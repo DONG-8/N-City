@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
-import { Admin, FAQ, Main, Mypage } from './pages/index';
+import { Admin, FAQ, Main, Mypage,NFTStore } from './pages/index';
 import Login from './pages/Login/Login';
 import GlobalStyle from './styles/global';
 function App() {
@@ -10,7 +10,7 @@ function App() {
     <>
       <GlobalStyle />
       <BrowserRouter>
-        <Navbar />
+        {/* <Navbar /> */}
         <Routes>
           <Route path="/" element={<Main />} />         
           <Route path="/login" element={<Login />}/>
@@ -18,8 +18,9 @@ function App() {
           <Route path="/faq" element={<FAQ />}/>
           <Route path="/admin" element={<Admin />}/>
           <Route path="/mypage" element={<Mypage />}/>
+          <Route path="/store" element={<NFTStore />}/>
         </Routes>
-        <Footer />
+        {/* <Footer /> */}
       </BrowserRouter>
     </>
   );
