@@ -6,8 +6,8 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: black;
-    color: white;
+    background-color: white;
+    color: black;
     width: 100%;
     height: 100%;
     background-size: cover;   
