@@ -60,10 +60,12 @@ const Button = styled.button`
 
 //// component
 const Login = () => {
+  const [loading, setLoading] = useState<boolean>(true);
   const [onboardButtonText, setOnboardButtonText] = useState<string>("");
   const [account, setAccount] = useState<string>("");
   useEffect(() => {
     initialize();
+    setLoading(false);
   }, []);
 
   const { ethereum } = window;
@@ -121,25 +123,29 @@ const Login = () => {
 
   return (
     <Wrapper>
-      <Container>
-        {isMetaMaskInstalled() ? (
-          <Header>
-            <H1>지갑에 연결하세요 !</H1>
-            <H3>MetaMask를 이용하여 로그인 할 수 있습니다 !</H3>
-          </Header>
-        ) : (
-          <Header>
-            <H1>지갑이 없으신가요 ?</H1>
-            <H3>지금 바로 생성하세요 !</H3>
-          </Header>
-        )}
-        <p>{account}</p>
+      {loading ? (
+        "Loading..."
+      ) : (
+        <Container>
+          {isMetaMaskInstalled() ? (
+            <Header>
+              <H1>지갑에 연결하세요 !</H1>
+              <H3>MetaMask를 이용하여 로그인 할 수 있습니다 !</H3>
+            </Header>
+          ) : (
+            <Header>
+              <H1>지갑이 없으신가요 ?</H1>
+              <H3>지금 바로 생성하세요 !</H3>
+            </Header>
+          )}
+          <p>{account}</p>
 
-        <Button onClick={onClickButton}>
-          <Logo src={MetamaskLogo} alt="Logo" />
-          {onboardButtonText} &rarr;
-        </Button>
-      </Container>
+          <Button onClick={onClickButton}>
+            <Logo src={MetamaskLogo} alt="Logo" />
+            {onboardButtonText} &rarr;
+          </Button>
+        </Container>
+      )}
     </Wrapper>
   );
 };
