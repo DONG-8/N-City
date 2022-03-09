@@ -60,7 +60,6 @@ const Button = styled.button`
 
 //// component
 const Login = () => {
-  console.log(LoginBackground)
   const [onboardButtonText, setOnboardButtonText] = useState<string>("");
   const [account, setAccount] = useState<string>("");
   useEffect(() => {
