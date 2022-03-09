@@ -6,7 +6,6 @@ const MainBackGround = styled.div`
   height: 650px ;
 `
 
-
 const MainBackImg = styled.img`
     position: relative ;
     object-fit: cover ;
@@ -87,9 +86,6 @@ const SubBanner = styled.div`
   margin: -400px auto 0 20px;
 `
 
-
-
-
 export default function Main() {
   const [position, setPosition] = useState<number>(0)
   const [eventNumber,setEventNumber] = useState<number>(0)
@@ -123,15 +119,19 @@ export default function Main() {
     if (idx === 0) {
       setPageTextPosition(0)
     } 
-    else if ( 1 < idx && idx < len-2 ) {
+    else if ( 2 < idx && idx < len-1 ) {
       setPageTextPosition(pageTextPosition - 250)
       }
+    else{
+      
+    }
+    console.log(eventNumber,'우')
     }
     
   
   const moveLeft = () => {
     const len = images.length;
-    const idx = Math.floor((eventNumber-1)%len)
+    const idx = Math.floor((eventNumber-1)%(len))
     if (0 === position) {
       setPosition((len-1)*(-1223))
     } else {
@@ -150,77 +150,76 @@ export default function Main() {
       setPageTextPosition(pageTextPosition + 250)
       }
     else if (idx=== len-2){
-      // console.log('옆으로 밀어주때욤')    
+      // console.log('옆으로 밀어주때욤')  
     }else{
         setPageTextPosition(0)
       }
+
+    console.log(eventNumber,'좌')
     }
   
   const clickToMove = (e : React.MouseEvent<HTMLDivElement>) => {
-    // console.log(e.currentTarget.id)
     const len = images.length;
     const num  = parseInt(e.currentTarget.id)
     const dif = (num-eventNumber)
-    console.log(dif)
     if (dif < 0) {
+      console.log(eventNumber,'클릭 이벤트넘버 현재위치')
+      console.log(dif,'차이')
       const di = Math.abs(dif)
-      const idx = Math.floor((eventNumber-1)%len)
+      const idx = Math.floor((eventNumber-di))
+      console.log(idx,'idx')
       setPosition(position + 1223*(di))
       setEventNumber(eventNumber-di)
       // setPageTextPosition(pageTextPosition + 250*(di))
-      if (di === 1) {
-        if (idx < 0) {
-          setPageTextPosition(-250*(len-1) +(2-Math.floor(idx%4))*250)
-        } 
-        else if ( 2 < idx && idx < len-2 ) {
+      if (di === 1){
+        if (idx === len-2) {
+          console.log('들어옴')
+        } else {
+          if (idx < 2) {
+
+          }else{
           setPageTextPosition(pageTextPosition + 250)
           }
-        else if (idx=== len-2){
-          // console.log('옆으로 밀어주때욤')    
-        }else{
-            setPageTextPosition(0)
-          }
-      } 
-      else if ( dif === 2 ) {
-        setPageTextPosition(pageTextPosition +(250))
+        }
       }
-      else {
-        setPageTextPosition(pageTextPosition +(500))
+      else if (di === 2) {
+        if (idx === len-3){
+          setPageTextPosition(pageTextPosition + 250)
+        }else if (idx < 2) {
+          setPageTextPosition(pageTextPosition + 250)
+        } else {
+          setPageTextPosition(pageTextPosition + 500)
+        }
       }
+      else if (di === 3) {
+        setPageTextPosition(pageTextPosition + 500)
+      }
+      
 
 
     } else {
-      const idx = Math.floor((eventNumber+dif)%len)
+      const idx = Math.floor((eventNumber+dif))
       setPosition(position - 1223*(dif))
       setEventNumber(eventNumber+dif)
-      console.log(idx,'idx')
+      // console.log(idx,'idx')
       if (dif === 1) {
         if (idx === 0) {
           setPageTextPosition(0)
         } 
-        else if ( 1 < idx && idx < len-1 ) {
+        else if ( 1 < idx && idx < len-2 ) {
           setPageTextPosition(pageTextPosition - 250)
           }
       } 
       else if ( dif === 2 ) {
         setPageTextPosition(pageTextPosition -(250))
       }
-      else {
+      else if (dif === 3) {
         setPageTextPosition(pageTextPosition -(500))
+      }else {
+
       }
     }
-    
-
-
-
   }
-
-  setTimeout(()=>{
-    moveRight()
-    // console.log('실행')
-  },5000)
-
-
 
   return (
     <>
