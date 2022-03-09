@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 
 const MainBackGround = styled.div`
@@ -105,13 +105,14 @@ export default function Main() {
     { pic: "https://cdn-lostark.game.onstove.com/uploadfiles/banner/93964914d8904123a71323313b1a95ba.jpg", ID: 3 , name : '로아 도화가' },
     { pic: "https://nimage.g-enews.com/phpwas/restmb_allidxmake.php?idx=5&simg=2020121617202605478e0eaf3841f218144160198.jpg", ID: 1 , name :'구찌'},
     { pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg", ID: 2 , name : '로아 프레딧 룩' },
+    { pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg", ID: 2 , name : '로아 프레딧 룩' },
+    { pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg", ID: 2 , name : '로아 프레딧 룩' },
     { pic: "https://cdn-lostark.game.onstove.com/uploadfiles/banner/93964914d8904123a71323313b1a95ba.jpg", ID: 3 , name : '로아 도화가' },
   ];
-  const moveRight = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const moveRight = () => {
     // console.log(e)
     const len = images.length;
     const idx = Math.floor((eventNumber+1)%len)
-    const Page = Math.floor(idx/4)
     if ((len-1)*(-1223) === position) {
       setPosition(0)
     } else {
@@ -141,16 +142,83 @@ export default function Main() {
     } else {
       setEventNumber(eventNumber-1)
     }
-
+    console.log(Math.floor(idx%4))
     if (idx < 0) {
-      setPageTextPosition(-250*(len-1))
+      setPageTextPosition(-250*(len-1) +(2-Math.floor(idx%4))*250)
     } 
-    else if ( 1 < idx && idx < len-1 ) {
+    else if ( 2 < idx && idx < len-2 ) {
       setPageTextPosition(pageTextPosition + 250)
-      }else {
+      }
+    else if (idx=== len-2){
+      // console.log('옆으로 밀어주때욤')    
+    }else{
         setPageTextPosition(0)
       }
     }
+  
+  const clickToMove = (e : React.MouseEvent<HTMLDivElement>) => {
+    // console.log(e.currentTarget.id)
+    const len = images.length;
+    const num  = parseInt(e.currentTarget.id)
+    const dif = (num-eventNumber)
+    console.log(dif)
+    if (dif < 0) {
+      const di = Math.abs(dif)
+      const idx = Math.floor((eventNumber-1)%len)
+      setPosition(position + 1223*(di))
+      setEventNumber(eventNumber-di)
+      // setPageTextPosition(pageTextPosition + 250*(di))
+      if (di === 1) {
+        if (idx < 0) {
+          setPageTextPosition(-250*(len-1) +(2-Math.floor(idx%4))*250)
+        } 
+        else if ( 2 < idx && idx < len-2 ) {
+          setPageTextPosition(pageTextPosition + 250)
+          }
+        else if (idx=== len-2){
+          // console.log('옆으로 밀어주때욤')    
+        }else{
+            setPageTextPosition(0)
+          }
+      } 
+      else if ( dif === 2 ) {
+        setPageTextPosition(pageTextPosition +(250))
+      }
+      else {
+        setPageTextPosition(pageTextPosition +(500))
+      }
+
+
+    } else {
+      const idx = Math.floor((eventNumber+dif)%len)
+      setPosition(position - 1223*(dif))
+      setEventNumber(eventNumber+dif)
+      console.log(idx,'idx')
+      if (dif === 1) {
+        if (idx === 0) {
+          setPageTextPosition(0)
+        } 
+        else if ( 1 < idx && idx < len-1 ) {
+          setPageTextPosition(pageTextPosition - 250)
+          }
+      } 
+      else if ( dif === 2 ) {
+        setPageTextPosition(pageTextPosition -(250))
+      }
+      else {
+        setPageTextPosition(pageTextPosition -(500))
+      }
+    }
+    
+
+
+
+  }
+
+  setTimeout(()=>{
+    moveRight()
+    // console.log('실행')
+  },5000)
 
 
 
@@ -175,18 +243,19 @@ export default function Main() {
               <button onClick={() => {moveLeft()}}>왼쪽</button>
               <div className='container'>
                 {images.map((value,idx) => {
+                    const id = String(idx)
                     //transform: `translate(${pageTextPosition}px)`, transition: `transform 0.5s`
                     if (idx === eventNumber) {
                       return(
-                        <div className='inner' style={{ color : 'white',transform: `translate(${pageTextPosition}px)`, transition: `transform 0.5s`}}>{value.name}</div>
+                        <div className='inner' id={id} onClick={(e)=>{clickToMove(e)}} style={{ color : 'white',transform: `translate(${pageTextPosition}px)`, transition: `transform 0.5s`}}>{value.name}</div>
                       )
                     } else {
                       return(
-                        <div className='inner' style={{color : 'gray',transform: `translate(${pageTextPosition}px)`, transition: `transform 0.5s`}}>{value.name}</div>
+                        <div className='inner' id={id} onClick={(e)=>{clickToMove(e)}} style={{color : 'gray',transform: `translate(${pageTextPosition}px)`, transition: `transform 0.5s`}}>{value.name}</div>
                     )}
                   })}
               </div>
-              <button onClick={(e) => {moveRight(e)}}>오른쪽</button>
+              <button onClick={() => {moveRight()}}>오른쪽</button>
               <button>{eventNumber+1}/{images.length}</button>
               <button>전체 이벤트 목록</button>
             </MainPagenationBanner>
