@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
+// import { clearInterval } from 'timers';
 
 const MainBackGround = styled.div`
   width : 1921px;
@@ -90,7 +91,7 @@ export default function Main() {
   const [position, setPosition] = useState<number>(0)
   const [eventNumber,setEventNumber] = useState<number>(0)
   const [pageTextPosition, setPageTextPosition] = useState<number>(0)
-
+  const [check, setCheck] = useState<number>(0)
   // 나중에 DB 기반의 데이터 형성시켜주고 이미지 받아오기 아니면 그냥 여기서 사용
   const images = [
     { pic: "https://nimage.g-enews.com/phpwas/restmb_allidxmake.php?idx=5&simg=2020121617202605478e0eaf3841f218144160198.jpg", ID: 1 , name :'구찌'},
@@ -107,6 +108,7 @@ export default function Main() {
   ];
   const moveRight = () => {
     // console.log(e)
+    // clearTimeout(1000)
     const len = images.length;
     const idx = Math.floor((eventNumber+1)%len)
     if ((len-1)*(-1223) === position) {
@@ -122,9 +124,6 @@ export default function Main() {
     else if ( 2 < idx && idx < len-1 ) {
       setPageTextPosition(pageTextPosition - 250)
       }
-    else{
-      
-    }
     console.log(eventNumber,'우')
     }
     
@@ -155,10 +154,12 @@ export default function Main() {
         setPageTextPosition(0)
       }
 
-    console.log(eventNumber,'좌')
+    // console.log(eventNumber,'좌')
     }
   
   const clickToMove = (e : React.MouseEvent<HTMLDivElement>) => {
+    clearTimeout()
+    // setCheck(true)
     const len = images.length;
     const num  = parseInt(e.currentTarget.id)
     const dif = (num-eventNumber)
@@ -206,20 +207,55 @@ export default function Main() {
         if (idx === 0) {
           setPageTextPosition(0)
         } 
-        else if ( 1 < idx && idx < len-2 ) {
+        else if ( 1 < idx && idx <= len-2 ) {
           setPageTextPosition(pageTextPosition - 250)
           }
+        else if (idx === len-2) {
+          setPageTextPosition(pageTextPosition - 250)
+        }
       } 
       else if ( dif === 2 ) {
-        setPageTextPosition(pageTextPosition -(250))
+        if (idx === 2) {
+
+        } else {
+          setPageTextPosition(pageTextPosition -(250))
+        }
+        
       }
       else if (dif === 3) {
-        setPageTextPosition(pageTextPosition -(500))
-      }else {
-
+        setPageTextPosition(pageTextPosition -(250))
       }
     }
   }
+
+  const moveAuto = () => {
+    const len = images.length;
+    const idx = Math.floor((eventNumber+1)%len)
+    if ((len-1)*(-1223) === position) {
+      setPosition(0)
+    } else {
+      setPosition(position - 1223)
+    }
+    setEventNumber(idx)
+
+    if (idx === 0) {
+      setPageTextPosition(0)
+    } 
+    else if ( 2 < idx && idx < len-1 ) {
+      setPageTextPosition(pageTextPosition - 250)
+      }
+    // console.log(eventNumber,'우')
+    if (check === 0) {setTimeout(() => {setCheck(1)},5000)}
+    else {setTimeout(() => {setCheck(0)},5000)}    
+  }
+
+  useEffect(() => {
+    moveAuto()
+  },[check])
+
+
+
+
 
   return (
     <>
@@ -237,28 +273,26 @@ export default function Main() {
                 )
               })}
           </MainBanner>
-          
-            <MainPagenationBanner>
-              <button onClick={() => {moveLeft()}}>왼쪽</button>
-              <div className='container'>
-                {images.map((value,idx) => {
-                    const id = String(idx)
-                    //transform: `translate(${pageTextPosition}px)`, transition: `transform 0.5s`
-                    if (idx === eventNumber) {
-                      return(
-                        <div className='inner' id={id} onClick={(e)=>{clickToMove(e)}} style={{ color : 'white',transform: `translate(${pageTextPosition}px)`, transition: `transform 0.5s`}}>{value.name}</div>
-                      )
-                    } else {
-                      return(
-                        <div className='inner' id={id} onClick={(e)=>{clickToMove(e)}} style={{color : 'gray',transform: `translate(${pageTextPosition}px)`, transition: `transform 0.5s`}}>{value.name}</div>
-                    )}
-                  })}
-              </div>
-              <button onClick={() => {moveRight()}}>오른쪽</button>
-              <button>{eventNumber+1}/{images.length}</button>
-              <button>전체 이벤트 목록</button>
-            </MainPagenationBanner>
-          
+          <MainPagenationBanner>
+            <button onClick={() => {moveLeft()}}>왼쪽</button>
+            <div className='container'>
+              {images.map((value,idx) => {
+                  const id = String(idx)
+                  //transform: `translate(${pageTextPosition}px)`, transition: `transform 0.5s`
+                  if (idx === eventNumber) {
+                    return(
+                      <div className='inner' id={id} onClick={(e)=>{clickToMove(e)}} style={{ color : 'white',transform: `translate(${pageTextPosition}px)`, transition: `transform 0.5s`}}>{value.name}</div>
+                    )
+                  } else {
+                    return(
+                      <div className='inner' id={id} onClick={(e)=>{clickToMove(e)}} style={{color : 'gray',transform: `translate(${pageTextPosition}px)`, transition: `transform 0.5s`}}>{value.name}</div>
+                  )}
+                })}
+            </div>
+            <button onClick={() => {moveRight()}}>오른쪽</button>
+            <button>{eventNumber+1}/{images.length}</button>
+            <button>전체 이벤트 목록</button>
+          </MainPagenationBanner>
         </MainBannerWrapper>
         <SubBanner>subBanner</SubBanner>
       </MainWrapper>
