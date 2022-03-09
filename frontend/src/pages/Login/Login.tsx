@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MetaMaskOnboarding from "@metamask/onboarding";
-import MetamaskLogo from "../../essets/images/metamask_logo.png"
-import LoginBackground from "../../essets/images/login_background.png"
+
 
 
 //// style
 const Wrapper = styled.div`
-  background-image: linear-gradient( rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8) ), url(${LoginBackground});
+  background-image: linear-gradient( rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8) ), url("/essets/images/login_background.png");
   font-family: 'Noto Sans KR', sans-serif;
   display: flex;
   flex-direction: column;
@@ -141,7 +140,7 @@ const Login = () => {
           <p>{account}</p>
 
           <Button onClick={onClickButton}>
-            <Logo src={MetamaskLogo} alt="Logo" />
+            <Logo src="/essets/images/metamask_logo.png" alt="Logo" />
             {onboardButtonText} &rarr;
           </Button>
         </Container>
