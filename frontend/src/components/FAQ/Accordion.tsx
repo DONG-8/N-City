@@ -1,5 +1,7 @@
 import React, {useRef, useState, useCallback} from "react";
 import styled from "styled-components";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
 interface AccordionProps {
   title?: string | React.ReactNode;
@@ -23,7 +25,6 @@ const Question = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  width: 800px;
   height: 40px;
   margin: 0 32px 0 10px;
 `;
@@ -37,7 +38,7 @@ const Button = styled.div`
 
 const ContentsWrapper = styled.div`
   height: 0;
-  width: inherit;
+  width: 800px;
   padding: 0 8px;
   overflow: hidden;
   transition: height 0.35s ease, background 0.35s ease;
@@ -64,7 +65,9 @@ function Accordion(props: AccordionProps) {
         parentRef.current.style.height = "0";
         parentRef.current.style.background = "none";
       } else {
-        parentRef.current.style.height = `${childRef.current.clientHeight + 5}px`;
+        parentRef.current.style.height = `${
+          props.contents ? childRef.current.clientHeight + 5 : 0
+        }px`;
         parentRef.current.style.backgroundColor = "#FFF6F3";
       }
       setIsCollapse(!isCollapse);
@@ -73,7 +76,8 @@ function Accordion(props: AccordionProps) {
   );
 
   const parentRefHeight = parentRef.current?.style.height ?? "0px";
-  const buttonText = parentRefHeight === "0px" ? "열기" : "닫기";
+  const buttonText =
+    parentRefHeight === "0px" ? <ExpandMoreIcon /> : <ExpandLessIcon />;
 
   return (
     <Container>
