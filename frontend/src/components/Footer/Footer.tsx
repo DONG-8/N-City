@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <div>
       <FooterBlock>
-        COPYRIGHT ©남현동 싹쓸어. All rights reserved.
+        <div>COPYRIGHT ©남현동 싹쓸어. All rights reserved.</div>
       </FooterBlock>
     </div>
   );
