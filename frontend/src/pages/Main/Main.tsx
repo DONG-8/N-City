@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 // import { clearInterval } from 'timers';
+import ItemCard from '../../components/Card/ItemCard';
 
 const MainBackGround = styled.div`
   width : 1921px;
@@ -145,9 +146,36 @@ const SubPagenationBanner = styled.div`
 
 const SubBottomItem = styled.div`
   width:100%;
-
+  background-color:black;
+  height: 290px;
+  color : white;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  h2 {
+    margin-top: 0px;
+    margin-left: 20px;
+    margin-bottom: 0px;
+  }
+  div {
+    margin-left: 40px;
+    margin-top: 20px;
+  }
+`
+const HotTokkenWrraper = styled.div`
+  width : 100%;
+  height : 100%;
+  margin: 0 7.5%;
 `
 
+const HotTokkenDiv = styled.div`
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  /* margin: auto; */
+  justify-content: center;
+`
 
 export default function Main() {
   const [position, setPosition] = useState<number>(0)
@@ -429,11 +457,28 @@ export default function Main() {
             <button>{subEventNumber+1}/{subImages.length}</button>
             <button onClick={()=>{moveSubRight()}}>오른쪽</button>
           </SubPagenationBanner>
-          <SubBottomItem>하이염</SubBottomItem>
+          <SubBottomItem>
+            <h2>오늘의 hot Room</h2>
+            <div>000 님의 방</div>
+            <div>000 님의 방</div>
+            <div>xxx 님의 방</div>
+            <div>임현홍 님의 방</div>
+          </SubBottomItem>
         </SubBannerWrraper>
-        
-          
       </MainWrapper>
+      <HotTokkenWrraper>
+        <h1>Hot Tokken</h1>
+        <HotTokkenDiv> 
+          <ItemCard></ItemCard>
+          <ItemCard></ItemCard>
+          <ItemCard></ItemCard>
+          <ItemCard></ItemCard>
+          <ItemCard></ItemCard>
+          <ItemCard></ItemCard>
+          <ItemCard></ItemCard>
+          <ItemCard></ItemCard>
+        </HotTokkenDiv>
+      </HotTokkenWrraper>
     </>
   );
 }
