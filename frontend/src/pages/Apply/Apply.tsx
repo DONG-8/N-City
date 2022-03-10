@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useState, useCallback} from "react";
 import styled from "styled-components";
+import ModalBase from "../../components/Apply/Test2";
 
 //// style
 const Wrapper = styled.div`
@@ -10,6 +11,9 @@ const Wrapper = styled.div`
   align-items: "center";
   height: 100vh;
   width: 100vw;
+  .Modal{
+    transition: 1s;
+  }
 `;
 
 const H1 = styled.h1`
@@ -59,32 +63,49 @@ const CardTitle = styled.div`
 
 //// component
 const Apply = () => {
-  const onClickInfluencer = () => {};
-  const onClickDesigner = () => {};
-  const onClickEnterprise = () => {};
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [formType, setFormType] = useState<string>("");
+  
+  const handleModalOpen = (type:string) => {
+    setIsOpen(true);
+    setFormType(type)
+    console.log(type)
+    console.log(formType)
+  };
+
+  const handleModalClose = () => {
+    setIsOpen(false);
+    setFormType("");
+  };
+
+  const cards = [
+    { logo: "/essets/images/influencer_logo.png", type: "influencer", name: "인플루언서" },
+    { logo: "/essets/images/designer_logo.png", type: "designer", name: "디자이너" },
+    { logo: "/essets/images/enterprise_logo.png", type: "enterprise", name:"기업" },
+  ];
+
   return (
     <Wrapper>
       <H1>유형을 선택해주세요</H1>
       <CardBox>
-        <CardWrapper>
-          <Card onClick={onClickInfluencer}>
-            <Logo src="/essets/images/influencer_logo.png" alt="logo" />
-          </Card>
-          <CardTitle>인플루언서</CardTitle>
-        </CardWrapper>
-        <CardWrapper>
-          <Card onClick={onClickDesigner}>
-            <Logo src="/essets/images/designer_logo.png" alt="logo" />
-          </Card>
-          <CardTitle>디자이너</CardTitle>
-        </CardWrapper>
-        <CardWrapper>
-          <Card onClick={onClickEnterprise}>
-            <Logo src="/essets/images/enterprise_logo.png" alt="logo" />
-          </Card>
-          <CardTitle>기업</CardTitle>
-        </CardWrapper>
+        {cards.map((card) => (
+          <CardWrapper key={card.type}>
+            <Card onClick={() => handleModalOpen(card.type)}>
+              <Logo src={card.logo} alt="logo" />
+            </Card>
+            <CardTitle>{card.name}</CardTitle>
+          </CardWrapper>
+        ))}
       </CardBox>
+      <div>
+        <ModalBase
+          visible={isOpen}
+          onClose={handleModalClose}
+          formType={formType}
+        >
+          <div>{formType}</div>
+        </ModalBase>
+      </div>
     </Wrapper>
   );
 }

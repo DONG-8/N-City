@@ -7,6 +7,7 @@ import Login from './pages/Login/Login';
 import Apply from './pages/Apply/Apply';
 import GlobalStyle from './styles/global';
 import DetailItem from './pages/NFTStore/DetailItem';
+
 function App() {
   return (
     <>
