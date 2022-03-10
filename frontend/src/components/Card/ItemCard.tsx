@@ -76,7 +76,7 @@ const Cards = styled.div`
     }
   }
 `
-const PictureCard = () => {
+const ItemCard = () => {
   return (
     <>
       <Cards>
@@ -106,4 +106,4 @@ const PictureCard = () => {
   )
 }
 
-export default PictureCard
+export default ItemCard

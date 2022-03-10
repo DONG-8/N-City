@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const verifiedIMG = ()=>{
+export const verifiedIMG = ()=>{
   return(
   <img alt='verified' style={{"height":'1.5rem'}}
-  src='https://o.remove.bg/downloads/d89e3a9c-382a-49c9-baad-1df8ca8934e9/verified-removebg-preview.png'/>)
+  src='https://cdn-icons.flaticon.com/png/512/5253/premium/5253963.png?token=exp=1646808025~hmac=c2a100c15f1e3a55617c2dfcea482212'/>)
 }
 
 
@@ -12,7 +12,7 @@ const Cards = styled.div`
   cursor: pointer;
   height: 450px;
   width: 500px;
-  background-color: #ffffff;
+  background-color: #fbe8e8;
   border-radius: 10px;
   box-shadow:1px 3px 7px  ;
   margin: 30px ;

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import ArtistCard from '../../components/Card/ArtistCard'
-import PictureCard from '../../components/Card/PictureCard'
+import ItemCard from '../../components/Card/ItemCard'
 
 const Title = styled.div`
   background-color: #F8D9CE ;
@@ -60,7 +60,7 @@ const CategoryBar = styled.div`
     cursor: pointer;
   }
 `
-const PictureCards = styled.div`
+const ItemCards = styled.div`
   margin:auto ;
   width: 90% ;
   display: flex ;
@@ -98,22 +98,22 @@ const NFTStore = () => {
       <div><p>Sports</p></div>
       <div><p>game</p></div>
     </CategoryBar>
-    <PictureCards>
-      <PictureCard/>
-      <PictureCard/>
-      <PictureCard/>
-      <PictureCard/>
-      <PictureCard/>
-      <PictureCard/>
-      <PictureCard/>
-      <PictureCard/>
-    </PictureCards>
-    {/* <ArtistCards>
+    <ItemCards>
+      <ItemCard/>
+      <ItemCard/>
+      <ItemCard/>
+      <ItemCard/>
+      <ItemCard/>
+      <ItemCard/>
+      <ItemCard/>
+      <ItemCard/>
+    </ItemCards>
+    <ArtistCards>
       <ArtistCard/>
       <ArtistCard/>
       <ArtistCard/>
       <ArtistCard/>
-    </ArtistCards> */}
+    </ArtistCards>
     </>
   )
 }

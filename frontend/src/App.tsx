@@ -5,6 +5,7 @@ import Footer from './components/Footer/Footer';
 import { Admin, FAQ, Main, Mypage,NFTStore } from './pages/index';
 import Login from './pages/Login/Login';
 import GlobalStyle from './styles/global';
+import DetailItem from './pages/NFTStore/DetailItem';
 function App() {
   return (
     <>
@@ -19,6 +20,7 @@ function App() {
           <Route path="/admin" element={<Admin />}/>
           <Route path="/mypage" element={<Mypage />}/>
           <Route path="/store" element={<NFTStore />}/>
+          <Route path="/store/detail" element={<DetailItem />}/>
         </Routes>
         {/* <Footer /> */}
       </BrowserRouter>
