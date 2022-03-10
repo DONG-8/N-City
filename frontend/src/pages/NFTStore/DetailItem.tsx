@@ -175,9 +175,6 @@ const DetailItem = () => {
         <div className='center'>
           <Transaction>
             <h1>거래내역</h1>
-            {transactions.map()=>{(
-              <div></div>
-            )}}
           </Transaction>
         </div>
         <div className='bottom'>
