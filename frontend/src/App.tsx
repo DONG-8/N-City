@@ -6,6 +6,7 @@ import { Admin, FAQ, Main, Mypage } from './pages/index';
 import Login from './pages/Login/Login';
 import Apply from './pages/Apply/Apply';
 import GlobalStyle from './styles/global';
+import FormDialog from './components/Apply/Test';
 function App() {
   return (
     <>
