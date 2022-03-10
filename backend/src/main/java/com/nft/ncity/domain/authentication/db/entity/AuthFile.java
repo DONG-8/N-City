@@ -2,7 +2,6 @@ package com.nft.ncity.domain.authentication.db.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -16,27 +15,31 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Authentication {
+public class AuthFile {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(value="파일 ID")
+    private Long fileId;
+
+    @OneToOne
+    @JoinColumn(name = "auth_id")
     @ApiModelProperty(value="인증 ID")
-    // 인증 id
-    Long authId = null;
+    private Authentication authId;
 
-    // 이름
-    @ApiModelProperty(value="이름")
-    String authName;
+    @ApiModelProperty(value="파일 이름")
+    private String fileName;
 
-    // 이메일
-    @ApiModelProperty(value="이메일")
-    String authEmail;
+    @ApiModelProperty(value="파일 크기")
+    private float fileSize;
 
-    // 신청일
+    @ApiModelProperty(value="파일 형식")
+    private String fileContentType;
+
+    @ApiModelProperty(value="파일 url")
+    private String fileUrl;
+
     @CreatedDate
-    @ApiModelProperty(value="신청일")
-    LocalDateTime authRegAt;
-
-    // 인증 타입
-    @ApiModelProperty(value="인증 타입")
-    int authType;
+    @ApiModelProperty(value="파일 생성일")
+    private LocalDateTime regDt;
 }
