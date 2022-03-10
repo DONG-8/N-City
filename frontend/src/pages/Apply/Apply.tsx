@@ -1,6 +1,6 @@
 import React, {useState, useCallback} from "react";
 import styled from "styled-components";
-import ModalBase from "../../components/Apply/Test2";
+import ModalBase from "../../components/Apply/ApplyModal";
 
 //// style
 const Wrapper = styled.div`
@@ -103,7 +103,7 @@ const Apply = () => {
           onClose={handleModalClose}
           formType={formType}
         >
-          <div>{formType}</div>
+          {/* <div>{formType}</div> */}
         </ModalBase>
       </div>
     </Wrapper>
