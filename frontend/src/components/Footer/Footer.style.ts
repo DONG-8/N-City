@@ -1,5 +1,12 @@
 import styled from 'styled-components';
 
+const FooterWrapper = styled.div`
+  position: relative;
+  bottom: 0%;
+  width: 100%;
+`
+
+
 const FooterBlock = styled.div`
   display: flex;
   text-align: center;
@@ -10,7 +17,6 @@ const FooterBlock = styled.div`
   background-color: #F5E1DB;
   justify-content: center;
   align-items: center;
-  margin-top: 50px;
 `;
 
-export { FooterBlock };
+export { FooterBlock,FooterWrapper };
