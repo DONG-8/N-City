@@ -1,6 +1,5 @@
-import React, { ReactNode, useEffect, useState, ChangeEvent, useCallback, useRef } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
-
 
 export type ModalBaseProps = {
   /** 모달에 들어갈 컴포넌트 */
@@ -12,8 +11,183 @@ export type ModalBaseProps = {
   formType: string;
 };
 
+//// style
+// animations
+const fadeIn = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
 
+const fadeOut = keyframes`
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+`;
 
+// components
+const modalSettings = (visible: boolean) => css`
+  visibility: ${visible ? 'visible' : 'hidden'};
+  z-index: 15;
+  animation: ${visible ? fadeIn : fadeOut} 0.15s ease-out;
+  transition: visibility 0.15s ease-out;
+`;
+
+const Background = styled.div<{ visible: boolean }>`
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.6);
+  ${(props) => modalSettings(props.visible)}
+`;
+
+const ModalSection = styled.div<{ visible: boolean }>`
+  font-family: 'Noto Sans KR', sans-serif;
+  width: 600px;
+  height: 90vh;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 50%;
+  left: 50%;
+  border: 2px solid black;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(30, 30, 30, 0.185);
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 1);
+  padding: 16px;
+  ${(props) => modalSettings(props.visible)}
+`;
+
+const Title = styled.h1`
+  margin: 20px 0 10px;
+  font-size: 30px;
+  text-align: center;
+`;
+
+const Divider = styled.hr`
+  border: solid 1px #FF865B;
+  width: 65%;
+  margin-bottom: 30px;
+`;
+
+const ExplaneBox = styled.div`
+  margin-bottom: 10px;
+`
+
+const FormWrapper = styled.form`
+  margin: 0px 20px;
+  display: flex;
+  flex-direction: column;
+  // 업로드 버튼
+  .file-label {
+    display: flex;
+    margin-top: 30px;
+    background-color: #FF865B;
+    color: #fff;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    width: 90px;
+    height: 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    &:active {
+      background-color: #DE5D30;
+    }
+  }
+  .file {
+    display: none;
+  }
+`;
+
+const Content = styled.div`
+  padding: 16px 0;
+`;
+
+const TextInputBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  label {
+    font-weight: bold;
+  }
+  input {
+    position: absolute;
+    left: 120px;
+    border: 1px solid black;
+    height: 20px;
+    width: 50vh;
+    border-radius: 5px;
+  }
+`
+
+const FileUploadExplaneBox = styled.div`
+  margin-top: 20px;
+  div {
+    margin-bottom: 10px;
+  }
+  .first {
+    font-size: 15px;
+  }
+  .second {
+    font-size: 15px;
+  }
+  .third {
+    font-size: 12px;
+  }
+`
+const FileUpload = styled.input`
+  border: 1px solid black;
+`
+
+const SubmitButton = styled.button`
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    background-color: #FF865B;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px 0;
+    width: 20%;
+    border-radius: 15px;
+  &:hover {
+    font-weight: bold;
+  }
+  &:active {
+    background-color: #DE5D30;
+  }
+`
+
+const ExplaneText = styled.h3`
+  font-size: 20px;
+  margin: 0;
+  span {
+    color: #aa2e2e;
+  }
+`
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: flex-end;
+  border: none;
+  background: none;
+  cursor: pointer;
+`;
+
+//// component
 const ModalBase = ({ children, visible, onClose, formType }: ModalBaseProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState<string>("");
@@ -149,186 +323,5 @@ const ModalBase = ({ children, visible, onClose, formType }: ModalBaseProps) => 
     </div>
   );
 };
-
-// animations
-const fadeIn = keyframes`
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-`;
-
-const fadeOut = keyframes`
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-`;
-
-// components
-const modalSettings = (visible: boolean) => css`
-  visibility: ${visible ? 'visible' : 'hidden'};
-  z-index: 15;
-  animation: ${visible ? fadeIn : fadeOut} 0.15s ease-out;
-  transition: visibility 0.15s ease-out;
-`;
-
-const Background = styled.div<{ visible: boolean }>`
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.6);
-  ${(props) => modalSettings(props.visible)}
-`;
-
-const ModalSection = styled.div<{ visible: boolean }>`
-  font-family: 'Noto Sans KR', sans-serif;
-  width: 600px;
-  height: 90vh;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  top: 50%;
-  left: 50%;
-  border: 2px solid black;
-  border-radius: 10px;
-  box-shadow: 0 0 30px rgba(30, 30, 30, 0.185);
-  transform: translate(-50%, -50%);
-  background-color: rgba(255, 255, 255, 1);
-  padding: 16px;
-  ${(props) => modalSettings(props.visible)}
-`;
-
-const Title = styled.h1`
-  margin: 20px 0 10px;
-  font-size: 30px;
-  text-align: center;
-`;
-
-const Divider = styled.hr`
-  border: solid 1px #FF865B;
-  width: 65%;
-  margin-bottom: 30px;
-`;
-
-const ExplaneBox = styled.div`
-  margin-bottom: 10px;
-`
-
-const FormWrapper = styled.form`
-  margin: 0px 20px;
-  display: flex;
-  flex-direction: column;
-  // 업로드 버튼
-  .file-label {
-    display: flex;
-    margin-top: 30px;
-    background-color: #FF865B;
-    color: #fff;
-    justify-content: center;
-    align-items: center;
-    padding: 10px 0;
-    width: 90px;
-    height: 15px;
-    border-radius: 15px;
-    cursor: pointer;
-    &:active {
-      background-color: #DE5D30;
-    }
-  }
-  .file {
-    display: none;
-  }
-
-`;
-
-const Content = styled.div`
-  padding: 16px 0;
-`;
-
-const TextInputBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 10px;
-  label {
-    font-weight: bold;
-  }
-  input {
-    position: absolute;
-    left: 120px;
-    border: 1px solid black;
-    height: 20px;
-    width: 50vh;
-    border-radius: 5px;
-  }
-`
-
-const FileUploadExplaneBox = styled.div`
-  margin-top: 20px;
-  div {
-    margin-bottom: 10px;
-  }
-  .first {
-    font-size: 15px;
-  }
-  .second {
-    font-size: 15px;
-  }
-  .third {
-    font-size: 12px;
-  }
-`
-const FileUpload = styled.input`
-  border: 1px solid black;
-
-`
-
-
-
-
-const SubmitButton = styled.button`
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    background-color: #FF865B;
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-    padding: 10px 0;
-    width: 20%;
-    border-radius: 15px;
-  &:hover {
-    font-weight: bold;
-  }
-  &:active {
-    background-color: #DE5D30;
-  }
-`
-
-const ExplaneText = styled.h3`
-  font-size: 20px;
-  margin: 0;
-  span {
-    color: #aa2e2e;
-  }
-`
-
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: flex-end;
-  border: none;
-  background: none;
-  cursor: pointer;
-`;
 
 export default ModalBase;
