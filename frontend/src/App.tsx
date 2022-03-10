@@ -24,7 +24,7 @@ function App() {
           <Route path="/store" element={<NFTStore />}/>
           <Route path="/store/detail" element={<DetailItem />}/>
         </Routes>
-        {<Footer />
+        <Footer />
       </BrowserRouter>
     </>
   );
