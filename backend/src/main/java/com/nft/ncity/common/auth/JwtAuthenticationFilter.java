@@ -1,11 +1,16 @@
 package com.nft.ncity.common.auth;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.nft.ncity.common.util.JwtTokenUtil;
 import com.nft.ncity.common.util.ResponseBodyWriteUtil;
+import com.nft.ncity.domain.log.service.LogService;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,12 +27,13 @@ import java.io.IOException;
 /**
  * 요청 헤더에 jwt 토큰이 있는 경우, 토큰 검증 및 인증 처리 로직 정의.
  */
+@Slf4j
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
-	private UserService userService;
+	private LogService logService;
 
 	public JwtAuthenticationFilter(AuthenticationManager authenticationManager, UserService userService) {
 		super(authenticationManager);
-		this.userService = userService;
+		this.logService = logService;
 	}
 
 	@Override
@@ -64,24 +70,39 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             JWTVerifier verifier = JwtTokenUtil.getVerifier();
             JwtTokenUtil.handleError(token);
             DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
-            String userId = decodedJWT.getSubject();
+            String userAddress = String.valueOf(decodedJWT.getClaim("userAddress"));
 
             // Search in the DB if we find the user by token subject (username)
             // If so, then grab user details and create spring auth token using username, pass, authorities/roles
-            if (userId != null) {
-                    // jwt 토큰에 포함된 계정 정보(userId) 통해 실제 디비에 해당 정보의 계정이 있는지 조회.
-            		User user = userService.getUserByEmail(userId);
+            if (userAddress != null) {
+                    // jwt 토큰에 포함된 계정 정보(userAddress) 통해 실제 디비에 해당 정보의 계정이 있는지 조회.
+            		User user = logService.getUserDetail(userAddress);
                 if(user != null) {
                         // 식별된 정상 유저인 경우, 요청 context 내에서 참조 가능한 인증 정보(jwtAuthentication) 생성.
                 		UserDetails userDetails = new UserDetails(user);
-                		UsernamePasswordAuthenticationToken jwtAuthentication = new UsernamePasswordAuthenticationToken(userId,
+                		UsernamePasswordAuthenticationToken jwtAuthentication = new UsernamePasswordAuthenticationToken(userAddress,
                 				null, userDetails.getAuthorities());
                 		jwtAuthentication.setDetails(userDetails);
+                        log.info("유효한 토큰입니다 : " + String.valueOf(userDetails.getAuthorities()));
                 		return jwtAuthentication;
                 }
             }
             return null;
         }
         return null;
+    }
+
+    // 토큰에서 userId 가져오기
+    public static long getUserId(String token) {
+        try {
+           JWTVerifier verifier = JwtTokenUtil.getVerifier();
+            JwtTokenUtil.handleError(token);
+            DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
+            Claim userId = decodedJWT.getClaim("userId");
+            return userId.asLong();
+        } catch (JWTVerificationException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }
