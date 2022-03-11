@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios, { AxiosRequestConfig } from "axios";
+import CategoryModal from "../../components/SalesResistration/CategoryModal";
 
 const Wrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
@@ -51,6 +52,11 @@ const UploadBox = styled.div`
         max-height: 300px;
         object-fit: cover;
       }
+
+      .file-logo {
+        width: 150px;
+        height: auto;
+      }
     }
   }
   .file {
@@ -64,8 +70,6 @@ const UploadBox = styled.div`
     color: #de5d30;
   }
 `;
-
-const UploadBoxImage = styled.div``;
 
 const FormBox = styled.form``;
 
@@ -98,6 +102,7 @@ const DescriptionInputBox = styled.div`
     width: 80vw;
     height: 100px;
     background-color: #e5e5e5;
+    resize:none;
     :focus {
       outline: none;
     }
@@ -109,6 +114,7 @@ const CategoryBox = styled.div`
   align-items: center;
   font-weight: bold;
   img {
+    display: inline;
     margin-left: 10px;
     width: 30px;
     height: 30px;
@@ -127,24 +133,24 @@ const CategoryBox = styled.div`
 `;
 
 const ButtonBox = styled.div`
-  display: block;
-  text-align: center;
-
+  display: flex;
+  justify-content: center;
+  margin: 20px auto 100px;
   button {
-    position: relative;
+    position: absolute;
     display: block;
-    margin: 20px auto 100px;
     background-color: #ff865b;
     color: #fff;
     font-weight: bold;
     text-align: center;
     padding: 10px 0;
-    width: 20%;
+    width: 110px;
+    height: 40px;
     border-radius: 15px;
-    box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px,
-      rgba(17, 17, 26, 0.1) 0px 0px 8px;
     &:hover {
-      font-weight: bold;
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      width: 115px;
+      height: 42px;
     }
     &:active {
       background-color: #de5d30;
@@ -175,6 +181,17 @@ const SalesResistration = () => {
   const [description, setDescription] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
   const [file, setFile] = useState<any>();
+
+  // category modal
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const handleModalOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsOpen(false);
+  };
 
   const onClickSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -246,9 +263,17 @@ const SalesResistration = () => {
         </div>
       );
     } else if (file?.type.slice(0, 5) === "video") {
-      return <div>비디오로고</div>;
+      return (
+        <div>
+          <img className="file-logo" src="/essets/images/video-file.png" alt="video-file" />
+        </div>
+      );
     } else if (file?.type.slice(0, 5) === "audio") {
-      return <div>오디오로고</div>;
+      return (
+        <div>
+          <img className="file-logo" src="/essets/images/music-file.png" alt="audio-file" />
+        </div>
+      );
     } else if (file) {
       alert("부적절한 파일입니다.");
       return (
@@ -309,12 +334,18 @@ const SalesResistration = () => {
           <img
             src="/essets/images/category_add_button.png"
             alt="category add"
+            onClick={handleModalOpen}
           />
         </CategoryBox>
         <ButtonBox>
           <button onClick={onClickSubmit}>작품등록</button>
         </ButtonBox>
       </FormBox>
+      <CategoryModal
+        visible={isOpen}
+        onClose={handleModalClose}
+        setCategories={setCategories}
+      ></CategoryModal>
     </Wrapper>
   );
 };
