@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios, { AxiosRequestConfig } from "axios";
-import CategoryModal from "../../components/SalesResistration/CategoryModal";
+import CategoryModal, {
+  Icategory,
+} from "../../components/SalesResistration/CategoryModal";
 
 const Wrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
@@ -52,7 +54,6 @@ const UploadBox = styled.div`
         max-height: 300px;
         object-fit: cover;
       }
-
       .file-logo {
         width: 150px;
         height: auto;
@@ -85,8 +86,34 @@ const NameInputBox = styled.div`
     width: 300px;
     margin-left: 10px;
     background-color: #e5e5e5;
+    font-size: 15px;
+    font-family: inherit;
     :focus {
       outline: none;
+    }
+  }
+`;
+
+const Categories = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto 10px;
+  p {
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
+      rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+    background-color: #ff865b;
+    font-weight: bold;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 7px 10px;
+    margin: 5px 3px;
+    height: 20px;
+    cursor: pointer;
+    &:hover {
+      box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     }
   }
 `;
@@ -102,7 +129,9 @@ const DescriptionInputBox = styled.div`
     width: 80vw;
     height: 100px;
     background-color: #e5e5e5;
-    resize:none;
+    resize: none;
+    font-family: inherit;
+    font-size: 15px;
     :focus {
       outline: none;
     }
@@ -125,7 +154,6 @@ const CategoryBox = styled.div`
       height: 32px;
       transition: all 0.08s ease-out;
     }
-
     &:active {
       background-color: #f3c8b9;
     }
@@ -137,46 +165,35 @@ const ButtonBox = styled.div`
   justify-content: center;
   margin: 20px auto 100px;
   button {
+    font-family: "Noto Sans KR", sans-serif;
     position: absolute;
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #ff865b;
     color: #fff;
     font-weight: bold;
-    text-align: center;
+    font-size: 20px;
     padding: 10px 0;
-    width: 110px;
-    height: 40px;
+    width: 200px;
+    height: 50px;
     border-radius: 15px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
     &:hover {
       box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-      width: 115px;
-      height: 42px;
+      width: 202px;
+      height: 52px;
     }
     &:active {
       background-color: #de5d30;
+      box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
     }
   }
 `;
 
-const TextInputBox = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 10px;
-  label {
-    font-weight: bold;
-  }
-  input {
-    position: absolute;
-    left: 120px;
-    border: 1px solid black;
-    height: 20px;
-    width: 50vh;
-    border-radius: 5px;
-  }
-`;
-
+//// component
 const SalesResistration = () => {
-  const [imageSrc, setImageSrc] = useState("");
+  const [imageSrc, setImageSrc] = useState<string>("");
   const [tokenName, setTokenName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
@@ -265,13 +282,21 @@ const SalesResistration = () => {
     } else if (file?.type.slice(0, 5) === "video") {
       return (
         <div>
-          <img className="file-logo" src="/essets/images/video-file.png" alt="video-file" />
+          <img
+            className="file-logo"
+            src="/essets/images/video-file.png"
+            alt="video-file"
+          />
         </div>
       );
     } else if (file?.type.slice(0, 5) === "audio") {
       return (
         <div>
-          <img className="file-logo" src="/essets/images/music-file.png" alt="audio-file" />
+          <img
+            className="file-logo"
+            src="/essets/images/music-file.png"
+            alt="audio-file"
+          />
         </div>
       );
     } else if (file) {
@@ -323,11 +348,20 @@ const SalesResistration = () => {
         </UploadBox>
         <NameInputBox>
           <p>작품이름*: </p>
-          <input type="text" onChange={onChangeTokenName} value={tokenName} />
+          <input
+            type="text"
+            onChange={onChangeTokenName}
+            value={tokenName}
+            spellCheck={false}
+          />
         </NameInputBox>
         <DescriptionInputBox>
           <p>작품설명 :</p>
-          <textarea onChange={onChangeDescription} value={description} />
+          <textarea
+            onChange={onChangeDescription}
+            value={description}
+            spellCheck={false}
+          />
         </DescriptionInputBox>
         <CategoryBox>
           <p>카테고리</p>
@@ -337,6 +371,14 @@ const SalesResistration = () => {
             onClick={handleModalOpen}
           />
         </CategoryBox>
+        <Categories>
+          {categories.map((category) => (
+            <p key={category} onClick={handleModalOpen}>
+              # {category}
+            </p>
+          ))}
+        </Categories>
+
         <ButtonBox>
           <button onClick={onClickSubmit}>작품등록</button>
         </ButtonBox>
@@ -344,6 +386,7 @@ const SalesResistration = () => {
       <CategoryModal
         visible={isOpen}
         onClose={handleModalClose}
+        openStateHandler={setIsOpen}
         setCategories={setCategories}
       ></CategoryModal>
     </Wrapper>

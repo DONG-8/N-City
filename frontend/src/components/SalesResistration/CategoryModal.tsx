@@ -1,15 +1,23 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import React, { ReactNode, useEffect, useState } from "react";
+import styled, { css, keyframes } from "styled-components";
 
-export type ModalBaseProps = {
+export interface ModalBaseProps {
   /** 모달에 들어갈 컴포넌트 */
   children?: ReactNode;
   /** 모달 창 생성 여부를 컨트롤할 변수 */
   visible: boolean;
   /** 닫기 버튼 혹은 백그라운드 클릭 시 실행할 함수 */
-  onClose: () => void;
-  setCategories: (categories:string[]) => void;
-};
+  onClose: React.MouseEventHandler<HTMLElement>;
+  setCategories: React.Dispatch<React.SetStateAction<string[]>>;
+  openStateHandler: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface Icategory {
+  category: {
+    name: string;
+    selected: boolean;
+  };
+}
 
 //// style
 // animations
@@ -32,7 +40,7 @@ const fadeOut = keyframes`
 `;
 
 const modalSettings = (visible: boolean) => css`
-  visibility: ${visible ? 'visible' : 'hidden'};
+  visibility: ${visible ? "visible" : "hidden"};
   z-index: 15;
   animation: ${visible ? fadeIn : fadeOut} 0.15s ease-out;
   transition: visibility 0.15s ease-out;
@@ -49,13 +57,13 @@ const Background = styled.div<{ visible: boolean }>`
 `;
 
 const ModalSection = styled.div<{ visible: boolean }>`
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   width: 600px;
   height: 55vh;
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 120%;
+  top: 80%;
   left: 50%;
   border: 2px solid black;
   border-radius: 10px;
@@ -73,34 +81,40 @@ const Title = styled.h1`
 `;
 
 const Divider = styled.hr`
-  border: solid 1px #FF865B;
+  border: solid 1px #ff865b;
   width: 65%;
   margin-bottom: 30px;
 `;
 
 const AddButton = styled.button`
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    background-color: #FF865B;
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-    padding: 10px 0;
-    width: 20%;
-    border-radius: 15px;
+  font-family: "Noto Sans KR", sans-serif;
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+  background-color: #ff865b;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px 0;
+  width: 150px;
+  height: 50px;
+  border-radius: 15px;
+  font-size: 20px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
   &:hover {
     font-weight: bold;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   }
   &:active {
-    background-color: #DE5D30;
+    background-color: #de5d30;
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
   }
-`
+`;
 
 const ExplaneText = styled.h3`
   font-size: 20px;
-  margin: 0 0 10px 10px;
-`
+  margin: 0 0 10px 20px;
+`;
 
 const CloseButton = styled.button`
   position: absolute;
@@ -115,63 +129,109 @@ const CloseButton = styled.button`
 
 const SelectCategory = styled.div`
   display: flex;
-  margin: 0 auto;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 auto 10px;
   border: 1px solid black;
+  border-radius: 15px;
   width: 90%;
-  height: 30%;
+  .active {
+    background-color: #ff865b;
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+  }
   button {
+    font-family: "Noto Sans KR", sans-serif;
+    font-weight: bold;
+    font-size: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
     border: 1px solid grey;
     border-radius: 10px;
-    padding: 5px;
-    margin: 3px;
+    padding: 13px;
+    margin: 5px 3px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     height: 20px;
     cursor: pointer;
     &:active {
-      background-color: grey;
+      background-color: #de5d30;
+      box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
     }
-    .selected {
-      background-color: red;
-    }
-
   }
-`
+`;
 
 const HashtagBox = styled.div`
   margin-left: 10px;
-`
+  p {
+    font-weight: bold;
+    display: inline-block;
+    margin: 5px 6px;
+  }
+`;
 
 //// component
-const CategoryModal = ({ children, visible, onClose, setCategories }: ModalBaseProps) => {
+const CategoryModal = ({
+  children,
+  visible,
+  onClose,
+  setCategories,
+  openStateHandler,
+}: ModalBaseProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
-  const categoryArr = [
+  const [selectedCategories, setSelectedCategories] = useState<
+    Icategory["category"][]
+  >([
     { name: "음악", selected: false },
     { name: "비디오", selected: false },
     { name: "오디오", selected: false },
-    { name: "동탁", selected: false },
-  ];
-  
-  const onClickSelect = (e:React.MouseEvent) => {
-    const newSelected = [...selectedCategories]
-    const temp = ((e.target as HTMLButtonElement).innerHTML)
-    const el = ((e.target as HTMLButtonElement).className)
-    
-    console.log(el)
-    
+    { name: "fsdaf", selected: false },
+    { name: "ㄴㅇㄻㄴㅇ", selected: false },
+    { name: "ㄴㅇ", selected: false },
+    { name: "ㄴㅇㄹㄴㅇ", selected: false },
+    { name: "ㄴㅇㄴㅇ", selected: false },
+    { name: "ㅁㄴㅇㄹ탁", selected: false },
+    { name: "동ㄴㅇㄹㄴㅇ", selected: false },
+    { name: "ㄹㄴㅇ", selected: false },
+    { name: "ㄴㄴㄴㄹㄴㅇ", selected: false },
+    { name: "ㅌㅊㅋㅍ", selected: false },
+    { name: "동ㅌㅊ", selected: false },
+    { name: "동ㅌㅋㅊㅍ탁", selected: false },
+  ]);
+
+  const onClickSelect = (category: { name: string; selected: boolean }) => {
+    // const newSelected = [...selectedCategories]
+    // const temp = ((e.target as HTMLButtonElement).innerHTML)
+    // const el = ((e.target as HTMLButtonElement).className)
+
+    console.log(category);
+    setSelectedCategories(
+      selectedCategories.map((item) =>
+        item.name === category.name
+          ? { ...item, selected: !item.selected }
+          : item
+      )
+    );
+    console.log(selectedCategories);
+
     // newSelected.push(temp)
     // setSelectedCategories(newSelected)
     // console.log(selectedCategories)
-  }
+  };
   // submit
-  const onClickAdd = (e:React.FormEvent) => {
+  const onClickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
+    const temp: any = selectedCategories
+      .filter((category) => {
+        if (category.selected) {
+          return category.name;
+        }
+      })
+      .map((category) => category.name);
+    setCategories(temp);
+    console.log(temp);
+    openStateHandler(false);
+  };
 
-  }
-  
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     if (visible) {
@@ -191,7 +251,6 @@ const CategoryModal = ({ children, visible, onClose, setCategories }: ModalBaseP
     return null;
   }
 
-
   return (
     <div>
       <Background visible={visible} onClick={onClose} />
@@ -201,13 +260,26 @@ const CategoryModal = ({ children, visible, onClose, setCategories }: ModalBaseP
         </CloseButton>
         <Title>카테고리 추가</Title>
         <Divider />
-        <ExplaneText>원하는 카테고리에 추가하세요.</ExplaneText>
+        <ExplaneText>원하는 카테고리를 추가하세요.</ExplaneText>
         <SelectCategory>
-          {categoryArr.map((category) => (
-            <button key={category.name}  onClick={onClickSelect}>{category.name}</button>
+          {selectedCategories.map((category) => (
+            <button
+              key={category.name}
+              className={category.selected ? "active" : ""}
+              onClick={() => onClickSelect(category)}
+            >
+              {category.name}
+            </button>
           ))}
         </SelectCategory>
-        <HashtagBox>#음악 #ㅇㅇ #ㅎㅎ</HashtagBox>
+        <HashtagBox>
+          {selectedCategories.map(
+            (category) =>
+              category.selected === true && (
+                <p key={category.name}># {category.name}</p>
+              )
+          )}
+        </HashtagBox>
         <AddButton type="submit" onClick={onClickAdd}>
           추가
         </AddButton>
