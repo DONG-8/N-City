@@ -27,5 +27,11 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
   }
+  html{
+    scroll-behavior: smooth;
+  }
+  li {
+    list-style-type : none 
+  }
 `;
 export default GlobalStyle;
