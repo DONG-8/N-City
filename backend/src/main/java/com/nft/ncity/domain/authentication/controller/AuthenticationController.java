@@ -81,7 +81,7 @@ public class AuthenticationController {
             @ApiResponse(code = 404, message = "인증요청 첨부파일 없음.")
     })
     public ResponseEntity<BaseResponseBody> AuthenticationRegister(@RequestBody AuthenticationRegisterPostReq authenticationRegisterPostReq,
-                                                                 @RequestParam List<MultipartFile> multipartFiles) {
+                                                                 @RequestParam MultipartFile multipartFiles) {
 
         // 0. 인증 등록 정보를 AuthenticationRegisterPostReq에 담고, 파일 정보를 Param으로 MultipartFiles에 담아 온다.
         // 1. 인증 등록 정보를 Authentication 테이블에 저장하고, 해당 인증 ID와 함께 인증 파일들을 AuthFile 테이블에 저장한다.

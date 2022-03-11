@@ -13,5 +13,5 @@ public interface AuthenticationService {
 
     Page<Authentication> getAuthenticationListByType(int authType, Pageable pageable);
    Authentication getAuthenticationDetailByAuthId(Long authId);
-   Authentication AuthenticationRegister(AuthenticationRegisterPostReq authenticationRegisterPostReq, List<MultipartFile> multipartFile);
+   Authentication AuthenticationRegister(AuthenticationRegisterPostReq authenticationRegisterPostReq, MultipartFile multipartFile);
 }

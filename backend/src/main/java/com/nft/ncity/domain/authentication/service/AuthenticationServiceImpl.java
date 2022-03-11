@@ -5,16 +5,14 @@ import com.nft.ncity.domain.authentication.db.entity.Authentication;
 import com.nft.ncity.domain.authentication.db.repository.AuthenticationRepository;
 import com.nft.ncity.domain.authentication.db.repository.AuthenticationRepositorySupport;
 import com.nft.ncity.domain.authentication.request.AuthenticationRegisterPostReq;
-import com.nft.ncity.domain.authentication.response.AuthenticationListGetRes;
-import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service("AuthenticationService")
 public class AuthenticationServiceImpl implements AuthenticationService{
@@ -41,8 +39,10 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         return authentication;
     }
 
+
     @Override
-    public Authentication AuthenticationRegister(AuthenticationRegisterPostReq authenticationRegisterPostReq, List<MultipartFile> multipartFile) {
+    @Transactional
+    public Authentication AuthenticationRegister(AuthenticationRegisterPostReq authenticationRegisterPostReq, MultipartFile multipartFile) {
 
         // 1. 인증 등록 정보를 Authentication 테이블에 저장하고, 해당 인증 ID와 함께 인증 파일들을 AuthFile 테이블에 저장한다.
         // 2. 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
@@ -56,16 +56,17 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
         Authentication savedAuthentication = authenticationRepository.save(authentication);
 
-        for(MultipartFile multi : multipartFile) {
-            AuthFile authFile = AuthFile.builder()
-                    .authId(savedAuthentication)
-                    .fileName(multi.getOriginalFilename())
-                    .fileSize(multi.getSize())
-                    .fileContentType(multi.getContentType())
-                    .fileUrl(multi.)
-                    .regDt(LocalDateTime.now())
-                    .build();
-        }
+        String fileurl = "";
+
+        AuthFile authFile = AuthFile.builder()
+                .authId(savedAuthentication)
+                .fileName(multipartFile.getOriginalFilename())
+                .fileSize(multipartFile.getSize())
+                .fileContentType(multipartFile.getContentType())
+                .fileUrl(multipartFile.)
+                .regDt(LocalDateTime.now())
+                .build();
+
 
 
         return null;
