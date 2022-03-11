@@ -32,4 +32,17 @@ public class AuthenticationRepositorySupport {
         return new PageImpl<Authentication>(authenticationQueryResults, pageable, authenticationQueryResults.size());
 
     }
+
+    public Authentication findAuthenticationDetailByAuthId(Long authId) {
+        Authentication authentication = jpaQueryFactory.select(qAuthentication)
+                .from(qAuthentication)
+                .where(qAuthentication.authId.eq(authId))
+                .fetchOne();
+
+        if(authentication.equals(null)) return null;
+
+        return authentication;
+
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.nft.ncity.domain.authentication.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @MappedSuperclass
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @EntityListeners(AuditingEntityListener.class)
@@ -21,22 +22,23 @@ public class Authentication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value="인증 ID")
     // 인증 id
-    Long authId = null;
+    private Long authId = null;
 
     // 이름
     @ApiModelProperty(value="이름")
-    String authName;
+    private String authName;
 
     // 이메일
     @ApiModelProperty(value="이메일")
-    String authEmail;
+    private String authEmail;
 
     // 신청일
     @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value="신청일")
-    LocalDateTime authRegAt;
+    private LocalDateTime authRegAt;
 
     // 인증 타입
     @ApiModelProperty(value="인증 타입")
-    int authType;
+    private int authType;
 }

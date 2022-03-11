@@ -1,0 +1,19 @@
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIA2PUTEOMXOEYJAW4Q
+      secretKey: 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
+    s3:
+      # bucket 이름
+      bucket: ncity
+    region:
+      # 리전
+      static: ap-northeast-2
+    stack:
+      auto: false
+# 파일 크기 설정
+spring:
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
