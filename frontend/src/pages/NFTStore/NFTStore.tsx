@@ -7,13 +7,12 @@ import ItemCard from '../../components/Card/ItemCard'
 
 const Title = styled.div`
   background-color: #F8D9CE ;
-  margin-top: 4vh ;
   display:flex ;
   justify-content:space-around;
   p{
     margin-top: 4vh;
     font-weight: 1000 ;
-
+    font-size: 1.5rem;
   }
 `
 const FilterBar = styled.div`
@@ -59,13 +58,34 @@ const CategoryBar = styled.div`
   margin: auto;
   width: 70% ;
   display: flex;
-  div{
-    flex:auto;
+  li{
+    margin: auto;
   }
   p{
     font-size:2.5vh;
     font-weight:1000;
     cursor: pointer;
+    transition: 0.3s;
+    position: relative;
+    text-align: center;
+  }
+  p::before{
+    content: "";
+    height: 5px;
+    width: 0px;
+    background-color: salmon;
+    border-radius: 10px;
+    transition: 0.3s;
+    position: absolute;
+    bottom: -0.5rem;
+  }
+  p:hover::before{
+    width: 100%;
+    background-color: salmon;
+  }
+  #category::before{
+    width: 100%;
+    background-color: salmon;
   }
 `
 const ItemCards = styled.div`
@@ -137,11 +157,12 @@ const NFTStore = () => {
       descreption:"Happy Club is the best Club all over the world. u know what? it is better to run out when i see u. cuase i'm too strong to keep ur house safe."},
   ])
   const [status,setStatus] = useState("items")
+  const [filter,setFilter] = useState("top")
   return (<>
     <Title>
       <h1>Store</h1>
       <div>
-        <p>소지금 : 356,321💎</p> 
+        <p>소지금 : 356,321<img alt="💎" style={{"height":"2.2vh"}} src="essets/images/ethereum.png"/></p> 
       </div>
     </Title>
 
@@ -153,12 +174,12 @@ const NFTStore = () => {
     </FilterBar>
 
     <CategoryBar>
-      <div><p>TOP</p></div>
-      <div><p>Art</p></div>
-      <div><p>Music</p></div>
-      <div><p>Photography</p></div>
-      <div><p>Sports</p></div>
-      <div><p>game</p></div>
+      <li><p id={filter==="top"?"category":""} onClick={()=>{setFilter("top")}}>TOP</p></li>
+      <li><p id={filter==="art"?"category":""} onClick={()=>{setFilter("art")}}>Art</p></li>
+      <li><p id={filter==="music"?"category":""} onClick={()=>{setFilter("music")}}>Music</p></li>
+      <li><p id={filter==="photography"?"category":""} onClick={()=>{setFilter("photography")}}>Photography</p></li>
+      <li><p id={filter==="sports"?"category":""} onClick={()=>{setFilter("sports")}}>Sports</p></li>
+      <li><p id={filter==="game"?"category":""} onClick={()=>{setFilter("game")}}>Game</p></li>
     </CategoryBar>
     {status==="items" &&
     <ItemCards>
