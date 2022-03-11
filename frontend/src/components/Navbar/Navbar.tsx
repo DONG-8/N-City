@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import PersonIcon from "@material-ui/icons/Person";
 
 const NavbarWrrap = styled.div`
   /* display: block; */
@@ -11,6 +12,7 @@ const NavbarWrrap = styled.div`
   background-color: white;
   border-color: black;
   border: solid;
+  border-width: 1px;
   margin-bottom: 80px;
   @font-face {
     font-family: "DungGeunMo";
@@ -47,11 +49,16 @@ const NavbarBox = styled.div`
     display: flex;
     flex-direction: row;
     /* margin: 0 2%; */
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
-    width: 40%;
+    width: 1000px;
     font-size: 20px;
     text-align: center;
+
+    .inner {
+      width: 120px;
+    }
+
     .game {
       display: flex;
       align-items: center;
@@ -74,6 +81,47 @@ const NavbarBox = styled.div`
         }
       }
     }
+
+    .profile {
+      width: 120px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .hide {
+        display: none;
+        width: 118px;
+        height: auto;
+        background-color: white;
+        color: black;
+        border: solid;
+        border-width: 1px;
+        position: absolute;
+        top: 80px;
+        margin-right: 1px;
+
+        div {
+          margin-top: 10px;
+          margin-bottom: 10px;
+        }
+      }
+    }
+
+    .profile:hover {
+      .hide {
+        display: block;
+        @keyframes fadein {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        animation: fadein 1s;
+      }
+    }
   }
 `;
 
@@ -83,40 +131,67 @@ const Empty = styled.div`
 `;
 
 export default function Navbar() {
+  const [isLogin, setIsLogin] = useState<Boolean>(false);
+
+  const goToGame = () => {
+    if (isLogin === true) {
+      alert("게임방입장예정");
+    } else {
+      alert("로그인을 먼저 진행 해 주세요");
+    }
+  };
+
   return (
     <>
       <NavbarWrrap>
         <NavbarBox>
           <div className="container">
-            <img
-              src="https://o.remove.bg/downloads/b7b9b8d2-3cdd-4710-ade8-ca63463d1ec1/image-removebg-preview.png"
-              alt="사진없노"
-            />
-            <div className="pageName">N-City</div>
+            <div>
+              <Link to="/">
+                <img src="essets/images/sakura.png" alt="사진없노" />
+              </Link>
+            </div>
+            <div className="pageName">
+              <Link to="/">N-City</Link>
+            </div>
           </div>
           <div className="secondContainer">
-            <Link to="/">
-              <p>메인</p>
-            </Link>
-            <Link to="login">
-              <p>로그인</p>
-            </Link>
-            <Link to="signup">
-              <p>회원가입</p>
-            </Link>
-            <Link to="faq">
+            <Link className="inner" to="faq">
               <p>FAQ</p>
             </Link>
-            <Link to="mypage">
-              <p>마이페이지</p>
-            </Link>
-            <Link to="store">
+
+            <Link className="inner" to="store">
               <p>store</p>
             </Link>
-            <div className="profile">
-              <p>프로필</p>
-            </div>
-            <div className="game">
+            {isLogin ? (
+              <div className="profile">
+                <PersonIcon></PersonIcon>
+                <p>000님</p>
+                <div className="hide">
+                  <div>
+                    <Link to="mypage">
+                      <p>마이페이지</p>
+                    </Link>
+                  </div>
+                  <div>
+                    <p>로그 아웃</p>
+                  </div>
+                  <div>
+                    <p>코인 충전</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <>
+                <Link className="inner" to="login">
+                  <p>로그인</p>
+                </Link>
+                {/* <Link className="inner" to="signup">
+                  <p>회원가입</p>
+                </Link> */}
+              </>
+            )}
+            <div className="game" onClick={() => goToGame()}>
               <p>Game Start</p>
             </div>
           </div>
