@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 // import { clearInterval } from 'timers';
 import ItemCard from "../../components/Card/ItemCard";
+import ListAltIcon from "@material-ui/icons/ListAlt";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import ArrowForward from "@material-ui/icons/ArrowForward";
 
 const MainBackGround = styled.div`
   /* margin-top: 80px; */
   /* top: 80px; */
-  width: 1921px;
+  width: 100%;
   height: 650px;
 `;
 
@@ -18,7 +21,7 @@ const MainBackImg = styled.img`
 `;
 
 const MainWrapper = styled.div`
-  width: 1921px;
+  width: 100%;
   display: flex;
 `;
 
@@ -113,10 +116,11 @@ const SubBanner = styled.div`
 const SubPagenationBanner = styled.div`
   position: absolute;
   width: 448px;
-  height: 30px;
+  height: 35px;
   display: flex;
   justify-content: flex-end;
-  margin: -30px 0 auto;
+  margin: -35px 0 auto;
+
   /* background-color: rgba(0,0,0,0.5); */
   color: white;
   .container {
@@ -140,7 +144,8 @@ const SubPagenationBanner = styled.div`
 
   button {
     background-color: rgba(0, 0, 0, 0.5);
-    width: 80px;
+    width: 35px;
+    height: 35px;
     color: white;
   }
 `;
@@ -168,6 +173,9 @@ const HotTokkenWrraper = styled.div`
   width: 100%;
   height: 100%;
   margin: 0 7.5%;
+  h1 {
+    width: 100%;
+  }
 `;
 
 const HotTokkenDiv = styled.div`
@@ -496,7 +504,7 @@ export default function Main() {
                 moveLeft();
               }}
             >
-              왼쪽
+              <ArrowBackIcon></ArrowBackIcon>
             </button>
             <div className="container">
               {images.map((value, idx) => {
@@ -544,12 +552,14 @@ export default function Main() {
                 moveRight();
               }}
             >
-              오른쪽
+              <ArrowForward></ArrowForward>
             </button>
             <button>
               {eventNumber + 1}/{images.length}
             </button>
-            <button>전체 이벤트 목록</button>
+            <button>
+              <ListAltIcon></ListAltIcon>
+            </button>
           </MainPagenationBanner>
         </MainBannerWrapper>
         <SubBannerWrraper>
@@ -577,7 +587,7 @@ export default function Main() {
                 moveSubLeft();
               }}
             >
-              왼쪽
+              <ArrowBackIcon></ArrowBackIcon>
             </button>
             <button>
               {subEventNumber + 1}/{subImages.length}
@@ -587,7 +597,7 @@ export default function Main() {
                 moveSubRight();
               }}
             >
-              오른쪽
+              <ArrowForward></ArrowForward>
             </button>
           </SubPagenationBanner>
           <SubBottomItem>
@@ -602,14 +612,14 @@ export default function Main() {
       <HotTokkenWrraper>
         <h1>Hot Tokken</h1>
         <HotTokkenDiv>
+          {/* <ItemCard></ItemCard>
           <ItemCard></ItemCard>
           <ItemCard></ItemCard>
           <ItemCard></ItemCard>
           <ItemCard></ItemCard>
           <ItemCard></ItemCard>
           <ItemCard></ItemCard>
-          <ItemCard></ItemCard>
-          <ItemCard></ItemCard>
+          <ItemCard></ItemCard> */}
         </HotTokkenDiv>
       </HotTokkenWrraper>
     </>
