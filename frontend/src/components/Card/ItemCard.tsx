@@ -1,50 +1,44 @@
 import React from 'react'
+import { useNavigate  } from 'react-router-dom'
 import styled from 'styled-components'
-
-const Cards = styled.div`
+import ether from './ethereum.png'
+const CardWrapper = styled.div`
   cursor: pointer;
   height: 400px;
-  width: 300px;
-  background-color: #F2DBDB;
+  width: 350px;
+  background-color: #ffffff;
   border-radius: 10px;
   box-shadow:1px 3px 7px  ;
   margin: 30px ;
-  .image{
-    img{
-    width:300px;
+  &:hover{
+    &{
+      transform:scale(1.01) ;
+    }
+    .buy{
+      visibility: visible ;
+      transition: 1s ;
+    }
+    .card_bottom{
+      background-color: #f8ede9;
+      transition: 0.1s ;
+    }
+  }
+`
+const Image = styled.div`
+  img{
+    width:350px;
     height:300px ;
     border-radius: 10px 10px 0 0 ;
     object-fit: cover;    
-
     }
-  }
-  .card_center{
-    display:flex ;
+`
+const CardCenter = styled.div`
+  display:flex ;
     height: 60px ;
     display: flex ;
-
-    .artist{
-        margin:0.2rem ;
-        font-weight: 1000 ;
-        margin-left: 0.5rem;
-    }
-    .title{
-      font-size:1.4rem;
-        margin: 0.1rem;
-        font-weight: 1000 ;   
-    }
-    .des_left{
-      margin-left:0.5rem ;
-      flex:6;
-    }
-    .des_right{
-      flex:4;
-      margin-top: 30px;
-      font-weight: 1000 ;
-    }
-  }
-  .card_bottom{
-    height:40px;
+`
+const CardBottom = styled.div`
+  height:40px;
     border-radius:0 0 10px 10px ;
     background-color: whitesmoke ;
     display: flex;
@@ -61,47 +55,70 @@ const Cards = styled.div`
       font-size:1.2rem ;
       margin: 7px ;
     }
-  }
-  &:hover{
-    &{
-      transform:scale(1.01) ;
-    }
-    .buy{
-      visibility: visible ;
-      transition: 1s ;
-    }
-    .card_bottom{
-      background-color: #f8ede9;
-      transition: 0.1s ;
-    }
-  }
 `
-const ItemCard = () => {
+const DesLeft = styled.div`
+  margin-left:0.5rem ;
+      flex:6;
+`
+const Artist = styled.div`
+    margin:0.2rem ;
+    font-weight: 1000 ;
+    margin-left: 0.5rem;
+`
+const DesRight = styled.div`
+  flex: 4;
+  margin-left: 70px;
+  margin-top: -25px;
+  font-weight: 1000;
+  font-size: 2rem;
+
+`;
+const Title = styled.div`
+  font-size: 1.4rem;
+  margin: 0.1rem;
+  font-weight: 1000;
+`;
+interface Iprops{
+  item :{
+    name:string,
+    title:string,
+    price:number,
+    liked:number,
+    url:string
+  }
+}
+
+const ItemCard:React.FC<Iprops>= ({item}) => {
+  const navigate = useNavigate()
+  const goDetailPage = ()=>{
+    navigate('/store/detail')
+    localStorage.setItem("item",JSON.stringify(item))
+  }
   return (
     <>
-      <Cards>
-        <div className='image'>
+      <CardWrapper onClick={()=>{goDetailPage()}}>
+        <Image>
           <img alt="pic" 
-          src='https://lh3.googleusercontent.com/MmtavcUNNiTpLFfDqqol8pwp1_TKSEv0AbkKSxmN2lffhgYtkxAdfAo72lZVSJ4hpRW87s9TCL-HYMEIpaJ8PdgWBQWVlPsMZkgM6A=w305'/>
-        </div>
-        <div className='card_center'>
-          <div className='des_left'>
-            <div className='artist'>
-              Hong Hosus
-            </div>
-            <div className='title'>
-              #Hong1535
-            </div>
-          </div>
-          <div className='des_right'>
-            1.24 💎
-          </div>
-        </div>
-        <div className='card_bottom'>
+          src={item.url}/>
+        </Image>
+        <CardCenter>
+          <DesLeft>
+            <Artist>
+              {item.name}
+            </Artist>
+            <Title>
+              {item.title}
+            </Title>
+          </DesLeft>
+          <DesRight>
+            <p className='number'> <img alt="💎" style={{"height":"2.5vh"}} src={ether}/>{item.price}</p>
+          </DesRight>
+        </CardCenter>
+        <CardBottom>
           <div className='buy'>Buy Now</div>
-          <div className='like'>❤ 35</div>
-        </div>
-      </Cards>
+          <div className='like'>❤ {item.liked}</div>
+        </CardBottom>
+      </CardWrapper>
     </>
   )
 }
