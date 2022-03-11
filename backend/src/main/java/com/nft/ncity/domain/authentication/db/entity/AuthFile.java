@@ -1,5 +1,6 @@
 package com.nft.ncity.domain.authentication.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -40,6 +41,7 @@ public class AuthFile {
     private String fileUrl;
 
     @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value="파일 생성일")
     private LocalDateTime regDt;
 }
