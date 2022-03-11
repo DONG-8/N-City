@@ -7,6 +7,7 @@ import Login from './pages/Login/Login';
 import Apply from './pages/Apply/Apply';
 import GlobalStyle from './styles/global';
 import DetailItem from './pages/NFTStore/DetailItem';
+import SalesResistration from './pages/SalesResistration/SalesResistration';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/apply" element={<Apply />}/>
           <Route path="/store" element={<NFTStore />}/>
           <Route path="/store/detail" element={<DetailItem />}/>
+          <Route path="/SalesResistration" element={<SalesResistration />}/>
         </Routes>
         <Footer />
       </BrowserRouter>
