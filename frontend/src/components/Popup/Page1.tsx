@@ -15,7 +15,7 @@ const BlockContent = styled.div`
 const BlockFooter = styled.div`
   width: 100%;
   height: 10%;
-  background-color: pink;
+  background-color: #f2dbdb;
 `;
 
 const MainContent = styled.div`
@@ -27,17 +27,49 @@ const MainContent = styled.div`
     width: 40%;
     height: 100%;
     color: black;
+    margin-left: 100px;
+    h1 {
+      margin-top: 100px;
+      font-size: 100px;
+    }
+
+    h2 {
+      margin-top: 10px;
+      font-size: 30px;
+    }
+
+    button {
+      margin: 120px 20px 120px;
+      border: solid 1px #ffaa98;
+      padding: 10px 50px;
+      border-radius: 10px;
+      background: linear-gradient(-45deg, #ffaa98, #fef0d3, #fddfd2, #ff9788);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    }
   }
 
   .two {
     width: 60%;
-    height: 700px;
+    height: 50vh;
     color: green;
     img {
       width: 45.5vw;
+      height: 72vh;
       position: absolute;
-      top: 10%;
-      right: 6%;
+      top: 9.2%;
+      right: 4%;
     }
   }
 `;
@@ -45,7 +77,7 @@ const MainContent = styled.div`
 const Circle = styled.div`
   position: absolute;
   top: 5%;
-  right: 20%;
+  right: 15%;
   width: 39vw;
   height: 78.5vh;
   border-radius: 50%;
@@ -54,12 +86,25 @@ const Circle = styled.div`
 `;
 
 const ImgBox = styled.div`
-  width: 30vw;
-  height: 30vh;
+  width: 33.5vw;
+  height: 39.5vh;
   background-color: gray;
   position: absolute;
-  top: 16.6%;
-  right: 15.5%;
+  top: 15%;
+  right: 10%;
+  background-image: url("essets/images/dote.gif");
+  background-size: 100%;
+`;
+
+const ImgBox2 = styled.div`
+  position: absolute;
+  width: 33.5vw;
+  height: 40vh;
+  background-color: yellow;
+  background-image: url("essets/images/login_background.png");
+  background-size: 33.5vw;
+  top: 35%;
+  right: 35%;
 `;
 
 const BottomWrapper = styled.div`
@@ -94,6 +139,7 @@ const Page1 = () => {
           </div>
           <div className="two">
             <Circle></Circle>
+            <ImgBox2></ImgBox2>
             <img src="essets/images/moniter.png" alt="사진없노"></img>
             <ImgBox></ImgBox>
           </div>
