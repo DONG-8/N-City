@@ -30,6 +30,10 @@ dependencies {
 	// swagger
 	implementation("io.springfox:springfox-swagger2:3.0.0")
 	implementation("io.springfox:springfox-swagger-ui:3.0.0")
+	//
+	implementation("io.springfox:springfox-data-rest:3.0.0")
+	implementation("io.springfox:springfox-bean-validators:3.0.0")
+	implementation("io.springfox:springfox-boot-starter:3.0.0")
 
 	// Querydsl 추가 시작
 	implementation 'com.querydsl:querydsl-jpa'

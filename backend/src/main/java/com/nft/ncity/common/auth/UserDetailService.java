@@ -1,13 +1,11 @@
 package com.nft.ncity.common.auth;
 
+import com.nft.ncity.domain.user.db.entity.User;
+import com.nft.ncity.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-
-import com.ssafy.api.service.UserService;
-import com.ssafy.db.entity.User;
-import com.ssafy.db.repository.UserRepository;
 
 
 /**
@@ -15,6 +13,7 @@ import com.ssafy.db.repository.UserRepository;
  */
 @Component
 public class UserDetailService implements UserDetailsService{
+
 	@Autowired
 	UserService userService;
 	
