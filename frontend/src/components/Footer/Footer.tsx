@@ -1,11 +1,11 @@
-import React from 'react';
-import { FooterBlock } from './Footer.style';
+import React from "react";
+import { FooterBlock, FooterWrapper } from "./Footer.style";
 export default function Footer() {
   return (
-    <div>
+    <FooterWrapper>
       <FooterBlock>
-        COPYRIGHT ©남현동 싹쓸어. All rights reserved.
+        <div>COPYRIGHT ©남현동 싹쓸어. All rights reserved.</div>
       </FooterBlock>
-    </div>
+    </FooterWrapper>
   );
 }
