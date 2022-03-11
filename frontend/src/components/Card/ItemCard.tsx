@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate  } from 'react-router-dom'
 import styled from 'styled-components'
-
+import ether from './ethereum.png'
 const CardWrapper = styled.div`
   cursor: pointer;
   height: 400px;
@@ -66,15 +66,18 @@ const Artist = styled.div`
     margin-left: 0.5rem;
 `
 const DesRight = styled.div`
-  flex:4;
-      margin-top: 30px;
-      font-weight: 1000 ;
-`
+  flex: 4;
+  margin-left: 70px;
+  margin-top: -25px;
+  font-weight: 1000;
+  font-size: 2rem;
+
+`;
 const Title = styled.div`
-  font-size:1.4rem;
-        margin: 0.1rem;
-        font-weight: 1000 ; 
-`
+  font-size: 1.4rem;
+  margin: 0.1rem;
+  font-weight: 1000;
+`;
 interface Iprops{
   item :{
     name:string,
@@ -108,7 +111,7 @@ const ItemCard:React.FC<Iprops>= ({item}) => {
             </Title>
           </DesLeft>
           <DesRight>
-            {item.price}💎
+            <p className='number'> <img alt="💎" style={{"height":"2.5vh"}} src={ether}/>{item.price}</p>
           </DesRight>
         </CardCenter>
         <CardBottom>

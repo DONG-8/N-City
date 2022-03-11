@@ -5,6 +5,7 @@ import ItemCard from "../../components/Card/ItemCard";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForward from "@material-ui/icons/ArrowForward";
+import Popup from "../../components/Popup/Popup";
 
 const MainBackGround = styled.div`
   /* margin-top: 80px; */
@@ -478,6 +479,7 @@ export default function Main() {
 
   return (
     <>
+      <Popup></Popup>
       <MainBackGround>
         <MainBackImg src="https://post-phinf.pstatic.net/MjAyMDEyMjJfMjc0/MDAxNjA4NjQ0MzExMzM4.BKpiZi7BKqbKceFNFAg0mB1JUZXGsGiDZsB2shTf2NYg.w-SkrTWCzjoyLu_-9moNkS3ZUGu0FljmpuuE-JMJRRwg.GIF/tumblr_nm6j1ghB7C1qze3hdo1_500.gif?type=w1200" />
       </MainBackGround>
