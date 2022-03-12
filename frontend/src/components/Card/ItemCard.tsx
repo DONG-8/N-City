@@ -2,6 +2,9 @@ import React from 'react'
 import { useNavigate  } from 'react-router-dom'
 import styled from 'styled-components'
 import ether from './ethereum.png'
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+
 const CardWrapper = styled.div`
   cursor: pointer;
   height: 400px;
@@ -53,8 +56,16 @@ const CardBottom = styled.div`
     }
     .like{
       font-size:1.2rem ;
+      font-weight:1000;
       margin: 7px ;
+      display: flex;
     }
+    .icon{
+    cursor: pointer;
+    &:hover{
+      transform: scale(1.1);
+    }
+  }
 `
 const DesLeft = styled.div`
   margin-left:0.5rem ;
@@ -116,7 +127,13 @@ const ItemCard:React.FC<Iprops>= ({item}) => {
         </CardCenter>
         <CardBottom>
           <div className='buy'>Buy Now</div>
-          <div className='like'>❤ {item.liked}</div>
+          <div className='like'>
+            <div className='icon'>
+              {/* <FavoriteIcon  color='error'/>  */}
+              <FavoriteBorderIcon color='error'/> 
+            </div> 
+              {item.liked}
+          </div>
         </CardBottom>
       </CardWrapper>
     </>

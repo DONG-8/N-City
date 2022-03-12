@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { IState } from '../NFTStore/NFTStore';
 import ItemCard from '../../components/Card/ItemCard';
 import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 const MypageWrapper = styled.div`
   box-shadow: 1px 3px 7px;
 `
@@ -135,6 +136,9 @@ const GotoSetting = styled.div`
   button{
     font-weight: 1000;
     background-color:salmon;
+    width: 8vw;
+    height: 5vh;
+    font-size: 2vh;
     &:hover{
       transition: 0.2s;
       background-color: coral;
@@ -142,6 +146,7 @@ const GotoSetting = styled.div`
   }
 `
 export default function Mypage() {
+  const navigate = useNavigate()
   const [items,setItems] = useState<IState["item"]>([
     {id:1,name:"Hong Hosus",title:"#Hong1535",price:1.24,liked:35,url:'https://lh3.googleusercontent.com/MmtavcUNNiTpLFfDqqol8pwp1_TKSEv0AbkKSxmN2lffhgYtkxAdfAo72lZVSJ4hpRW87s9TCL-HYMEIpaJ8PdgWBQWVlPsMZkgM6A=w305'},
     {id:2,name:"Giks Home",title:"#ghe23434",price:1.35,liked:43,url:'https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352'},
@@ -191,7 +196,8 @@ export default function Mypage() {
             </div>
           </div>
         </Wallet>
-        <GotoSetting><Button color="warning" variant="contained">프로필 수정</Button></GotoSetting>
+        <GotoSetting><Button onClick={()=>{navigate('/profilesetting')}}
+        color="warning" variant="contained">프로필 수정</Button></GotoSetting>
       </ProfileWrapper>
         <FilterBar>
           <div className='allPicture'  ><p>내가 가진 </p></div>

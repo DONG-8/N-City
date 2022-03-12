@@ -5,9 +5,14 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ItemCard from '../../components/Card/ItemCard';
-
+import Background from '../../components/Card/Background';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 const etherURL = '/essets/images/ethereum.png'
+
+const Wrapper = styled.div`
+`
 const DetailPage = styled.div`
   width: 1500px ;
   margin: auto ;
@@ -29,6 +34,12 @@ const DetailItemCard = styled.div`
     justify-content: end;
     margin-right:1vw ;
     font-size:1.5rem ;
+  }
+  .icon{
+    cursor: pointer;
+    &:hover{
+      transform: scale(1.1);
+    }
   }
 `
 const Top = styled.div`
@@ -136,7 +147,7 @@ const ArtistMore = styled.div`
   background-color: #fbe9e1;
   box-shadow:1px 3px 7px ;
   width: 83.5%;
-  height: 70vh ;
+  height: 600px ;
   margin: auto ;
   margin-top: 10vh ;
   border-radius: 10px ;
@@ -167,6 +178,7 @@ const Head = styled.div`
     font-size:1.5rem;
   }
 `
+
 interface IProps{
   item :{
     id:number,
@@ -203,11 +215,19 @@ const DetailItem = () => {
     window.scrollTo(0,0)
   },[change])
   return (
+    <Wrapper>
+      <Background imgsrc='https://cdn.notefolio.net/img/d7/5b/d75bf02e2a35f76dba6ed5eeccde793c45d74edd83df838e31290603ceb5c5c9_v1.jpg' />
       <DetailPage>
         <Top>
           <DetailItemCard>
             <img alt ="pic" src={item.url}/>
-            <div className='like'> ❤ {item.liked}</div>
+            <div className='like'>
+              <div className='icon'>
+                {/* <FavoriteIcon fontSize='large' color='error'/>  */}
+                <FavoriteBorderIcon fontSize='large' color='error'/> 
+              </div> 
+              {item.liked}
+            </div>
           </DetailItemCard>
           <Description>
             <Artist>
@@ -311,6 +331,7 @@ const DetailItem = () => {
           </ArtistMore>
         </Bottom>
       </DetailPage>
+      </Wrapper>
   )
 }
 
