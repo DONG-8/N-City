@@ -9,6 +9,8 @@ import GlobalStyle from './styles/global';
 import DetailItem from './pages/NFTStore/DetailItem';
 import SalesResistration from './pages/SalesResistration/SalesResistration';
 import ProfileSetting from './pages/Mypage/ProfileSetting';
+import EventPage from './pages/FAQ/EventPage';
+import EventDetail from './pages/FAQ/EventDetail';
 function App() {
   return (
     <>
@@ -27,6 +29,8 @@ function App() {
           <Route path="/store/detail" element={<DetailItem />}/>
           <Route path="/SalesResistration" element={<SalesResistration />}/>
           <Route path="/profilesetting" element={<ProfileSetting />}/>
+          <Route path="/event" element={<EventPage />}/>
+          <Route path="/event/detail" element={<EventDetail />}/>
         </Routes>
         <Footer />
       </BrowserRouter>
