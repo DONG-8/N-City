@@ -55,9 +55,9 @@ const Event = styled.div`
 
 const EventPage = () => {
   const events = [
-    {title:"서울브랜드파트너스가 선물을 드려요",url:"https://brand.seoul.go.kr/data/2021/mgdat/BK010/kor/BK010_1635904889332.jpg",date:"2021.12.22 06:00 ~ 03.16 06:00",content:""},
-    {title:"복지로는 ???이다",url:"https://t1.daumcdn.net/cfile/tistory/23413A45574E315F25",date:"2021.12.22 06:00 ~ 03.16 06:00",content:""},
-    {title:"서울브랜드파트너스가 선물을 드려요",url:"http://www.dailycc.net/news/photo/202012/626599_508066_0946.jpg",date:"2021.12.22 06:00 ~ 03.16 06:00",content:""},
+    {title:"서울브랜드파트너스가 선물을 드려요",url:"https://www.fetv.co.kr/data/photos/20210938/art_16324402689008_18ca02.jpg",date:"2021.12.22 06:00 ~ 03.16 06:00",content:""},
+    {title:"복지로는 ???이다",url:"https://asia.playstation.com/content/dam/pscom/kr/latest-news/FY19/12/20191220-holiday-luckydraw-16x9-2.jpg",date:"2021.12.22 06:00 ~ 03.16 06:00",content:""},
+    {title:"서울브랜드파트너스가 선물을 드려요",url:"https://www.culture.go.kr/assets/images/content/borad_event_img7.jpg",date:"2021.12.22 06:00 ~ 03.16 06:00",content:""},
     {title:"복지로는 ???이다",url:"https://s3.ap-northeast-2.amazonaws.com/coinone-talk-share/20211101/notice_thread_1635760564981.8904.png",date:"2021.12.22 06:00 ~ 03.16 06:00",content:""},
   ]
   const navigate = useNavigate()
