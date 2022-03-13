@@ -77,7 +77,7 @@ const Circle = styled.div`
   height: 600px;
   border-radius: 300px;
   /* background-color: #faebeb; */
-  background-color: blue;
+  background-color: #ffc9ad;
   /* margin: 0%; */
   z-index: 1;
 `;
@@ -85,7 +85,7 @@ const Circle = styled.div`
 const ImgBox = styled.div`
   width: 640px;
   height: 350px;
-  background-color: gray;
+  background-color: #fffbd8;
   position: relative;
   background-image: url("essets/images/dote.gif");
   background-size: 100%;

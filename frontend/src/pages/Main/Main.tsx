@@ -310,6 +310,8 @@ export default function Main() {
   const [subEventNumber, setSubEventNumber] = useState<number>(0);
   const [subCheck, setSubCheck] = useState<number>(0);
 
+  const [exitPopup, setExitPopup] = useState<Boolean>(false);
+
   // 나중에 DB 기반의 데이터 형성시켜주고 이미지 받아오기 아니면 그냥 여기서 사용
   const images = [
     {
