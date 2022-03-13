@@ -12,7 +12,7 @@ const NavbarWrrap = styled.div`
   background-color: white;
   border-color: black;
   border: solid;
-  border-width: 1px;
+  border-width: 0 0 1px 0;
   margin-bottom: 80px;
   @font-face {
     font-family: "DungGeunMo";
@@ -52,6 +52,7 @@ const NavbarBox = styled.div`
     justify-content: flex-end;
     align-items: center;
     width: 1000px;
+    min-width: 1000px;
     font-size: 20px;
     text-align: center;
 
