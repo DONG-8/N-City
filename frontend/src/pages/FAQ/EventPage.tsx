@@ -7,6 +7,7 @@ const Wrapper = styled.div`
   margin: auto;
   margin-top: 5vh;
   margin-bottom: 10vh;
+  
 `
 const Header = styled.div`
   text-align: center;
@@ -22,6 +23,7 @@ const Events = styled.div`
   flex-wrap: wrap;
 `
 const Event = styled.div`
+  border-radius: 10px;
   margin: auto;
   margin-top: 10vh;
   border:1px solid black;
@@ -30,6 +32,7 @@ const Event = styled.div`
   width: 40%;
   cursor: pointer;
   img{
+    border-radius: 10px 10px 0 0 ;
     width: 100%;
     height: 37vh;
     object-fit:fill;
