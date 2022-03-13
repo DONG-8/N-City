@@ -8,7 +8,7 @@ import Apply from './pages/Apply/Apply';
 import GlobalStyle from './styles/global';
 import DetailItem from './pages/NFTStore/DetailItem';
 import SalesResistration from './pages/SalesResistration/SalesResistration';
-
+import ProfileSetting from './pages/Mypage/ProfileSetting';
 function App() {
   return (
     <>
@@ -26,6 +26,7 @@ function App() {
           <Route path="/store" element={<NFTStore />}/>
           <Route path="/store/detail" element={<DetailItem />}/>
           <Route path="/SalesResistration" element={<SalesResistration />}/>
+          <Route path="/profilesetting" element={<ProfileSetting />}/>
         </Routes>
         <Footer />
       </BrowserRouter>

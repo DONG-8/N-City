@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 interface Iprops{
@@ -60,8 +61,13 @@ const CardBottom = styled.div`
 `
 
 const ArtistCard:React.FC<Iprops> = ({artist}) => {
+  const navigate = useNavigate()
+  const goMyPage = ()=>{
+    navigate('/mypage')
+    localStorage.setItem("item",JSON.stringify(artist))
+  }
   return (<>
-    <Cards>
+    <Cards onClick={()=>{goMyPage()}}>
         <SumnailImg>
           <img alt="pic" 
           src={artist.sumnailImg}/>
