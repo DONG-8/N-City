@@ -13,51 +13,49 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.h1`
+  margin-top: 60px;
+  font-size: 50px;
   span {
-    color: #ff865b;
+    color: #ff7543;
   }
 `;
 
 const ExplaneBox = styled.div`
   p {
+    font-size: 20px;
     margin: 0;
   }
 `;
 
 const UploadBox = styled.div`
-  .file-label {
+  label {
     position: relative;
     display: flex;
     flex-direction: column;
     margin-top: 30px;
-    background-color: #e5e5e5;
     color: black;
     justify-content: center;
     align-items: center;
     padding: 10px 0;
     width: 500px;
-    height: 300px;
+    height: 310px;
+    border: 3px dashed lightgray;
     border-radius: 15px;
     cursor: pointer;
-    &:active {
-      background-color: #de5d30;
-    }
-    p {
-      position: absolute;
-      bottom: 22%;
-    }
     div {
-      /* width: inherit;
-      height: inherit; */
       img {
         max-width: 480px;
-        max-height: 300px;
+        max-height: 310px;
         object-fit: cover;
       }
-      .file-logo {
-        width: 150px;
-        height: auto;
+      video {
+        max-width: 490px;
+        max-height: 310px;
+        object-fit: cover;
       }
+    }
+    audio {
+      width: 420px;
     }
   }
   .file {
@@ -65,28 +63,32 @@ const UploadBox = styled.div`
   }
   .file-name {
     position: absolute;
-    margin-top: 5px;
-    margin-left: 5px;
+    margin-top: -32px;
+    margin-left: 10px;
     font-weight: bold;
+    font-size: 18px;
     color: #de5d30;
   }
+`;
+
+const Change = styled.div`
+  font-weight: 500;
+  font-size: 20px;
 `;
 
 const FormBox = styled.form``;
 
 const NameInputBox = styled.div`
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
+  font-weight: 500;
+  font-size: 25px;
+  margin-top: 50px;
   input {
-    border: 1px solid grey;
+    border: 1px solid lightgray;
     border-radius: 5px;
     height: 20px;
     width: 300px;
-    margin-left: 10px;
-    background-color: #e5e5e5;
-    font-size: 15px;
+    padding: 7px;
+    font-size: 16px;
     font-family: inherit;
     :focus {
       outline: none;
@@ -101,7 +103,9 @@ const Categories = styled.div`
   p {
     box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
       rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
-    background-color: #ff865b;
+    background-color: white;
+    border: 1px solid #ff865b;
+    color: #ff865b;
     font-weight: bold;
     font-size: 15px;
     display: flex;
@@ -119,19 +123,20 @@ const Categories = styled.div`
 `;
 
 const DescriptionInputBox = styled.div`
-  font-weight: bold;
+  font-weight: 500;
+  margin-top: 30px;
+  font-size: 25px;
   p {
     margin-top: 8px;
   }
   textarea {
-    border: 1px solid grey;
+    border: 1px solid lightgray;
     border-radius: 5px;
     width: 80vw;
     height: 100px;
-    background-color: #e5e5e5;
     resize: none;
     font-family: inherit;
-    font-size: 15px;
+    font-size: 16px;
     :focus {
       outline: none;
     }
@@ -141,17 +146,19 @@ const DescriptionInputBox = styled.div`
 const CategoryBox = styled.div`
   display: flex;
   align-items: center;
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 25px;
+  margin-top: 20px;
   img {
     display: inline;
     margin-left: 10px;
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     border-radius: 10px;
     cursor: pointer;
     &:hover {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       transition: all 0.08s ease-out;
     }
     &:active {
@@ -163,7 +170,7 @@ const CategoryBox = styled.div`
 const ButtonBox = styled.div`
   display: flex;
   justify-content: center;
-  margin: 20px auto 100px;
+  margin: 30px auto 200px;
   button {
     font-family: "Noto Sans KR", sans-serif;
     position: absolute;
@@ -191,13 +198,20 @@ const ButtonBox = styled.div`
   }
 `;
 
+const Plus = styled.div`
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z' fill='rgba(255,134,91,1)'/%3E%3C/svg%3E");
+  width: 100px;
+  height: 100px;
+`;
+
 //// component
 const SalesResistration = () => {
-  const [imageSrc, setImageSrc] = useState<string>("");
+  const [fileSrc, setFileSrc] = useState<string>("");
   const [tokenName, setTokenName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
   const [file, setFile] = useState<any>();
+  const [isVideo, setIsVideo] = useState(false);
 
   // category modal
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -247,7 +261,7 @@ const SalesResistration = () => {
     }
     return new Promise(() => {
       reader.onload = () => {
-        setImageSrc(reader.result);
+        setFileSrc(reader.result);
       };
     });
   };
@@ -264,7 +278,6 @@ const SalesResistration = () => {
 
   const handleFileOnChange = (e: React.ChangeEvent) => {
     setFile((e.target as HTMLInputElement).files?.item(0));
-
     console.log((e.target as HTMLInputElement).files?.item(0));
     if ((e.target as HTMLInputElement).files) {
       encodeFileToBasek64((e.target as HTMLInputElement).files?.item(0));
@@ -276,64 +289,59 @@ const SalesResistration = () => {
       return (
         <div className="preview">
           {" "}
-          {imageSrc && <img src={imageSrc} alt="preview-img" />}{" "}
+          {fileSrc && <img src={fileSrc} alt="preview-img" />}{" "}
         </div>
       );
     } else if (file?.type.slice(0, 5) === "video") {
       return (
         <div>
-          <img
-            className="file-logo"
-            src="/essets/images/video-file.png"
-            alt="video-file"
-          />
+          <video src={fileSrc} controls></video>
         </div>
       );
     } else if (file?.type.slice(0, 5) === "audio") {
       return (
         <div>
-          <img
-            className="file-logo"
-            src="/essets/images/music-file.png"
-            alt="audio-file"
-          />
+          <audio src={fileSrc} controls></audio>
         </div>
       );
     } else if (file) {
       alert("부적절한 파일입니다.");
       return (
         <div>
-          <img src="/essets/images/plus_image.png" alt="fileimage" />
-          <p>파일 업로드</p>
+          <Plus></Plus>
         </div>
       );
     } else {
       return (
         <div>
-          <img src="/essets/images/plus_image.png" alt="fileimage" />
-          <p>파일 업로드</p>
+          <Plus></Plus>
         </div>
       );
     }
   };
+
+  useEffect(() => {
+    if (
+      file?.type.slice(0, 5) === "video"
+    ) {
+      setIsVideo(true);
+    } else {
+      setIsVideo(false);
+    }
+  }, [file]);
 
   return (
     <Wrapper>
       <Title>
         <span>NFT </span>작품 등록하기
       </Title>
-      <ExplaneBox>
-        <p>*필수</p>
-        <p>사진, 비디오, 오디오 </p>
-        <br />
-        <p className="secondpart">100MB 를 넘기지않는</p>
-        <p>PG,PNG,GIF,SVG,MP4,MP3</p>
-        <p>파일만 가능합니다.</p>
-      </ExplaneBox>
       <FormBox>
         <UploadBox>
-          <label className="file-label" htmlFor="chooseFile">
+          <p className="file-name">{file?.name}</p>
+          <label className={file?.type.slice(0, 5)} htmlFor="chooseFile">
             {previewImage()}
+            {file?.type.slice(0, 5) === "video"}
+            {isVideo && <Change>Change</Change>}
           </label>
           <input
             className="file"
@@ -342,8 +350,12 @@ const SalesResistration = () => {
             accept="audio/*, video/*, image/*"
             onChange={handleFileOnChange}
           ></input>
-          <p className="file-name">{file?.name}</p>
           <br></br>
+          <ExplaneBox>
+            <p className="secondpart">100MB를 넘지않는</p>
+            <p>JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG</p>
+            <p>파일만 가능합니다.</p>
+          </ExplaneBox>
           {/* {file?.type.slice(0, 5)} */}
         </UploadBox>
         <NameInputBox>
