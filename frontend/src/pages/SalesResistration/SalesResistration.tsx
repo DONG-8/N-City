@@ -23,7 +23,7 @@ const ExplaneBox = styled.div`
 `;
 
 const UploadBox = styled.div`
-  .file-label {
+  label {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -52,7 +52,11 @@ const UploadBox = styled.div`
         max-height: 300px;
         object-fit: cover;
       }
-
+      video {
+        max-width: 480px;
+        max-height: 300px;
+        object-fit: cover;
+      }
       .file-logo {
         width: 150px;
         height: auto;
@@ -68,6 +72,10 @@ const UploadBox = styled.div`
     margin-left: 5px;
     font-weight: bold;
     color: #de5d30;
+  }
+  .video {
+  }
+  .audio {
   }
 `;
 
@@ -102,7 +110,7 @@ const DescriptionInputBox = styled.div`
     width: 80vw;
     height: 100px;
     background-color: #e5e5e5;
-    resize:none;
+    resize: none;
     :focus {
       outline: none;
     }
@@ -176,7 +184,7 @@ const TextInputBox = styled.div`
 `;
 
 const SalesResistration = () => {
-  const [imageSrc, setImageSrc] = useState("");
+  const [fileSrc, setFileSrc] = useState("");
   const [tokenName, setTokenName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
@@ -230,7 +238,7 @@ const SalesResistration = () => {
     }
     return new Promise(() => {
       reader.onload = () => {
-        setImageSrc(reader.result);
+        setFileSrc(reader.result);
       };
     });
   };
@@ -259,19 +267,21 @@ const SalesResistration = () => {
       return (
         <div className="preview">
           {" "}
-          {imageSrc && <img src={imageSrc} alt="preview-img" />}{" "}
+          {fileSrc && <img src={fileSrc} alt="preview-img" />}{" "}
         </div>
       );
     } else if (file?.type.slice(0, 5) === "video") {
       return (
         <div>
-          <img className="file-logo" src="/essets/images/video-file.png" alt="video-file" />
+          {/* <img className="file-logo" src="/essets/images/video-file.png" alt="video-file" /> */}
+          <video src={fileSrc} controls></video>
         </div>
       );
     } else if (file?.type.slice(0, 5) === "audio") {
       return (
         <div>
-          <img className="file-logo" src="/essets/images/music-file.png" alt="audio-file" />
+          {/* <img className="file-logo" src="/essets/images/music-file.png" alt="audio-file" /> */}
+          <audio src={fileSrc} controls></audio>
         </div>
       );
     } else if (file) {
@@ -297,6 +307,7 @@ const SalesResistration = () => {
       <Title>
         <span>NFT </span>작품 등록하기
       </Title>
+
       <ExplaneBox>
         <p>*필수</p>
         <p>사진, 비디오, 오디오 </p>
@@ -307,7 +318,7 @@ const SalesResistration = () => {
       </ExplaneBox>
       <FormBox>
         <UploadBox>
-          <label className="file-label" htmlFor="chooseFile">
+          <label className={file?.type.slice(0, 5)} htmlFor="chooseFile">
             {previewImage()}
           </label>
           <input
