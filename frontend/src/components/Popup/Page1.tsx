@@ -1,19 +1,26 @@
 import React from "react";
 import styled from "styled-components";
 
-const oneWrapper = styled.div`
+const Wrapper = styled.div`
   width: 100%;
+  height: 900px;
   height: 100%;
+  background-color: #f2dbdb;
+  background-image: url("https://mblogthumb-phinf.pstatic.net/MjAxODA1MjlfOCAg/MDAxNTI3NTcwODY5ODc5.iMrWUglAiT5Ik9ijZM0mSYL6KfPPpes8xaKQTUqvW0Ig.RT-Ki2uWaVl7HIAYXsdB1RO2P5pj5NvVyttt2fHRzL0g.GIF.rlfjrl24/%EB%B2%9A%EA%BD%83_%2810%29.gif?type=w800");
+  background-size: 50%;
+  /* background-position-y: -1000%; */
 `;
 
 const BlockContent = styled.div`
   width: 100%;
+  min-width: 1340px;
   height: 90%;
   background-color: #f2dbdb;
 `;
 
 const BlockFooter = styled.div`
   width: 100%;
+  min-width: 1340px;
   height: 10%;
   background-color: #f2dbdb;
 `;
@@ -62,6 +69,7 @@ const MainContent = styled.div`
 
   .two {
     width: 60%;
+    min-width: 1320px;
     height: 50vh;
     color: green;
     img {
@@ -78,19 +86,19 @@ const Circle = styled.div`
   position: absolute;
   top: 5%;
   right: 15%;
-  width: 39vw;
-  height: 78.5vh;
-  border-radius: 50%;
+  width: 700px;
+  height: 700px;
+  border-radius: 350px;
   background-color: #faebeb;
-  margin: 0%;
+  margin: 0px;
 `;
 
 const ImgBox = styled.div`
-  width: 33.5vw;
-  height: 39.5vh;
+  width: 400px;
+  height: 250px;
   background-color: gray;
   position: absolute;
-  top: 15%;
+  top: 10%;
   right: 10%;
   background-image: url("essets/images/dote.gif");
   background-size: 100%;
@@ -127,7 +135,7 @@ const BottomCircle = styled.div`
 const Page1 = () => {
   return (
     <>
-      <BlockContent>
+      {/* <BlockContent>
         <MainContent>
           <div className="one">
             <h1>N-City</h1>
@@ -151,7 +159,8 @@ const Page1 = () => {
           <BottomCircle></BottomCircle>
           <BottomCircle></BottomCircle>
         </BottomWrapper>
-      </BlockFooter>
+      </BlockFooter> */}
+      <Wrapper></Wrapper>
     </>
   );
 };
