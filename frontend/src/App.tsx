@@ -7,7 +7,7 @@ import Login from './pages/Login/Login';
 import Apply from './pages/Apply/Apply';
 import GlobalStyle from './styles/global';
 import DetailItem from './pages/NFTStore/DetailItem';
-import SalesResistration from './pages/SalesResistration/SalesResistration';
+import Mint from './pages/Mint/Mint';
 import ProfileSetting from './pages/Mypage/ProfileSetting';
 import EventPage from './pages/FAQ/EventPage';
 import EventDetail from './pages/FAQ/EventDetail';
@@ -27,7 +27,7 @@ function App() {
           <Route path="/apply" element={<Apply />}/>
           <Route path="/store" element={<NFTStore />}/>
           <Route path="/store/detail" element={<DetailItem />}/>
-          <Route path="/SalesResistration" element={<SalesResistration />}/>
+          <Route path="/mint" element={<Mint />}/>
           <Route path="/profilesetting" element={<ProfileSetting />}/>
           <Route path="/event" element={<EventPage />}/>
           <Route path="/event/detail" element={<EventDetail />}/>

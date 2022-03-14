@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axios, { AxiosRequestConfig } from "axios";
 import CategoryModal, {
   Icategory,
-} from "../../components/SalesResistration/CategoryModal";
+} from "../../components/Mint/CategoryModal";
 
 const Wrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
@@ -211,7 +211,7 @@ const HashtagPlus = styled(Plus)`
 `
 
 //// component
-const SalesResistration = () => {
+const Mint = () => {
   const [fileSrc, setFileSrc] = useState<string>("");
   const [tokenName, setTokenName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -415,4 +415,4 @@ const SalesResistration = () => {
   );
 };
 
-export default SalesResistration;
+export default Mint;
