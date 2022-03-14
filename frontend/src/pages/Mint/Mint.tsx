@@ -171,16 +171,15 @@ const ButtonBox = styled.div`
     background-color: #ff865b;
     color: #fff;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 25px;
     padding: 10px 0;
-    width: 200px;
+    width: 300px;
     height: 50px;
     border-radius: 15px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
     &:hover {
       box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-      width: 202px;
-      height: 52px;
+      background-color: #FF7240;
     }
     &:active {
       background-color: #de5d30;
