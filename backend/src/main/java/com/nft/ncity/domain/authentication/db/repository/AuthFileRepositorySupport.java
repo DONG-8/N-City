@@ -11,7 +11,7 @@ public class AuthFileRepositorySupport {
     @Autowired
     JPAQueryFactory jpaQueryFactory;
 
-    QAuthFile qAuthFile = QAuthFile.authFile;
+
 
 
 }

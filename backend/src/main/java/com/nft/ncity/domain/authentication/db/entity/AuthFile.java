@@ -10,18 +10,19 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
-@Entity
-@MappedSuperclass
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
+@Entity
 @EntityListeners(AuditingEntityListener.class)
 public class AuthFile {
 
     @Id
+    // 기본 키 생성을 데이터베이스에 위임
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value="파일 ID")
-    private Long fileId;
+    @Builder.Default
+    private Long fileId = null;
 
     @OneToOne
     @JoinColumn(name = "auth_id")
