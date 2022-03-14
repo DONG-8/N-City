@@ -1,7 +1,7 @@
 package com.nft.ncity.domain.log.service;
 
 import com.nft.ncity.domain.log.db.repository.LogRepository;
-import com.nft.ncity.domain.user.db.entity.User;
+import com.nft.ncity.domain.log.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class LogServiceImpl implements LogService{
     private LogRepository logRepository;
 
     @Override
-    public User getUserDetail(String userAddress) {
+    public User getUserDetailByAddress(String userAddress) {
         Optional<User> user = logRepository.findUserByUserAddress(userAddress);
         if(user.isPresent()) {  // 이미 한번 로그인한 유저라면
             return user.get();
@@ -29,4 +29,15 @@ public class LogServiceImpl implements LogService{
             return nowOldUser;
         }
     }
+
+    @Override
+    public User getUserDetailById(long userId) {
+        Optional<User> user = logRepository.findById(userId);
+        if(user.isPresent()) {  // 이미 한번 로그인한 유저라면
+            return user.get();
+        } else {    // 처음 로그인한 유저라면
+            return null;
+        }
+    }
+
 }
