@@ -11,26 +11,27 @@ interface AccordionProps {
 // style
 const Container = styled.div`
   display: flex;
+  width: 80%;
   position: relative;
   flex-direction: column;
   justify-content: center;
-  border-radius: 10px;
-  border: 2px solid grey;
+  /* border-radius: 10px; */
+  border: 1px solid lightgray;
   margin-bottom: 5px;
 `;
 
 const Question = styled.div`
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   display: flex;
   align-items: center;
   cursor: pointer;
   height: 40px;
   margin: 0 32px 0 10px;
+  padding: 5px 0;
 `;
 
 const Button = styled.div`
-  top: 9px;
   right: 10px;
   font-size: 14px;
   position: absolute;
@@ -38,15 +39,19 @@ const Button = styled.div`
 
 const ContentsWrapper = styled.div`
   height: 0;
-  width: 800px;
   padding: 0 8px;
   overflow: hidden;
-  transition: height 0.35s ease, background 0.35s ease;
+  transition: height 0.2s ease, background 0.2s ease;
   border-radius: 10px;
 `;
 
 const Contents = styled.div`
   padding: 0.1px;
+  p {
+    margin: 0;
+    font-weight: 500;
+    font-size: 18px;
+  }
 `;
 
 // component
@@ -79,6 +84,19 @@ function Accordion(props: AccordionProps) {
   const buttonText =
     parentRefHeight === "0px" ? <ExpandMoreIcon /> : <ExpandLessIcon />;
 
+  const enter = (sentence:any) => {
+    return (
+      <>
+        {sentence.split("\n").map((txt:any) => (
+          <div>
+            <p>{txt}</p>
+            <br />
+          </div>
+        ))}
+      </>
+    ); 
+  }
+
   return (
     <Container>
       <Question onClick={handleButtonClick}>
@@ -86,7 +104,7 @@ function Accordion(props: AccordionProps) {
         <Button>{buttonText}</Button>
       </Question>
       <ContentsWrapper ref={parentRef}>
-        <Contents ref={childRef}>{props.contents}</Contents>
+        <Contents ref={childRef}>{enter(props.contents)}</Contents>
       </ContentsWrapper>
     </Container>
   );
