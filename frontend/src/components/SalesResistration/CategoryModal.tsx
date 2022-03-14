@@ -140,7 +140,6 @@ const SelectCategory = styled.div`
     border-radius: 10px;
     padding: 13px;
     margin: 5px 3px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     height: 20px;
     cursor: pointer;
     &:active {

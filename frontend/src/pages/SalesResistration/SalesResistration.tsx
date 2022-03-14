@@ -32,7 +32,7 @@ const UploadBox = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    margin-top: 30px;
+    margin-top: 10px;
     color: black;
     justify-content: center;
     align-items: center;
@@ -82,7 +82,11 @@ const NameInputBox = styled.div`
   font-weight: 500;
   font-size: 25px;
   margin-top: 50px;
+  p {
+    margin: 8px 0;
+  }
   input {
+    margin: 0;
     border: 1px solid lightgray;
     border-radius: 5px;
     height: 20px;
@@ -101,8 +105,6 @@ const Categories = styled.div`
   flex-wrap: wrap;
   margin: 0 auto 10px;
   p {
-    box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
-      rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
     background-color: white;
     border: 1px solid #ff865b;
     color: #ff865b;
@@ -127,11 +129,13 @@ const DescriptionInputBox = styled.div`
   margin-top: 30px;
   font-size: 25px;
   p {
-    margin-top: 8px;
+    margin: 8px 0;
   }
   textarea {
+
     border: 1px solid lightgray;
     border-radius: 5px;
+    margin-top: 0;
     width: 80vw;
     height: 100px;
     resize: none;
@@ -149,28 +153,15 @@ const CategoryBox = styled.div`
   font-weight: 500;
   font-size: 25px;
   margin-top: 20px;
-  img {
-    display: inline;
-    margin-left: 10px;
-    width: 35px;
-    height: 35px;
-    border-radius: 10px;
-    cursor: pointer;
-    &:hover {
-      width: 36px;
-      height: 36px;
-      transition: all 0.08s ease-out;
-    }
-    &:active {
-      background-color: #f3c8b9;
-    }
+  p {
+    margin-bottom: 8px;
   }
 `;
 
 const ButtonBox = styled.div`
   display: flex;
   justify-content: center;
-  margin: 30px auto 200px;
+  margin: 50px auto 200px;
   button {
     font-family: "Noto Sans KR", sans-serif;
     position: absolute;
@@ -203,6 +194,21 @@ const Plus = styled.div`
   width: 100px;
   height: 100px;
 `;
+
+const HashtagBox = styled.div`
+  span {
+    font-size: 17px;
+  }
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+`
+
+const HashtagPlus = styled(Plus)`
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+`
 
 //// component
 const SalesResistration = () => {
@@ -377,19 +383,23 @@ const SalesResistration = () => {
         </DescriptionInputBox>
         <CategoryBox>
           <p>카테고리</p>
-          <img
-            src="/essets/images/category_add_button.png"
-            alt="category add"
-            onClick={handleModalOpen}
-          />
         </CategoryBox>
-        <Categories>
-          {categories.map((category) => (
-            <p key={category} onClick={handleModalOpen}>
-              # {category}
-            </p>
-          ))}
-        </Categories>
+        {categories.length !== 0 ? (
+          <Categories>
+            {categories.map((category) => (
+              <p key={category} onClick={handleModalOpen}>
+                # {category}
+              </p>
+            ))}
+          </Categories>
+        ) : (
+          <HashtagBox onClick={handleModalOpen} >
+            <span>카테고리를 추가해 주세요</span>
+            <HashtagPlus/>
+          </HashtagBox>
+        )}
+
+        {/* <HashtagPlus onClick={handleModalOpen} /> */}
 
         <ButtonBox>
           <button onClick={onClickSubmit}>작품등록</button>
