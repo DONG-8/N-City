@@ -75,6 +75,7 @@ const UploadBox = styled.div`
 const Change = styled.div`
   font-weight: 600;
   font-size: 20px;
+  padding: 5px 0;
 `;
 
 const FormBox = styled.form``;
@@ -187,12 +188,12 @@ const ButtonBox = styled.div`
 
 const ThumbnailUploadBox = styled(UploadBox)`
   label {
-    width: 320px;
-    height: 220px;
+    width: 250px;
+    height: 250px;
     div {
       img {
-        max-width: 320px;
-        max-height: 220px;
+        max-width: 250px;
+        max-height: 250px;
         object-fit: cover;
       }
     }
@@ -237,7 +238,7 @@ const Mint = () => {
   const [tokenName, setTokenName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
-  const [isVideo, setIsVideo] = useState(false);
+  const [isVideo, setIsVideo] = useState<boolean>(false);
 
   // category modal
   const [isOpen, setIsOpen] = useState<boolean>(false);

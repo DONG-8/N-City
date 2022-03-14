@@ -63,7 +63,7 @@ const ModalSection = styled.div<{ visible: boolean }>`
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 900px;
+  top: 1200px;
   left: 50%;
   border: 2px solid black;
   border-radius: 10px;
