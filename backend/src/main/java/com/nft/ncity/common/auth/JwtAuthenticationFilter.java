@@ -7,10 +7,14 @@ import com.nft.ncity.domain.log.db.entity.User;
 import com.nft.ncity.domain.log.service.LogService;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -23,22 +27,36 @@ import java.io.IOException;
  * 요청 헤더에 jwt 토큰이 있는 경우, 토큰 검증 및 인증 처리 로직 정의.
  */
 @Slf4j
-public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    @Autowired
 	private LogService logService;
 
+    @Autowired
     private CookieUtil cookieUtil;
 
+    @Autowired
     private RedisUtil redisUtil;
 
-	public JwtAuthenticationFilter(AuthenticationManager authenticationManager, LogService logService) {
-		super(authenticationManager);
-		this.logService = logService;
-	}
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+//	public JwtAuthenticationFilter(AuthenticationManager authenticationManager, LogService logService) {
+//		super(authenticationManager);
+//		this.logService = logService;
+//	}
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        final Cookie jwtToken = cookieUtil.getCookie(httpServletRequest, JwtTokenUtil.ACCESS_TOKEN_NAME);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+//                String header = httpServletRequest.getHeader(jwtTokenUtil.HEADER_STRING);
+//
+//        // If header does not contain BEARER or is null delegate to Spring impl and exit
+//        if (header == null || !header.startsWith(jwtTokenUtil.TOKEN_PREFIX)) {
+//            filterChain.doFilter(httpServletRequest, httpServletResponse);
+//            return;
+//        }
 
+        final Cookie jwtToken = cookieUtil.getCookie(request, jwtTokenUtil.ACCESS_TOKEN_NAME);
         String userAddress = null;
         String jwt = null;
         String refreshJwt = null;
@@ -47,23 +65,23 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         try{
             if(jwtToken != null){
                 jwt = jwtToken.getValue();
-                userAddress = JwtTokenUtil.getUserAddress(jwt);
+                userAddress = jwtTokenUtil.getUserAddress(jwt);
             }
             if(userAddress != null){    // Access token이 유효하면 AccessToken내 payload를 읽어 사용자와 관련있는 userDetail 생성
                 // jwt 토큰에 포함된 계정 정보(userAddress) 통해 실제 디비에 해당 정보의 계정이 있는지 조회.
                 User user = logService.getUserDetailByAddress(userAddress);
                 UserDetails userDetails = new UserDetails(user);
-                if(JwtTokenUtil.verify(jwt).isResult()){
+                if(jwtTokenUtil.verify(jwt).isResult()){
                     // 식별된 정상 유저인 경우, 요청 context 내에서 참조 가능한 인증 정보(jwtAuthentication) 생성.
                     UsernamePasswordAuthenticationToken jwtAuthentication = new UsernamePasswordAuthenticationToken(userAddress,
-                            null, userDetails.getAuthorities());
+                            null, AuthorityUtils.createAuthorityList(user.getUserRole()));
                     jwtAuthentication.setDetails(userDetails);
                     // jwt 토큰으로 부터 획득한 인증 정보(authentication) 설정.
                     SecurityContextHolder.getContext().setAuthentication(jwtAuthentication);
                 }
             }
         }catch (ExpiredJwtException e){ // Access token이 유효하지 않으면 Refresh Token 값을 읽어드림
-            Cookie refreshToken = cookieUtil.getCookie(httpServletRequest,JwtTokenUtil.REFRESH_TOKEN_NAME);
+            Cookie refreshToken = cookieUtil.getCookie(request,jwtTokenUtil.REFRESH_TOKEN_NAME);
             if(refreshToken!=null){
                 refreshJwt = refreshToken.getValue();
             }
@@ -74,27 +92,27 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             if(refreshJwt != null){
                 refreshUAddress = redisUtil.getData(refreshJwt);
 
-                if(refreshUAddress.equals(JwtTokenUtil.getUserAddress(refreshJwt))){
+                if(refreshUAddress.equals(jwtTokenUtil.getUserAddress(refreshJwt))){
                     User user = logService.getUserDetailByAddress(userAddress);
                     UserDetails userDetails = new UserDetails(user);
 
                     UsernamePasswordAuthenticationToken jwtAuthentication = new UsernamePasswordAuthenticationToken(userAddress,
-                            null, userDetails.getAuthorities());
+                            null, AuthorityUtils.createAuthorityList(user.getUserRole()));
                     jwtAuthentication.setDetails(userDetails);
 
                     SecurityContextHolder.getContext().setAuthentication(jwtAuthentication);
 
                     // Access Token 재생성
-                    String newToken = JwtTokenUtil.createAccessToken(user.getUserId(), refreshUAddress);
+                    String newToken = jwtTokenUtil.createAccessToken(user.getUserId(), refreshUAddress);
 
-                    Cookie newAccessToken = cookieUtil.createCookie(JwtTokenUtil.ACCESS_TOKEN_NAME,newToken);
-                    httpServletResponse.addCookie(newAccessToken);
+                    Cookie newAccessToken = cookieUtil.createCookie(jwtTokenUtil.ACCESS_TOKEN_NAME,newToken);
+                    response.addCookie(newAccessToken);
                 }
             }
         }catch(ExpiredJwtException e){
 
         }
-        filterChain.doFilter(httpServletRequest,httpServletResponse);
+        filterChain.doFilter(request,response);
     }
 
 
@@ -102,10 +120,10 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 //	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 //			throws ServletException, IOException {
 //		// Read the Authorization header, where the JWT Token should be
-//        String header = request.getHeader(JwtTokenUtil.HEADER_STRING);
+//        String header = request.getHeader(jwtTokenUtil.HEADER_STRING);
 //
 //        // If header does not contain BEARER or is null delegate to Spring impl and exit
-//        if (header == null || !header.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
+//        if (header == null || !header.startsWith(jwtTokenUtil.TOKEN_PREFIX)) {
 //            filterChain.doFilter(request, response);
 //            return;
 //        }
@@ -125,13 +143,13 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 //
 //	@Transactional(readOnly = true)
 //    public Authentication getAuthentication(HttpServletRequest request) throws Exception {
-//        String token = request.getHeader(JwtTokenUtil.HEADER_STRING);
+//        String token = request.getHeader(jwtTokenUtil.HEADER_STRING);
 //        // 요청 헤더에 Authorization 키값에 jwt 토큰이 포함된 경우에만, 토큰 검증 및 인증 처리 로직 실행.
 //        if (token != null) {
 //            // parse the token and validate it (decode)
-//            JWTVerifier verifier = JwtTokenUtil.getVerifier();
-//            JwtTokenUtil.handleError(token);
-//            DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
+//            JWTVerifier verifier = jwtTokenUtil.getVerifier();
+//            jwtTokenUtil.handleError(token);
+//            DecodedJWT decodedJWT = verifier.verify(token.replace(jwtTokenUtil.TOKEN_PREFIX, ""));
 //            String userAddress = String.valueOf(decodedJWT.getClaim("userAddress"));
 //
 //            // Search in the DB if we find the user by token subject (username)

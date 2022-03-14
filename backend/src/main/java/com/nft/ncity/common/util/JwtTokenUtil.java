@@ -5,10 +5,10 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.*;
 
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.nft.ncity.common.model.response.VerifyResult;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +84,7 @@ public class JwtTokenUtil {
     }
 
     // 토큰에 담긴 payload 값 가져오기
-    public Claims extractAllClaims(String token){
+    public Claims extractAllClaims(String token) throws ExpiredJwtException {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
@@ -99,31 +99,13 @@ public class JwtTokenUtil {
     }
 
     // 토큰에서 userId 가져오기
-    public static long getUserId(String token) {
-        try {
-            JWTVerifier verifier = JwtTokenUtil.getVerifier();
-            JwtTokenUtil.handleError(token);
-            DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
-            Claim userId = decodedJWT.getClaim("userId");
-            return userId.asLong();
-        } catch (JWTVerificationException e) {
-            e.printStackTrace();
-            return 0;
-        }
+    public long getUserId(String token) {
+        return extractAllClaims(token).get("getUserId", long.class);
     }
 
     // 토큰에서 userAddress 가져오기
-    public static String getUserAddress(String token) {
-        try {
-            JWTVerifier verifier = JwtTokenUtil.getVerifier();
-            JwtTokenUtil.handleError(token);
-            DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
-            Claim userAddress = decodedJWT.getClaim("userAddress");
-            return String.valueOf(userAddress);
-        } catch (JWTVerificationException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public String getUserAddress(String token) {
+        return extractAllClaims(token).get("userAddress", String.class);
     }
 
     // 토큰 검증하기
@@ -139,62 +121,59 @@ public class JwtTokenUtil {
 
     public static Date getTokenExpiration(int expirationTime) {
     		Date now = new Date();
-            System.out.println(new Date(now.getTime() + expirationTime));
     		return new Date(now.getTime() + expirationTime);
     }
-
-
-
-    public static void handleError(String token) {
-        JWTVerifier verifier = JWT
-                .require(Algorithm.HMAC512(secretKey.getBytes()))
-                .withIssuer(ISSUER)
-                .build();
-
-        try {
-            verifier.verify(token.replace(TOKEN_PREFIX, ""));
-        } catch (AlgorithmMismatchException ex) {
-            throw ex;
-        } catch (InvalidClaimException ex) {
-            throw ex;
-        } catch (SignatureGenerationException ex) {
-            throw ex;
-        } catch (SignatureVerificationException ex) {
-            throw ex;
-        } catch (TokenExpiredException ex) {
-            throw ex;
-        } catch (JWTCreationException ex) {
-            throw ex;
-        } catch (JWTDecodeException ex) {
-            throw ex;
-        } catch (JWTVerificationException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw ex;
-        }
-    }
-
-    public static void handleError(JWTVerifier verifier, String token) {
-        try {
-            verifier.verify(token.replace(TOKEN_PREFIX, ""));
-        } catch (AlgorithmMismatchException ex) {
-            throw ex;
-        } catch (InvalidClaimException ex) {
-            throw ex;
-        } catch (SignatureGenerationException ex) {
-            throw ex;
-        } catch (SignatureVerificationException ex) {
-            throw ex;
-        } catch (TokenExpiredException ex) {
-            throw ex;
-        } catch (JWTCreationException ex) {
-            throw ex;
-        } catch (JWTDecodeException ex) {
-            throw ex;
-        } catch (JWTVerificationException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw ex;
-        }
-    }
+//
+//    public static void handleError(String token) {
+//        JWTVerifier verifier = JWT
+//                .require(Algorithm.HMAC512(secretKey.getBytes()))
+//                .withIssuer(ISSUER)
+//                .build();
+//
+//        try {
+//            verifier.verify(token.replace(TOKEN_PREFIX, ""));
+//        } catch (AlgorithmMismatchException ex) {
+//            throw ex;
+//        } catch (InvalidClaimException ex) {
+//            throw ex;
+//        } catch (SignatureGenerationException ex) {
+//            throw ex;
+//        } catch (SignatureVerificationException ex) {
+//            throw ex;
+//        } catch (TokenExpiredException ex) {
+//            throw ex;
+//        } catch (JWTCreationException ex) {
+//            throw ex;
+//        } catch (JWTDecodeException ex) {
+//            throw ex;
+//        } catch (JWTVerificationException ex) {
+//            throw ex;
+//        } catch (Exception ex) {
+//            throw ex;
+//        }
+//    }
+//
+//    public static void handleError(JWTVerifier verifier, String token) {
+//        try {
+//            verifier.verify(token.replace(TOKEN_PREFIX, ""));
+//        } catch (AlgorithmMismatchException ex) {
+//            throw ex;
+//        } catch (InvalidClaimException ex) {
+//            throw ex;
+//        } catch (SignatureGenerationException ex) {
+//            throw ex;
+//        } catch (SignatureVerificationException ex) {
+//            throw ex;
+//        } catch (TokenExpiredException ex) {
+//            throw ex;
+//        } catch (JWTCreationException ex) {
+//            throw ex;
+//        } catch (JWTDecodeException ex) {
+//            throw ex;
+//        } catch (JWTVerificationException ex) {
+//            throw ex;
+//        } catch (Exception ex) {
+//            throw ex;
+//        }
+//    }
 }
