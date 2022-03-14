@@ -59,7 +59,7 @@ const Background = styled.div<{ visible: boolean }>`
 const ModalSection = styled.div<{ visible: boolean }>`
   font-family: "Noto Sans KR", sans-serif;
   width: 600px;
-  height: 400px;
+  height: 430px;
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -83,7 +83,7 @@ const Title = styled.h1`
 const Divider = styled.hr`
   border: solid 1px #ff865b;
   width: 65%;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 `;
 
 const AddButton = styled.button`
@@ -125,6 +125,7 @@ const SelectCategory = styled.div`
   border: 1px solid black;
   border-radius: 15px;
   width: 90%;
+  padding: 10px;
   .active {
     background-color: #FEAF84;
     box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;

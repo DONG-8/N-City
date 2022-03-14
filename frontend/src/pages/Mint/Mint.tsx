@@ -21,6 +21,7 @@ const Title = styled.h1`
 `;
 
 const ExplaneBox = styled.div`
+  margin-top: 8px;
   p {
     font-size: 20px;
     margin: 0;
@@ -72,7 +73,7 @@ const UploadBox = styled.div`
 `;
 
 const Change = styled.div`
-  font-weight: 500;
+  font-weight: 600;
   font-size: 20px;
 `;
 
@@ -91,7 +92,7 @@ const NameInputBox = styled.div`
     border-radius: 5px;
     height: 20px;
     width: 300px;
-    padding: 7px;
+    padding: 10px;
     font-size: 16px;
     font-family: inherit;
     :focus {
@@ -132,7 +133,7 @@ const DescriptionInputBox = styled.div`
     margin: 8px 0;
   }
   textarea {
-
+    padding: 10px;
     border: 1px solid lightgray;
     border-radius: 5px;
     margin-top: 0;
@@ -152,7 +153,7 @@ const CategoryBox = styled.div`
   align-items: center;
   font-weight: 500;
   font-size: 25px;
-  margin-top: 20px;
+  margin-top: 0;
   p {
     margin-bottom: 8px;
   }
@@ -170,17 +171,13 @@ const ButtonBox = styled.div`
     align-items: center;
     background-color: #ff865b;
     color: #fff;
-    font-weight: bold;
+    font-weight: 500;
     font-size: 25px;
     padding: 10px 0;
     width: 300px;
     height: 50px;
     border-radius: 15px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
-    &:hover {
-      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-      background-color: #FF7240;
-    }
     &:active {
       background-color: #de5d30;
       box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
@@ -196,7 +193,7 @@ const Plus = styled.div`
 
 const HashtagBox = styled.div`
   span {
-    font-size: 17px;
+    font-size: 18px;
   }
   cursor: pointer;
   display: flex;
@@ -355,7 +352,6 @@ const Mint = () => {
             accept="audio/*, video/*, image/*"
             onChange={handleFileOnChange}
           ></input>
-          <br></br>
           <ExplaneBox>
             <p className="secondpart">100MB를 넘지않는</p>
             <p>JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG</p>
