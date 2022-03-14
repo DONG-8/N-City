@@ -22,6 +22,7 @@ const Header = styled.div`
 `
 
 const Main = styled.div`
+  margin-top: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,7 +31,7 @@ const Main = styled.div`
 
 const Title = styled.h1`
   margin: 80px 0;
-  font-size: 70px;
+  font-size: 45px;
 `
 
 
@@ -58,10 +59,10 @@ export default function FAQ() {
   return (
     <Container>
       <Header>
-        <h1>무엇을 도와드릴까요?</h1>
+        {/* <h1>무엇을 도와드릴까요?</h1> */}
+        <Title>무엇을 도와드릴까요?</Title>
       </Header>
       <Main>
-        <Title>FAQ</Title>
         <Accordion title={Q1} contents={A1}></Accordion>
         <Accordion title={Q2} contents={A2}></Accordion>
         <Accordion title={Q3} contents={A3}></Accordion>
