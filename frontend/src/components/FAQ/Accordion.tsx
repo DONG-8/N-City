@@ -11,13 +11,18 @@ interface AccordionProps {
 // style
 const Container = styled.div`
   display: flex;
-  width: 80%;
+  width: 70vw;
   position: relative;
   flex-direction: column;
   justify-content: center;
   /* border-radius: 10px; */
   border: 1px solid lightgray;
   margin-bottom: 5px;
+  span {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 12px;
+  }
 `;
 
 const Question = styled.div`
@@ -27,7 +32,7 @@ const Question = styled.div`
   align-items: center;
   cursor: pointer;
   height: 40px;
-  margin: 0 32px 0 10px;
+  margin: 0 32px 0 20px;
   padding: 5px 0;
 `;
 
@@ -46,11 +51,18 @@ const ContentsWrapper = styled.div`
 `;
 
 const Contents = styled.div`
-  padding: 0.1px;
+  padding: 12px;
   p {
     margin: 0;
     font-weight: 500;
     font-size: 18px;
+    display: inline;
+  }
+  div {
+    display: inline;
+  }
+  a {
+    color: #FF865B;
   }
 `;
 
@@ -71,7 +83,7 @@ function Accordion(props: AccordionProps) {
         parentRef.current.style.background = "none";
       } else {
         parentRef.current.style.height = `${
-          props.contents ? childRef.current.clientHeight + 5 : 0
+          props.contents ? childRef.current.clientHeight : 0
         }px`;
         parentRef.current.style.backgroundColor = "#FFF6F3";
       }
@@ -87,9 +99,10 @@ function Accordion(props: AccordionProps) {
   const enter = (sentence:any) => {
     return (
       <>
-        {sentence.split("\n").map((txt:any) => (
-          <div>
-            <p>{txt}</p>
+        <span>A.</span>
+        {sentence.split("\n").map((txt:any, idx:number) => (
+          <div key={idx}>
+            {txt.slice(0,4) === "http" ? <a href={txt} target="blank">{txt}</a> : <p>{txt}</p>}
             <br />
           </div>
         ))}
@@ -100,7 +113,10 @@ function Accordion(props: AccordionProps) {
   return (
     <Container>
       <Question onClick={handleButtonClick}>
-        {props.title}
+        <div>
+          <span>Q.</span>
+          {props.title}
+        </div>
         <Button>{buttonText}</Button>
       </Question>
       <ContentsWrapper ref={parentRef}>
