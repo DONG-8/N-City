@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate  } from 'react-router-dom'
 import styled from 'styled-components'
 import ether from './ethereum.png'
@@ -7,16 +7,16 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 const CardWrapper = styled.div`
   cursor: pointer;
-  height: 400px;
+  height: 420px;
   width: 350px;
   background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow:1px 3px 7px  ;
+  border-radius: 5px;
+  border:1px solid gray;
+  box-shadow:0px 3px 3px  ;
+  /* border: 0.5px solid gray; */
   margin: 30px ;
   &:hover{
-    &{
-      transform:scale(1.01) ;
-    }
+    box-shadow:0px 5px 5px  ;    
     .buy{
       visibility: visible ;
       transition: 1s ;
@@ -31,18 +31,18 @@ const Image = styled.div`
   img{
     width:350px;
     height:300px ;
-    border-radius: 10px 10px 0 0 ;
+    border-radius: 5px 5px 0 0 ;
     object-fit: cover;    
     }
 `
 const CardCenter = styled.div`
-  display:flex ;
-    height: 60px ;
-    display: flex ;
-`
+  display: flex;
+  height: 80px;
+  display: flex;
+`;
 const CardBottom = styled.div`
-  height:40px;
-    border-radius:0 0 10px 10px ;
+    height:40px;
+    border-radius:0 0 5px 5px ;
     background-color: whitesmoke ;
     display: flex;
     justify-content: space-between ;
@@ -62,20 +62,22 @@ const CardBottom = styled.div`
     }
     .icon{
     cursor: pointer;
+    margin-right: 0.5vw;
+    margin-top:0.2vh;
     &:hover{
       transform: scale(1.1);
     }
   }
 `
 const DesLeft = styled.div`
-  margin-left:0.5rem ;
-      flex:6;
-`
+  margin-left: 0.5rem;
+  flex: 6;
+`;
 const Artist = styled.div`
-    margin:0.2rem ;
-    font-weight: 1000 ;
-    margin-left: 0.5rem;
-`
+  margin: 0.2rem;
+  font-weight: 1000;
+  margin-left: 0.5rem;
+`;
 const DesRight = styled.div`
   flex: 4;
   margin-left: 70px;
@@ -85,9 +87,10 @@ const DesRight = styled.div`
 
 `;
 const Title = styled.div`
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   margin: 0.1rem;
   font-weight: 1000;
+  margin-top: 0.4rem;
 `;
 interface Iprops{
   item :{
@@ -105,14 +108,17 @@ const ItemCard:React.FC<Iprops>= ({item}) => {
     navigate('/store/detail')
     localStorage.setItem("item",JSON.stringify(item))
   }
+  const [liked,setLiked] = useState(false)
+  const [likes,setLikes] = useState(item.liked)
+
   return (
     <>
-      <CardWrapper onClick={()=>{goDetailPage()}}>
-        <Image>
+      <CardWrapper >
+        <Image onClick={()=>{goDetailPage()}}>
           <img alt="pic" 
           src={item.url}/>
         </Image>
-        <CardCenter>
+        <CardCenter onClick={()=>{goDetailPage()}}>
           <DesLeft>
             <Artist>
               {item.name}
@@ -126,13 +132,21 @@ const ItemCard:React.FC<Iprops>= ({item}) => {
           </DesRight>
         </CardCenter>
         <CardBottom>
-          <div className='buy'>Buy Now</div>
+          <div className='buy'>
+            <div>Buy Now</div>
+            {/* <div>Sell</div>
+            <div>판매수정</div> */}
+            {/* 가격이 붙어 있고, 소유주가 아니면 buy now */}
+            {/* 가격이 붙어 있고, 소유주라면 판매수정  */}
+            {/* 가격이 붙어 있지 않고, 소유주라면 판매수정  */}
+          </div>
           <div className='like'>
-            <div className='icon'>
-              {/* <FavoriteIcon  color='error'/>  */}
-              <FavoriteBorderIcon color='error'/> 
+            <div onClick={()=>{setLiked(!liked)}} className='icon'>
+              {liked?
+              <FavoriteIcon onClick={()=>{setLikes(likes-1)}}  color='error'/> :
+              <FavoriteBorderIcon onClick={()=>{setLikes(likes+1)}} color='error'/>}
             </div> 
-              {item.liked}
+              {likes}
           </div>
         </CardBottom>
       </CardWrapper>
