@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ConfirmModal from "../../components/admin/ConfirmModal";
 
@@ -64,18 +64,11 @@ const ListItem = styled.div`
   justify-content: space-between;
   align-items: center;
   border: 1px solid grey;
-  border-radius: 10px;
+  margin-bottom: 3px;
   width: 80%;
-  padding-right: 12px;
-  .button {
-    border-radius: 15px;
-    margin: 0 5px;
-    padding: 10px 0;
-    font-weight: bold;
-    text-align: center;
-  }
+  padding-right: 10px;
   div {
-    font-weight: bold;
+    font-weight: 500;
     padding: 10px;
   }
   .id {
@@ -86,47 +79,37 @@ const ListItem = styled.div`
     width: 12%;
   }
   .email {
-    width: 40%;
+    width: 30%;
   }
   .file {
     width: 12%;
     button {
-      background-color: #ff865b;
-      color: #fff;
+      border: 1px solid #ff865b;
+      color: #ff865b;
       width: 100px;
-      &:hover {
-        font-weight: bold;
-      }
-      &:active {
-        background-color: #de5d30;
-      }
     }
+  }
+  .button {
+    border-radius: 15px;
+    padding: 10px 0;
+    font-weight: bold;
+    text-align: center;
+    width: 70px;
   }
   .approveBtn {
-    width: 8%;
-    background-color: #399b20;
-    color: #fff;
-    width: 70px;
-    &:hover {
-      font-weight: bold;
-    }
-    &:active {
-      background-color: #2e8518;
-    }
+    border: 1px solid #399b20;
+    color: #399b20;
   }
   .rejectBtn {
-    width: 8%;
-    background-color: #e34558;
-    color: #fff;
-    width: 70px;
-    &:hover {
-      font-weight: bold;
-    }
-    &:active {
-      background-color: #b72a3b;
-    }
+    margin-left: 10px;
+    border: 1px solid #e34558;
+    color: #e34558;
   }
 `;
+
+const ApproveBtnBox = styled.div`
+  display: flex;
+`
 
 export interface IApply {
   id: string;
@@ -176,7 +159,6 @@ const Admin = () => {
   const [status, setStatus] = useState("influencer");
   const [control, setControl] = useState("");
   const [selectedItem, setSelectedItem] = useState<IApply>();
-  const [index, setIndex] = useState<number>(-1);
   // 이름, 이메일, 파일
 
   const onClickApprove = (apply: IApply, idx: number) => {
@@ -193,9 +175,9 @@ const Admin = () => {
 
   const removeList = (apply: any) => {
     const temp = [...chooseList()];
-    setIndex(temp.indexOf(apply));
-    if (index > -1) {
-      temp.splice(index, 1);
+    const idx = (temp.indexOf(apply));
+    if (idx > -1) {
+      temp.splice(idx, 1);
     }
 
     switch (status) {
@@ -233,6 +215,10 @@ const Admin = () => {
   const handleModalClose = () => {
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    console.log(influencer)
+  }, [influencer, designer, enterprise])
   return (
     <Wrapper>
       <Title>
@@ -279,8 +265,8 @@ const Admin = () => {
                   <button className="button">첨부파일</button>
                 </a>
               </div>
-
-              <button
+              <ApproveBtnBox>
+                <button
                 className="approveBtn button"
                 onClick={() => onClickApprove(apply, idx)}
               >
@@ -292,6 +278,8 @@ const Admin = () => {
               >
                 거절
               </button>
+              </ApproveBtnBox>
+              
             </ListItem>
           );
         })}
