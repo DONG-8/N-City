@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   display: flex;
   flex-direction: column;
-  margin: 3vh 7vw;
+  margin: 5vh 10vw;
 `;
 
 const Title = styled.h1`
@@ -185,6 +185,28 @@ const ButtonBox = styled.div`
   }
 `;
 
+const ThumbnailUploadBox = styled(UploadBox)`
+  label {
+    width: 320px;
+    height: 220px;
+    div {
+      img {
+        max-width: 320px;
+        max-height: 220px;
+        object-fit: cover;
+      }
+    }
+  }
+`
+
+const ThumbnailExplain = styled.div`
+  p {
+    font-size: 25px;
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+`
+
 const Plus = styled.div`
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z' fill='rgba(255,134,91,1)'/%3E%3C/svg%3E");
   width: 100px;
@@ -208,11 +230,13 @@ const HashtagPlus = styled(Plus)`
 
 //// component
 const Mint = () => {
+  const [file, setFile] = useState<any>();
   const [fileSrc, setFileSrc] = useState<string>("");
+  const [thumbnail, setThumbnail] = useState<any>();
+  const [thumbnailSrc, setThumbnailSrc] = useState<string>("");
   const [tokenName, setTokenName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
-  const [file, setFile] = useState<any>();
   const [isVideo, setIsVideo] = useState(false);
 
   // category modal
@@ -256,14 +280,26 @@ const Mint = () => {
     // })();
   };
 
-  const encodeFileToBasek64 = (fileBlob: any) => {
-    const reader: any = new FileReader();
+  const encodeMainFileToBasek64 = (fileBlob: any) => {
+    const reader:any = new FileReader();
     if (fileBlob) {
       reader.readAsDataURL(fileBlob);
     }
     return new Promise(() => {
       reader.onload = () => {
         setFileSrc(reader.result);
+      };
+    });
+  };
+
+  const encodeThumbnailToBasek64 = (fileBlob: any) => {
+    const reader:any = new FileReader();
+    if (fileBlob) {
+      reader.readAsDataURL(fileBlob);
+    }
+    return new Promise(() => {
+      reader.onload = () => {
+        setThumbnailSrc(reader.result);
       };
     });
   };
@@ -279,14 +315,32 @@ const Mint = () => {
   };
 
   const handleFileOnChange = (e: React.ChangeEvent) => {
+    console.log("메인파일변화")
     setFile((e.target as HTMLInputElement).files?.item(0));
     console.log((e.target as HTMLInputElement).files?.item(0));
     if ((e.target as HTMLInputElement).files) {
-      encodeFileToBasek64((e.target as HTMLInputElement).files?.item(0));
+      encodeMainFileToBasek64((e.target as HTMLInputElement).files?.item(0));
     }
   };
 
-  const previewImage = () => {
+  const handleThumbnailUpload = (e: React.ChangeEvent) => {
+    console.log("썸네일파일변화")
+    setThumbnail((e.target as HTMLInputElement).files?.item(0));
+    console.log((e.target as HTMLInputElement).files?.item(0));
+    if ((e.target as HTMLInputElement).files) {
+      encodeThumbnailToBasek64((e.target as HTMLInputElement).files?.item(0));
+    }
+  }
+
+  const isVideoAudio = () => {
+    if (file?.type.slice(0, 5) === "video" || file?.type.slice(0, 5) === "audio") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const previewMainImage = () => {
     if (file?.type.slice(0, 5) === "image") {
       return (
         <div className="preview">
@@ -322,6 +376,26 @@ const Mint = () => {
     }
   };
 
+  console.log(file)
+  console.log(thumbnail)
+
+  const previewThumbnailImage = () => {
+    if (thumbnail) {
+      return (
+        <div className="preview">
+          {" "}
+          {thumbnailSrc && <img src={thumbnailSrc} alt="preview-img" />}{" "}
+        </div>
+      )
+    } else {
+      return (
+        <div>
+        <Plus></Plus>
+      </div>
+      )
+    }
+  }
+
   useEffect(() => {
     if (
       file?.type.slice(0, 5) === "video"
@@ -341,8 +415,7 @@ const Mint = () => {
         <UploadBox>
           <p className="file-name">{file?.name}</p>
           <label className={file?.type.slice(0, 5)} htmlFor="chooseFile">
-            {previewImage()}
-            {file?.type.slice(0, 5) === "video"}
+            {previewMainImage()}
             {isVideo && <Change>Change</Change>}
           </label>
           <input
@@ -359,6 +432,23 @@ const Mint = () => {
           </ExplaneBox>
           {/* {file?.type.slice(0, 5)} */}
         </UploadBox>
+        {isVideoAudio() && (
+          <ThumbnailUploadBox>
+            <ThumbnailExplain>
+              <p>미리보기 이미지를 업로드해주세요*</p>
+            </ThumbnailExplain>
+            <label className={file?.type.slice(0, 5)} htmlFor="chooseThumbnail">
+              {previewThumbnailImage()}
+            </label>
+            <input
+              className="file"
+              id="chooseThumbnail"
+              type="file"
+              accept="image/*"
+              onChange={handleThumbnailUpload}
+            ></input>
+          </ThumbnailUploadBox>
+        )}
         <NameInputBox>
           <p>작품이름*: </p>
           <input
@@ -388,14 +478,11 @@ const Mint = () => {
             ))}
           </Categories>
         ) : (
-          <HashtagBox onClick={handleModalOpen} >
+          <HashtagBox onClick={handleModalOpen}>
             <span>카테고리를 추가해 주세요</span>
-            <HashtagPlus/>
+            <HashtagPlus />
           </HashtagBox>
         )}
-
-        {/* <HashtagPlus onClick={handleModalOpen} /> */}
-
         <ButtonBox>
           <button onClick={onClickSubmit}>작품등록</button>
         </ButtonBox>
