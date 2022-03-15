@@ -23,16 +23,16 @@ const Events = styled.div`
   flex-wrap: wrap;
 `
 const Event = styled.div`
-  border-radius: 10px;
+  border-radius: 5px;
   margin: auto;
   margin-top: 10vh;
-  border:1px solid black;
+  border:1px solid gray;
   box-shadow: 1px 1px 3px;
   height: 46vh;
   width: 40%;
   cursor: pointer;
   img{
-    border-radius: 10px 10px 0 0 ;
+    border-radius: 5px 5px 0 0 ;
     width: 100%;
     height: 37vh;
     object-fit:fill;
