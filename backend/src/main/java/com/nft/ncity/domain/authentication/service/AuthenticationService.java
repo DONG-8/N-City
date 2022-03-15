@@ -13,5 +13,4 @@ public interface AuthenticationService {
    Page<Authentication> getAuthenticationListByType(int authType, Pageable pageable);
    Authentication getAuthenticationDetailByAuthId(Long authId);
    Authentication AuthenticationRegister(AuthenticationRegisterPostReq authenticationRegisterPostReq, MultipartFile multipartFile) throws IOException;
-   void deleteFile(String fileName);
 }

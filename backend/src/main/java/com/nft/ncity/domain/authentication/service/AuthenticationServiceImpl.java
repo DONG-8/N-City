@@ -45,6 +45,9 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private final AmazonS3Client amazonS3Client;
 
     @Autowired
+    AwsS3Service awsS3Service;
+
+    @Autowired
     AuthenticationRepositorySupport authenticationRepositorySupport;
 
     @Autowired
@@ -81,25 +84,33 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 .authName(authenticationRegisterPostReq.getAuthName())
                 .authEmail(authenticationRegisterPostReq.getAuthEmail())
                 .authType(authenticationRegisterPostReq.getAuthType())
+                .authUrl(authenticationRegisterPostReq.getAuthUrl())
                 .authRegAt(LocalDateTime.now())
                 .build();
 
         // 인증 등록정보 저장
         Authentication savedAuthentication = authenticationRepository.save(authentication);
 
+
+        /**
+         * 유저 아이디 받아와서 해당 유저에 인증 id 넣어야함.
+         */
+        savedAuthentication.getAuthId();
+
         String fileUrl;
 
         // 실제 파일 이름을 받아서 랜덤한 이름으로 변경해준다.
-        String fileName = createFileName(multipartFile.getOriginalFilename());
+        String fileName = awsS3Service.createFileName(multipartFile.getOriginalFilename());
 
         // 파일 객체 생성
         // System.getProperty => 시스템 환경에 관한 정보를 얻을 수 있다. (user.dir = 현재 작업 디렉토리를 의미함)
         File file = new File(System.getProperty("user.dir") + fileName);
 
+        // 파일 변환
         multipartFile.transferTo(file);
 
         // S3 파일 업로드
-        uploadOnS3(fileName, file);
+        awsS3Service.uploadOnS3(fileName, file);
         // 주소 할당
         fileUrl = amazonS3Client.getUrl(bucket, fileName).toString();
 
@@ -119,40 +130,5 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         authFileRepository.save(authFile);
 
         return authentication;
-    }
-
-    private void uploadOnS3(final String findName, final File file) {
-        // AWS S3 전송 객체 생성
-        final TransferManager transferManager = TransferManagerBuilder.standard()
-                .withS3Client(amazonS3Client)
-                .build();
-        // 요청 객체 생성
-        final PutObjectRequest request = new PutObjectRequest(bucket, findName, file);
-        // 업로드 시도
-        final Upload upload = transferManager.upload(request);
-
-        try {
-            upload.waitForCompletion();
-        } catch (AmazonClientException amazonClientException) {
-            log.error(amazonClientException.getMessage());
-        } catch (InterruptedException e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    public void deleteFile(String fileName) {
-        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
-    }
-
-    private String createFileName(String fileName) { // 먼저 파일 업로드 시, 파일명을 난수화하기 위해 random으로 돌립니다.
-        return UUID.randomUUID().toString().concat(getFileExtension(fileName));
-    }
-
-    private String getFileExtension(String fileName) { // file 형식이 잘못된 경우를 확인하기 위해 만들어진 로직이며, 파일 타입과 상관없이 업로드할 수 있게 하기 위해 .의 존재 유무만 판단하였습니다.
-        try {
-            return fileName.substring(fileName.lastIndexOf("."));
-        } catch (StringIndexOutOfBoundsException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 형식의 파일(" + fileName + ") 입니다.");
-        }
     }
 }

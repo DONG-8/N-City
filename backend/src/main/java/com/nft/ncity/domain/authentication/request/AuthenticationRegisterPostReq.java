@@ -3,9 +3,7 @@ package com.nft.ncity.domain.authentication.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -33,5 +31,9 @@ public class AuthenticationRegisterPostReq {
     // 인증 타입
     @ApiModelProperty(value="인증 타입", required = true)
     int authType;
+
+    @ApiModelProperty(value="인증파일 url")
+    private String authUrl;
+
 
 }
