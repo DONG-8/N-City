@@ -2,9 +2,11 @@ import styled from 'styled-components'
 import React, { useEffect, useState } from 'react';
 import { IState } from '../NFTStore/NFTStore';
 import ItemCard from '../../components/Card/ItemCard';
-import {Button,Box,Modal,Typography  } from '@mui/material';
+import {Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SaleModal from '../../components/Store/SaleModal';
+import SellIcon from '@mui/icons-material/Sell';
+
 const MypageWrapper = styled.div`
   box-shadow: 1px 3px 7px;
 `
@@ -253,7 +255,7 @@ export default function Mypage() {
         {items.map((item) => {
           return (<Card>
           <ItemCard key={item.id} item={item} />
-          <Button onClick={handleOpen}>Sell</Button>
+          <Button onClick={handleOpen}><SellIcon /></Button>
           </Card>)})}
       </ItemCards>
       <SaleModal open={open} setOpen={setOpen} />
