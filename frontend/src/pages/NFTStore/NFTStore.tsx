@@ -6,63 +6,66 @@ import ItemCard from '../../components/Card/ItemCard'
 
 
 const Title = styled.div`
-  background-color: #F8D9CE ;
+  background-color: #F5E1DB ;
   display:flex ;
   justify-content:space-around;
+  height: 20vh;
+  h1{
+    font-size: 3.5rem;
+  }
   p{
-    margin-top: 4vh;
+    margin-top: 10vh;
     font-weight: 1000 ;
     font-size: 1.5rem;
   }
 `
 const FilterBar = styled.div`
-  box-shadow:2px 2px 2px gray ;
   margin: auto;
-  margin-top: -2vh;
+  margin-top: 3vh;
   width: 70% ;
   display: flex;
   div{
     cursor:pointer;
     flex: 2.5;
-    height: 5vh ;
+    height: 6vh ;
     text-align:center ;
     &:hover{
-      background-color: white ;
+      background-color: whitesmoke ;
       transition:0.3s ;
     }
     p{
-      font-size:2vh ;
+      font-size:2.5vh ;
       margin-top : 1vh;
       font-weight: 1000 ;
     }
   }
-  .allPicture{
-    background-color: #FECDBB;
-
+  div{
+    /* background-color: #F5B6A0; */
+    border-bottom:2px solid #FF865B;
   }
-  .likePicture{
-    background-color: #FEAF84;
-    
-  }
-  .allArtist{
-    background-color: #FECDBB;
-  }
-  .followArtist{
-    background-color: #FEAD9D;
-  }
+  
   #select{
     background-color: white ;
+    border-left: 2px solid #FF865B;
+    border-right: 2px solid #FF865B;
+    border-top:2px solid #FF865B;
+    border-bottom: none;
+    &:hover{
+      background-color: #F9F9F9 ;
+      transition:0.3s ;
+    }
   }
 `
 const CategoryBar = styled.div`
   margin: auto;
+  margin-top: 5vh;
   width: 70% ;
   display: flex;
   li{
     margin: auto;
   }
   p{
-    font-size:2.5vh;
+    font-size:2vh;
     font-weight:1000;
     cursor: pointer;
     transition: 0.3s;
@@ -168,9 +171,9 @@ const NFTStore = () => {
 
     <FilterBar>
       <div className='allPicture' id={status==='items'?'select':""} onClick={()=>{setStatus("items")}}><p>전체작품</p></div>
-      <div className='likePicture' ><p>관심있는 작품</p></div>
+      <div className='likePicture' id={status==='likePicture'?'select':""} onClick={()=>{setStatus("likePicture")}} ><p>관심있는 작품</p></div>
       <div className='allArtist' id={status==='artists'?'select':""} onClick={()=>{setStatus("artists")}}><p>전체 작가</p></div>
-      <div className='followArtist'><p>팔로우한 작가</p></div>
+      <div className='followArtist' id={status==='followArtist'?'select':""} onClick={()=>{setStatus("followArtist")}}><p>팔로우한 작가</p></div>
     </FilterBar>
 
     <CategoryBar>
