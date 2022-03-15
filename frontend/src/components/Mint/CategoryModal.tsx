@@ -59,11 +59,11 @@ const Background = styled.div<{ visible: boolean }>`
 const ModalSection = styled.div<{ visible: boolean }>`
   font-family: "Noto Sans KR", sans-serif;
   width: 600px;
-  height: 55vh;
+  height: 430px;
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 80%;
+  top: 1200px;
   left: 50%;
   border: 2px solid black;
   border-radius: 10px;
@@ -76,14 +76,14 @@ const ModalSection = styled.div<{ visible: boolean }>`
 
 const Title = styled.h1`
   margin: 20px 0 10px;
-  font-size: 30px;
+  font-size: 32px;
   text-align: center;
 `;
 
 const Divider = styled.hr`
   border: solid 1px #ff865b;
   width: 65%;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 `;
 
 const AddButton = styled.button`
@@ -112,19 +112,9 @@ const AddButton = styled.button`
 `;
 
 const ExplaneText = styled.h3`
-  font-size: 20px;
+  font-size: 24px;
+  font-weight: 500;
   margin: 0 0 10px 20px;
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: flex-end;
-  border: none;
-  background: none;
-  cursor: pointer;
 `;
 
 const SelectCategory = styled.div`
@@ -135,14 +125,15 @@ const SelectCategory = styled.div`
   border: 1px solid black;
   border-radius: 15px;
   width: 90%;
+  padding: 10px;
   .active {
-    background-color: #ff865b;
+    background-color: #FEAF84;
     box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
   }
   button {
     font-family: "Noto Sans KR", sans-serif;
-    font-weight: bold;
-    font-size: 15px;
+    font-weight: 500;
+    font-size: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -150,24 +141,35 @@ const SelectCategory = styled.div`
     border-radius: 10px;
     padding: 13px;
     margin: 5px 3px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     height: 20px;
     cursor: pointer;
     &:active {
-      background-color: #de5d30;
+      background-color: #FF9E69;
       box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
     }
   }
 `;
 
 const HashtagBox = styled.div`
-  margin-left: 10px;
+  margin-left: 14px;
   p {
     font-weight: bold;
     display: inline-block;
     margin: 5px 6px;
   }
 `;
+
+const CloseButton = styled.div`
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z'/%3E%3C/svg%3E");
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+`
 
 //// component
 const CategoryModal = ({
@@ -255,8 +257,7 @@ const CategoryModal = ({
     <div>
       <Background visible={visible} onClick={onClose} />
       <ModalSection visible={visible}>
-        <CloseButton type="button" onClick={onClose}>
-          X
+        <CloseButton onClick={onClose}>
         </CloseButton>
         <Title>카테고리 추가</Title>
         <Divider />

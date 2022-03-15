@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MetaMaskOnboarding from "@metamask/onboarding";
 
-
-
 //// style
 const Wrapper = styled.div`
   background-image: linear-gradient( rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8) ), url("/essets/images/login_background.png");
@@ -12,12 +10,15 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: "center";
   align-items: "center";
-  height: 100vh;
-  width: 100vw;
+  height: 1000px;
+  width: 100%;
 `;
 
 const Container = styled.div`
   margin-left: 20vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 const Header = styled.div`
   /* display: flex; */
@@ -44,9 +45,9 @@ const Logo = styled.img`
 const Button = styled.button`
   font-family: 'Noto Sans KR', sans-serif;
   background-color: white;
-  margin-top: 5vh;
-  width: 280px;
-  height: 60px;
+  margin-top: 30px;
+  width: 320px;
+  height: 80px;
   border: 1px solid black;
   border-radius: 2vh;
   font-size: 27px;
@@ -55,7 +56,17 @@ const Button = styled.button`
   align-items: center;
   justify-content: center;
 `
-
+const Explain = styled.div`
+  margin-top: 30px;
+  p {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+  }
+  span {
+    color: #F68614;
+  }
+`
 
 //// component
 const Login = () => {
@@ -123,20 +134,29 @@ const Login = () => {
       <Container>
         {isMetaMaskInstalled() ? (
           <Header>
-            <H1>지갑에 연결하세요 !</H1>
-            <H3>MetaMask를 이용하여 로그인 할 수 있습니다 !</H3>
+            <H1>지갑에 연결하세요</H1>
+            {/* <H3>MetaMask를 이용하여 로그인 할 수 있습니다</H3> */}
           </Header>
         ) : (
           <Header>
-            <H1>지갑이 없으신가요 ?</H1>
-            <H3>지금 바로 생성하세요 !</H3>
+            <H1>지갑이 없으신가요?</H1>
+            <H3>지금 바로 생성하세요</H3>
           </Header>
         )}
-        <p>{account}</p>
-
+        {account && <p>연결된 지갑 주소 : {account}</p>}
+        <Explain>
+          <p>저희 사이트에는 개인지갑을 편리하고 안전하게 관리할 수 있는</p>
+          <p>
+            구글 확장프로그램인 <span>메타마스크</span>를 이용하여 로그인 합니다
+          </p>
+        </Explain>
+        <Explain>
+          <p>이미 지갑을 소유하셨다면 회원가입 절차 필요없이</p>
+          <p>서비스를 바로 이용할 수 있습니다</p>
+        </Explain>
         <Button onClick={onClickButton}>
           <Logo src="/essets/images/metamask_logo.png" alt="Logo" />
-          {onboardButtonText} &rarr;
+          {onboardButtonText}
         </Button>
       </Container>
     </Wrapper>
