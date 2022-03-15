@@ -58,11 +58,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider());
     }
 
-    @Override // ignore check swagger resource
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/v3/api-docs", "/swagger-resources/**",
-                "/swagger-ui.html", "/webjars/**", "/swagger/**", "/api/**", "/swagger-ui/**");
-    }
+//    @Override // ignore check swagger resource
+//    public void configure(WebSecurity web) {
+//        web.ignoring().antMatchers("/v3/api-docs", "/swagger-resources/**",
+//                "/swagger-ui.html", "/webjars/**", "/swagger/**", "/api/**", "/swagger-ui/**");
+//    }
 
 
     @Override
@@ -78,6 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()// 인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
                 .antMatchers("/onlyuser/").hasAnyRole("USER", "ENTERPRISE", "ARTIST", "INFLUENCER") // 로그인한 유저만 접근 가능 경로
                 .antMatchers("/onlyadmin/").hasRole("ADMIN") // 관리자만 접근 가능 경로
+                .antMatchers("/v3/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/api/**", "/swagger-ui/**").permitAll()
     	        	    .anyRequest().permitAll()
                 .and().cors();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가

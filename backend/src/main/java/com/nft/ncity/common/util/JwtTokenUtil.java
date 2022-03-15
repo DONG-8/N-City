@@ -50,13 +50,6 @@ public class JwtTokenUtil {
     		JwtTokenUtil.accessTokenExpiration = accessTokenExpiration;
             JwtTokenUtil.refreshTokenExpiration = refreshTokenExpiration;
 	}
-
-	public static JWTVerifier getVerifier() {
-        return JWT
-                .require(Algorithm.HMAC512(secretKey.getBytes()))
-                .withIssuer(ISSUER)
-                .build();
-    }
     
     public static String createAccessToken(long userId, String userAddress) {
     	Date expires = JwtTokenUtil.getTokenExpiration(accessTokenExpiration);
@@ -122,6 +115,14 @@ public class JwtTokenUtil {
     public static Date getTokenExpiration(int expirationTime) {
     		Date now = new Date();
     		return new Date(now.getTime() + expirationTime);
+    }
+
+    public Long getTokenExpirationAsLong(String token) {
+        // 남은 유효시간
+        Date expiration = extractAllClaims(token).getExpiration();
+        // 현재 시간
+        Long now = new Date().getTime();
+        return (expiration.getTime() - now);
     }
 //
 //    public static void handleError(String token) {

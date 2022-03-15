@@ -60,7 +60,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String userAddress = null;
         String jwt = null;
         String refreshJwt = null;
-        String refreshUAddress = null;
 
         try{
             if(jwtToken != null){
@@ -90,9 +89,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try{    // Refresh Token을 읽어 Access Token을 사용자에게 재생성하고, 요청을 허가시킴
             if(refreshJwt != null){
-                refreshUAddress = redisUtil.getData(refreshJwt);
-
-                if(refreshUAddress.equals(jwtTokenUtil.getUserAddress(refreshJwt))){
+                userAddress = redisUtil.getData(refreshJwt);
+                if (userAddress != null) {
                     User user = logService.getUserDetailByAddress(userAddress);
                     UserDetails userDetails = new UserDetails(user);
 
@@ -103,9 +101,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(jwtAuthentication);
 
                     // Access Token 재생성
-                    String newToken = jwtTokenUtil.createAccessToken(user.getUserId(), refreshUAddress);
+                    String newToken = jwtTokenUtil.createAccessToken(user.getUserId(), userAddress);
 
-                    Cookie newAccessToken = cookieUtil.createCookie(jwtTokenUtil.ACCESS_TOKEN_NAME,newToken);
+                    Cookie newAccessToken = cookieUtil.createCookie(jwtTokenUtil.ACCESS_TOKEN_NAME, newToken);
                     response.addCookie(newAccessToken);
                 }
             }

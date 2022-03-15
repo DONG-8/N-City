@@ -1,9 +1,11 @@
 package com.nft.ncity.domain.log.Controller;
 
+import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.common.util.CookieUtil;
 import com.nft.ncity.common.util.JwtTokenUtil;
 import com.nft.ncity.common.util.RedisUtil;
 import com.nft.ncity.domain.log.request.LoginPostReq;
+import com.nft.ncity.domain.log.request.LogoutGetReq;
 import com.nft.ncity.domain.log.response.LoginPostRes;
 import com.nft.ncity.domain.log.service.LogService;
 import com.nft.ncity.domain.log.db.entity.User;
@@ -34,15 +36,23 @@ public class LogController {
     @Autowired
     CookieUtil cookieUtil;
 
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
+
     @ApiOperation(value = "로그인")
     @PostMapping("/login")
-    public ResponseEntity<LoginPostRes> userLogin(@RequestBody @ApiParam(value = "로그인 정보", required = true) LoginPostReq loginInfo,
-                                                  HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<LoginPostRes> userLogin(@RequestBody @ApiParam(value = "로그인 정보", required = true) LoginPostReq loginInfo, HttpServletResponse response) {
         log.info("userLogin - Call");
 
         String userAddress = loginInfo.getUserAddress();
+        log.error("userAddress"+ userAddress);
+        System.out.println("userAdd " + userAddress);
+        Integer addressLength = userAddress.length();
+        System.out.println("addressLength " + addressLength);
+        System.out.println(addressLength.equals(42));
+        log.error(String.valueOf(addressLength.equals(42)));
         // 올바른 지갑 주소인지 확인
-        if(userAddress.length() == 42) {
+        if(!addressLength.equals(42)) {
             return ResponseEntity.status(401).body(LoginPostRes.of(401, "Incorrect Wallet", null));
         } else {
             User user = logService.getUserDetailByAddress(userAddress);
@@ -62,4 +72,29 @@ public class LogController {
             return ResponseEntity.status(201).body(LoginPostRes.of(201, "Success", accessJwt));
         }
     }
+
+    @ApiOperation(value = "로그아웃")
+    @GetMapping("/logout")
+    public ResponseEntity<? extends BaseResponseBody> userLogout( HttpServletRequest request) {
+        log.info("userLogout - Call");
+
+        String accessToken = cookieUtil.getCookie(request,  jwtTokenUtil.ACCESS_TOKEN_NAME).getValue();
+        String refreshToken = cookieUtil.getCookie(request, jwtTokenUtil.REFRESH_TOKEN_NAME).getValue();
+
+        // Access Token 유효하다면
+        if (JwtTokenUtil.verify(accessToken).isResult()) {
+            // access token 유효시간 가지고와서 redis에 블랙리스트로 저장하기
+            long expirationTime = jwtTokenUtil.getTokenExpirationAsLong(accessToken);
+            redisUtil.setDataExpire(accessToken, "logout", expirationTime);
+            log.info("userLogout - access token redis에 저장");
+        }
+
+        // refresh token 삭제
+        if(redisUtil.getData(refreshToken) != null) {
+            redisUtil.deleteData(refreshToken);
+            log.info("userLogout - refreshToken redis에서 삭제");
+        }
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
+
 }
