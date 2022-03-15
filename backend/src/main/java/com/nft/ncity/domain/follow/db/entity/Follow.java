@@ -14,7 +14,6 @@ import java.io.Serializable;
 //@MappedSuperclass
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "user")
 @Builder
 @IdClass(Follow.FollowKey.class)
 public class Follow {
