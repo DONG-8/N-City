@@ -168,10 +168,12 @@ const SubBottomItem = styled.div`
     margin-left: 20px;
     margin-bottom: 10px;
     /* cursor: pointer; */
+    font-size: 30px;
   }
   div {
     margin-left: 40px;
     margin-top: 13px;
+    font-size: 20px;
     cursor: pointer;
     :hover {
       text-decoration: underline;
@@ -309,8 +311,6 @@ export default function Main() {
   const [subPosition, setSubPosition] = useState<number>(0);
   const [subEventNumber, setSubEventNumber] = useState<number>(0);
   const [subCheck, setSubCheck] = useState<number>(0);
-
-  const [exitPopup, setExitPopup] = useState<Boolean>(false);
 
   // 나중에 DB 기반의 데이터 형성시켜주고 이미지 받아오기 아니면 그냥 여기서 사용
   const images = [
@@ -828,7 +828,6 @@ export default function Main() {
             <div>동탁 님의 방</div>
             <div>오일남 님의 방</div>
             <div>제니 님의 방</div>
-            <div>임현홍 님의 방</div>
           </SubBottomItem>
         </SubBannerWrraper>
       </MainWrapper>
