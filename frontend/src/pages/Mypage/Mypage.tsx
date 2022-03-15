@@ -1,8 +1,12 @@
 import styled from 'styled-components'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IState } from '../NFTStore/NFTStore';
 import ItemCard from '../../components/Card/ItemCard';
-import Button from '@mui/material/Button';
+import {Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import SaleModal from '../../components/Store/SaleModal';
+import SellIcon from '@mui/icons-material/Sell';
+
 const MypageWrapper = styled.div`
   box-shadow: 1px 3px 7px;
 `
@@ -42,7 +46,6 @@ const Wallet = styled.div`
     height: 90%;
     margin: auto;
     margin-top:0.5vh;
-    border-radius: 10px;
     div{
       flex: 2.5;
       height: 100%;
@@ -61,42 +64,40 @@ const Wallet = styled.div`
   }
 `
 const FilterBar = styled.div`
-  box-shadow:2px 2px 2px gray ;
   margin: auto;
+  margin-top: 5vh;
   width: 70% ;
   display: flex;
-  margin-top: -5vh;
   div{
     cursor:pointer;
     flex: 2.5;
-    height: 5vh ;
+    height: 6vh ;
     text-align:center ;
     &:hover{
-      background-color: white ;
+      background-color: whitesmoke ;
       transition:0.3s ;
     }
     p{
-      font-size:2vh ;
+      font-size:2.5vh ;
       margin-top : 1vh;
       font-weight: 1000 ;
     }
   }
-  .allPicture{
-    background-color: #FECDBB;
-
+  div{
+    /* background-color: #F5B6A0; */
+    border-bottom:2px solid #FF865B;
   }
-  .likePicture{
-    background-color: #FEAF84;
-    
-  }
-  .allArtist{
-    background-color: #FECDBB;
-  }
-  .followArtist{
-    background-color: #FEAD9D;
-  }
+  
   #select{
     background-color: white ;
+    border-left: 2px solid #FF865B;
+    border-right: 2px solid #FF865B;
+    border-top:2px solid #FF865B;
+    border-bottom: none;
+    &:hover{
+      background-color: #F9F9F9 ;
+      transition:0.3s ;
+    }
   }
 `
 const ProfileImg = styled.div`
@@ -107,7 +108,7 @@ const ProfileImg = styled.div`
     border-radius: 100%;
   }
 `;
-const Nickname = styled.div`
+const Profile = styled.div`
   position: absolute;
   top:2vh;
   left: 18vw;
@@ -117,31 +118,40 @@ const Nickname = styled.div`
   h2{
     font-size: 3vh;
   }
+  button{
+    font-weight: 1000;
+    background-color:#E89669;
+    width: 14vw;
+    height: 5vh;
+    font-size: 2.2vh;
+    &:hover{
+      transition: 0.2s;
+      background-color: #F08850;
+    }
+  }
   
 `
 const ItemCards = styled.div`
   margin:auto ;
+  margin-top:10vh;
   width: 100% ;
   display: flex ;
   flex-wrap: wrap ;
-  justify-content:center ;
+  justify-content:center ; 
 `
-const GotoSetting = styled.div`
-  position: absolute;
-  left: 70vw;
-  top:20vh;
-  width: 10vw;
-  height: 5vh;
-  button{
-    font-weight: 1000;
-    background-color:salmon;
-    &:hover{
-      transition: 0.2s;
-      background-color: coral;
-    }
+const Card = styled.div`
+  button {
+    position: absolute;
+    margin-left: 10rem;
+    margin-top: -4rem;
+    font-size: 1.5rem;
   }
-`
+`;
+
 export default function Mypage() {
+  
+  const navigate = useNavigate()
+  const [status,setStatus] = useState("allPicture")
   const [items,setItems] = useState<IState["item"]>([
     {id:1,name:"Hong Hosus",title:"#Hong1535",price:1.24,liked:35,url:'https://lh3.googleusercontent.com/MmtavcUNNiTpLFfDqqol8pwp1_TKSEv0AbkKSxmN2lffhgYtkxAdfAo72lZVSJ4hpRW87s9TCL-HYMEIpaJ8PdgWBQWVlPsMZkgM6A=w305'},
     {id:2,name:"Giks Home",title:"#ghe23434",price:1.35,liked:43,url:'https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352'},
@@ -156,55 +166,100 @@ export default function Mypage() {
     {id:11,name:"Giks Home",title:"#ghe254334",price:1.2,liked:24,url:'https://lh3.googleusercontent.com/BqScg3QwKPcNW_cxtvBws2D2cE8Us-QsN9yYmB_8UzUikBwLfOC5Nc2JgXWOB2ijx4lAU2KcYplGujimb2FUD9ArixBFeCyNPcES=w352'},
     {id:12,name:"Giks Home",title:"#g53434",price:1.37,liked:52,url:'https://lh3.googleusercontent.com/OjwqOOt3_po4pPlTYg43Us9_pp4Ji9X8JKZY4aCsjzHISKQL-u2oSX_q4NmK5qZZn5PPYfMCpDS8OKFXBzXzXA6ljfWfaxGdEvc8DA=w300'},
   ])
+  //모달창
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+
+  useEffect(()=>{
+    window.scrollTo(0,0)
+  },[])
   return (
     <>
-    
-  <MypageWrapper>
-    <Background >
-      <img alt="배경" src="essets/images/login_background.png"/>
-    </Background>
-      <ProfileWrapper>
-        <ProfileImg>
-          <img src='https://lh3.googleusercontent.com/Ie_qAA75_piqy1daeu3dRKUEETbQMz0ormtUaHt8LY15I5AeGKJ45gojR9NW7SY-h_vbgA-O-hwKrU0xf6Q_qqpwQ4ep7Xld8hao=s130' alt="프로필"/>
-        </ProfileImg>
-        <Nickname>
-          <h1>ShowMaker</h1>
-          <h2>follower: 150</h2>
-        </Nickname>
-        <Wallet>
-          <div className='border'>
-            <div> 
-              <p className='number'>10</p> 
-              <p className='description'>items</p>
+      <MypageWrapper>
+        <Background>
+          <img alt="배경" src="essets/images/login_background.png" />
+        </Background>
+        <ProfileWrapper>
+          <ProfileImg>
+            <img
+              src="https://lh3.googleusercontent.com/Ie_qAA75_piqy1daeu3dRKUEETbQMz0ormtUaHt8LY15I5AeGKJ45gojR9NW7SY-h_vbgA-O-hwKrU0xf6Q_qqpwQ4ep7Xld8hao=s130"
+              alt="프로필"
+            />
+          </ProfileImg>
+          <Profile>
+            <h1>ShowMaker</h1>
+            <h2>follower: 150</h2>
+              <Button
+                onClick={() => {
+                  navigate("/profilesetting");
+                }}
+                color="warning"
+                variant="contained"
+              >
+                프로필 수정
+              </Button>
+          </Profile>
+          <Wallet>
+            <div className="border">
+              <div>
+                <p className="number">10</p>
+                <p className="description">items</p>
+              </div>
+              <div>
+                <p className="number">10213</p>
+                <p className="description"> owners</p>
+              </div>
+              <div>
+                <p className="number">
+                  {" "}
+                  <img
+                    alt="ether"
+                    style={{ height: "2.5vh" }}
+                    src="essets\images\ethereum.png"
+                  />
+                  1.02
+                </p>
+                <p className="description">floor price</p>
+              </div>
+              <div>
+                <p className="number">
+                  {" "}
+                  <img
+                    alt="ether"
+                    style={{ height: "2.5vh" }}
+                    src="essets\images\ethereum.png"
+                  />
+                  5121
+                </p>
+                <p className="description">volume traded</p>
+              </div>
             </div>
-            <div>
-              <p className='number'>10213</p>
-              <p className='description'> owners</p>
-            </div>
-            <div>
-              <p className='number'> <img alt="ether" style={{"height":"2.5vh"}} src="essets\images\ethereum.png"/>1.02</p>
-             <p className='description'>floor price</p>
-            </div>
-            <div>
-              <p className='number'> <img alt="ether" style={{"height":"2.5vh"}} src="essets\images\ethereum.png"/>5121</p> 
-              <p className='description'>volume traded</p>
-            </div>
-          </div>
-        </Wallet>
-        <GotoSetting><Button color="warning" variant="contained">프로필 수정</Button></GotoSetting>
-      </ProfileWrapper>
+          </Wallet>
+        </ProfileWrapper>
+      </MypageWrapper>
         <FilterBar>
-          <div className='allPicture'  ><p>내가 가진 </p></div>
-          <div className='likePicture' ><p>내가 등록한</p></div>
-          <div className='allArtist' ><p>좋아요한</p></div>
-          <div className='followArtist'><p>활동내역</p></div>
+          <div id={status==='allPicture'?'select':""} onClick={()=>{setStatus("allPicture")}} className="allPicture">
+            <p>내가 가진 </p>
+          </div>
+          <div id={status==='likePicture'?'select':""} onClick={()=>{setStatus("likePicture")}} className="likePicture">
+            <p>내가 등록한</p>
+          </div>
+          <div id={status==='allArtist'?'select':""} onClick={()=>{setStatus("allArtist")}} className="allArtist">
+            <p>좋아요한</p>
+          </div>
+          <div id={status==='followArtist'?'select':""} onClick={()=>{setStatus("followArtist")}}  className="followArtist">
+            <p>활동내역</p>
+          </div>
         </FilterBar>
-  </MypageWrapper>
-    <ItemCards>
-      {items.map(item=>{return(
-        <ItemCard key={item.id} item={item} />)})}
-    </ItemCards>
-  </>
+      <ItemCards>
+        {items.map((item) => {
+          return (<Card>
+          <ItemCard key={item.id} item={item} />
+          <Button onClick={handleOpen}><SellIcon /></Button>
+          </Card>)})}
+      </ItemCards>
+      <SaleModal open={open} setOpen={setOpen} />
+    </>
   );
 }
 
