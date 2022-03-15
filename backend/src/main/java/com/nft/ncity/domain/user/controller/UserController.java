@@ -1,10 +1,10 @@
 package com.nft.ncity.domain.user.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
-import com.nft.ncity.domain.authentication.db.entity.Authentication;
-import com.nft.ncity.domain.authentication.request.AuthenticationRegisterPostReq;
+import com.nft.ncity.domain.user.db.entity.EmailAuth;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
+import com.nft.ncity.domain.user.request.EmailAuthRegisterReq;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
 import com.nft.ncity.domain.user.service.UserService;
 import io.swagger.annotations.Api;
@@ -223,36 +223,55 @@ public class UserController {
         return ResponseEntity.status(201).body(BaseResponseBody.of(201,"닉네임 변경 가능."));
     }
 
-    @PostMapping("/confirm-email")
-    @ApiOperation(value = "이메일 인증", notes = "<strong>이메일 인증</strong>")
+    @PostMapping("/confirm")
+    @ApiOperation(value = "이메일 인증 요청하기", notes = "<strong>이메일 인증 요청하기</strong>")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "이메일 인증 가능."),
-            @ApiResponse(code = 403, message = "이미 존재하는 이메일."),
-            @ApiResponse(code = 404, message = "이메일 인증 불가능.")
+            @ApiResponse(code = 201, message = "이메일 인증 등록 및 확인 메일 보내기 완료."),
+            @ApiResponse(code = 403, message = "이미 존재하는 이메일.")
     })
-    public ResponseEntity<BaseResponseBody> EmailAuthRegister(@RequestBody String emailAuthEmail) {
+    public ResponseEntity<BaseResponseBody> EmailAuthRegister(@RequestBody EmailAuthRegisterReq emailAuthRegisterReq) {
 
-
-        // 0. 이메일을 입력하고 해당 버튼을 클릭한다.
+        // 0. 이메일을 입력하고 이메일 인증 신청 버튼을 클릭한다.
         // 1. 해당 이메일이 user 테이블에 이미 존재하는지 확인
-        // 2. 존재하지 않는다면 해당 이메일로 인증 진행
+        // 2. 존재하지 않는다면 해당 이메일 EmailAuth 테이블에 등록
         // 2-1 존재 한다면 에러메세지 응답.
-        // 3. 이메일 인증후 완료되면 응답 체크.
+
         log.info("EmailAuthRegister - 호출");
         // 해당 이메일이 존재하면
-        if(userRepository.findByUserEmail(emailAuthEmail).isPresent()) {
+        if(userRepository.findByUserEmail(emailAuthRegisterReq.getEmailAuthEmail()).isPresent()) {
             return ResponseEntity.status(403).body(BaseResponseBody.of(403,"이미 존재하는 이메일."));
         }
 
-        userService.EmailAuthRegister(emailAuthEmail);
+        // 그렇다면 이미 인증을 완료한 상태에서 이메일을 변경한다면?
+        User user = userRepository.findUserByUserId(emailAuthRegisterReq.getUserId()).get();
+        // 다시 인증상태 false로 변경
+        user.updateEmail(emailAuthRegisterReq.getEmailAuthEmail());
+        // 변경한거 DB에 저장.
+        userRepository.save(user);
 
+        // 이메일 인증 테이블에 해당 이메일 등록하고 인증 확인 메일 보내기.
+        EmailAuth emailAuth = userService.EmailAuthRegister(emailAuthRegisterReq.getEmailAuthEmail());
 
-        if(true) {
-            log.error("EmailAuthRegister - This userNickName exists.");
-            return ResponseEntity.status(404).body(BaseResponseBody.of(404,"닉네임 변경 불가능."));
-        }
+        return ResponseEntity.status(201).body(BaseResponseBody.of(201,"이메일 인증 등록 및 확인 메일 보내기 완료."));
+    }
+
+    @GetMapping("/confirm-email")
+    @ApiOperation(value = "이메일 인증 수락", notes = "<strong>이메일 인증 수락</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "이메일 인증 수락."),
+            @ApiResponse(code = 404, message = "이메일 인증 수락 불가능.")
+    })
+    public ResponseEntity<BaseResponseBody> EmailAuthConfirm(@RequestParam(name = "email") String emailAuthEmail,
+                                                             @RequestParam(name = "authToken") String authToken) {
+
+        // 이메일 인증 처리.
+        log.info("EmailAuthConfirm - 호출");
+        userService.confirmEmail(emailAuthEmail, authToken);
+
         return ResponseEntity.status(201).body(BaseResponseBody.of(201,"닉네임 변경 가능."));
     }
+
+
 
 
 }

@@ -16,5 +16,6 @@ public interface UserService {
 	Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo, MultipartFile profileImg) throws IOException;
 	Long userUpdateNoProfileImg(UserModifyUpdateReq userInfo);
 	EmailAuth EmailAuthRegister(String emailAuthEmail);
+	void confirmEmail(String emailAuthEmail,String authToken);
 
 }

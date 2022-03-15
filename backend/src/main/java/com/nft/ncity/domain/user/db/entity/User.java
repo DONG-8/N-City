@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Getter
 @Entity
 @ApiModel(value = "User", description = "회원 정보")
-//@MappedSuperclass
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "user")
@@ -59,6 +58,10 @@ public class User {
     @ApiModelProperty(value = "회원 이메일")
     String userEmail;
 
+    // 이메일 인증여부
+    @ApiModelProperty(value = "회원 이메일 인증여부")
+    Boolean userEmailConfirm;
+
     // 프로필 설명란
     @ApiModelProperty(value = "회원 프로필 설명란")
     String userDescription;
@@ -67,4 +70,14 @@ public class User {
     @ApiModelProperty(value = "회원 프로필 이미지 url")
     String userImgUrl;
 
+    
+    // 이메일 변경시 false로 값 변환해주기
+    public void updateEmail(String userEmail) {
+        this.userEmail = userEmail;
+        this.userEmailConfirm = false;
+    }
+
+    public void emailVerifiedSuccess() {
+        this.userEmailConfirm = true;
+    }
 }

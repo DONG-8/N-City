@@ -22,9 +22,13 @@ public class EmailAuth {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long emailAuthId;
 
+    // 가입 이메일
     private String emailAuthEmail;
+    // UUID
     private String emailAuthToken;
+    // 만료 여부
     private Boolean emailAuthExpired;
+    // 만료 시간
     private LocalDateTime emailAuthExpireDate;
 
     @Builder

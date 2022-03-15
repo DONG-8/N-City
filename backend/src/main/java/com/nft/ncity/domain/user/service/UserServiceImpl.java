@@ -3,6 +3,8 @@ package com.nft.ncity.domain.user.service;
 import com.nft.ncity.domain.authentication.service.AwsS3Service;
 import com.nft.ncity.domain.user.db.entity.EmailAuth;
 import com.nft.ncity.domain.user.db.entity.User;
+import com.nft.ncity.domain.user.db.repository.EmailAuthRepositorySupport;
+import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.nft.ncity.domain.user.db.repository.UserRepositorySupport;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -23,7 +27,16 @@ public class UserServiceImpl implements UserService {
     AwsS3Service awsS3Service;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     UserRepositorySupport userRepositorySupport;
+
+    @Autowired
+    EmailAuthRepositorySupport emailAuthRepositorySupport;
+
+    @Autowired
+    EmailService emailService;
 
     @Override
     public User getUserByEmail(String userEmail) {
@@ -59,7 +72,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public EmailAuth EmailAuthRegister(String emailAuthEmail) {
-        return null;
+        EmailAuth emailAuth = emailAuthRepositorySupport.emailAuthRegister(emailAuthEmail);
+
+        // 해당 이메일로 인증메일 전송
+        emailService.send(emailAuth.getEmailAuthEmail(),emailAuth.getEmailAuthToken());
+        return emailAuth;
+    }
+
+    @Override
+    @Transactional
+    public void confirmEmail(String emailAuthEmail, String authToken) {
+        // emailAuth 테이블 갱신
+        EmailAuth emailAuth = emailAuthRepositorySupport.findValidAuthByEmail(emailAuthEmail,authToken, LocalDateTime.now()).get();
+        emailAuth.useToken();
+
+        User user = userRepository.findByUserEmail(emailAuthEmail).get();
+        user.emailVerifiedSuccess();
+
     }
 
 }
