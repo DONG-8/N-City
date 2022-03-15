@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Page2 from "./Page2";
 import Page3 from "./Page3";
-import Page1 from "./Page1";
+import Page4 from "./Page4";
 
 const PopupWrapper = styled.div`
   position: absolute;
@@ -43,7 +43,7 @@ const Popup = () => {
           <Exit onClick={() => clickExit()}>X</Exit>
           <Page2></Page2>
           <Page3></Page3>
-          <Page3></Page3>
+          <Page4></Page4>
         </PopupWrapper>
       ) : null}
     </>

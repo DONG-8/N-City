@@ -3,61 +3,60 @@ import styled from "styled-components";
 import axios, { AxiosRequestConfig } from "axios";
 import CategoryModal, {
   Icategory,
-} from "../../components/SalesResistration/CategoryModal";
+} from "../../components/Mint/CategoryModal";
 
 const Wrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   display: flex;
   flex-direction: column;
-  margin: 3vh 7vw;
+  margin: 5vh 10vw;
 `;
 
 const Title = styled.h1`
+  margin-top: 60px;
+  font-size: 50px;
   span {
-    color: #ff865b;
+    color: #ff7543;
   }
 `;
 
 const ExplaneBox = styled.div`
+  margin-top: 8px;
   p {
+    font-size: 20px;
     margin: 0;
   }
 `;
 
 const UploadBox = styled.div`
-  .file-label {
+  label {
     position: relative;
     display: flex;
     flex-direction: column;
-    margin-top: 30px;
-    background-color: #e5e5e5;
+    margin-top: 10px;
     color: black;
     justify-content: center;
     align-items: center;
     padding: 10px 0;
     width: 500px;
-    height: 300px;
+    height: 310px;
+    border: 3px dashed lightgray;
     border-radius: 15px;
     cursor: pointer;
-    &:active {
-      background-color: #de5d30;
-    }
-    p {
-      position: absolute;
-      bottom: 22%;
-    }
     div {
-      /* width: inherit;
-      height: inherit; */
       img {
         max-width: 480px;
-        max-height: 300px;
+        max-height: 310px;
         object-fit: cover;
       }
-      .file-logo {
-        width: 150px;
-        height: auto;
+      video {
+        max-width: 490px;
+        max-height: 310px;
+        object-fit: cover;
       }
+    }
+    audio {
+      width: 420px;
     }
   }
   .file {
@@ -65,28 +64,37 @@ const UploadBox = styled.div`
   }
   .file-name {
     position: absolute;
-    margin-top: 5px;
-    margin-left: 5px;
+    margin-top: -32px;
+    margin-left: 10px;
     font-weight: bold;
+    font-size: 18px;
     color: #de5d30;
   }
+`;
+
+const Change = styled.div`
+  font-weight: 600;
+  font-size: 20px;
+  padding: 5px 0;
 `;
 
 const FormBox = styled.form``;
 
 const NameInputBox = styled.div`
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
+  font-weight: 500;
+  font-size: 25px;
+  margin-top: 50px;
+  p {
+    margin: 8px 0;
+  }
   input {
-    border: 1px solid grey;
+    margin: 0;
+    border: 1px solid lightgray;
     border-radius: 5px;
     height: 20px;
     width: 300px;
-    margin-left: 10px;
-    background-color: #e5e5e5;
-    font-size: 15px;
+    padding: 10px;
+    font-size: 16px;
     font-family: inherit;
     :focus {
       outline: none;
@@ -99,9 +107,9 @@ const Categories = styled.div`
   flex-wrap: wrap;
   margin: 0 auto 10px;
   p {
-    box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px,
-      rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
-    background-color: #ff865b;
+    background-color: white;
+    border: 1px solid #ff865b;
+    color: #ff865b;
     font-weight: bold;
     font-size: 15px;
     display: flex;
@@ -119,19 +127,22 @@ const Categories = styled.div`
 `;
 
 const DescriptionInputBox = styled.div`
-  font-weight: bold;
+  font-weight: 500;
+  margin-top: 30px;
+  font-size: 25px;
   p {
-    margin-top: 8px;
+    margin: 8px 0;
   }
   textarea {
-    border: 1px solid grey;
+    padding: 10px;
+    border: 1px solid lightgray;
     border-radius: 5px;
+    margin-top: 0;
     width: 80vw;
     height: 100px;
-    background-color: #e5e5e5;
     resize: none;
     font-family: inherit;
-    font-size: 15px;
+    font-size: 16px;
     :focus {
       outline: none;
     }
@@ -141,29 +152,18 @@ const DescriptionInputBox = styled.div`
 const CategoryBox = styled.div`
   display: flex;
   align-items: center;
-  font-weight: bold;
-  img {
-    display: inline;
-    margin-left: 10px;
-    width: 30px;
-    height: 30px;
-    border-radius: 10px;
-    cursor: pointer;
-    &:hover {
-      width: 32px;
-      height: 32px;
-      transition: all 0.08s ease-out;
-    }
-    &:active {
-      background-color: #f3c8b9;
-    }
+  font-weight: 500;
+  font-size: 25px;
+  margin-top: 0;
+  p {
+    margin-bottom: 8px;
   }
 `;
 
 const ButtonBox = styled.div`
   display: flex;
   justify-content: center;
-  margin: 20px auto 100px;
+  margin: 50px auto 200px;
   button {
     font-family: "Noto Sans KR", sans-serif;
     position: absolute;
@@ -172,18 +172,13 @@ const ButtonBox = styled.div`
     align-items: center;
     background-color: #ff865b;
     color: #fff;
-    font-weight: bold;
-    font-size: 20px;
+    font-weight: 500;
+    font-size: 25px;
     padding: 10px 0;
-    width: 200px;
+    width: 300px;
     height: 50px;
     border-radius: 15px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
-    &:hover {
-      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-      width: 202px;
-      height: 52px;
-    }
     &:active {
       background-color: #de5d30;
       box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
@@ -191,13 +186,59 @@ const ButtonBox = styled.div`
   }
 `;
 
+const ThumbnailUploadBox = styled(UploadBox)`
+  label {
+    width: 250px;
+    height: 250px;
+    div {
+      img {
+        max-width: 250px;
+        max-height: 250px;
+        object-fit: cover;
+      }
+    }
+  }
+`
+
+const ThumbnailExplain = styled.div`
+  p {
+    font-size: 25px;
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+`
+
+const Plus = styled.div`
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z' fill='rgba(255,134,91,1)'/%3E%3C/svg%3E");
+  width: 100px;
+  height: 100px;
+`;
+
+const HashtagBox = styled.div`
+  span {
+    font-size: 18px;
+  }
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+`
+
+const HashtagPlus = styled(Plus)`
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+`
+
 //// component
-const SalesResistration = () => {
-  const [imageSrc, setImageSrc] = useState<string>("");
+const Mint = () => {
+  const [file, setFile] = useState<any>();
+  const [fileSrc, setFileSrc] = useState<string>("");
+  const [thumbnail, setThumbnail] = useState<any>();
+  const [thumbnailSrc, setThumbnailSrc] = useState<string>("");
   const [tokenName, setTokenName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
-  const [file, setFile] = useState<any>();
+  const [isVideo, setIsVideo] = useState<boolean>(false);
 
   // category modal
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -240,14 +281,26 @@ const SalesResistration = () => {
     // })();
   };
 
-  const encodeFileToBasek64 = (fileBlob: any) => {
-    const reader: any = new FileReader();
+  const encodeMainFileToBasek64 = (fileBlob: any) => {
+    const reader:any = new FileReader();
     if (fileBlob) {
       reader.readAsDataURL(fileBlob);
     }
     return new Promise(() => {
       reader.onload = () => {
-        setImageSrc(reader.result);
+        setFileSrc(reader.result);
+      };
+    });
+  };
+
+  const encodeThumbnailToBasek64 = (fileBlob: any) => {
+    const reader:any = new FileReader();
+    if (fileBlob) {
+      reader.readAsDataURL(fileBlob);
+    }
+    return new Promise(() => {
+      reader.onload = () => {
+        setThumbnailSrc(reader.result);
       };
     });
   };
@@ -263,77 +316,108 @@ const SalesResistration = () => {
   };
 
   const handleFileOnChange = (e: React.ChangeEvent) => {
+    console.log("메인파일변화")
     setFile((e.target as HTMLInputElement).files?.item(0));
-
     console.log((e.target as HTMLInputElement).files?.item(0));
     if ((e.target as HTMLInputElement).files) {
-      encodeFileToBasek64((e.target as HTMLInputElement).files?.item(0));
+      encodeMainFileToBasek64((e.target as HTMLInputElement).files?.item(0));
     }
   };
 
-  const previewImage = () => {
+  const handleThumbnailUpload = (e: React.ChangeEvent) => {
+    console.log("썸네일파일변화")
+    setThumbnail((e.target as HTMLInputElement).files?.item(0));
+    console.log((e.target as HTMLInputElement).files?.item(0));
+    if ((e.target as HTMLInputElement).files) {
+      encodeThumbnailToBasek64((e.target as HTMLInputElement).files?.item(0));
+    }
+  }
+
+  const isVideoAudio = () => {
+    if (file?.type.slice(0, 5) === "video" || file?.type.slice(0, 5) === "audio") {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const previewMainImage = () => {
     if (file?.type.slice(0, 5) === "image") {
       return (
         <div className="preview">
           {" "}
-          {imageSrc && <img src={imageSrc} alt="preview-img" />}{" "}
+          {fileSrc && <img src={fileSrc} alt="preview-img" />}{" "}
         </div>
       );
     } else if (file?.type.slice(0, 5) === "video") {
       return (
         <div>
-          <img
-            className="file-logo"
-            src="/essets/images/video-file.png"
-            alt="video-file"
-          />
+          <video src={fileSrc} controls></video>
         </div>
       );
     } else if (file?.type.slice(0, 5) === "audio") {
       return (
         <div>
-          <img
-            className="file-logo"
-            src="/essets/images/music-file.png"
-            alt="audio-file"
-          />
+          <audio src={fileSrc} controls></audio>
         </div>
       );
     } else if (file) {
       alert("부적절한 파일입니다.");
       return (
         <div>
-          <img src="/essets/images/plus_image.png" alt="fileimage" />
-          <p>파일 업로드</p>
+          <Plus></Plus>
         </div>
       );
     } else {
       return (
         <div>
-          <img src="/essets/images/plus_image.png" alt="fileimage" />
-          <p>파일 업로드</p>
+          <Plus></Plus>
         </div>
       );
     }
   };
+
+  console.log(file)
+  console.log(thumbnail)
+
+  const previewThumbnailImage = () => {
+    if (thumbnail) {
+      return (
+        <div className="preview">
+          {" "}
+          {thumbnailSrc && <img src={thumbnailSrc} alt="preview-img" />}{" "}
+        </div>
+      )
+    } else {
+      return (
+        <div>
+        <Plus></Plus>
+      </div>
+      )
+    }
+  }
+
+  useEffect(() => {
+    if (
+      file?.type.slice(0, 5) === "video"
+    ) {
+      setIsVideo(true);
+    } else {
+      setIsVideo(false);
+    }
+  }, [file]);
 
   return (
     <Wrapper>
       <Title>
         <span>NFT </span>작품 등록하기
       </Title>
-      <ExplaneBox>
-        <p>*필수</p>
-        <p>사진, 비디오, 오디오 </p>
-        <br />
-        <p className="secondpart">100MB 를 넘기지않는</p>
-        <p>PG,PNG,GIF,SVG,MP4,MP3</p>
-        <p>파일만 가능합니다.</p>
-      </ExplaneBox>
       <FormBox>
         <UploadBox>
-          <label className="file-label" htmlFor="chooseFile">
-            {previewImage()}
+          <p className="file-name">{file?.name}</p>
+          <label className={file?.type.slice(0, 5)} htmlFor="chooseFile">
+            {previewMainImage()}
+            {isVideo && <Change>Change</Change>}
           </label>
           <input
             className="file"
@@ -342,10 +426,30 @@ const SalesResistration = () => {
             accept="audio/*, video/*, image/*"
             onChange={handleFileOnChange}
           ></input>
-          <p className="file-name">{file?.name}</p>
-          <br></br>
+          <ExplaneBox>
+            <p className="secondpart">100MB를 넘지않는</p>
+            <p>JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG</p>
+            <p>파일만 가능합니다.</p>
+          </ExplaneBox>
           {/* {file?.type.slice(0, 5)} */}
         </UploadBox>
+        {isVideoAudio() && (
+          <ThumbnailUploadBox>
+            <ThumbnailExplain>
+              <p>미리보기 이미지를 업로드해주세요*</p>
+            </ThumbnailExplain>
+            <label className={file?.type.slice(0, 5)} htmlFor="chooseThumbnail">
+              {previewThumbnailImage()}
+            </label>
+            <input
+              className="file"
+              id="chooseThumbnail"
+              type="file"
+              accept="image/*"
+              onChange={handleThumbnailUpload}
+            ></input>
+          </ThumbnailUploadBox>
+        )}
         <NameInputBox>
           <p>작품이름*: </p>
           <input
@@ -365,20 +469,21 @@ const SalesResistration = () => {
         </DescriptionInputBox>
         <CategoryBox>
           <p>카테고리</p>
-          <img
-            src="/essets/images/category_add_button.png"
-            alt="category add"
-            onClick={handleModalOpen}
-          />
         </CategoryBox>
-        <Categories>
-          {categories.map((category) => (
-            <p key={category} onClick={handleModalOpen}>
-              # {category}
-            </p>
-          ))}
-        </Categories>
-
+        {categories.length !== 0 ? (
+          <Categories>
+            {categories.map((category) => (
+              <p key={category} onClick={handleModalOpen}>
+                # {category}
+              </p>
+            ))}
+          </Categories>
+        ) : (
+          <HashtagBox onClick={handleModalOpen}>
+            <span>카테고리를 추가해 주세요</span>
+            <HashtagPlus />
+          </HashtagBox>
+        )}
         <ButtonBox>
           <button onClick={onClickSubmit}>작품등록</button>
         </ButtonBox>
@@ -393,4 +498,4 @@ const SalesResistration = () => {
   );
 };
 
-export default SalesResistration;
+export default Mint;

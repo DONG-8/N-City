@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PersonIcon from "@material-ui/icons/Person";
+import SearchBar from "./SearchBar";
 
 const NavbarWrrap = styled.div`
   /* display: block; */
@@ -11,9 +12,10 @@ const NavbarWrrap = styled.div`
   height: 80px;
   background-color: white;
   border-color: black;
-  border: solid;
-  border-width: 0 0 1px 0;
+  /* border: solid; */
+  /* border-width: 0 0 1px 0; */
   margin-bottom: 80px;
+  box-shadow: 0 0 5px 0 gray;
   @font-face {
     font-family: "DungGeunMo";
     src: url("../../essets/DungGeunMo.woff") format("woff");
@@ -28,7 +30,7 @@ const NavbarBox = styled.div`
   flex-direction: row;
   justify-content: space-between;
   margin: 0px;
-  font-family: "DungGeunMo";
+  /* font-family: "DungGeunMo"; */
   .container {
     display: flex;
     flex-direction: row;
@@ -41,25 +43,20 @@ const NavbarBox = styled.div`
   }
   .pageName {
     font-size: 40px;
-    margin: 0 2%;
+    margin: 0 15px;
     min-width: 120px;
   }
 
   .secondContainer {
     display: flex;
     flex-direction: row;
-    /* margin: 0 2%; */
     justify-content: flex-end;
     align-items: center;
-    width: 1000px;
-    min-width: 1000px;
     font-size: 20px;
     text-align: center;
-
     .inner {
       width: 120px;
     }
-
     .game {
       display: flex;
       align-items: center;
@@ -69,18 +66,8 @@ const NavbarBox = styled.div`
       height: 80px;
       background: linear-gradient(-45deg, #ffaa98, #fef0d3, #fddfd2, #ff9788);
       background-size: 400% 400%;
-      animation: gradient 15s ease infinite;
-      @keyframes gradient {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
+      font-size: 35px;
+      cursor: pointer;
     }
 
     .profile {
@@ -89,18 +76,18 @@ const NavbarBox = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
       .hide {
         display: none;
-        width: 118px;
+        width: 200px;
         height: auto;
         background-color: white;
         color: black;
-        border: solid;
-        border-width: 1px;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px;
         position: absolute;
-        top: 80px;
+        top: 60px;
+        right: 205px;
         margin-right: 1px;
-
         div {
           margin-top: 10px;
           margin-bottom: 10px;
@@ -131,14 +118,25 @@ const Empty = styled.div`
   height: 80px;
 `;
 
+const SearchBarContainer = styled.div`
+  position: relative;
+  width: 900px;
+  min-width: 500px;
+  max-width: 900px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+`;
+
 export default function Navbar() {
   const [isLogin, setIsLogin] = useState<Boolean>(false);
+  const navigate = useNavigate();
 
   const goToGame = () => {
     if (isLogin === true) {
-      alert("게임방입장예정");
+      navigate("/Game");
     } else {
-      alert("로그인을 먼저 진행 해 주세요");
+      navigate("/Login");
     }
   };
 
@@ -156,6 +154,9 @@ export default function Navbar() {
               <Link to="/">N-City</Link>
             </div>
           </div>
+          <SearchBarContainer>
+            <SearchBar></SearchBar>
+          </SearchBarContainer>
           <div className="secondContainer">
             <Link className="inner" to="faq">
               <p>FAQ</p>
@@ -164,11 +165,17 @@ export default function Navbar() {
             <Link className="inner" to="store">
               <p>store</p>
             </Link>
+            <Link className="inner" to="store">
+              <p>Create</p>
+            </Link>
             {isLogin ? (
               <div className="profile">
                 <PersonIcon></PersonIcon>
                 <p>000님</p>
                 <div className="hide">
+                  <div>
+                    <p>코인 충전</p>
+                  </div>
                   <div>
                     <Link to="mypage">
                       <p>마이페이지</p>
@@ -177,16 +184,30 @@ export default function Navbar() {
                   <div>
                     <p>로그 아웃</p>
                   </div>
-                  <div>
-                    <p>코인 충전</p>
-                  </div>
                 </div>
               </div>
             ) : (
               <>
-                <Link className="inner" to="login">
+                {/* <Link className="inner" to="login">
                   <p>로그인</p>
-                </Link>
+                </Link> */}
+                <div className="profile">
+                  <PersonIcon></PersonIcon>
+                  <p>000님</p>
+                  <div className="hide">
+                    <div>
+                      <p>코인 충전</p>
+                    </div>
+                    <div>
+                      <Link to="mypage">
+                        <p>마이페이지</p>
+                      </Link>
+                    </div>
+                    <div>
+                      <p>로그 아웃</p>
+                    </div>
+                  </div>
+                </div>
                 {/* <Link className="inner" to="signup">
                   <p>회원가입</p>
                 </Link> */}

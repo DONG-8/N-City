@@ -131,16 +131,18 @@ const ExplaneText = styled.h3`
   }
 `;
 
-const CloseButton = styled.button`
+const CloseButton = styled.div`
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z'/%3E%3C/svg%3E");
+  width: 35px;
+  height: 35px;
   position: absolute;
   top: 20px;
   right: 20px;
   display: flex;
   justify-content: flex-end;
-  border: none;
-  background: none;
   cursor: pointer;
-`;
+`
+
 
 //// component
 const ConfirmModal = ({
@@ -153,15 +155,15 @@ const ConfirmModal = ({
 }: ModalBaseProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleApprove = () => {
+  const handleApprove = async () => {
     if (control === "승인") {
       //여기서 승인 요청
       //정보는 selectedItem에 있음
     } else if (control === "거절") {
       // 여기서 거절 요청
     }
-    setIsOpenProp(false);
     removeList(selectedItem);
+    setIsOpenProp(false);
   };
 
   const setBtnClass = () => {
@@ -195,9 +197,7 @@ const ConfirmModal = ({
     <div>
       <Background visible={visible} onClick={onClose} />
       <ModalSection visible={visible}>
-        <CloseButton type="button" onClick={onClose}>
-          X
-        </CloseButton>
+        <CloseButton onClick={onClose} />
         <Title>확인</Title>
         <Divider />
         {control === "승인" && (

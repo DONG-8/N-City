@@ -46,6 +46,7 @@ const MainContent = styled.div`
     }
 
     button {
+      width: 200px;
       margin: 120px 20px 120px;
       border: solid 1px #ffaa98;
       padding: 10px 50px;
