@@ -6,25 +6,27 @@ import styled from 'styled-components'
 const SettingWrapper = styled.div`
   width: 83%;
   display: flex;
-  height: 85vh;
-  background-color:#F2DBDB;
+  height: 78vh;
+  background-color:#e7e0e0;
   margin: auto;
+  margin-top: 3vh;
   margin-bottom:3vh;
+  border: 0.5px solid gray;
 `
 const Left = styled.div`
   margin-left:3vw;
   .bigTitle {
-    font-size: 5vh;
+    font-size: 4vh;
     font-weight: 1000;
   }
   .profileImg {
     margin-left:20vh;
     border-radius: 100%;
-    width: 15vw;
+    width: 13vw;
     height: auto;
   }
   .title {
-    font-size: 4vh;
+    font-size: 3vh;
     font-weight: 1000;
     margin-top: 2vh;
   }
@@ -38,13 +40,13 @@ const Left = styled.div`
 const Right = styled.div`
   margin-left: 5vw;
   .title {
-    font-size: 4vh;
+    font-size: 3vh;
     font-weight: 1000;
     margin-top: 2vh;
   }
   textarea {
     width: 40vw;
-    height: 30vh;
+    height: 25vh;
     resize: none;
     font-size: 2rem;
     &:focus {
