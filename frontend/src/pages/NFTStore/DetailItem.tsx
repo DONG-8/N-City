@@ -86,7 +86,7 @@ const Transaction = styled.div`
 `
 const Artist = styled.div`
   font-weight:1000 ;
-    color:#EB6767;
+    color: #F43B00;
     font-size: 2rem ;
     margin:1rem ;
 `
@@ -103,7 +103,7 @@ const Owner = styled.div`
     margin-bottom:2rem ;
     .owner_name{
       margin-left:1rem ;
-      color:#EB6767;
+      color:#F43B00;
     }
 `
 const Contents = styled.div`
@@ -117,7 +117,7 @@ const Contents = styled.div`
       margin-bottom:2rem ;
     }
     .red_text{
-      color:#EB6767;
+      color:#F43B00;
     }
 `
 const Buy = styled.div`
@@ -132,7 +132,7 @@ const Buy = styled.div`
       border-radius:5px ;
       width:10rem ;
       height:3rem;
-      background-color:#EB6767 ;
+      background-color:#F43B00 ;
       color:white ;
       font-size:1.5rem ;
       font-weight:1000 ;
@@ -367,7 +367,7 @@ const DetailItem = () => {
         <Bottom>
           <TitleSee>
             <div style={{ display: "flex" }}>
-              <h1 style={{ color: "#EB6767" }}>{item.name}</h1>
+              <h1 style={{ color: "#F43B00" }}>{item.name}</h1>
               <h1 style={{ marginLeft: "1rem" }}>의 작품 보기</h1>
             </div>
           </TitleSee>
