@@ -3,7 +3,7 @@ package com.nft.ncity.common.auth;
 import com.nft.ncity.common.util.CookieUtil;
 import com.nft.ncity.common.util.JwtTokenUtil;
 import com.nft.ncity.common.util.RedisUtil;
-import com.nft.ncity.domain.log.db.entity.User;
+import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.log.service.LogService;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
@@ -62,6 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if(userAddress != null){    // Access token이 유효하면 AccessToken내 payload를 읽어 사용자와 관련있는 userDetail 생성
                 // jwt 토큰에 포함된 계정 정보(userAddress) 통해 실제 디비에 해당 정보의 계정이 있는지 조회.
                 User user = logService.getUserDetailByAddress(userAddress);
+
                 UserDetails userDetails = new UserDetails(user);
                 if(jwtTokenUtil.verify(accessToken).isResult()){
                     // 식별된 정상 유저인 경우, 요청 context 내에서 참조 가능한 인증 정보(jwtAuthentication) 생성.

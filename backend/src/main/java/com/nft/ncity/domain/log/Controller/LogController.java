@@ -7,7 +7,7 @@ import com.nft.ncity.common.util.RedisUtil;
 import com.nft.ncity.domain.log.request.LoginPostReq;
 import com.nft.ncity.domain.log.response.LoginPostRes;
 import com.nft.ncity.domain.log.service.LogService;
-import com.nft.ncity.domain.log.db.entity.User;
+import com.nft.ncity.domain.user.db.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

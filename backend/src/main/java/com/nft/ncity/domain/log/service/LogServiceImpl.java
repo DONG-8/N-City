@@ -1,7 +1,7 @@
 package com.nft.ncity.domain.log.service;
 
 import com.nft.ncity.domain.log.db.repository.LogRepository;
-import com.nft.ncity.domain.log.db.entity.User;
+import com.nft.ncity.domain.user.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
