@@ -5,7 +5,7 @@ cloud:
       secretKey: UtLtsIrWSGRMpoRt87fpNsh6ZX5X831s5VvuUHMn
     s3:
       # bucket 이름
-      bucket: ncity
+      bucket: ncity-bucket
     region:
       # 리전
       static: ap-northeast-2

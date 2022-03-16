@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Getter
 @Entity
@@ -15,6 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "user")
 @Builder
+@IdClass(Follow.FollowKey.class)
 public class Follow {
 
     @Id
@@ -24,6 +26,15 @@ public class Follow {
     @Id
     @ApiModelProperty(value = "팔로우 요청받는 사람 id")
     private Long followFollowee;
+
+    @EqualsAndHashCode
+    @Embeddable
+    static class FollowKey implements Serializable {
+        @Column(name = "follow_follower")
+        private Long followFollower;
+        @Column(name = "follow_followee")
+        private Long followFollowee;
+    }
 
 //    @Id
 //    @ManyToOne
