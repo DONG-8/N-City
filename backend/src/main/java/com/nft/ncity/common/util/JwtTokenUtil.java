@@ -93,7 +93,7 @@ public class JwtTokenUtil {
 
     // 토큰에서 userId 가져오기
     public long getUserId(String token) {
-        return extractAllClaims(token).get("getUserId", long.class);
+        return extractAllClaims(token).get("userId", Integer.class);
     }
 
     // 토큰에서 userAddress 가져오기
@@ -102,7 +102,7 @@ public class JwtTokenUtil {
     }
 
     // 토큰 검증하기
-    public static VerifyResult verify(String token){
+    public VerifyResult verify(String token){
         try{
             DecodedJWT decode = JWT.require(Algorithm.HMAC512(secretKey.getBytes())).build().verify(token);
             return VerifyResult.builder().userId(String.valueOf(decode.getClaim("userId"))).result(true).build();

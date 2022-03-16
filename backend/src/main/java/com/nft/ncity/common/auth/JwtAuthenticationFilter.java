@@ -8,11 +8,10 @@ import com.nft.ncity.domain.log.service.LogService;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -41,36 +40,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-//	public JwtAuthenticationFilter(AuthenticationManager authenticationManager, LogService logService) {
-//		super(authenticationManager);
-//		this.logService = logService;
-//	}
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//                String header = httpServletRequest.getHeader(jwtTokenUtil.HEADER_STRING);
-//
-//        // If header does not contain BEARER or is null delegate to Spring impl and exit
-//        if (header == null || !header.startsWith(jwtTokenUtil.TOKEN_PREFIX)) {
-//            filterChain.doFilter(httpServletRequest, httpServletResponse);
-//            return;
-//        }
 
-        final Cookie jwtToken = cookieUtil.getCookie(request, jwtTokenUtil.ACCESS_TOKEN_NAME);
+        final Cookie accessCookie = cookieUtil.getCookie(request, jwtTokenUtil.ACCESS_TOKEN_NAME);
+
         String userAddress = null;
-        String jwt = null;
-        String refreshJwt = null;
+        String accessToken = null;
+        String refreshToken = null;
 
         try{
-            if(jwtToken != null){
-                jwt = jwtToken.getValue();
-                userAddress = jwtTokenUtil.getUserAddress(jwt);
+            if(accessCookie != null){
+                accessToken = accessCookie.getValue();
+
+                if(redisUtil.getData(accessToken).equals("logout")) {
+                    throw new InvalidCookieException("잘못된 접근 - 이미 로그아웃 처리된 token입니다.");
+                }
+
+                userAddress = jwtTokenUtil.getUserAddress(accessToken);
             }
             if(userAddress != null){    // Access token이 유효하면 AccessToken내 payload를 읽어 사용자와 관련있는 userDetail 생성
                 // jwt 토큰에 포함된 계정 정보(userAddress) 통해 실제 디비에 해당 정보의 계정이 있는지 조회.
                 User user = logService.getUserDetailByAddress(userAddress);
                 UserDetails userDetails = new UserDetails(user);
-                if(jwtTokenUtil.verify(jwt).isResult()){
+                if(jwtTokenUtil.verify(accessToken).isResult()){
                     // 식별된 정상 유저인 경우, 요청 context 내에서 참조 가능한 인증 정보(jwtAuthentication) 생성.
                     UsernamePasswordAuthenticationToken jwtAuthentication = new UsernamePasswordAuthenticationToken(userAddress,
                             null, AuthorityUtils.createAuthorityList(user.getUserRole()));
@@ -80,16 +73,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         }catch (ExpiredJwtException e){ // Access token이 유효하지 않으면 Refresh Token 값을 읽어드림
-            Cookie refreshToken = cookieUtil.getCookie(request,jwtTokenUtil.REFRESH_TOKEN_NAME);
+            Cookie refreshCookie = cookieUtil.getCookie(request,jwtTokenUtil.REFRESH_TOKEN_NAME);
             if(refreshToken!=null){
-                refreshJwt = refreshToken.getValue();
+                refreshToken = refreshCookie.getValue();
             }
         }catch(Exception e){
         }
 
         try{    // Refresh Token을 읽어 Access Token을 사용자에게 재생성하고, 요청을 허가시킴
-            if(refreshJwt != null){
-                userAddress = redisUtil.getData(refreshJwt);
+            if(refreshToken != null){
+                userAddress = redisUtil.getData(refreshToken);
                 if (userAddress != null) {
                     User user = logService.getUserDetailByAddress(userAddress);
                     UserDetails userDetails = new UserDetails(user);

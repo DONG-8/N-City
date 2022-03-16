@@ -5,7 +5,6 @@ import com.nft.ncity.common.util.CookieUtil;
 import com.nft.ncity.common.util.JwtTokenUtil;
 import com.nft.ncity.common.util.RedisUtil;
 import com.nft.ncity.domain.log.request.LoginPostReq;
-import com.nft.ncity.domain.log.request.LogoutGetReq;
 import com.nft.ncity.domain.log.response.LoginPostRes;
 import com.nft.ncity.domain.log.service.LogService;
 import com.nft.ncity.domain.log.db.entity.User;
@@ -45,12 +44,7 @@ public class LogController {
         log.info("userLogin - Call");
 
         String userAddress = loginInfo.getUserAddress();
-        log.error("userAddress"+ userAddress);
-        System.out.println("userAdd " + userAddress);
         Integer addressLength = userAddress.length();
-        System.out.println("addressLength " + addressLength);
-        System.out.println(addressLength.equals(42));
-        log.error(String.valueOf(addressLength.equals(42)));
         // 올바른 지갑 주소인지 확인
         if(!addressLength.equals(42)) {
             return ResponseEntity.status(401).body(LoginPostRes.of(401, "Incorrect Wallet", null));
@@ -75,26 +69,62 @@ public class LogController {
 
     @ApiOperation(value = "로그아웃")
     @GetMapping("/logout")
-    public ResponseEntity<? extends BaseResponseBody> userLogout( HttpServletRequest request) {
+    public ResponseEntity<? extends BaseResponseBody> userLogout(HttpServletRequest request, HttpServletResponse response) {
         log.info("userLogout - Call");
 
-        String accessToken = cookieUtil.getCookie(request,  jwtTokenUtil.ACCESS_TOKEN_NAME).getValue();
-        String refreshToken = cookieUtil.getCookie(request, jwtTokenUtil.REFRESH_TOKEN_NAME).getValue();
+        Cookie accessCookie = cookieUtil.getCookie(request,  jwtTokenUtil.ACCESS_TOKEN_NAME);
+        Cookie refreshCookie = cookieUtil.getCookie(request, jwtTokenUtil.REFRESH_TOKEN_NAME);
 
-        // Access Token 유효하다면
-        if (JwtTokenUtil.verify(accessToken).isResult()) {
-            // access token 유효시간 가지고와서 redis에 블랙리스트로 저장하기
-            long expirationTime = jwtTokenUtil.getTokenExpirationAsLong(accessToken);
-            redisUtil.setDataExpire(accessToken, "logout", expirationTime);
-            log.info("userLogout - access token redis에 저장");
+        // < Access Token 작업 >
+        // 1. access token 담겨있는 cookie 있는지 확인
+        if (accessCookie != null) { // 2. access Cookie 유효하다면 토큰 가져오기
+            String accessToken = accessCookie.getValue();
+
+            // 3. Access Token 유효한지 확인
+            if (jwtTokenUtil.verify(accessToken).isResult()) {
+                // 3-1. access token 유효시간 가지고와서 redis에 블랙리스트로 저장하기
+                long expirationTime = jwtTokenUtil.getTokenExpirationAsLong(accessToken);
+                redisUtil.setDataExpire(accessToken, "logout", expirationTime);
+                log.info("userLogout - access token redis에 저장");
+            }
+            // 4. access Token 담겨있는 쿠키 삭제
+            Cookie expiredAccessCookie = cookieUtil.removeCookie(jwtTokenUtil.ACCESS_TOKEN_NAME);
+            response.addCookie(expiredAccessCookie);
         }
 
-        // refresh token 삭제
+        // < refresh token 작업 >
+        // 1. refresh token 담겨있는 쿠키 있는지 확인
+        if (refreshCookie == null) {
+            // 1-1. 쿠키 없으면 이미 로그아웃한 유저로 반환
+            log.error("userLogout - refresh cookie 없음");
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "이미 로그아웃한 유저입니다."));
+        }
+
+        // 2. 쿠키키 유효하다면 토큰 가져기
+        String refreshToken = refreshCookie.getValue();
+
+        // 3. refresh Token 담겨있는 쿠키 삭제
+        Cookie expiredRefreshCookie = cookieUtil.removeCookie(jwtTokenUtil.REFRESH_TOKEN_NAME);
+        response.addCookie(expiredRefreshCookie);
+
+        // 4. refresh token redis에서 삭제
         if(redisUtil.getData(refreshToken) != null) {
             redisUtil.deleteData(refreshToken);
             log.info("userLogout - refreshToken redis에서 삭제");
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        } else {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "이미 로그아웃한 유저입니다."));
         }
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
+
+    @ApiOperation(value = "쿠키 테스트")
+    @GetMapping("/cookietest")
+    public ResponseEntity<? extends BaseResponseBody> cookietest(HttpServletResponse response) {
+        log.info("userLogout - Call");
+
+        response.addCookie(cookieUtil.createCookie("accessToken", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzc2FmeS5jb20iLCJleHAiOjE2NDg2OTIyNzUsImlhdCI6MTY0NzM5NjI3NX0.Pq8TjbNv82tnMLH4jBqHtoBZuWm9xfEmRrTE-b1n8wTur_0pd3xIwJrmQ2a4cS-VWWQtINJJ6qh-S_yg4OI7vQ"));
+        response.addCookie(cookieUtil.createCookie("refreshToken", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VyQWRkcmVzcyI6IjB4ZDk3NDYwNEZlYjEyNjBCZjM2NWNkNDJkQ2Y2MjhGZkQ1QjIxNDU4MCIsImlzcyI6InNzYWZ5LmNvbSIsImV4cCI6MTY0NzQwMjI3NSwidXNlcklkIjo0LCJpYXQiOjE2NDczOTYyNzV9.MgYJtV9-E6sLFEXtC-NJ6EZU2hLBHcDxBJX2ddXJAOOuW7mhU0pSx1Q9vIpYpH_QAj7za3w6xnF2QgVh18M5JQ"));
+        return null;
     }
 
 }

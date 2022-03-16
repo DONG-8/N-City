@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 public class CookieUtil {
 
     public Cookie createCookie(String cookieName, String value){
-        Cookie token = new Cookie(cookieName,value);
-        token.setHttpOnly(true);
-        token.setMaxAge(JwtTokenUtil.accessTokenExpiration);
-        token.setPath("/");
-        return token;
+        Cookie cookie = new Cookie(cookieName,value);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(JwtTokenUtil.accessTokenExpiration);
+        cookie.setPath("/");
+        return cookie;
     }
 
     public Cookie getCookie(HttpServletRequest request, String cookieName){
@@ -24,6 +24,13 @@ public class CookieUtil {
                 return cookie;
         }
         return null;
+    }
+
+    public Cookie removeCookie(String cookieName){
+        Cookie expiredCookie = new Cookie(cookieName, null);
+        expiredCookie.setMaxAge(0); // expiration 타임 0으로 하여 삭제
+        expiredCookie.setPath("/"); // 모든 경로에서 삭제
+        return expiredCookie;
     }
 
 }
