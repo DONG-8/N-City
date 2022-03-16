@@ -12,6 +12,7 @@ import EventPage from "./pages/FAQ/EventPage";
 import EventDetail from "./pages/FAQ/EventDetail";
 import Rank from "./pages/Rank/Rank";
 import Mint from "./pages/Mint/Mint";
+import Artists from "./pages/NFTStore/Artists";
 function App() {
   return (
     <>
@@ -33,6 +34,7 @@ function App() {
           <Route path="/event" element={<EventPage />} />
           <Route path="/event/detail" element={<EventDetail />} />
           <Route path="/rank" element={<Rank />} />
+          <Route path="/artists" element={<Artists />} />
         </Routes>
         <Footer />
       </BrowserRouter>
