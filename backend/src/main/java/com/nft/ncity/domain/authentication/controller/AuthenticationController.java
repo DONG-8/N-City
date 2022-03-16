@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -55,7 +56,7 @@ public class AuthenticationController {
         return ResponseEntity.status(200).body(AuthenticationListGetRes.of(authentications));
     }
 
-    @GetMapping("/{authId}")
+    @GetMapping("/detail/{authId}")
     @ApiOperation(value = "인증요청 내역 상세 조회", notes = "<strong>인증요청 상세 정보</strong>를 넘겨준다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = Authentication.class),
@@ -78,18 +79,24 @@ public class AuthenticationController {
     @ApiOperation(value = "인증요청 등록", notes = "<strong>인증요청을 등록</strong>한다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "등록 성공"),
-            @ApiResponse(code = 404, message = "인증요청 첨부파일 없음.")
+            @ApiResponse(code = 404, message = "등록 실패")
     })
-    public ResponseEntity<BaseResponseBody> AuthenticationRegister(@RequestBody AuthenticationRegisterPostReq authenticationRegisterPostReq,
-                                                                 @RequestParam List<MultipartFile> multipartFiles) {
+    public ResponseEntity<BaseResponseBody> AuthenticationRegister(@RequestPart(value = "body") AuthenticationRegisterPostReq authenticationRegisterPostReq,
+                                                                 @RequestPart(value = "authFile") MultipartFile multipartFile) throws IOException {
 
         // 0. 인증 등록 정보를 AuthenticationRegisterPostReq에 담고, 파일 정보를 Param으로 MultipartFiles에 담아 온다.
         // 1. 인증 등록 정보를 Authentication 테이블에 저장하고, 해당 인증 ID와 함께 인증 파일들을 AuthFile 테이블에 저장한다.
         // 2. 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
         log.info("AuthenticationRegister - 호출");
+        Authentication authentication = authenticationService.AuthenticationRegister(authenticationRegisterPostReq,multipartFile);
 
-        Authentication authentication = authenticationService.AuthenticationRegister(authenticationRegisterPostReq,multipartFiles);
+        if(!authentication.equals(null)) {
+            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
+        }
+        else {
+            return ResponseEntity.status(201).body(BaseResponseBody.of(404, "등록 실패"));
+        }
 
-        return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
+
     }
 }
