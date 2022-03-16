@@ -63,7 +63,7 @@ const ModalSection = styled.div<{ visible: boolean }>`
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 1200px;
+  top: 1020px;
   left: 50%;
   border: 2px solid black;
   border-radius: 10px;
@@ -127,7 +127,7 @@ const SelectCategory = styled.div`
   width: 90%;
   padding: 10px;
   .active {
-    background-color: #FEAF84;
+    background-color: #feaf84;
     box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
   }
   button {
@@ -144,7 +144,7 @@ const SelectCategory = styled.div`
     height: 20px;
     cursor: pointer;
     &:active {
-      background-color: #FF9E69;
+      background-color: #ff9e69;
       box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
     }
   }
@@ -169,7 +169,7 @@ const CloseButton = styled.div`
   display: flex;
   justify-content: flex-end;
   cursor: pointer;
-`
+`;
 
 //// component
 const CategoryModal = ({
@@ -257,8 +257,7 @@ const CategoryModal = ({
     <div>
       <Background visible={visible} onClick={onClose} />
       <ModalSection visible={visible}>
-        <CloseButton onClick={onClose}>
-        </CloseButton>
+        <CloseButton onClick={onClose}></CloseButton>
         <Title>카테고리 추가</Title>
         <Divider />
         <ExplaneText>원하는 카테고리를 추가하세요.</ExplaneText>
