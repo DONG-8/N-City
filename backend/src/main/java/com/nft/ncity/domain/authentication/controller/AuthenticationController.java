@@ -5,9 +5,7 @@ import com.nft.ncity.domain.authentication.db.entity.Authentication;
 import com.nft.ncity.domain.authentication.request.AuthenticationRegisterPostReq;
 import com.nft.ncity.domain.authentication.response.AuthenticationListGetRes;
 import com.nft.ncity.domain.authentication.service.AuthenticationService;
-import com.nft.ncity.domain.follow.request.AuthenticationConfirmReq;
-import com.nft.ncity.domain.user.db.entity.User;
-import com.nft.ncity.domain.user.db.repository.UserRepository;
+import com.nft.ncity.domain.authentication.request.AuthenticationConfirmReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -24,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
 
 @Slf4j
 @Api(value = "인증관리 API")
