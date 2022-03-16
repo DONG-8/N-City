@@ -12,16 +12,16 @@ import lombok.Setter;
 public class LoginPostRes extends BaseResponseBody {
     @ApiModelProperty(name = "JWT access token")
     String accessToken;
-//
-//    @ApiModelProperty(name = "JWT refresh token")
-//    String refreshToken;
 
-    public static LoginPostRes of(Integer statusCode, String message, String accessToken) {
+    @ApiModelProperty(name = "유저 구분 id")
+    Long userId;
+
+    public static LoginPostRes of(Integer statusCode, String message, String accessToken, Long userId) {
         LoginPostRes loginRes = new LoginPostRes();
         loginRes.setStatusCode(statusCode);
         loginRes.setMessage(message);
         loginRes.setAccessToken(accessToken);
-//        loginRes.setAccessToken(refreshToken);
+        loginRes.setUserId(userId);
         return loginRes;
     }
 }

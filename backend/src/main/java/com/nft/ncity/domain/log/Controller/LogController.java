@@ -1,6 +1,5 @@
 package com.nft.ncity.domain.log.Controller;
 
-import com.nft.ncity.common.auth.UserDetails;
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.common.util.CookieUtil;
 import com.nft.ncity.common.util.JwtTokenUtil;
@@ -15,9 +14,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -53,7 +49,7 @@ public class LogController {
         Integer addressLength = userAddress.length();
         // 올바른 지갑 주소인지 확인
         if(!addressLength.equals(42)) {
-            return ResponseEntity.status(401).body(LoginPostRes.of(401, "Incorrect Wallet", null));
+            return ResponseEntity.status(401).body(LoginPostRes.of(401, "Incorrect Wallet", null, null));
         } else {
             User user = logService.getUserDetailByAddress(userAddress);
             // 토큰
@@ -69,7 +65,7 @@ public class LogController {
 
             response.addCookie(accessToken);
             response.addCookie(refreshToken);
-            return ResponseEntity.status(201).body(LoginPostRes.of(201, "Success", accessJwt));
+            return ResponseEntity.status(201).body(LoginPostRes.of(201, "Success", accessJwt, user.getUserId()));
         }
     }
 
