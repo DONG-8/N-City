@@ -49,7 +49,7 @@ public class UserController {
         log.info("getUserDetailById - 호출");
         User user = userRepository.getById(userId);
 
-        if(user.equals(null)) {
+        if(null == user) {
             log.error("getUserDetailById - This userId doesn't exist.");
             return ResponseEntity.status(404).body(null);
         }
@@ -165,6 +165,8 @@ public class UserController {
      * Post : 리소스의 생성을 담당, 요청 시 마다 새로운 리소스가 생성
      * Put : 리소스의 생성과 수정을 담당, 요청 시 마다 같은 리소스를 반환, 리소스의 모든 속성을 수정
      * Patch : 수정만 담당, 리소스의 일부분만 수정
+     *
+     * userId를 현재 Body로 받아옴. Token에서 빼서 쓸 경우 변경해야함.
      */
     @PatchMapping("/change-info")
     @ApiOperation(value = "해당 유저의 회원정보 변경", notes = "<strong>해당 유저의 회원정보</strong>를 변경한다.")
