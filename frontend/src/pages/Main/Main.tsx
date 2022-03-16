@@ -6,6 +6,7 @@ import ListAltIcon from "@material-ui/icons/ListAlt";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import Popup from "../../components/Popup/Popup";
+import Guide from "../../components/Popup/Guide";
 
 const MainBackGround = styled.div`
   /* margin-top: 80px; */
@@ -24,18 +25,19 @@ const MainBackImg = styled.img`
 const MainWrapper = styled.div`
   width: 100%;
   display: flex;
+  margin: 0 auto;
 `;
 
 const MainBannerWrapper = styled.div`
-  width: 1223px;
-  height: 700px;
+  width: 890px;
+  height: 508px;
   color: white;
-  margin: -500px 10px 0 auto;
+  margin: -400px 10px 0 auto;
 `;
 
 const MainBanner = styled.div`
-  width: 1223px;
-  height: 650px;
+  width: 890px;
+  height: 508px;
   object-fit: cover;
   display: flex;
   flex-direction: column;
@@ -44,24 +46,25 @@ const MainBanner = styled.div`
   overflow: hidden;
   z-index: 0;
   .inner {
-    width: 1223px;
+    width: 890px;
+    height: 508px;
   }
   .inner img {
-    width: 100%;
-    height: 100%;
+    width: 890px;
+    height: 508px;
   }
 `;
 
 const MainPagenationBanner = styled.div`
   position: absolute;
-  width: 1223px;
+  width: 890px;
   height: 70px;
   display: flex;
   margin: -70px 0 auto;
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   .container {
-    width: 1000px;
+    width: 890px;
     text-align: center;
     display: flex;
     flex-wrap: nowrap;
@@ -71,25 +74,25 @@ const MainPagenationBanner = styled.div`
     overflow: hidden;
   }
   .inner {
-    width: 250px;
-    min-width: 250px;
+    width: 182.5px;
+    min-width: 182.5px;
     display: flex;
     justify-content: center;
     align-items: center;
     /* transform: translate(-250px) */
   }
   button {
-    width: 50px;
+    width: 40px;
     color: white;
   }
 `;
 const SubBannerWrraper = styled.div`
   position: relative;
   width: 448px;
-  height: 566px;
-  background-color: black;
+  height: 509px;
+  /* background-color: black; */
   color: white;
-  margin: -500px auto 0 10px;
+  margin: -400px auto 0 10px;
 `;
 
 const SubBanner = styled.div`
@@ -153,8 +156,8 @@ const SubPagenationBanner = styled.div`
 
 const SubBottomItem = styled.div`
   width: 100%;
-  background-color: black;
-  height: 290px;
+  background-color: rgba(28, 30, 36, 0.9);
+  height: 229px;
   color: white;
   display: flex;
   justify-content: center;
@@ -163,29 +166,140 @@ const SubBottomItem = styled.div`
   h2 {
     margin-top: 0px;
     margin-left: 20px;
-    margin-bottom: 0px;
+    margin-bottom: 10px;
+    /* cursor: pointer; */
+    font-size: 30px;
   }
   div {
     margin-left: 40px;
-    margin-top: 20px;
+    margin-top: 13px;
+    font-size: 20px;
+    cursor: pointer;
+    :hover {
+      text-decoration: underline;
+    }
+  }
+
+  .plus {
+    position: absolute;
+    top: 270px;
+    right: 20px;
+    color: white;
+    font-size: 50px;
+    cursor: pointer;
   }
 `;
+
 const HotTokkenWrraper = styled.div`
   width: 100%;
+  height: auto;
+  background-color: #fffbd8;
+`;
+
+const HotTokken = styled.div`
+  width: 1320px;
   height: 100%;
-  margin: 0 7.5%;
+  margin: 0 auto;
   h1 {
-    width: 100%;
+    width: 1320px;
+    padding-top: 40px;
+    font-family: "DungGeunMo";
+    font-size: 40px;
   }
 `;
 
 const HotTokkenDiv = styled.div`
-  width: 90%;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  /* margin: auto; */
+  margin: 0;
   justify-content: center;
 `;
+
+const MainWord = styled.div`
+  position: absolute;
+  height: 100px;
+  top: 15%;
+  left: 50%;
+  z-index: 1;
+  margin: 0 auto;
+  font-size: 100px;
+  font-family: "DungGeunMo";
+  .typing {
+    text-transform: capitalize;
+    white-space: nowrap;
+    color: transparent;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    // 텍스트를 정 가운데에 고정시키려면 필수
+    &::before {
+      content: "Welcome N-City";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      color: black;
+      overflow: hidden;
+      border-right: 3px solid black;
+      // 커서역할을 하는것
+      animation: typing 8s steps(30) infinite;
+    }
+  }
+  @keyframes typing {
+    0% {
+      width: 0%;
+    }
+    50% {
+      width: 100%;
+    }
+    100% {
+      width: 0%;
+    }
+  }
+`;
+
+const GuideWrapper = styled.div`
+  width: 100%;
+  margin: 0 auto;
+`;
+
+const Cash = styled.div`
+  width: 500px;
+  height: 200px;
+  position: sticky;
+  position: -webkit-sticky;
+  bottom: 20px;
+  right: 20px;
+  /* background-image: ;
+  background-size: 100%; */
+  z-index: 100;
+`;
+
+const MainH = styled.div`
+  width: 100%;
+  height: auto;
+`;
+
+export interface IState {
+  item: {
+    id: number;
+    name: string;
+    title: string;
+    price: number;
+    liked: number;
+    url: string;
+  }[];
+  artist: {
+    name: string;
+    profileImg: string;
+    verified: boolean;
+    sumnailImg: string;
+    descreption: string;
+  }[];
+}
 
 export default function Main() {
   const [position, setPosition] = useState<number>(0);
@@ -295,17 +409,17 @@ export default function Main() {
     // clearTimeout(1000)
     const len = images.length;
     const idx = Math.floor((eventNumber + 1) % len);
-    if ((len - 1) * -1223 === position) {
+    if ((len - 1) * -890 === position) {
       setPosition(0);
     } else {
-      setPosition(position - 1223);
+      setPosition(position - 890);
     }
     setEventNumber(idx);
 
     if (idx === 0) {
       setPageTextPosition(0);
     } else if (2 < idx && idx < len - 1) {
-      setPageTextPosition(pageTextPosition - 250);
+      setPageTextPosition(pageTextPosition - 182.5);
     }
     console.log(eventNumber, "우");
   };
@@ -314,9 +428,9 @@ export default function Main() {
     const len = images.length;
     const idx = Math.floor((eventNumber - 1) % len);
     if (0 === position) {
-      setPosition((len - 1) * -1223);
+      setPosition((len - 1) * -890);
     } else {
-      setPosition(position + 1223);
+      setPosition(position + 890);
     }
     if (idx < 0) {
       setEventNumber(len - 1);
@@ -325,9 +439,11 @@ export default function Main() {
     }
     console.log(Math.floor(idx % 4));
     if (idx < 0) {
-      setPageTextPosition(-250 * (len - 1) + (2 - Math.floor(idx % 4)) * 250);
+      setPageTextPosition(
+        -182.5 * (len - 1) + (2 - Math.floor(idx % 4)) * 182.5
+      );
     } else if (2 < idx && idx < len - 2) {
-      setPageTextPosition(pageTextPosition + 250);
+      setPageTextPosition(pageTextPosition + 182.5);
     } else if (idx === len - 2) {
       // console.log('옆으로 밀어주때욤')
     } else {
@@ -349,7 +465,7 @@ export default function Main() {
       const di = Math.abs(dif);
       const idx = Math.floor(eventNumber - di);
       console.log(idx, "idx");
-      setPosition(position + 1223 * di);
+      setPosition(position + 890 * di);
       setEventNumber(eventNumber - di);
       // setPageTextPosition(pageTextPosition + 250*(di))
       if (di === 1) {
@@ -358,14 +474,14 @@ export default function Main() {
         } else {
           if (idx < 2) {
           } else {
-            setPageTextPosition(pageTextPosition + 250);
+            setPageTextPosition(pageTextPosition + 182.5);
           }
         }
       } else if (di === 2) {
         if (idx === len - 3) {
-          setPageTextPosition(pageTextPosition + 250);
+          setPageTextPosition(pageTextPosition + 182.5);
         } else if (idx < 2) {
-          setPageTextPosition(pageTextPosition + 250);
+          setPageTextPosition(pageTextPosition + 182.5);
         } else {
           setPageTextPosition(pageTextPosition + 500);
         }
@@ -374,24 +490,24 @@ export default function Main() {
       }
     } else {
       const idx = Math.floor(eventNumber + dif);
-      setPosition(position - 1223 * dif);
+      setPosition(position - 890 * dif);
       setEventNumber(eventNumber + dif);
       // console.log(idx,'idx')
       if (dif === 1) {
         if (idx === 0) {
           setPageTextPosition(0);
         } else if (1 < idx && idx <= len - 2) {
-          setPageTextPosition(pageTextPosition - 250);
+          setPageTextPosition(pageTextPosition - 182.5);
         } else if (idx === len - 2) {
-          setPageTextPosition(pageTextPosition - 250);
+          setPageTextPosition(pageTextPosition - 182.5);
         }
       } else if (dif === 2) {
         if (idx === 2) {
         } else {
-          setPageTextPosition(pageTextPosition - 250);
+          setPageTextPosition(pageTextPosition - 182.5);
         }
       } else if (dif === 3) {
-        setPageTextPosition(pageTextPosition - 250);
+        setPageTextPosition(pageTextPosition - 182.5);
       }
     }
   };
@@ -399,17 +515,17 @@ export default function Main() {
   const moveAuto = () => {
     const len = images.length;
     const idx = Math.floor((eventNumber + 1) % len);
-    if ((len - 1) * -1223 === position) {
+    if ((len - 1) * -890 === position) {
       setPosition(0);
     } else {
-      setPosition(position - 1223);
+      setPosition(position - 890);
     }
     setEventNumber(idx);
 
     if (idx === 0) {
       setPageTextPosition(0);
     } else if (2 < idx && idx < len - 1) {
-      setPageTextPosition(pageTextPosition - 250);
+      setPageTextPosition(pageTextPosition - 182.5);
     }
     // console.log(eventNumber,'우')
     if (check === 0) {
@@ -422,6 +538,8 @@ export default function Main() {
       }, 4000);
     }
   };
+
+  // 타이핑 글씨 효과
 
   useEffect(() => {
     moveAuto();
@@ -477,9 +595,111 @@ export default function Main() {
     }
   };
 
+  const [items, setItems] = useState<IState["item"]>([
+    {
+      id: 1,
+      name: "Hong Hosus",
+      title: "#Hong1535",
+      price: 1.24,
+      liked: 35,
+      url: "https://lh3.googleusercontent.com/MmtavcUNNiTpLFfDqqol8pwp1_TKSEv0AbkKSxmN2lffhgYtkxAdfAo72lZVSJ4hpRW87s9TCL-HYMEIpaJ8PdgWBQWVlPsMZkgM6A=w305",
+    },
+    {
+      id: 2,
+      name: "Giks Home",
+      title: "#ghe23434",
+      price: 1.35,
+      liked: 43,
+      url: "https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352",
+    },
+    {
+      id: 3,
+      name: "Giks Home",
+      title: "#ghe254334",
+      price: 1.2,
+      liked: 24,
+      url: "https://lh3.googleusercontent.com/3usYOjVkwnra66EAhX4yJB-xmYCfFoTsREGVvVLCYWhtVG4pifdZLBRCSgv6wbjbV4rwPamlBDgganvgFO3xeifJyZQtqxwTYpXiqtc=w300",
+    },
+    {
+      id: 4,
+      name: "Hong Hosus",
+      title: "#Hong1535",
+      price: 1.24,
+      liked: 35,
+      url: "https://lh3.googleusercontent.com/Cxb_lnNlgplYCULm_ZGlY9pCrxQ67GO2hmStVJTSEN3O2hNeIZoWyK3CwaCj-vZBxeQqioC-P1qT7cK6wXWc-WjjfUyjR3zXNwKN=w300",
+    },
+    {
+      id: 5,
+      name: "Giks Home",
+      title: "#ghe23434",
+      price: 1.35,
+      liked: 43,
+      url: "https://lh3.googleusercontent.com/qeCj7NRekCZ9BUjM8c9Pk02DxmPgX483qgEkVJeLXYIDOFVTXAfCg8TTztcMMQPgYFsNDUqndF5asWPCgJVpiM6P39VzpWa3TTKrvg=w300",
+    },
+    {
+      id: 6,
+      name: "Giks Home",
+      title: "#ghe254334",
+      price: 1.2,
+      liked: 24,
+      url: "https://lh3.googleusercontent.com/jWonBwIV3RRzCv2xEu3pKA5buXUne_vnltLcLIfnluPuctdbTd-ScsBO94-njkA2L5VHVRA56CG5tbbxwacCvFdFWaZzuIJNUB1sVCA=w300",
+    },
+    {
+      id: 7,
+      name: "Giks Home",
+      title: "#g53434",
+      price: 1.37,
+      liked: 52,
+      url: "https://lh3.googleusercontent.com/Op3TUf8vqznY1geantykLx86mlGf4yEaBfKT25utQlQu8keA9ywYdwYYzVSqGZG_3uSJKCNcUBAVK6qs520xhZ6lsP3dVDGsM9wnRA=w352",
+    },
+    {
+      id: 8,
+      name: "Hong Hosus",
+      title: "#Hong1535",
+      price: 1.24,
+      liked: 35,
+      url: "https://lh3.googleusercontent.com/jc4P6pZhiNsBNxErAilpkx-d3RZDpNpJbYjs2k5nou29DJGe_r27tu2i0xy0KBOIgHaQhgVOqIF4-aLpjIqLV6eo-IsIUQ98VI_jDw=w300",
+    },
+    {
+      id: 9,
+      name: "Giks Home",
+      title: "#ghe23434",
+      price: 1.35,
+      liked: 43,
+      url: "https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352",
+    },
+    {
+      id: 10,
+      name: "Giks Home",
+      title: "#g53434",
+      price: 1.37,
+      liked: 52,
+      url: "https://lh3.googleusercontent.com/Op3TUf8vqznY1geantykLx86mlGf4yEaBfKT25utQlQu8keA9ywYdwYYzVSqGZG_3uSJKCNcUBAVK6qs520xhZ6lsP3dVDGsM9wnRA=w352",
+    },
+    {
+      id: 11,
+      name: "Giks Home",
+      title: "#ghe254334",
+      price: 1.2,
+      liked: 24,
+      url: "https://lh3.googleusercontent.com/BqScg3QwKPcNW_cxtvBws2D2cE8Us-QsN9yYmB_8UzUikBwLfOC5Nc2JgXWOB2ijx4lAU2KcYplGujimb2FUD9ArixBFeCyNPcES=w352",
+    },
+    {
+      id: 12,
+      name: "Giks Home",
+      title: "#g53434",
+      price: 1.37,
+      liked: 52,
+      url: "https://lh3.googleusercontent.com/OjwqOOt3_po4pPlTYg43Us9_pp4Ji9X8JKZY4aCsjzHISKQL-u2oSX_q4NmK5qZZn5PPYfMCpDS8OKFXBzXzXA6ljfWfaxGdEvc8DA=w300",
+    },
+  ]);
+
   return (
-    <>
+    <MainH>
       <Popup></Popup>
+      <MainWord>
+        <div className="typing">Welcome N-City</div>
+      </MainWord>
       <MainBackGround>
         <MainBackImg src="https://post-phinf.pstatic.net/MjAyMDEyMjJfMjc0/MDAxNjA4NjQ0MzExMzM4.BKpiZi7BKqbKceFNFAg0mB1JUZXGsGiDZsB2shTf2NYg.w-SkrTWCzjoyLu_-9moNkS3ZUGu0FljmpuuE-JMJRRwg.GIF/tumblr_nm6j1ghB7C1qze3hdo1_500.gif?type=w1200" />
       </MainBackGround>
@@ -603,27 +823,27 @@ export default function Main() {
             </button>
           </SubPagenationBanner>
           <SubBottomItem>
+            <div className="plus">+</div>
             <h2>오늘의 hot Room</h2>
-            <div>000 님의 방</div>
-            <div>000 님의 방</div>
-            <div>xxx 님의 방</div>
-            <div>임현홍 님의 방</div>
+            <div>동탁 님의 방</div>
+            <div>오일남 님의 방</div>
+            <div>제니 님의 방</div>
           </SubBottomItem>
         </SubBannerWrraper>
       </MainWrapper>
+      <GuideWrapper>
+        <Guide></Guide>
+      </GuideWrapper>
       <HotTokkenWrraper>
-        <h1>Hot Tokken</h1>
-        <HotTokkenDiv>
-          {/* <ItemCard></ItemCard>
-          <ItemCard></ItemCard>
-          <ItemCard></ItemCard>
-          <ItemCard></ItemCard>
-          <ItemCard></ItemCard>
-          <ItemCard></ItemCard>
-          <ItemCard></ItemCard>
-          <ItemCard></ItemCard> */}
-        </HotTokkenDiv>
+        <HotTokken>
+          <h1>Hot Tokken</h1>
+          <HotTokkenDiv>
+            {items.map((item) => {
+              return <ItemCard key={item.id} item={item} />;
+            })}
+          </HotTokkenDiv>
+        </HotTokken>
       </HotTokkenWrraper>
-    </>
+    </MainH>
   );
 }

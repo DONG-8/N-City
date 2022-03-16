@@ -5,8 +5,8 @@ import "aos/dist/aos.css";
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 1000px;
-  background-color: #fddfd2;
+  height: 900px;
+  background-color: white;
   /* background-image: url("https://mblogthumb-phinf.pstatic.net/MjAxODA1MjlfOCAg/MDAxNTI3NTcwODY5ODc5.iMrWUglAiT5Ik9ijZM0mSYL6KfPPpes8xaKQTUqvW0Ig.RT-Ki2uWaVl7HIAYXsdB1RO2P5pj5NvVyttt2fHRzL0g.GIF.rlfjrl24/%EB%B2%9A%EA%BD%83_%2810%29.gif?type=w800"); */
   background-size: 50%;
 `;
@@ -29,7 +29,7 @@ const TextContent = styled.div`
   flex-direction: column;
   justify-content: center;
   margin-left: 30px;
-  /* text-align: center; */
+  text-align: center;
   h1 {
     margin: 0px;
     font-size: 80px;
@@ -94,7 +94,7 @@ const ImgBox2 = styled.div`
   left: -150px;
 `;
 
-const Page3 = () => {
+const Page4 = () => {
   useEffect(() => {
     AOS.init();
   });
@@ -109,8 +109,7 @@ const Page3 = () => {
         <TextContent data-aos="zoom-out" data-aos-duration="1500">
           <h1>🎮 N-City의</h1>
           <h2>안전한 거래를 통해</h2>
-          <h3>나만의 작품을</h3>
-          <h3>가져보세요</h3>
+          <h3>나만의 작품을 가져보세요</h3>
           <button>N-City로 여행가기</button>
         </TextContent>
       </BlockContent>
@@ -118,4 +117,4 @@ const Page3 = () => {
   );
 };
 
-export default Page3;
+export default Page4;
