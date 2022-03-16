@@ -5,24 +5,30 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ItemCard from '../../components/Card/ItemCard';
-
+import Background from '../../components/Card/Background';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 const etherURL = '/essets/images/ethereum.png'
+
+const Wrapper = styled.div`
+`
 const DetailPage = styled.div`
   width: 1500px ;
   margin: auto ;
 `
 const DetailItemCard = styled.div`
-  background-color: #fffffe;
-  border-radius:10px ;
-  box-shadow:1px 3px 7px ;
-  margin-left: 3vw ;
-  width: 600px;
-  height: 650px;
+  background-color: white;
+  border-radius: 5px 0 0 5px  ;
+  width: 500px;
+  height: 550px;
+  border: 1px solid gray;
+  border-top: none;
   img{
-    width: 600px;
-    height:600px ;
-    border-radius:10px 10px 0 0 ;
+    width: 500px;
+    height: 500px;
+    
+    border-radius:5px 0 0 0 ;
   }
   .like{
     display:flex ;
@@ -30,32 +36,53 @@ const DetailItemCard = styled.div`
     margin-right:1vw ;
     font-size:1.5rem ;
   }
+  .icon{
+    cursor: pointer;
+    &:hover{
+      transform: scale(1.1);
+    }
+    margin-right: 0.5rem;
+  }
 `
 const Top = styled.div`
   margin-top: 10vh ;
   display: flex ;
-  justify-content:space-around ;
-  `
+`
+const TitleSee = styled.div`
+  margin-top: 10vh;
+  margin-left: 6vw;
+  font-size: 3vh;
+`
 const Center = styled.div`
   
 `
 const Description = styled.div`
+  border: 1px solid gray;
+  border-left:none;
+  border-top: none;
   background-color: #fffffe;
-  box-shadow:1px 3px 7px ;
-  width: 500px;
+  width: 100%;
   height: 550px;
-  border-radius: 10px ;
-  margin-right: 3vw ;
-  margin-top:5vh ;
-
+  border-radius: 0 5px 5px 0  ;
+  
+`
+const BigCard = styled.div`
+  display: flex;
+  width: 85%;
+  margin:auto;
+  
 `
 const Transaction = styled.div`
   background-color: #fffffe;
-  box-shadow:1px 3px 7px ;
-  width: 83.5%;
+  /* box-shadow:1px 3px 5px 0 ; */
+  width: 85%;
   margin: auto ;
   margin-top: 10vh ;
-  border-radius: 10px ;
+  border-radius: 5px ;
+  border:2px solid gray;
+  h1{
+    font-size: 2.3rem;
+  }
 `
 const Artist = styled.div`
   font-weight:1000 ;
@@ -100,9 +127,10 @@ const Buy = styled.div`
     margin : 1rem;
     margin-top:2.5rem;
     justify-content:space-between ;
+    margin-left:2rem;
     .buy_button{
-      border-radius:10px ;
-      width:7rem ;
+      border-radius:5px ;
+      width:10rem ;
       height:3rem;
       background-color:#EB6767 ;
       color:white ;
@@ -114,17 +142,16 @@ const Buy = styled.div`
       }
       &:hover{
         &{
-          transform: scale(1.05) ;
           background-color:#fb5252  ;
         }
       }
     }
 `
-const Content =styled.div`
+const Content = styled.div`
   display: flex;
-      justify-content: space-between ;
-      
-`
+  justify-content: space-between;
+  margin-top: 0.5rem;
+`;
 const Bottom = styled.div`
   
 `
@@ -134,12 +161,13 @@ const ArtistMore = styled.div`
     margin-left:2rem;
   }
   background-color: #fbe9e1;
-  box-shadow:1px 3px 7px ;
-  width: 83.5%;
-  height: 70vh ;
+  /* box-shadow:1px 3px 7px ; */
+  border: 2px solid gray;
+  width: 85%;
+  height: 500px ;
   margin: auto ;
-  margin-top: 10vh ;
-  border-radius: 10px ;
+  margin-top: 2vh ;
+  border-radius:5px ;
   overflow-y:hidden;
   overflow-x:scroll;
   &::-webkit-scrollbar{width: 4px; height:12px;}
@@ -150,12 +178,13 @@ const ArtistMore = styled.div`
 const Cards = styled.div`
   display: flex ;
 `
+
 const EachTransaction = styled.div`
   display: flex;
   justify-content: space-between ;
   div{
     flex:2;
-    font-size:1.3rem;
+    font-size:1.2srem;
   }
 `
 const Head = styled.div`
@@ -164,9 +193,10 @@ const Head = styled.div`
   div{
     flex :2;
     font-weight:1000 ;
-    font-size:1.5rem;
+    font-size:1.7rem;
   }
 `
+
 interface IProps{
   item :{
     id:number,
@@ -196,122 +226,166 @@ const DetailItem = () => {
     {id:8,name:"Hong Hosus",title:"#Hong1535",price:1.24,liked:35,url:'https://lh3.googleusercontent.com/jc4P6pZhiNsBNxErAilpkx-d3RZDpNpJbYjs2k5nou29DJGe_r27tu2i0xy0KBOIgHaQhgVOqIF4-aLpjIqLV6eo-IsIUQ98VI_jDw=w300'},
   ])
   const [item,setItem] = useState(JSON.parse(localStorage.getItem("item")||""))
+  const [likes,setLikes] = useState(item.liked)
+  const [liked,setLiked] = useState(false)
+
   const [change,setChange] = useState(false)
   useEffect(()=>{
-    setItem(JSON.parse(localStorage.getItem("item")||""))
+    const tmp = JSON.parse(localStorage.getItem("item")||"")
+    if (item.id !==tmp.id){
+      setItem(tmp)
+      window.scrollTo(0,0)
+    }
     setChange(false)
-    window.scrollTo(0,0)
   },[change])
   return (
+    <Wrapper>
+      <Background imgsrc="https://cdn.notefolio.net/img/d7/5b/d75bf02e2a35f76dba6ed5eeccde793c45d74edd83df838e31290603ceb5c5c9_v1.jpg" />
       <DetailPage>
         <Top>
-          <DetailItemCard>
-            <img alt ="pic" src={item.url}/>
-            <div className='like'> ❤ {item.liked}</div>
-          </DetailItemCard>
-          <Description>
-            <Artist>
-            {item.name}   
-            {item.verfied&&        
-              <img alt="verified" style={{"height":'1.5rem'}} src= "/essets/images/verified.png" />}
-            </Artist>
-            <Title>
-            {item.title}
-            </Title>
-            <Owner>
-              owner: <div className='owner_name'>{item.name}</div>
-            </Owner>
-            <hr/>
-            <Contents>
-              <div className='des_title'>
-              작품설명
+          <BigCard>
+            <DetailItemCard>
+              <img alt="pic" src={item.url} />
+              <div className="like">
+                <div
+                  onClick={() => {
+                    setLiked(!liked);
+                  }}
+                  className="icon"
+                >
+                  {liked ? (
+                    <FavoriteIcon
+                      fontSize="large"
+                      onClick={() => {
+                        setLikes(likes - 1);
+                      }}
+                      color="error"
+                    />
+                  ) : (
+                    <FavoriteBorderIcon
+                      fontSize="large"
+                      onClick={() => {
+                        setLikes(likes + 1);
+                      }}
+                      color="error"
+                    />
+                  )}
+                </div>
+                {likes}
               </div>
-              <Content>
-                <span> Contract Adderess : </span> 
-                <span className='red_text'>0x1234515re932</span>
-              </Content>
-              <Content>
-                <span> Token ID: </span> 
-                <span className='red_text'>8055</span>
-              </Content>
-              <Content>
-                <span> Token Standard: </span> 
-                <span className='red_text'>ERC-721</span>
-              </Content>
-            </Contents>
-            <hr/>
-            <Buy>
-              <div className='price'>
-                {item.price} 
-                <img style={{"height":"2rem"}}  alt="이더" src= {etherURL}/>
-              </div>
-              <button className='buy_button'>
-                <img  alt="cart"
-                src='https://cdn-icons-png.flaticon.com/512/3737/3737151.png'/>
-                구매   
-              </button>
-            </Buy>
-          </Description>
+            </DetailItemCard>
+            <Description>
+              <Artist>
+                {item.name}
+                {item.verfied && (
+                  <img
+                    alt="verified"
+                    style={{ height: "1.5rem" }}
+                    src="/essets/images/verified.png"
+                  />
+                )}
+              </Artist>
+              <Title>{item.title}</Title>
+              <Owner>
+                owner: <div className="owner_name">{item.name}</div>
+              </Owner>
+              <hr />
+              <Contents>
+                <div className="des_title">작품설명</div>
+                <Content>
+                  <span> Contract Adderess : </span>
+                  <span className="red_text">0x1234515re932</span>
+                </Content>
+                <Content>
+                  <span> Token ID: </span>
+                  <span className="red_text">8055</span>
+                </Content>
+                <Content>
+                  <span> Token Standard: </span>
+                  <span className="red_text">ERC-721</span>
+                </Content>
+              </Contents>
+              <hr />
+              <Buy>
+                <div className="price">
+                  {item.price}
+                  <img style={{ height: "2rem" }} alt="이더" src={etherURL} />
+                </div>
+                <button className="buy_button">구매</button>
+              </Buy>
+            </Description>
+          </BigCard>
         </Top>
         <Center>
           <Transaction>
-              <Accordion defaultExpanded={true} >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <h1>거래내역</h1>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Head>
-                   
-                    <div>event</div>
-                    <div>price</div>
-                    <div>from</div>
-                    <div>to</div>
-                    <div>date</div>
-                  </Head>
-                  {transactions.map((tran,i)=>{
-                  return(
+            <Accordion defaultExpanded={true}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <h1>거래내역</h1>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Head>
+                  <div>event</div>
+                  <div>price</div>
+                  <div>from</div>
+                  <div>to</div>
+                  <div>date</div>
+                </Head>
+                {transactions.map((tran, i) => {
+                  return (
                     <div key={i}>
-                    <hr/>
-                    <EachTransaction >
-                    <div>{tran.event}</div>
-                    <div>
-                      {tran.price}
-                      {tran.price?<img style={{"height":'1rem'}} alt="ether" src={etherURL}/>:""}
-                      
+                      <hr />
+                      <EachTransaction>
+                        <div>{tran.event}</div>
+                        <div>
+                          {tran.price}
+                          {tran.price ? (
+                            <img
+                              style={{ height: "1rem" }}
+                              alt="ether"
+                              src={etherURL}
+                            />
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                        <div>{tran.from}</div>
+                        <div>{tran.to}</div>
+                        <div>{tran.date}</div>
+                        {/* a year ago 로 바꾸기 */}
+                      </EachTransaction>
                     </div>
-                    <div>{tran.from}</div>
-                    <div>{tran.to}</div>
-                    <div>{tran.date}</div>
-                    {/* a year ago 로 바꾸기 */}
-                    </EachTransaction>
-                    </div>
-                  )}
-                  )}
-                </AccordionDetails>
-              </Accordion>
+                  );
+                })}
+              </AccordionDetails>
+            </Accordion>
           </Transaction>
         </Center>
         <Bottom>
-          <ArtistMore>
-            <div style={{display:'flex'}}>
-              <h1 style={{color:'#EB6767'}}>{item.name}</h1>
-              <h1 style={{marginLeft:"1rem"}}>의 작품 보기</h1>
+          <TitleSee>
+            <div style={{ display: "flex" }}>
+              <h1 style={{ color: "#EB6767" }}>{item.name}</h1>
+              <h1 style={{ marginLeft: "1rem" }}>의 작품 보기</h1>
             </div>
+          </TitleSee>
+          <ArtistMore>
             <Cards>
-            {items.map(item=>{return(
-              <div onClick={()=>setChange(true)}>
-                <ItemCard key={item.url} item={item}  />
-              </div>  
-              )})}
+              {items.map((item) => {
+                return (
+                  <div onClick={() => setChange(true)}>
+                    <ItemCard key={item.url} item={item} />
+                  </div>
+                );
+              })}
             </Cards>
           </ArtistMore>
         </Bottom>
       </DetailPage>
-  )
+    </Wrapper>
+  );
 }
 
 export default DetailItem
