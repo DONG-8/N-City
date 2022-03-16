@@ -4,6 +4,8 @@ import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.domain.authentication.db.entity.Authentication;
 import com.nft.ncity.domain.authentication.request.AuthenticationRegisterPostReq;
 import com.nft.ncity.domain.follow.db.entity.Follow;
+import com.nft.ncity.domain.follow.response.FolloweeListGetRes;
+import com.nft.ncity.domain.follow.response.FollowerListGetRes;
 import com.nft.ncity.domain.follow.service.FollowService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @Slf4j
 @Api(value = "팔로우 관리 API")
@@ -26,6 +29,54 @@ public class FollowController {
 
     @Autowired
     FollowService followService;
+
+    @GetMapping("/follower")
+    @ApiOperation(value = "팔로우 조회", notes = "<strong>팔로우 조회</strong>한다.")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "팔로우 조회 성공"),
+            @ApiResponse(code = 404, message = "팔로우 조회 실패")
+    })
+    public ResponseEntity<List<FollowerListGetRes>> FollowerList(Principal principal){
+
+        // 0. 토큰으로부터 내 userId를 받아온다.
+        // 1. Follower가 입력받은 userId인 값들을 받아온다.
+
+        log.info("FollowerList - 호출");
+        Long userId = Long.valueOf(principal.getName());
+
+        List<Follow> follow = followService.FolloweeList(userId);
+
+        if(null != follow) {
+            return ResponseEntity.status(201).body(FollowerListGetRes.of(follow));
+        }
+        else {
+            return ResponseEntity.status(404).body(null);
+        }
+    }
+
+    @GetMapping("/followee")
+    @ApiOperation(value = "팔로워 조회", notes = "<strong>팔로워 조회</strong>한다.")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "팔로우 조회 성공"),
+            @ApiResponse(code = 404, message = "팔로우 조회 실패")
+    })
+    public ResponseEntity<List<FolloweeListGetRes>> FolloweeList(Principal principal){
+
+        // 0. 토큰으로부터 내 userId를 받아온다.
+        // 1. Followee가 입력받은 userId인 값들을 받아온다.
+
+        log.info("FolloweeList - 호출");
+        Long userId = Long.valueOf(principal.getName());
+
+        List<Follow> follow = followService.FollowerList(userId);
+
+        if(null != follow) {
+            return ResponseEntity.status(201).body(FolloweeListGetRes.of(follow));
+        }
+        else {
+            return ResponseEntity.status(404).body(null);
+        }
+    }
 
     @PostMapping("/{followFollowee}")
     @ApiOperation(value = "팔로우 신청", notes = "<strong>팔로우 신청</strong>한다.")
