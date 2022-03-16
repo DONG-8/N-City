@@ -9,13 +9,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import org.springframework.data.domain.Pageable;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRules;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -39,10 +38,11 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)
+                .apiInfo(apiInfo())
                 .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Pageable.class),typeResolver.resolve(Page.class)))
                 .select()
                 .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.ant("/**"))
+                .paths(PathSelectors.ant("/api/**"))
                 .build()
                 .securityContexts(newArrayList(securityContext()))
                 .securitySchemes(newArrayList(apiKey()))
@@ -92,5 +92,13 @@ public class SwaggerConfig {
         private List<String> sort;
     }
 
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder().title("N-City API")
+                .description("SSAFY 6th Specialized PJT N-City")
+                .termsOfServiceUrl("https://edu.ssafy.com")
+                .contact(new Contact("SSAFY", "https://edu.ssafy.com", "ssafy@ssafy.com"))
+                .license("SSAFY License")
+                .licenseUrl("ssafy@ssafy.com").version("3.3").build();
+    }
 
 }
