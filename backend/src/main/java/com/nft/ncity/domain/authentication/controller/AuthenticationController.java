@@ -75,6 +75,14 @@ public class AuthenticationController {
         return ResponseEntity.status(200).body(authentication);
     }
 
+    /**
+     * 0315 일기
+     * 회원 완성되면 유저 id 값도 받아와야함
+     * @param authenticationRegisterPostReq
+     * @param multipartFile
+     * @return
+     * @throws IOException
+     */
     @PostMapping
     @ApiOperation(value = "인증요청 등록", notes = "<strong>인증요청을 등록</strong>한다.")
     @ApiResponses({
