@@ -23,6 +23,7 @@ public class LogServiceImpl implements LogService{
                     .userAddress(userAddress)
                     .userNick("noname") // 닉네임 초기 설정
                     .userRole("ROLE_USER") // 유저 역할 초기 설정 (일반 유저)
+                    .userEmailConfirm(false)
                     .build();
             logRepository.save(newUser);    // db에 유저 정보 저장
             User nowOldUser = logRepository.findUserByUserAddress(userAddress).get();
