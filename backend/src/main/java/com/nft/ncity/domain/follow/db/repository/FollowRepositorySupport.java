@@ -26,4 +26,18 @@ public class FollowRepositorySupport {
         followRepository.save(follow);
         return follow;
     }
+
+    public Follow FollowRemove(Long followeeId, Long followerId) {
+
+        Follow follow = jpaQueryFactory.select(qFollow)
+                .from(qFollow)
+                .where(qFollow.followFollowee.eq(followeeId)
+                        .and(qFollow.followFollower.eq(followerId)))
+                .fetchOne();
+
+        followRepository.delete(follow);
+
+        return follow;
+
+    }
 }

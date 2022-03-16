@@ -7,7 +7,7 @@ import com.nft.ncity.domain.authentication.db.repository.AuthFileRepository;
 import com.nft.ncity.domain.authentication.db.repository.AuthenticationRepository;
 import com.nft.ncity.domain.authentication.db.repository.AuthenticationRepositorySupport;
 import com.nft.ncity.domain.authentication.request.AuthenticationRegisterPostReq;
-import com.nft.ncity.domain.follow.request.AuthenticationConfirmReq;
+import com.nft.ncity.domain.authentication.request.AuthenticationConfirmReq;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

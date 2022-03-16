@@ -12,8 +12,15 @@ public class FollowServiceImpl implements FollowService{
     FollowRepositorySupport followRepositorySupport;
 
     @Override
-    public Follow FollowRegister(Long followeeId, Long followerId) {
-        Follow follow = followRepositorySupport.FollowRegister(followeeId,followerId);
+    public Follow FollowRegister(Long followeeId, Long userId) {
+        Follow follow = followRepositorySupport.FollowRegister(followeeId,userId);
         return follow;
+    }
+
+    @Override
+    public Follow FollowRemove(Long followeeId, Long userId) {
+        Follow follow = followRepositorySupport.FollowRemove(followeeId,userId);
+        return follow;
+
     }
 }

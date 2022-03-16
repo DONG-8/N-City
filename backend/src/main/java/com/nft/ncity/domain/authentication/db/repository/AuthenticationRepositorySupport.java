@@ -2,9 +2,8 @@ package com.nft.ncity.domain.authentication.db.repository;
 
 import com.nft.ncity.domain.authentication.db.entity.Authentication;
 import com.nft.ncity.domain.authentication.db.entity.QAuthentication;
-import com.nft.ncity.domain.follow.request.AuthenticationConfirmReq;
+import com.nft.ncity.domain.authentication.request.AuthenticationConfirmReq;
 import com.nft.ncity.domain.user.db.entity.QUser;
-import com.nft.ncity.domain.user.db.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

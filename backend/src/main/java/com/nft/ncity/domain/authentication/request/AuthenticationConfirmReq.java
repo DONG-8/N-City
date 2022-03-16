@@ -1,4 +1,4 @@
-package com.nft.ncity.domain.follow.request;
+package com.nft.ncity.domain.authentication.request;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
