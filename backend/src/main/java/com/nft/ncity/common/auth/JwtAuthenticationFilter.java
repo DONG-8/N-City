@@ -53,20 +53,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if(accessCookie != null){
                 accessToken = accessCookie.getValue();
 
-                if(redisUtil.getData(accessToken).equals("logout")) {
-                    throw new InvalidCookieException("잘못된 접근 - 이미 로그아웃 처리된 token입니다.");
-                }
-
                 userAddress = jwtTokenUtil.getUserAddress(accessToken);
             }
             if(userAddress != null){    // Access token이 유효하면 AccessToken내 payload를 읽어 사용자와 관련있는 userDetail 생성
+                log.info("jwt - access token 유효");
                 // jwt 토큰에 포함된 계정 정보(userAddress) 통해 실제 디비에 해당 정보의 계정이 있는지 조회.
                 User user = logService.getUserDetailByAddress(userAddress);
 
                 UserDetails userDetails = new UserDetails(user);
                 if(jwtTokenUtil.verify(accessToken).isResult()){
                     // 식별된 정상 유저인 경우, 요청 context 내에서 참조 가능한 인증 정보(jwtAuthentication) 생성.
-                    UsernamePasswordAuthenticationToken jwtAuthentication = new UsernamePasswordAuthenticationToken(userAddress,
+                    UsernamePasswordAuthenticationToken jwtAuthentication = new UsernamePasswordAuthenticationToken(user.getUserId(),
                             null, AuthorityUtils.createAuthorityList(user.getUserRole()));
                     jwtAuthentication.setDetails(userDetails);
                     // jwt 토큰으로 부터 획득한 인증 정보(authentication) 설정.
@@ -74,6 +71,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         }catch (ExpiredJwtException e){ // Access token이 유효하지 않으면 Refresh Token 값을 읽어드림
+            log.info("jwt - access token 유효하지 않아서 refresh token 값 가져오기");
             Cookie refreshCookie = cookieUtil.getCookie(request,jwtTokenUtil.REFRESH_TOKEN_NAME);
             if(refreshToken!=null){
                 refreshToken = refreshCookie.getValue();
@@ -85,10 +83,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if(refreshToken != null){
                 userAddress = redisUtil.getData(refreshToken);
                 if (userAddress != null) {
+                    log.info("jwt - access token 읽어오기 성공");
                     User user = logService.getUserDetailByAddress(userAddress);
                     UserDetails userDetails = new UserDetails(user);
 
-                    UsernamePasswordAuthenticationToken jwtAuthentication = new UsernamePasswordAuthenticationToken(userAddress,
+                    UsernamePasswordAuthenticationToken jwtAuthentication = new UsernamePasswordAuthenticationToken(user.getUserId(),
                             null, AuthorityUtils.createAuthorityList(user.getUserRole()));
                     jwtAuthentication.setDetails(userDetails);
 
