@@ -170,6 +170,7 @@ public class UserController {
     @ApiOperation(value = "해당 유저의 회원정보 변경", notes = "<strong>해당 유저의 회원정보</strong>를 변경한다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공"),
+            @ApiResponse(code = 404, message = "해당 유저 없음."),
             @ApiResponse(code = 404, message = "해당 유저 없음.")
     })
     public ResponseEntity<BaseResponseBody> modifyUserInfoByUserId(@RequestPart(value = "body") UserModifyUpdateReq userInfo,
@@ -190,6 +191,15 @@ public class UserController {
         else {
             execute = userService.userUpdateNoProfileImg(userInfo);
         }
+
+        // 이메일 인증 확인
+        User user = userRepository.getById(userInfo.getUserId());
+        // 인증이 안되었으면
+        if(!user.getUserEmailConfirm()){
+            log.error("modifyUserInfoByUserId - 이메일 인증을 해주세요.");
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404,"이메일 인증 필요."));
+        }
+
 
         // 수정한게 없다.
         if(execute < 1) {
@@ -270,8 +280,4 @@ public class UserController {
 
         return ResponseEntity.status(201).body(BaseResponseBody.of(201,"닉네임 변경 가능."));
     }
-
-
-
-
 }
