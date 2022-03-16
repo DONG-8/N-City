@@ -1,5 +1,6 @@
 package com.nft.ncity.domain.log.Controller;
 
+import com.nft.ncity.common.auth.UserDetails;
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.common.util.CookieUtil;
 import com.nft.ncity.common.util.JwtTokenUtil;
@@ -14,11 +15,15 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 
 @Slf4j
 @Api(value = "로그인, 로그아웃")
@@ -37,6 +42,7 @@ public class LogController {
 
     @Autowired
     JwtTokenUtil jwtTokenUtil;
+    private java.security.Principal Principal;
 
     @ApiOperation(value = "로그인")
     @PostMapping("/login")
@@ -117,14 +123,12 @@ public class LogController {
         }
     }
 
-    @ApiOperation(value = "쿠키 테스트")
-    @GetMapping("/cookietest")
-    public ResponseEntity<? extends BaseResponseBody> cookietest(HttpServletResponse response) {
-        log.info("userLogout - Call");
-
-        response.addCookie(cookieUtil.createCookie("accessToken", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzc2FmeS5jb20iLCJleHAiOjE2NDg2OTIyNzUsImlhdCI6MTY0NzM5NjI3NX0.Pq8TjbNv82tnMLH4jBqHtoBZuWm9xfEmRrTE-b1n8wTur_0pd3xIwJrmQ2a4cS-VWWQtINJJ6qh-S_yg4OI7vQ"));
-        response.addCookie(cookieUtil.createCookie("refreshToken", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VyQWRkcmVzcyI6IjB4ZDk3NDYwNEZlYjEyNjBCZjM2NWNkNDJkQ2Y2MjhGZkQ1QjIxNDU4MCIsImlzcyI6InNzYWZ5LmNvbSIsImV4cCI6MTY0NzQwMjI3NSwidXNlcklkIjo0LCJpYXQiOjE2NDczOTYyNzV9.MgYJtV9-E6sLFEXtC-NJ6EZU2hLBHcDxBJX2ddXJAOOuW7mhU0pSx1Q9vIpYpH_QAj7za3w6xnF2QgVh18M5JQ"));
-        return null;
+    @ApiOperation(value = "유저 아이디 반환 테스트")
+    @GetMapping("/test")
+    public Long test(Principal principal) {
+        Long userId = Long.valueOf(principal.getName());
+        log.warn(principal.getName());
+        return Long.valueOf(principal.getName());
     }
 
 }
