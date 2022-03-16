@@ -1,34 +1,32 @@
 package com.nft.ncity.domain.user.db.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.nft.ncity.domain.authentication.db.entity.Authentication;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Getter
 @Entity
 @ApiModel(value = "User", description = "회원 정보")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "user")
 @Builder
 public class User {
 
     @ApiModelProperty(value = "회원 id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Builder.Default
     // 회원 id
-    Long userId = null;
+    Long userId;
 
     // 인증 id
     @ApiModelProperty(value = "회원 인증 id")
-    @Builder.Default
-    Long authId = null;
+    Long authId;
 
     @ApiModelProperty(value = "회원 지갑 주소", required = true)
     // 유저 지갑 주소
@@ -51,7 +49,6 @@ public class User {
 
     // 닉네임
     @ApiModelProperty(value="회원 닉네임")
-    @Column(name = "user_nick")
     String userNick;
 
     // 이메일
@@ -70,7 +67,6 @@ public class User {
     @ApiModelProperty(value = "회원 프로필 이미지 url")
     String userImgUrl;
 
-    
     // 이메일 변경시 false로 값 변환해주기
     public void updateEmail(String userEmail) {
         this.userEmail = userEmail;
