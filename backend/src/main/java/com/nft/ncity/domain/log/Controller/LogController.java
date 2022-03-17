@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 
 @Slf4j
-@Api(value = "로그인, 로그아웃")
+@Api(value = "로그인, 로그아웃 API")
 @RestController
 @RequestMapping("/api/users")
 public class LogController {
@@ -38,7 +38,6 @@ public class LogController {
 
     @Autowired
     JwtTokenUtil jwtTokenUtil;
-    private java.security.Principal Principal;
 
     @ApiOperation(value = "로그인")
     @PostMapping("/login")
