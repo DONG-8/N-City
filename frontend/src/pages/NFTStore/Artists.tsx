@@ -19,20 +19,19 @@ const ColorBar = styled.div`
     margin: auto;
     margin-top:0;
     width: 100vw ;
-  .all{
-    background-color: #FCD7CD ;
-    height: 8vh;
-  }
-  .follow{
-    background-color: #FCD7CD ;
-    height: 8vh;
-  }
+  
   
   img{
     margin: auto;
     width: 100vw ;
     height: 30vh;
     object-fit: cover;
+  }
+  .all{
+    object-position:50% 50%;
+  }
+  .follow{
+    object-position:20% 20%;
   }
   .influencer{
     object-position:50% 50%;
@@ -136,16 +135,26 @@ const Artists = () => {
 
   return (
     <div>
-     
-    <ColorBar>
-        {status==='all' && <div className='all'/>}
-        {status==='follow' && <div className='follow'/>}
-        {status==='influencer' &&
-        <img className='influencer' src="essets/images/인플.jpg" alt='bg'/>  }
-        {status==='artist' &&
-        <img className='artist' src="essets/images/아티스트.jpg" alt='bg'/>  }
-        {status==='enterprise' &&
-        <img className='enterprise' src="essets/images/나이키.jpeg" alt='bg'/>  }
+      <ColorBar>
+        {status === "all" && (
+          <img className="all" src="essets/images/오로라.jpg" alt="bg" />
+        )}
+        {status === "follow" && (
+          <img className="follow" src="essets/images/오로라2.jpg" alt="bg" />
+        )}
+        {status === "influencer" && (
+          <img className="influencer" src="essets/images/influencer.jpg" alt="bg" />
+        )}
+        {status === "artist" && (
+          <img className="artist" src="essets/images/아티스트.jpg" alt="bg" />
+        )}
+        {status === "enterprise" && (
+          <img
+            className="enterprise"
+            src="essets/images/나이키.jpeg"
+            alt="bg"
+          />
+        )}
       </ColorBar>
       {/* <Title>
         <h1>Artists</h1>
@@ -161,18 +170,53 @@ const Artists = () => {
         </div>
       </Title> */}
       <FilterBar>
-      <div  id={status==='all'?'select':""} onClick={()=>{setStatus("all")}}><p>전체작가</p></div>
-      <div  id={status==='follow'?'select':""} onClick={()=>{setStatus("follow")}} ><p>관심작가</p></div>
-      <div  id={status==='influencer'?'select':""} onClick={()=>{setStatus("influencer")}}><p>인플루언서</p></div>
-      <div  id={status==='artist'?'select':""} onClick={()=>{setStatus("artist")}}><p>아티스트</p></div>
-      <div  id={status==='enterprise'?'select':""} onClick={()=>{setStatus("enterprise")}}><p>기업</p></div>
-    </FilterBar>
-      
-    <ArtistCards>
-      {artists.map(artist=>{return(
-        <ArtistCard key={artist.profileImg} artist={artist}/>
-      )})}
-    </ArtistCards>
+        <div
+          id={status === "all" ? "select" : ""}
+          onClick={() => {
+            setStatus("all");
+          }}
+        >
+          <p>전체작가</p>
+        </div>
+        <div
+          id={status === "follow" ? "select" : ""}
+          onClick={() => {
+            setStatus("follow");
+          }}
+        >
+          <p>관심작가</p>
+        </div>
+        <div
+          id={status === "influencer" ? "select" : ""}
+          onClick={() => {
+            setStatus("influencer");
+          }}
+        >
+          <p>인플루언서</p>
+        </div>
+        <div
+          id={status === "artist" ? "select" : ""}
+          onClick={() => {
+            setStatus("artist");
+          }}
+        >
+          <p>아티스트</p>
+        </div>
+        <div
+          id={status === "enterprise" ? "select" : ""}
+          onClick={() => {
+            setStatus("enterprise");
+          }}
+        >
+          <p>기업</p>
+        </div>
+      </FilterBar>
+
+      <ArtistCards>
+        {artists.map((artist) => {
+          return <ArtistCard key={artist.profileImg} artist={artist} />;
+        })}
+      </ArtistCards>
     </div>
   );
 }

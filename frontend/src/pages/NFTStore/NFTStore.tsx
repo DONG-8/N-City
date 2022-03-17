@@ -15,11 +15,35 @@ const Title = styled.div`
   margin-bottom: 0;
 `
 const ColorBar = styled.div`
-  background-color: #FCD7CD ;
-  width: 85vw ;
-  height: 8vh;
   margin: auto;
-  margin-top:0;
+    margin-top:0;
+    width: 100vw ;
+  
+  
+  img{
+    margin: auto;
+    width: 100vw ;
+    height: 20vh;
+    object-fit: cover;
+  }
+  .all{
+    object-position:10% 10%;
+  }
+  .art{
+    object-position:70% 70%;
+  }
+  .music{
+    object-position:70% 70%;
+  }
+  .photography{
+    object-position:40% 40%;
+  }
+  .sports{
+    object-position:90% 90%;
+  }
+  .game{
+    object-position:60% 60%;
+  }
 `
 
 const CategoryBar = styled.div`
@@ -92,29 +116,110 @@ const NFTStore = () => {
   ])
  
   const [filter,setFilter] = useState("all")
-  return (<>
-    <Title>
-      <h1>Store</h1>
-      <div>
-        <p>소지금 : 356,321<img alt="💎" style={{"height":"2.2vh"}} src="essets/images/ethereum.png"/></p> 
-      </div>
-    </Title>
-    <ColorBar/>
-    <CategoryBar>
-      <li><p id={filter==="all"?"category":""} onClick={()=>{setFilter("all")}}>All</p></li>
-      <li><p id={filter==="art"?"category":""} onClick={()=>{setFilter("art")}}>Art</p></li>
-      <li><p id={filter==="music"?"category":""} onClick={()=>{setFilter("music")}}>Music</p></li>
-      <li><p id={filter==="photography"?"category":""} onClick={()=>{setFilter("photography")}}>Photography</p></li>
-      <li><p id={filter==="sports"?"category":""} onClick={()=>{setFilter("sports")}}>Sports</p></li>
-      <li><p id={filter==="game"?"category":""} onClick={()=>{setFilter("game")}}>Game</p></li>
-    </CategoryBar>
-    <ItemCards>
-      {items.map(item=>{return(
-        <ItemCard key={item.id} item={item} />)})}
-    </ItemCards>
-    
+  return (
+    <>
+      <ColorBar>
+        {filter === "all" && (
+          <img className="all" src="essets/images/오로라.jpg" alt="bg" />
+        )}
+        {filter === "art" && (
+          <img className="art" src="essets/images/art.jpg" alt="bg" />
+        )}
+        {filter === "music" && (
+          <img className="music" src="essets/images/music.jpg" alt="bg" />
+        )}
+        {filter === "photography" && (
+          <img className="photography" src="essets/images/photography2.jpg" alt="bg" />
+        )}
+        {filter === "sports" && (
+          <img className="sports" src="essets/images/sports.jpg" alt="bg" />
+        )}
+        {filter === "game" && (
+          <img className="game" src="essets/images/game.jpg" alt="bg" />
+        )}
+      </ColorBar>
+      <Title>
+        <h1>Store</h1>
+        <div>
+          <p>
+            소지금 : 356,321
+            <img
+              alt="💎"
+              style={{ height: "2.2vh" }}
+              src="essets/images/ethereum.png"
+            />
+          </p>
+        </div>
+      </Title>
+      <CategoryBar>
+        <li>
+          <p
+            id={filter === "all" ? "category" : ""}
+            onClick={() => {
+              setFilter("all");
+            }}
+          >
+            All
+          </p>
+        </li>
+        <li>
+          <p
+            id={filter === "art" ? "category" : ""}
+            onClick={() => {
+              setFilter("art");
+            }}
+          >
+            Art
+          </p>
+        </li>
+        <li>
+          <p
+            id={filter === "music" ? "category" : ""}
+            onClick={() => {
+              setFilter("music");
+            }}
+          >
+            Music
+          </p>
+        </li>
+        <li>
+          <p
+            id={filter === "photography" ? "category" : ""}
+            onClick={() => {
+              setFilter("photography");
+            }}
+          >
+            Photography
+          </p>
+        </li>
+        <li>
+          <p
+            id={filter === "sports" ? "category" : ""}
+            onClick={() => {
+              setFilter("sports");
+            }}
+          >
+            Sports
+          </p>
+        </li>
+        <li>
+          <p
+            id={filter === "game" ? "category" : ""}
+            onClick={() => {
+              setFilter("game");
+            }}
+          >
+            Game
+          </p>
+        </li>
+      </CategoryBar>
+      <ItemCards>
+        {items.map((item) => {
+          return <ItemCard key={item.id} item={item} />;
+        })}
+      </ItemCards>
     </>
-  )
+  );
 }
 
 export default NFTStore
