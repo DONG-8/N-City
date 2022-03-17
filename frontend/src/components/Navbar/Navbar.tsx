@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PersonIcon from "@material-ui/icons/Person";
 import SearchBar from "./SearchBar";
+import CoinChargeModal from "../Mint/CoinChargeModal";
 
 const NavbarWrrap = styled.div`
   /* display: block; */
@@ -131,7 +132,9 @@ const SearchBarContainer = styled.div`
 export default function Navbar() {
   const [isLogin, setIsLogin] = useState<Boolean>(false);
   const navigate = useNavigate();
-
+  const [openCoin, setOpenCoin] = useState(false);
+  {/* ⭐ */}
+  
   const goToGame = () => {
     if (isLogin === true) {
       navigate("/Game");
@@ -195,8 +198,10 @@ export default function Navbar() {
                   <PersonIcon></PersonIcon>
                   <p>000님</p>
                   <div className="hide">
-                    <div>
-                      <p>코인 충전</p>
+                    <div >
+                      <p onClick = {()=>{setOpenCoin(true)}}>코인 충전</p>
+                      <CoinChargeModal open={openCoin} setOpen={setOpenCoin} /> 
+                      {/* ⭐ */}
                     </div>
                     <div>
                       <Link to="mypage">
