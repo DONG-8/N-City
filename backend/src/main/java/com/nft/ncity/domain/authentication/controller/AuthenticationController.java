@@ -76,8 +76,6 @@ public class AuthenticationController {
     }
 
     /**
-     * 0315 일기
-     * 회원 완성되면 유저 id 값도 받아와야함
      * @param authenticationRegisterPostReq
      * @param multipartFile
      * @return
@@ -126,6 +124,4 @@ public class AuthenticationController {
 
         return ResponseEntity.status(201).body(BaseResponseBody.of(201,"인증 처리완료."));
     }
-
-
 }
