@@ -31,8 +31,8 @@ public class User {
     @ApiModelProperty(value = "회원 지갑 주소", required = true)
     // 유저 지갑 주소
     String userAddress;
+
     /* 회원 코드
-<<<<<<< HEAD
             - ROLE_ADMIN : 사이트 관리자
             - ROLE_USER : 일반 회원
             - ROLE_ENTERPRISE : 기업
@@ -46,22 +46,7 @@ public class User {
             "ROLE_ARTIST : 아티스트, " +
             "ROLE_INFLUENCER : 인플루언서)")
     String userRole;
-=======
-        - ROLE_ADMIN : 사이트 관리자
-        - ROLE_USER : 일반 회원
-        - ROLE_ENTERPRISE : 기업
-        - ROLE_ARTIST : 아티스트
-        - ROLE_INFLUENCER : 인플루언서
-     */
-    @ApiModelProperty(value = "회원 구분 코드 (" +
-                                                "ROLE_ADMIN : 사이트 관리자, " +
-                                                "ROLE_USER : 일반회원 (default), " +
-                                                "ROLE_ENTERPRISE : 기업, " +
-                                                "ROLE_ARTIST : 아티스트, " +
-                                                "ROLE_INFLUENCER : 인플루언서)")
-    String userRole;
 
->>>>>>> fbe33699e432cfc0e0a1e3127e3c9f66636d504f
     // 닉네임
     @ApiModelProperty(value="회원 닉네임")
     String userNick;
