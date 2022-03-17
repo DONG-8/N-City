@@ -1,7 +1,6 @@
 package com.nft.ncity.domain.myroom.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
-import com.nft.ncity.domain.log.response.LoginPostRes;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +19,9 @@ public class MyroomController {
 
     @ApiOperation(value = "유저 방 입장하기")
     @PostMapping("/{userId}")
-    public ResponseEntity<? extends BaseResponseBody> getMyRoom(@PathVariable ) {
+    public ResponseEntity<? extends BaseResponseBody> getMyRoom(@PathVariable Long userId) {
         log.info("getMyRoom - Call");
-
-
-            return ResponseEntity.status(201).body(LoginPostRes.of(201, "Success", accessJwt, user.getUserId()));
-        }
+        return null;
     }
+
 }
