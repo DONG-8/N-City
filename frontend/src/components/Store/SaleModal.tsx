@@ -19,12 +19,15 @@ const Wrapper = styled.div`
   .title {
     text-align: center;
     font-size:2.5vh;
+    width: 80%;
+    border-bottom: 1px solid red;
+    margin: auto;
   }
 `;
   const Session1 = styled.div`
     .choiceBox {
       width: 35vw;
-      height: 30vh;
+      height: 20vh;
       margin: auto;
       display: flex;
       align-items: center;
@@ -107,11 +110,11 @@ const Session2 = styled.div`
     width:50%;
     height:7vh;
     margin-top: 12vh;
-    font-weight: 1000;
     font-size:2rem;
-    background-color:#FEAD9D ;
+    /* font-weight: 1000; */
+    /* background-color:#FEAD9D ; */
     &:hover{
-      background-color:#FB8973 ;
+      /* background-color:#FB8973 ; */
     }
   }
 `
@@ -168,7 +171,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen}) => {
             }}/> <img alt="ether" src='essets/images/ethereum.png'/>
           </div>
           <Button onClick={()=>setSession1("")} className='back' variant="contained" color='inherit'><ArrowBackIcon/></Button>
-          <Button className='sell' variant="contained" color='error' >판매 개시</Button>
+          <Button className='sell' variant="contained" color='primary' >판매 개시</Button>
         </Session2>
         }
         {session1 ==="Auction" &&
