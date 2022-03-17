@@ -42,7 +42,7 @@ const SubText = styled.div`
   height: 100px;
   /* background-color: red; */
   font-size: 30px;
-  font-family: "DungGeunMo";
+  /* font-family: "DungGeunMo"; */
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -56,7 +56,7 @@ const Guide = () => {
       <FlexBox>
         <InnerFlexBox>
           <SubText>
-            <h3>업데이트</h3>
+            <h3>Hot Room</h3>
             <h1>+</h1>
           </SubText>
 
@@ -64,14 +64,14 @@ const Guide = () => {
         </InnerFlexBox>
         <InnerFlexBox>
           <SubText>
-            <h3>핵심 가이드</h3>
+            <h3>Hot Artist</h3>
             <h1>+</h1>
           </SubText>
           <SmallSlide></SmallSlide>
         </InnerFlexBox>
         <InnerFlexBox>
           <SubText>
-            <h3>HOT Artist</h3>
+            <h3>Guide</h3>
             <h1>+</h1>
           </SubText>
           <SmallSlide></SmallSlide>
