@@ -2,7 +2,6 @@ package com.nft.ncity.common.auth;
 
 import com.nft.ncity.domain.log.service.LogService;
 import com.nft.ncity.domain.user.db.entity.User;
-import com.nft.ncity.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +20,7 @@ public class UserDetailService implements UserDetailsService{
     @Override
     public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String userAddress) throws UsernameNotFoundException {
 
-    		User user = logService.getUserDetail(userAddress);
+    		User user = logService.getUserDetailByAddress(userAddress);
     		if(user != null) {
     			UserDetails userDetails = new UserDetails(user);
     			return userDetails;

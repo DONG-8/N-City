@@ -168,7 +168,7 @@ export default function Navbar() {
             <Link className="inner" to="store">
               <p>store</p>
             </Link>
-            <Link className="inner" to="store">
+            <Link className="inner" to="mint">
               <p>Create</p>
             </Link>
             {isLogin ? (

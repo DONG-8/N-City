@@ -7,6 +7,10 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import Popup from "../../components/Popup/Popup";
 import Guide from "../../components/Popup/Guide";
+import HotTokkenList from "./HotTokkenList";
+import NewTokkenList from "./NewTokkenList";
+import VideoGuide from "./VideoGuide";
+import Profile from "./Profile";
 
 const MainBackGround = styled.div`
   /* margin-top: 80px; */
@@ -193,6 +197,7 @@ const SubBottomItem = styled.div`
 const HotTokkenWrraper = styled.div`
   width: 100%;
   height: auto;
+  min-width: 1236px;
   background-color: #fffbd8;
 `;
 
@@ -200,10 +205,11 @@ const HotTokken = styled.div`
   width: 1320px;
   height: 100%;
   margin: 0 auto;
+  min-width: 1320px;
   h1 {
     width: 1320px;
     padding-top: 40px;
-    font-family: "DungGeunMo";
+    /* font-family: "DungGeunMo"; */
     font-size: 40px;
   }
 `;
@@ -224,7 +230,7 @@ const MainWord = styled.div`
   z-index: 1;
   margin: 0 auto;
   font-size: 100px;
-  font-family: "DungGeunMo";
+  /* font-family: "DungGeunMo"; */
   .typing {
     text-transform: capitalize;
     white-space: nowrap;
@@ -620,86 +626,14 @@ export default function Main() {
       liked: 24,
       url: "https://lh3.googleusercontent.com/3usYOjVkwnra66EAhX4yJB-xmYCfFoTsREGVvVLCYWhtVG4pifdZLBRCSgv6wbjbV4rwPamlBDgganvgFO3xeifJyZQtqxwTYpXiqtc=w300",
     },
-    {
-      id: 4,
-      name: "Hong Hosus",
-      title: "#Hong1535",
-      price: 1.24,
-      liked: 35,
-      url: "https://lh3.googleusercontent.com/Cxb_lnNlgplYCULm_ZGlY9pCrxQ67GO2hmStVJTSEN3O2hNeIZoWyK3CwaCj-vZBxeQqioC-P1qT7cK6wXWc-WjjfUyjR3zXNwKN=w300",
-    },
-    {
-      id: 5,
-      name: "Giks Home",
-      title: "#ghe23434",
-      price: 1.35,
-      liked: 43,
-      url: "https://lh3.googleusercontent.com/qeCj7NRekCZ9BUjM8c9Pk02DxmPgX483qgEkVJeLXYIDOFVTXAfCg8TTztcMMQPgYFsNDUqndF5asWPCgJVpiM6P39VzpWa3TTKrvg=w300",
-    },
-    {
-      id: 6,
-      name: "Giks Home",
-      title: "#ghe254334",
-      price: 1.2,
-      liked: 24,
-      url: "https://lh3.googleusercontent.com/jWonBwIV3RRzCv2xEu3pKA5buXUne_vnltLcLIfnluPuctdbTd-ScsBO94-njkA2L5VHVRA56CG5tbbxwacCvFdFWaZzuIJNUB1sVCA=w300",
-    },
-    {
-      id: 7,
-      name: "Giks Home",
-      title: "#g53434",
-      price: 1.37,
-      liked: 52,
-      url: "https://lh3.googleusercontent.com/Op3TUf8vqznY1geantykLx86mlGf4yEaBfKT25utQlQu8keA9ywYdwYYzVSqGZG_3uSJKCNcUBAVK6qs520xhZ6lsP3dVDGsM9wnRA=w352",
-    },
-    {
-      id: 8,
-      name: "Hong Hosus",
-      title: "#Hong1535",
-      price: 1.24,
-      liked: 35,
-      url: "https://lh3.googleusercontent.com/jc4P6pZhiNsBNxErAilpkx-d3RZDpNpJbYjs2k5nou29DJGe_r27tu2i0xy0KBOIgHaQhgVOqIF4-aLpjIqLV6eo-IsIUQ98VI_jDw=w300",
-    },
-    {
-      id: 9,
-      name: "Giks Home",
-      title: "#ghe23434",
-      price: 1.35,
-      liked: 43,
-      url: "https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352",
-    },
-    {
-      id: 10,
-      name: "Giks Home",
-      title: "#g53434",
-      price: 1.37,
-      liked: 52,
-      url: "https://lh3.googleusercontent.com/Op3TUf8vqznY1geantykLx86mlGf4yEaBfKT25utQlQu8keA9ywYdwYYzVSqGZG_3uSJKCNcUBAVK6qs520xhZ6lsP3dVDGsM9wnRA=w352",
-    },
-    {
-      id: 11,
-      name: "Giks Home",
-      title: "#ghe254334",
-      price: 1.2,
-      liked: 24,
-      url: "https://lh3.googleusercontent.com/BqScg3QwKPcNW_cxtvBws2D2cE8Us-QsN9yYmB_8UzUikBwLfOC5Nc2JgXWOB2ijx4lAU2KcYplGujimb2FUD9ArixBFeCyNPcES=w352",
-    },
-    {
-      id: 12,
-      name: "Giks Home",
-      title: "#g53434",
-      price: 1.37,
-      liked: 52,
-      url: "https://lh3.googleusercontent.com/OjwqOOt3_po4pPlTYg43Us9_pp4Ji9X8JKZY4aCsjzHISKQL-u2oSX_q4NmK5qZZn5PPYfMCpDS8OKFXBzXzXA6ljfWfaxGdEvc8DA=w300",
-    },
   ]);
 
   return (
     <MainH>
       <Popup></Popup>
-      <MainWord>
+      {/* <MainWord>
         <div className="typing">Welcome N-City</div>
-      </MainWord>
+      </MainWord> */}
       <MainBackGround>
         <MainBackImg src="https://post-phinf.pstatic.net/MjAyMDEyMjJfMjc0/MDAxNjA4NjQ0MzExMzM4.BKpiZi7BKqbKceFNFAg0mB1JUZXGsGiDZsB2shTf2NYg.w-SkrTWCzjoyLu_-9moNkS3ZUGu0FljmpuuE-JMJRRwg.GIF/tumblr_nm6j1ghB7C1qze3hdo1_500.gif?type=w1200" />
       </MainBackGround>
@@ -784,7 +718,7 @@ export default function Main() {
             </button>
           </MainPagenationBanner>
         </MainBannerWrapper>
-        <SubBannerWrraper>
+        {/* <SubBannerWrraper>
           <SubBanner>
             {subImages.map((value, idx) => {
               // style={{transform: `translate(${position}px)`, transition: `transform 0.5s`}}
@@ -824,26 +758,30 @@ export default function Main() {
           </SubPagenationBanner>
           <SubBottomItem>
             <div className="plus">+</div>
-            <h2>오늘의 hot Room</h2>
-            <div>동탁 님의 방</div>
-            <div>오일남 님의 방</div>
-            <div>제니 님의 방</div>
+            <h2>My Room</h2>
+            <div>Today's : 100</div>
+            <div>Total : 11111</div>
+            <div>follower : 1K</div>
           </SubBottomItem>
-        </SubBannerWrraper>
+        </SubBannerWrraper> */}
+        <Profile></Profile>
       </MainWrapper>
       <GuideWrapper>
         <Guide></Guide>
       </GuideWrapper>
       <HotTokkenWrraper>
         <HotTokken>
-          <h1>Hot Tokken</h1>
-          <HotTokkenDiv>
-            {items.map((item) => {
-              return <ItemCard key={item.id} item={item} />;
-            })}
-          </HotTokkenDiv>
+          <h1>New Tokken</h1>
+          <NewTokkenList />
         </HotTokken>
       </HotTokkenWrraper>
+      <HotTokkenWrraper>
+        <HotTokken>
+          <h1>Hot Tokken</h1>
+          <HotTokkenList></HotTokkenList>
+        </HotTokken>
+      </HotTokkenWrraper>
+      <VideoGuide />
     </MainH>
   );
 }
