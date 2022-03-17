@@ -76,4 +76,8 @@ public class User {
     public void emailVerifiedSuccess() {
         this.userEmailConfirm = true;
     }
+
+    public void authIdRegister(Long authId) {
+        this.authId = authId;
+    }
 }

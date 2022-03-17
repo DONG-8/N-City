@@ -1,37 +1,29 @@
 package com.nft.ncity.domain.authentication.service;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.transfer.TransferManager;
-import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
-import com.amazonaws.services.s3.transfer.Upload;
 import com.nft.ncity.domain.authentication.db.entity.AuthFile;
 import com.nft.ncity.domain.authentication.db.entity.Authentication;
 import com.nft.ncity.domain.authentication.db.repository.AuthFileRepository;
 import com.nft.ncity.domain.authentication.db.repository.AuthenticationRepository;
 import com.nft.ncity.domain.authentication.db.repository.AuthenticationRepositorySupport;
 import com.nft.ncity.domain.authentication.request.AuthenticationRegisterPostReq;
+import com.nft.ncity.domain.authentication.request.AuthenticationConfirmReq;
+import com.nft.ncity.domain.user.db.entity.User;
+import com.nft.ncity.domain.user.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,6 +48,9 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     @Autowired
     AuthFileRepository authFileRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Override
     public Page<Authentication> getAuthenticationListByType(int authType, Pageable pageable) {
 
@@ -75,7 +70,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
     @Override
     @Transactional
-    public Authentication AuthenticationRegister(AuthenticationRegisterPostReq authenticationRegisterPostReq, MultipartFile multipartFile) throws IOException{
+    public Authentication AuthenticationRegister(AuthenticationRegisterPostReq authenticationRegisterPostReq, MultipartFile multipartFile, Principal principal) throws IOException{
 
         // 1. 인증 등록 정보를 Authentication 테이블에 저장하고, 해당 인증 ID와 함께 인증 파일들을 AuthFile 테이블에 저장한다.
         // 2. 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
@@ -90,12 +85,6 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
         // 인증 등록정보 저장
         Authentication savedAuthentication = authenticationRepository.save(authentication);
-
-
-        /**
-         * 유저 아이디 받아와서 해당 유저에 인증 id 넣어야함.
-         */
-        savedAuthentication.getAuthId();
 
         String fileUrl;
 
@@ -129,6 +118,23 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         // 인증 등록에 사용된 파일 저장.
         authFileRepository.save(authFile);
 
+
+        /**
+         * 유저 아이디 받아와서 해당 유저에 인증 id 넣어야함.
+         */
+        // 등록한 인증 Id를 유저 테이블에도 저장
+        Long userId = Long.valueOf(principal.getName());
+        User user = userRepository.findUserByUserId(userId).get();
+        user.authIdRegister(savedAuthentication.getAuthId());
+        //userRepository.save(user);
+
         return authentication;
+    }
+
+    @Override
+    public Long modifyUserRole(AuthenticationConfirmReq authenticationConfirmReq) {
+        Long execute = authenticationRepositorySupport.updateUserRoleByAuth(authenticationConfirmReq);
+
+        return execute;
     }
 }
