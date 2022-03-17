@@ -1,24 +1,35 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios, { AxiosRequestConfig } from "axios";
-import CategoryModal, {
-  Icategory,
-} from "../../components/Mint/CategoryModal";
+import CategoryModal, { Icategory } from "../../components/Mint/CategoryModal";
 
 const Wrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   display: flex;
   flex-direction: column;
-  margin: 5vh 10vw;
+  margin: 5vh 24vw;
 `;
 
 const Title = styled.h1`
-  margin-top: 60px;
+  margin-top: 30px;
+  margin-bottom: 30px;
   font-size: 50px;
   span {
     color: #ff7543;
   }
 `;
+
+const DoUploadText = styled.div`
+  p {
+    font-weight: 500;
+    font-size: 25px;
+    margin: 0;
+    span {
+      color: red;
+    }
+  }
+
+`
 
 const ExplaneBox = styled.div`
   margin-top: 8px;
@@ -33,7 +44,7 @@ const UploadBox = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    margin-top: 10px;
+    margin-top: 40px;
     color: black;
     justify-content: center;
     align-items: center;
@@ -65,7 +76,7 @@ const UploadBox = styled.div`
   .file-name {
     position: absolute;
     margin-top: -32px;
-    margin-left: 10px;
+    margin-left: 15px;
     font-weight: bold;
     font-size: 18px;
     color: #de5d30;
@@ -86,6 +97,9 @@ const NameInputBox = styled.div`
   margin-top: 50px;
   p {
     margin: 8px 0;
+    span {
+      color: red;
+    }
   }
   input {
     margin: 0;
@@ -138,7 +152,7 @@ const DescriptionInputBox = styled.div`
     border: 1px solid lightgray;
     border-radius: 5px;
     margin-top: 0;
-    width: 80vw;
+    width: 100%;
     height: 100px;
     resize: none;
     font-family: inherit;
@@ -188,25 +202,29 @@ const ButtonBox = styled.div`
 
 const ThumbnailUploadBox = styled(UploadBox)`
   label {
-    width: 250px;
-    height: 250px;
+    margin-top: 12px;
+    width: 240px;
+    height: 240px;
     div {
       img {
-        max-width: 250px;
-        max-height: 250px;
+        max-width: 240px;
+        max-height: 240px;
         object-fit: cover;
       }
     }
   }
-`
+`;
 
 const ThumbnailExplain = styled.div`
   p {
     font-size: 25px;
     font-weight: 500;
     margin-bottom: 0;
+    span {
+      color: red;
+    }
   }
-`
+`;
 
 const Plus = styled.div`
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z' fill='rgba(255,134,91,1)'/%3E%3C/svg%3E");
@@ -221,13 +239,22 @@ const HashtagBox = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-`
+`;
 
 const HashtagPlus = styled(Plus)`
   display: inline-block;
   width: 25px;
   height: 25px;
-`
+`;
+
+const Required = styled.div`
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: gray;
+  span {
+    color: red;
+  }
+`;
 
 //// component
 const Mint = () => {
@@ -282,7 +309,7 @@ const Mint = () => {
   };
 
   const encodeMainFileToBasek64 = (fileBlob: any) => {
-    const reader:any = new FileReader();
+    const reader: any = new FileReader();
     if (fileBlob) {
       reader.readAsDataURL(fileBlob);
     }
@@ -294,7 +321,7 @@ const Mint = () => {
   };
 
   const encodeThumbnailToBasek64 = (fileBlob: any) => {
-    const reader:any = new FileReader();
+    const reader: any = new FileReader();
     if (fileBlob) {
       reader.readAsDataURL(fileBlob);
     }
@@ -316,7 +343,7 @@ const Mint = () => {
   };
 
   const handleFileOnChange = (e: React.ChangeEvent) => {
-    console.log("메인파일변화")
+    console.log("메인파일변화");
     setFile((e.target as HTMLInputElement).files?.item(0));
     console.log((e.target as HTMLInputElement).files?.item(0));
     if ((e.target as HTMLInputElement).files) {
@@ -325,16 +352,19 @@ const Mint = () => {
   };
 
   const handleThumbnailUpload = (e: React.ChangeEvent) => {
-    console.log("썸네일파일변화")
+    console.log("썸네일파일변화");
     setThumbnail((e.target as HTMLInputElement).files?.item(0));
     console.log((e.target as HTMLInputElement).files?.item(0));
     if ((e.target as HTMLInputElement).files) {
       encodeThumbnailToBasek64((e.target as HTMLInputElement).files?.item(0));
     }
-  }
+  };
 
   const isVideoAudio = () => {
-    if (file?.type.slice(0, 5) === "video" || file?.type.slice(0, 5) === "audio") {
+    if (
+      file?.type.slice(0, 5) === "video" ||
+      file?.type.slice(0, 5) === "audio"
+    ) {
       return true;
     } else {
       return false;
@@ -377,8 +407,8 @@ const Mint = () => {
     }
   };
 
-  console.log(file)
-  console.log(thumbnail)
+  console.log(file);
+  console.log(thumbnail);
 
   const previewThumbnailImage = () => {
     if (thumbnail) {
@@ -387,20 +417,18 @@ const Mint = () => {
           {" "}
           {thumbnailSrc && <img src={thumbnailSrc} alt="preview-img" />}{" "}
         </div>
-      )
+      );
     } else {
       return (
         <div>
-        <Plus></Plus>
-      </div>
-      )
+          <Plus></Plus>
+        </div>
+      );
     }
-  }
+  };
 
   useEffect(() => {
-    if (
-      file?.type.slice(0, 5) === "video"
-    ) {
+    if (file?.type.slice(0, 5) === "video") {
       setIsVideo(true);
     } else {
       setIsVideo(false);
@@ -412,6 +440,12 @@ const Mint = () => {
       <Title>
         <span>NFT </span>작품 등록하기
       </Title>
+      <Required>
+        <span>*</span>필수
+      </Required>
+      <DoUploadText>
+        <p>작품을 업로드 해주세요<span>*</span></p>
+      </DoUploadText>
       <FormBox>
         <UploadBox>
           <p className="file-name">{file?.name}</p>
@@ -436,7 +470,9 @@ const Mint = () => {
         {isVideoAudio() && (
           <ThumbnailUploadBox>
             <ThumbnailExplain>
-              <p>미리보기 이미지를 업로드해주세요*</p>
+              <p>
+                미리보기 이미지를 업로드해주세요<span>*</span>
+              </p>
             </ThumbnailExplain>
             <label className={file?.type.slice(0, 5)} htmlFor="chooseThumbnail">
               {previewThumbnailImage()}
@@ -451,7 +487,9 @@ const Mint = () => {
           </ThumbnailUploadBox>
         )}
         <NameInputBox>
-          <p>작품이름*: </p>
+          <p>
+            작품이름<span>*</span>
+          </p>
           <input
             type="text"
             onChange={onChangeTokenName}
@@ -460,7 +498,7 @@ const Mint = () => {
           />
         </NameInputBox>
         <DescriptionInputBox>
-          <p>작품설명 :</p>
+          <p>작품설명</p>
           <textarea
             onChange={onChangeDescription}
             value={description}
