@@ -64,7 +64,7 @@ const Wrapper = styled.div`
         margin: auto;  
         text-align: center;
         p{
-          padding-top:1.2rem 
+          padding-top:0.5rem 
         }
       }
     #choiced{

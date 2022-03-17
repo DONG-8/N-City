@@ -6,6 +6,7 @@ import {Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SaleModal from '../../components/Store/SaleModal';
 import SellIcon from '@mui/icons-material/Sell';
+import Tooltip from '@mui/material/Tooltip';
 
 const MypageWrapper = styled.div`
   box-shadow: 1px 3px 7px;
@@ -65,7 +66,7 @@ const Wallet = styled.div`
 `
 const FilterBar = styled.div`
   margin: auto;
-  margin-top: 5vh;
+  margin-top: 3vh;
   width: 70% ;
   display: flex;
   div{
@@ -85,18 +86,20 @@ const FilterBar = styled.div`
   }
   div{
     /* background-color: #F5B6A0; */
-    border-bottom:2px solid #FF865B;
+    border-bottom:2px solid #F43B00;
   }
   
   #select{
     background-color: white ;
-    border-left: 2px solid #FF865B;
-    border-right: 2px solid #FF865B;
-    border-top:2px solid #FF865B;
+    border-left: 2px solid #F43B00;
+    border-right: 2px solid #F43B00;
+    border-top:2px solid #F43B00;
     border-bottom: none;
+    color:#FF7248 ;
     &:hover{
       background-color: #F9F9F9 ;
       transition:0.3s ;
+  
     }
   }
 `
@@ -255,10 +258,14 @@ export default function Mypage() {
         {items.map((item) => {
           return (<Card>
           <ItemCard key={item.id} item={item} />
+          <Tooltip title="판매하기">
           <Button onClick={handleOpen}><SellIcon /></Button>
+          </Tooltip>
           </Card>)})}
       </ItemCards>
-      <SaleModal open={open} setOpen={setOpen} />
+     
+        <SaleModal open={open} setOpen={setOpen} />
+      
     </>
   );
 }

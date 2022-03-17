@@ -6,18 +6,24 @@ import ItemCard from '../../components/Card/ItemCard'
 
 
 const Title = styled.div`
-  background-color: #F5E1DB ;
   display:flex ;
   justify-content:space-around;
-  height: 20vh;
   h1{
-    font-size: 3.5rem;
+    font-size: 4rem;
   }
   p{
     margin-top: 10vh;
     font-weight: 1000 ;
     font-size: 1.5rem;
   }
+  margin-bottom: 0;
+`
+const ColorBar = styled.div`
+  background-color: #FCD7CD ;
+  width: 85vw ;
+  height: 8vh;
+  margin: auto;
+  margin-top:0;
 `
 const FilterBar = styled.div`
   margin: auto;
@@ -41,18 +47,20 @@ const FilterBar = styled.div`
   }
   div{
     /* background-color: #F5B6A0; */
-    border-bottom:2px solid #FF865B;
+    border-bottom:2px solid #F43B00;
   }
   
   #select{
     background-color: white ;
-    border-left: 2px solid #FF865B;
-    border-right: 2px solid #FF865B;
-    border-top:2px solid #FF865B;
+    border-left: 2px solid #F43B00;
+    border-right: 2px solid #F43B00;
+    border-top:2px solid #F43B00;
     border-bottom: none;
+    color:#FF7248 ;
     &:hover{
       background-color: #F9F9F9 ;
       transition:0.3s ;
+  
     }
   }
 `
@@ -76,7 +84,7 @@ const CategoryBar = styled.div`
     content: "";
     height: 5px;
     width: 0px;
-    background-color: salmon;
+    background-color: #F43B00;
     border-radius: 10px;
     transition: 0.3s;
     position: absolute;
@@ -84,11 +92,11 @@ const CategoryBar = styled.div`
   }
   p:hover::before{
     width: 100%;
-    background-color: salmon;
+    background-color: #F43B00;
   }
   #category::before{
     width: 100%;
-    background-color: salmon;
+    background-color: #F43B00;
   }
 `
 const ItemCards = styled.div`
@@ -100,7 +108,7 @@ const ItemCards = styled.div`
 `
 const ArtistCards = styled.div`
   margin:auto ;
-  width: 90% ;
+  width: 80vw ;
   display: flex ;
   flex-wrap: wrap ;
   justify-content:center ;
@@ -127,7 +135,7 @@ const NFTStore = () => {
     {id:1,name:"Hong Hosus",title:"#Hong1535",price:1.24,liked:35,url:'https://lh3.googleusercontent.com/MmtavcUNNiTpLFfDqqol8pwp1_TKSEv0AbkKSxmN2lffhgYtkxAdfAo72lZVSJ4hpRW87s9TCL-HYMEIpaJ8PdgWBQWVlPsMZkgM6A=w305'},
     {id:2,name:"Giks Home",title:"#ghe23434",price:1.35,liked:43,url:'https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352'},
     {id:3,name:"Giks Home",title:"#ghe254334",price:1.2,liked:24,url:'https://lh3.googleusercontent.com/3usYOjVkwnra66EAhX4yJB-xmYCfFoTsREGVvVLCYWhtVG4pifdZLBRCSgv6wbjbV4rwPamlBDgganvgFO3xeifJyZQtqxwTYpXiqtc=w300'},
-    {id:4,name:"Hong Hosus",title:"#Hong1535",price:1.24,liked:35,url:'https://lh3.googleusercontent.com/Cxb_lnNlgplYCULm_ZGlY9pCrxQ67GO2hmStVJTSEN3O2hNeIZoWyK3CwaCj-vZBxeQqioC-P1qT7cK6wXWc-WjjfUyjR3zXNwKN=w300'},
+    {id:4,name:"Hong Hosus",title:"#Hong1535",price:1.24,liked:35,url:'https://lh3.googleusercontent.com/EdzzR4e6tc8jtOsRZ7T5-d9ejmy6r7zyulAjw4D-XlNMNISRPAwYXpVLOmj_dL-gWme69VvlDBj_EsXit8jwSFPjS_oFvgcjmo-Z=w328'},
     {id:5,name:"Giks Home",title:"#ghe23434",price:1.35,liked:43,url:'https://lh3.googleusercontent.com/qeCj7NRekCZ9BUjM8c9Pk02DxmPgX483qgEkVJeLXYIDOFVTXAfCg8TTztcMMQPgYFsNDUqndF5asWPCgJVpiM6P39VzpWa3TTKrvg=w300'},
     {id:6,name:"Giks Home",title:"#ghe254334",price:1.2,liked:24,url:'https://lh3.googleusercontent.com/jWonBwIV3RRzCv2xEu3pKA5buXUne_vnltLcLIfnluPuctdbTd-ScsBO94-njkA2L5VHVRA56CG5tbbxwacCvFdFWaZzuIJNUB1sVCA=w300'},
     {id:7,name:"Giks Home",title:"#g53434",price:1.37,liked:52,url:'https://lh3.googleusercontent.com/Op3TUf8vqznY1geantykLx86mlGf4yEaBfKT25utQlQu8keA9ywYdwYYzVSqGZG_3uSJKCNcUBAVK6qs520xhZ6lsP3dVDGsM9wnRA=w352'},
@@ -168,6 +176,8 @@ const NFTStore = () => {
         <p>소지금 : 356,321<img alt="💎" style={{"height":"2.2vh"}} src="essets/images/ethereum.png"/></p> 
       </div>
     </Title>
+    <ColorBar>
+    </ColorBar>
 
     <FilterBar>
       <div className='allPicture' id={status==='items'?'select':""} onClick={()=>{setStatus("items")}}><p>전체작품</p></div>
