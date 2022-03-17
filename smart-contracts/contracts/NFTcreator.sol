@@ -10,7 +10,7 @@ import "./token/ERC721/ERC721.sol";
 contract NFTcreator {
 
     uint256 private _tokenIds;
-    mapping(uint256 => string) tokenURIs;
+    mapping(uint256 => string) tokenURIs; // 토큰URI를 저장할 수 있는 mapping
 
     constructor() {
         // TODO
