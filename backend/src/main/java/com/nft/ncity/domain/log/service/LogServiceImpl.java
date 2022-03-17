@@ -16,21 +16,7 @@ public class LogServiceImpl implements LogService{
     @Override
     public User getUserDetailByAddress(String userAddress) {
         Optional<User> user = logRepository.findUserByUserAddress(userAddress);
-<<<<<<< HEAD
-//        if(user.isPresent()) {  // 이미 한번 로그인한 유저라면
-//            return user.get();
-//        } else {    // 처음 로그인한 유저라면
-//            User newUser = User.builder()
-//                    .userAddress(userAddress)
-//                    .userNick("noname") // 닉네임, 코드(일반 회원 : 2) 초기 설정
-//                    .userCode(2)
-//                    .build();
-//            logRepository.save(newUser);    // db에 유저 정보 저장
-//            User nowOldUser = logRepository.findUserByUserAddress(userAddress).get();
-//            return nowOldUser;
-//        }
-        return user.get();
-=======
+
         if(user.isPresent()) {  // 이미 한번 로그인한 유저라면
             return user.get();
         } else {    // 처음 로그인한 유저라면
@@ -44,7 +30,6 @@ public class LogServiceImpl implements LogService{
             User nowOldUser = logRepository.findUserByUserAddress(userAddress).get();
             return nowOldUser;
         }
->>>>>>> fbe33699e432cfc0e0a1e3127e3c9f66636d504f
     }
 
     @Override
