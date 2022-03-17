@@ -28,5 +28,5 @@ services:
 
   swagger-service:
     build:
-      context: .
-      dockerfile: docker/Dockerfile
+      context: backend/
+      dockerfile: Dockerfile
