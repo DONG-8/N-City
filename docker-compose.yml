@@ -25,3 +25,8 @@ services:
     volumes:
       - /home/ubuntu/docker-volume/ssl:/root
     container_name: "backend"
+
+  swagger-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
