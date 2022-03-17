@@ -3,7 +3,7 @@
  * @dev NFT mint, transfer, and compare URI 
  */
 
-const NftCreator = artifacts.require("SsafyNFT");
+const NftCreator = artifacts.require("NFTcreator");
 
 contract("NftCreator", (accounts) => {
     
