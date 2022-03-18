@@ -20,7 +20,7 @@ services:
       context: backend/
       dockerfile: Dockerfile
     ports:
-      - "8443:8443"  
+      - "8080:8080"  
         # [인증서 파일 저장 경로]:/root 
     volumes:
       - /home/ubuntu/docker-volume/ssl:/root
