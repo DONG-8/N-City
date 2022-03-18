@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -14,15 +15,16 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "product") // table 명 대소문자 구분 하나?? , 이 Annotation 역할이 table명 다를때 연결 시키는거 맞지?
 @ApiModel(value = "Product", description = "상품 CRUD") // swagger
+@ToString
 public class Product {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY) // auto increment
     @Column(name = "product_id")
-    private long productId;
+    private Long productId;
 
     @Column(name = "user_id")
-    private long userId;
+    private Long userId;
 
     @Column(name = "product_title")
     private String productTitle;
