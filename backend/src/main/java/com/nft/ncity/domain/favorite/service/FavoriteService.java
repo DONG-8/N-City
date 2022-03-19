@@ -8,12 +8,19 @@ import java.util.List;
 
 public interface FavoriteService {
 
-
+    //Create
     Favorite favoriteRegister(Long userId, Long productId);
+
+    //Read
+    boolean getFavoriteUserUse(Long userId, Long productId);
+    Long getFavoriteCount(Long productId);
+
+    //Delete
     Favorite favoriteRemove(Long userId, Long productId);
 
-    int getFavoriteCount(Long productId);
-    List<Product> favoriteList(Long userId);
+
+    //user쪽에서 구현됨
+//    List<Product> getFavoriteList(Long userId);
 
 
 

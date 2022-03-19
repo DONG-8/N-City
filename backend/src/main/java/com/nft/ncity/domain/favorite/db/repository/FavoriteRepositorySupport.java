@@ -5,6 +5,7 @@ import com.nft.ncity.domain.favorite.db.entity.QFavorite;
 import com.nft.ncity.domain.follow.db.entity.Follow;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.repository.ProductRepository;
+import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,10 @@ public class FavoriteRepositorySupport {
     @Autowired
     FavoriteRepository favoriteRepository;
 
-    @Autowired
-    ProductRepository productRepository;
-
 
     QFavorite qFavorite = QFavorite.favorite;
 
     public Favorite favoriteRegister(Long userId, Long productId){
-
-        Product product = productRepository.findById(productId).get();
 
         // 해당유저가 해당상품에 좋아요가 이미 있는지 확인
         Favorite isExist = jpaQueryFactory.select(qFavorite)
@@ -43,12 +39,27 @@ public class FavoriteRepositorySupport {
                     .productId(productId)
                     .build();
 
-            System.out.println("Service Fav Register 2");
+            System.out.println(favorite);
 
             favoriteRepository.save(favorite);
             return favorite;
         }else return isExist;
 
+    }
+
+
+
+    public boolean getFavoriteUserUse(Long userId, Long productId){
+        Integer fetchOne = jpaQueryFactory.selectOne()
+                        .from(qFavorite)
+                        .where(qFavorite.userId.eq(userId)
+                                .and(qFavorite.productId.eq(productId))).fetchOne();
+        if( fetchOne != null) return true;
+        return false;
+    }
+
+    public Long getFavoriteCount(Long productId){
+        return favoriteRepository.countByProductId(productId);
     }
 
 

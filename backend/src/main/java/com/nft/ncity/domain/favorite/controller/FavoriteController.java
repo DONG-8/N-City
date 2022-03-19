@@ -31,13 +31,11 @@ public class FavoriteController {
             @ApiResponse(code = 201,message = "신청 성공"),
             @ApiResponse(code = 404, message = "신청 실패")
     })
-    public ResponseEntity<BaseResponseBody> favoriteRegister (@ApiParam(value = "상품id") @PathVariable("productId") Long productId,
-                                                              Principal principal){
+    public ResponseEntity<BaseResponseBody> favoriteRegister (Principal principal,
+                                                              @ApiParam(value = "상품id") @PathVariable("productId") Long productId){
         log.info("favoriteRegister - 호출");
         Long userId = Long.valueOf(principal.getName());
 
-        System.out.println("userId  : " +userId);
-        System.out.println("productId  : " +productId);
         Favorite favorite = favoriteService.favoriteRegister(userId, productId);
 
         if(null != favorite){
@@ -46,6 +44,42 @@ public class FavoriteController {
             return ResponseEntity.status(404).body(BaseResponseBody.of(404, "신청 실패"));
         }
     }
+
+    // Read
+    // 1. 좋아요 했는지 여부
+    // 2. 좋아요한 수
+    // 3. 내가 좋아요한 상품 리스트 -> User에 있네??
+
+    @GetMapping("/{productId}")
+    @ApiOperation(value = "내가 좋아요한 여부")
+    @ApiResponses({
+            @ApiResponse(code = 201 , message = "반환 성공"),
+            @ApiResponse(code = 404 , message = "반환 실패")
+    })
+    public boolean getFavoriteUserUse ( Principal principal,
+                                 @ApiParam(value = "상품id") @PathVariable("productId") Long productId){
+        log.info("favoriteGet - 호출");
+        Long userId = Long.valueOf(principal.getName());
+
+        if( favoriteService.getFavoriteUserUse(userId, productId)){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    @GetMapping("/{productId}/count")
+    @ApiOperation(value = "좋아요 수")
+    @ApiResponses({
+            @ApiResponse(code = 201 , message = "반환 성공"),
+            @ApiResponse(code = 404 , message = "반환 실패")
+    })
+    public Long getFavoriteCount (@ApiParam(value = "상품id") @PathVariable("productId") Long productId){
+        log.info("getFavoriteCount - 호출");
+        return favoriteService.getFavoriteCount(productId);
+    }
+
 
 
     // Delete
