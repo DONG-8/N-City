@@ -16,6 +16,7 @@ public class MyRoomServiceImpl implements MyRoomService{
     @Override
     public MyRoom getUserRoom(long userId) {
         Optional<MyRoom> myRoom = myRoomRepository.findById(userId);
+
         if(myRoom.isPresent()) {
             MyRoom myRoomGet = myRoom.get();
             MyRoom myRoomAddVisit = MyRoom.builder()
@@ -27,7 +28,9 @@ public class MyRoomServiceImpl implements MyRoomService{
                     .myRoomTodayCnt(myRoomGet.getMyRoomTodayCnt() + 1)
                     .myRoomTotalCnt(myRoomGet.getMyRoomTotalCnt() + 1)
                     .build();
+
             myRoomRepository.save(myRoomAddVisit);
+
             return myRoomAddVisit;
         }
         return null;
@@ -36,13 +39,16 @@ public class MyRoomServiceImpl implements MyRoomService{
     @Override
     public Boolean modifyMyRoom(Integer code, Long userId, String changeInfo) {
         MyRoom myOldRoom = myRoomRepository.getById(userId);
+
         String myRoomBackground = myOldRoom.getMyRoomBackground();
         String myRoomCharacter = myOldRoom.getMyRoomCharacter();
+
         if (code == 1) {    // 방 테마 변경
             myRoomBackground = changeInfo;
         } else if (code == 2) { // 캐릭터 변경
             myRoomCharacter = changeInfo;
         }
+
         MyRoom myNewRoom = MyRoom.builder()
                 .userId(userId)
                 .myRoomBackground(myRoomBackground)
@@ -51,7 +57,9 @@ public class MyRoomServiceImpl implements MyRoomService{
                 .myRoomTodayCnt(myOldRoom.getMyRoomTodayCnt())
                 .myRoomTotalCnt(myOldRoom.getMyRoomTotalCnt())
                 .build();
+
         myRoomRepository.save(myNewRoom);
+
         return true;
     }
 

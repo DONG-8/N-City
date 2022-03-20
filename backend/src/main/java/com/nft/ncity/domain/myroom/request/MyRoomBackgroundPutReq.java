@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@ApiModel(value = "MyRoomPutReq", description = "로그인시 필요한 정보")
-public class MyRoomPutReq {
+@ApiModel(value = "MyRoomBackgroundPutReq", description = "방 꾸미기 시 필요한 정보")
+public class MyRoomBackgroundPutReq {
     @ApiModelProperty(value = "유저 방 정보")
-    String mapInfo;
+    String myRoomBackground;
 }
