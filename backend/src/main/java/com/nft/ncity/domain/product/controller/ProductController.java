@@ -3,17 +3,21 @@ package com.nft.ncity.domain.product.controller;
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
+import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
 import com.nft.ncity.domain.product.service.ProductService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.security.Principal;
 
 @Slf4j
 @Api(value = "상품정보")
@@ -26,16 +30,31 @@ public class ProductController {
 
 
     // Create
-    // 상품등록이라 multipart/form-data로 수정해야 할 듯!
-//    @ApiOperation(value = "상품 등록")
-//    @PostMapping
-//    public ResponseEntity<> productRegister(@RequestPart ProductRegisterPostReq productRegister, HttpServletRequest request){
-//        log.info("productRegister - 호출");
-//        productService.productRegister(productRegister);
-//
-//        return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success")); // BaseResponseBody를 맞추던가.. 아니면 보고 바꿔야 겠는데..
-//    }
+    @Transactional
+    @ApiOperation(value = "상품 등록")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "등록 성공"),
+            @ApiResponse(code = 404, message = "등록 실패")
+    })
+    @PostMapping
+    public ResponseEntity<BaseResponseBody> productRegister(@ModelAttribute ProductRegisterPostReq productRegisterPostReq,
+                                            @RequestPart(value = "productFile")MultipartFile productFile,
+                                            @RequestPart(value = "thumbnailFile")MultipartFile thumbnailFile,
+                                            Principal principal) throws IOException {
 
+        // 상품 정보는 productRegisterPostReq에, 파일은 productFile, 썸네일은 thumbnailFile에 담아온다.
+        // 상품 정보와 file url을 Product 테이블에 저장한다. (민팅 개념임으로 file url은 변경 할 수 없다.)
+        // 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
+
+        log.info("productRegister - 호출");
+        Product product = productService.productRegister(productRegisterPostReq,productFile,thumbnailFile,principal);
+        if(!product.equals(null)) {
+            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
+        }
+        else {
+            return ResponseEntity.status(201).body(BaseResponseBody.of(404, "등록 실패"));
+        }
+    }
 
 
 
@@ -62,17 +81,17 @@ public class ProductController {
 
     // Update
     // multipart가 put이 안되서 post해야 한다고 들었는데...
-    @ApiOperation(value = "상품 정보 수정")
-    @PutMapping
-    public ResponseEntity<BaseResponseBody> productModify(@RequestPart ProductModifyPutReq productModify , HttpServletRequest request){
-        log.info("productModify - 호출");
-        if (productService.productModify(productModify) == null){
-            log.error("productModify - This productId doesn't exist.");
-            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "This productId doesn't exist."));
-        } else {    // 정상 작동
-            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success")); //post나 put 요청 성공시 201 사용
-        }
-    }
+//    @ApiOperation(value = "상품 정보 수정")
+//    @PutMapping
+//    public ResponseEntity<BaseResponseBody> productModify(@RequestPart ProductModifyPutReq productModify , HttpServletRequest request){
+//        log.info("productModify - 호출");
+//        if (productService.productModify(productModify) == null){
+//            log.error("productModify - This productId doesn't exist.");
+//            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "This productId doesn't exist."));
+//        } else {    // 정상 작동
+//            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success")); //post나 put 요청 성공시 201 사용
+//        }
+//    }
 
 
     // Delete

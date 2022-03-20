@@ -2,6 +2,7 @@ package com.nft.ncity.domain.product.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "product") // table 명 대소문자 구분 하나?? , 이 Annotation 역할이 table명 다를때 연결 시키는거 맞지?
 @ApiModel(value = "Product", description = "상품 CRUD") // swagger
+@Builder
 @ToString
 public class Product {
 
