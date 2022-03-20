@@ -5,6 +5,7 @@ import com.nft.ncity.domain.myroom.db.repository.MyRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +20,7 @@ public class MyRoomServiceImpl implements MyRoomService{
 
         if(myRoom.isPresent()) {
             MyRoom myRoomGet = myRoom.get();
+
             MyRoom myRoomAddVisit = MyRoom.builder()
                     .userId(userId)
                     // 기존 값 넣기
@@ -61,6 +63,11 @@ public class MyRoomServiceImpl implements MyRoomService{
         myRoomRepository.save(myNewRoom);
 
         return true;
+    }
+
+    @Override
+    public List<MyRoom> getMyRoomRank() {
+        return myRoomRepository.findTop5ByOrderByMyRoomTotalCntDesc();
     }
 
 

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 
 @Slf4j
@@ -44,7 +45,7 @@ public class MyRoomController {
     @ApiOperation(value = "유저 방 변경")
     @PutMapping("/background")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 200, message = "변경 성공"),
             @ApiResponse(code = 404, message = "로그인 해주세요")
     })
     public ResponseEntity<? extends BaseResponseBody> modifyMyRoomBackground(@RequestBody @ApiParam(value = "방 변경 정보", required = true) MyRoomBackgroundPutReq myRoomBackgroundInfo, Principal principal) {
@@ -53,9 +54,9 @@ public class MyRoomController {
         Long userId = Long.valueOf(principal.getName());
 
         if (myRoomService.modifyMyRoom(1, userId, myRoomBackgroundInfo.getMyRoomBackground()) == true) {
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "변경 성공"));
+            return ResponseEntity.status(200).body(null);
         } else {
-            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "로그인 해주세요"));
+            return ResponseEntity.status(404).body(null);
         }
     }
 
@@ -72,9 +73,22 @@ public class MyRoomController {
         Long userId = Long.valueOf(principal.getName());
 
         if (myRoomService.modifyMyRoom(2, userId, myRoomCharacterInfo.getMyRoomCharacter()) == true) {
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "변경 성공"));
+            return ResponseEntity.status(200).body(null);
         } else {
-            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "로그인 해주세요"));
+            return ResponseEntity.status(404).body(null);
         }
+    }
+
+    @ApiOperation(value = "총 방문수가 높은 방 5개 반환")
+    @GetMapping
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = MyRoom.class),
+            @ApiResponse(code = 404, message = "실패")
+    })
+    public ResponseEntity<List<MyRoom>> getMyRoomRank() {
+        log.info("getMyRoomRank - Call");
+
+        List<MyRoom> myRoom = myRoomService.getMyRoomRank();
+        return ResponseEntity.status(200).body(myRoom);
     }
 }
