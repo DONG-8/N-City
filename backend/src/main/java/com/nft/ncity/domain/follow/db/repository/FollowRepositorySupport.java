@@ -37,7 +37,7 @@ public class FollowRepositorySupport {
                 .where(qFollow.followFollower.eq(follower)
                         .and(qFollow.followFollowee.eq(followee))).fetchFirst();
 
-        if(isExist.equals(null)) {
+        if(null == isExist) {
             Follow follow = Follow.builder()
                     .followFollowee(followee)
                     .followFollower(follower)
@@ -82,5 +82,32 @@ public class FollowRepositorySupport {
                 .fetch();
 
         return list;
+    }
+
+    /**
+     * 나를 팔로우 하는사람 수
+     * @param userId
+     * @return
+     */
+    public Long getFollowerCount(Long userId) {
+
+        JPAQuery<Long> followerCnt = jpaQueryFactory.select(qFollow.count())
+                        .from(qFollow)
+                        .where(qFollow.followFollowee.userId.eq(userId));
+
+        return followerCnt.fetchFirst();
+    }
+
+    /**
+     * 내가 팔로우 하는사람 수
+     * @param userId
+     * @return
+     */
+    public Long getFolloweeCount(Long userId) {
+        JPAQuery<Long> followeeCnt = jpaQueryFactory.select(qFollow.count())
+                .from(qFollow)
+                .where(qFollow.followFollower.userId.eq(userId));
+
+        return followeeCnt.fetchFirst();
     }
 }

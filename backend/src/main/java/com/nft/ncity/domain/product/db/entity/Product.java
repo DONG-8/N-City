@@ -30,7 +30,7 @@ public class Product {
     @Column(name = "product_desc")
     private String productDesc;
 
-    @Column(name = "product_code")
+    @Column(name = "product_code", columnDefinition = "TINYINT")
     private int productCode;
 
     @Column(name = "product_x_coordinate")
@@ -39,10 +39,10 @@ public class Product {
     @Column(name = "product_y_coordinate")
     private int productYCoordinate;
 
-    @Column(name = "product_view",columnDefinition = "TINYINT")
+    @Column(name = "product_view")
     private boolean productView;
 
-    @Column(name = "product_state")
+    @Column(name = "product_state", columnDefinition = "TINYINT")
     private int productState;
 
     @Column(name = "product_price")

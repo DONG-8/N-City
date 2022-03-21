@@ -6,6 +6,7 @@ import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.nft.ncity.domain.user.request.EmailAuthRegisterReq;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
+import com.nft.ncity.domain.user.response.UserInfoRes;
 import com.nft.ncity.domain.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,24 +42,24 @@ public class UserController {
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "해당 유저 없음.")
     })
-    public ResponseEntity<User> getUserDetailById(@PathVariable("userId") Long userId) {
+    public ResponseEntity<UserInfoRes> getUserDetailById(@PathVariable("userId") Long userId) {
 
         // 0. 받아올 유저 ID를 받음
         // 1. 해당 하는 유저에 대한 정보를 넘겨준다.
 
         log.info("getUserDetailById - 호출");
         User user = userRepository.getById(userId);
-
+        UserInfoRes userInfoRes = userService.getUserInfo(user);
         if(null == user) {
             log.error("getUserDetailById - This userId doesn't exist.");
             return ResponseEntity.status(404).body(null);
         }
-        return ResponseEntity.status(201).body(user);
+        return ResponseEntity.status(201).body(userInfoRes);
     }
-
 
     /**
         Product 생성 된 후에 가능.
+        product 테이블의 회원id가 입력받은 userid와 동일한 컬럼 추출하기
      */
     @GetMapping("/{userId}/collected")
     @ApiOperation(value = "유저가 가진 작품 조회", notes = "<strong>해당 유저가 가진 작품 목록</strong>을 넘겨준다.")
@@ -85,6 +86,7 @@ public class UserController {
 
     /**
      Remix에서 값들을 받아와서 저장부터 해야함.? DB에도 저장 하나?
+     거래 테이블에서 보내는 사람id가 입력받은 userId이고 받는 사람 id는 NullAddress이면서 , 거래타입이 minted인 값들 받아오기
      */
     @GetMapping("/{userId}/created")
     @ApiOperation(value = "유저가 생성한 작품 조회", notes = "<strong>해당 유저가 생성한 작품 목록</strong>을 넘겨준다.")
@@ -111,6 +113,7 @@ public class UserController {
 
     /**
       상품좋아요(favorite) 테이블이 완료 되어야 진행 가능함.
+     favorite 테이블의 user_id가 입력받은 userId와 동일한 값들 받아오기.
      */
     @GetMapping("/{userId}/favorites")
     @ApiOperation(value = "유저가 좋아요한 작품 조회", notes = "<strong>해당 유저가 좋아요한 작품 목록</strong>을 넘겨준다.")
@@ -137,6 +140,7 @@ public class UserController {
 
     /**
      거래내역(deal) 테이블이 완료 되어야 진행 가능함.
+     deal 테이블에서 deal_from 또는 deal_to가 입력받은 userId인 값들 받아오기.
      */
     @GetMapping("/{userId}/activities")
     @ApiOperation(value = "해당 유저의 거래 내역 조회", notes = "<strong>해당 유저의 거래 내역</strong>을 넘겨준다.")

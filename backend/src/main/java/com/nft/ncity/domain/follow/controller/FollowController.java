@@ -36,12 +36,12 @@ public class FollowController {
             @ApiResponse(code = 201, message = "팔로우 조회 성공"),
             @ApiResponse(code = 404, message = "팔로우 조회 실패")
     })
-    public ResponseEntity<List<FollowerListGetRes>> FollowerList(Principal principal){
+    public ResponseEntity<List<FollowerListGetRes>> getFollowerList(Principal principal){
 
         // 0. 토큰으로부터 내 userId를 받아온다.
         // 1. Follower가 입력받은 userId인 값들을 받아온다.
 
-        log.info("FollowerList - 호출");
+        log.info("getFollowerList - 호출");
         Long userId = Long.valueOf(principal.getName());
 
         List<Follow> follow = followService.FolloweeList(userId);
@@ -60,12 +60,12 @@ public class FollowController {
             @ApiResponse(code = 201, message = "팔로우 조회 성공"),
             @ApiResponse(code = 404, message = "팔로우 조회 실패")
     })
-    public ResponseEntity<List<FolloweeListGetRes>> FolloweeList(Principal principal){
+    public ResponseEntity<List<FolloweeListGetRes>> getFolloweeList(Principal principal){
 
         // 0. 토큰으로부터 내 userId를 받아온다.
         // 1. Followee가 입력받은 userId인 값들을 받아온다.
 
-        log.info("FolloweeList - 호출");
+        log.info("getFolloweeList - 호출");
         Long userId = Long.valueOf(principal.getName());
 
         List<Follow> follow = followService.FollowerList(userId);
@@ -84,7 +84,7 @@ public class FollowController {
             @ApiResponse(code = 201, message = "신청 성공"),
             @ApiResponse(code = 404, message = "신청 실패")
     })
-    public ResponseEntity<BaseResponseBody> FollowRegister(@PathVariable(value = "followFollowee") Long followeeId,
+    public ResponseEntity<BaseResponseBody> followRegister(@PathVariable(value = "followFollowee") Long followeeId,
                                                            Principal principal){
 
         // 0. 토큰으로부터 내 userId와 팔로우 신청할 유저의 Id(followeeId)를 받아온다.
@@ -110,12 +110,12 @@ public class FollowController {
             @ApiResponse(code = 201, message = "취소 성공"),
             @ApiResponse(code = 404, message = "취소 실패")
     })
-    public ResponseEntity<BaseResponseBody> FollowRemove(@PathVariable(value = "followFollowee") Long followeeId,
+    public ResponseEntity<BaseResponseBody> followRemove(@PathVariable(value = "followFollowee") Long followeeId,
                                                          Principal principal){
 
         // 0. 토큰으로부터 내 userId와 팔로우 신청할 유저의 Id(followeeId)를 받아온다.
         // 1. Follow 테이블에서 삭제.
-        log.info("FollowRemove - 호출");
+        log.info("followRemove - 호출");
         Long userId = Long.valueOf(principal.getName());
         Follow follow = followService.FollowRemove(followeeId,userId);
 
@@ -126,4 +126,6 @@ public class FollowController {
             return ResponseEntity.status(201).body(BaseResponseBody.of(404, "취소 실패"));
         }
     }
+
+
 }

@@ -45,7 +45,7 @@ public class Authentication {
 
     // 인증 타입
     @ApiModelProperty(value="인증 타입")
-    @Column(name = "auth_type")
+    @Column(name = "auth_type", columnDefinition = "TINYINT")
     private int authType;
 
     @ApiModelProperty(value="인증파일 url")
