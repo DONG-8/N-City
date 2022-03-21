@@ -15,8 +15,15 @@ public class MyRoomServiceImpl implements MyRoomService{
     MyRoomRepository myRoomRepository;
 
     @Override
-    public MyRoom getUserRoom(long userId) {
-        Optional<MyRoom> myRoom = myRoomRepository.findById(userId);
+    public MyRoom getUserRoom(Integer code, Long userId) {
+        Optional<MyRoom> myRoom = null;
+
+        if(code == 1) { // userId 통해 유저 방 정보 가져오기
+             myRoom = myRoomRepository.findById(userId);
+        } else if(code == 2) {  // 유저 방 정보 랜덤으로 가져오기
+            myRoom = myRoomRepository.getMyRoomByRandom();
+            userId = myRoom.get().getUserId();
+        }
 
         if(myRoom.isPresent()) {
             MyRoom myRoomGet = myRoom.get();

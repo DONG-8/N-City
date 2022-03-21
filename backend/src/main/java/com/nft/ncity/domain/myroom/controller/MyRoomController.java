@@ -33,7 +33,7 @@ public class MyRoomController {
     public ResponseEntity<MyRoom> getUserRoom(@PathVariable @ApiParam(value = "방 주인의 유저 id", required = true) Long userId) {
         log.info("getMyRoom - Call");
 
-        MyRoom userRoom = myRoomService.getUserRoom(userId);
+        MyRoom userRoom = myRoomService.getUserRoom(1, userId);
         if(userRoom == null) {  // userId 존재하지 않는 경우
             return ResponseEntity.status(404).body(null);
         } else {
@@ -49,7 +49,7 @@ public class MyRoomController {
             @ApiResponse(code = 404, message = "로그인 해주세요")
     })
     public ResponseEntity<? extends BaseResponseBody> modifyMyRoomBackground(@RequestBody @ApiParam(value = "방 변경 정보", required = true) MyRoomBackgroundPutReq myRoomBackgroundInfo, Principal principal) {
-        log.info("modifyUserRoom - Call");
+        log.info("modifyMyRoomBackground - Call");
 
         Long userId = Long.valueOf(principal.getName());
 
@@ -68,7 +68,7 @@ public class MyRoomController {
     })
     public ResponseEntity<? extends BaseResponseBody> modifyMyRoomCharacter(@RequestBody @ApiParam(value = "캐릭터 변경 정보", required = true) MyRoomCharacterPutReq myRoomCharacterInfo,
                                                     Principal principal) {
-        log.info("modifyMyCharacter - Call");
+        log.info("modifyMyRoomCharacter - Call");
 
         Long userId = Long.valueOf(principal.getName());
 
@@ -83,12 +83,23 @@ public class MyRoomController {
     @GetMapping
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = MyRoom.class),
-            @ApiResponse(code = 404, message = "실패")
     })
     public ResponseEntity<List<MyRoom>> getMyRoomRank() {
         log.info("getMyRoomRank - Call");
 
         List<MyRoom> myRoom = myRoomService.getMyRoomRank();
+        return ResponseEntity.status(200).body(myRoom);
+    }
+
+    @ApiOperation(value = "랜덤으로 유저 방 입장")
+    @PostMapping("/random")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = MyRoom.class),
+    })
+    public ResponseEntity<MyRoom> getUserRoomByRandom() {
+        log.info("getUserRoomByRandom - Call");
+
+        MyRoom myRoom = myRoomService.getUserRoom(2, null);
         return ResponseEntity.status(200).body(myRoom);
     }
 }
