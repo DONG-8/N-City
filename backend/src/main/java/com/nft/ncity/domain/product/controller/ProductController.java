@@ -46,6 +46,7 @@ public class ProductController {
         // 상품 정보와 file url을 Product 테이블에 저장한다. (민팅 개념임으로 file url은 변경 할 수 없다.)
         // 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
 
+
         log.info("productRegister - 호출");
         Product product = productService.productRegister(productRegisterPostReq,productFile,thumbnailFile,principal);
         if(!product.equals(null)) {

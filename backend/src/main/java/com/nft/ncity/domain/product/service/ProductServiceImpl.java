@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
@@ -41,6 +42,7 @@ public class ProductServiceImpl implements ProductService{
 
     // CREATE
     @Override
+    @Transactional
     public Product productRegister(ProductRegisterPostReq productRegisterPostReq, MultipartFile productFile, MultipartFile thumbnailFile, Principal principal) throws IOException {
 
         // 상품 파일 처리
@@ -53,7 +55,7 @@ public class ProductServiceImpl implements ProductService{
         File file = new File(System.getProperty("user.dir") + fileName);
 
         // 파일 저장
-//        productFile.transferTo(file);
+        productFile.transferTo(file);
 
         // S3 파일 업로드
         awsS3Service.uploadOnS3(fileName, file);
@@ -61,7 +63,7 @@ public class ProductServiceImpl implements ProductService{
         String productFileUrl = amazonS3Client.getUrl(bucket, fileName).toString();
 
         // 파일 삭제
-//        file.delete();
+        file.delete();
 
 
         // 상품 썸네일 처리
@@ -74,7 +76,7 @@ public class ProductServiceImpl implements ProductService{
         File file2 = new File(System.getProperty("user.dir") + thumbnailFileName);
 
         // 파일 저장
-//        productFile.transferTo(file);
+        thumbnailFile.transferTo(file2);
 
         // S3 파일 업로드
         awsS3Service.uploadOnS3(thumbnailFileName, file2);
@@ -82,7 +84,8 @@ public class ProductServiceImpl implements ProductService{
         String productThumbnailUrl = amazonS3Client.getUrl(bucket, thumbnailFileName).toString();
 
         // 파일 삭제
-//        file.delete();
+        file2.delete();
+
         Product product = Product.builder()
                 .userId(Long.valueOf(principal.getName()))
                 .productTitle(productRegisterPostReq.getProductTitle())
