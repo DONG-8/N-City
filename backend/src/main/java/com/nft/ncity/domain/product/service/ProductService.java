@@ -23,7 +23,7 @@ public interface ProductService {
     Product productDetail(Long productId); // 상품 상세 조회
 
     // update
-//    Product productModify(ProductModifyPutReq productModify);
+    long productModify(ProductModifyPutReq productModify);
 
     // delete
     boolean productRemove(Long productId);

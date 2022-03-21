@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.nft.ncity.domain.authentication.service.AwsS3Service;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.repository.ProductRepository;
+import com.nft.ncity.domain.product.db.repository.ProductRepositorySupport;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,10 @@ public class ProductServiceImpl implements ProductService{
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    ProductRepositorySupport productRepositorySupport;
+
 
     @Autowired
     AwsS3Service awsS3Service;
@@ -116,21 +121,14 @@ public class ProductServiceImpl implements ProductService{
     }
 
     // UPDATE
-//    @Override
-//    public Product productModify(ProductModifyPutReq productModify) {
-//        // 해당 상품이 존재하면 수정, 존재하지않으면 null 반환
-//        if (productRepository.findById(productModify.getProductId()).isPresent()){
-//            Product product = new Product();
-//
-//            product = productRepository.findById(productModify.getProductId()).get(); // 객체로 전부 가져옴
-//            product.setProductTitle(productModify.getProductTitle());
-//            product.setProductDesc(productModify.getProductDesc());
-//
-//            // 수정할 것들 더 수정하고 ui 확인후...
-//
-//            return productRepository.save(product);
-//        }else return null;
-//    }
+    @Override
+    public long productModify(ProductModifyPutReq productModifyReq) {
+        // 해당 상품이 존재하면 수정, 존재하지않으면 null 반환
+        if (productRepository.findById(productModifyReq.getProductId()).isPresent()){
+            long  execute = productRepositorySupport.updateProductByProductId(productModifyReq);
+            return execute;
+        }else return 0;
+    }
 
     // DELETE
     @Override

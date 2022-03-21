@@ -2,10 +2,7 @@ package com.nft.ncity.domain.product.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -13,9 +10,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "product") // table 명 대소문자 구분 하나?? , 이 Annotation 역할이 table명 다를때 연결 시키는거 맞지?
 @ApiModel(value = "Product", description = "상품 CRUD") // swagger
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @ToString
 public class Product {
@@ -34,7 +32,7 @@ public class Product {
     @Column(name = "product_desc")
     private String productDesc;
 
-    @Column(name = "product_code")
+    @Column(name = "product_code", columnDefinition = "TINYINT")
     private int productCode;
 
     @Column(name = "product_x_coordinate")
@@ -43,10 +41,10 @@ public class Product {
     @Column(name = "product_y_coordinate")
     private int productYCoordinate;
 
-    @Column(name = "product_view",columnDefinition = "TINYINT")
+    @Column(name = "product_view")
     private boolean productView;
 
-    @Column(name = "product_state")
+    @Column(name = "product_state", columnDefinition = "TINYINT")
     private int productState;
 
     @Column(name = "product_price")

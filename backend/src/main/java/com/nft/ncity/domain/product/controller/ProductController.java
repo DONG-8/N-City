@@ -81,18 +81,20 @@ public class ProductController {
 
 
     // Update
-    // multipart가 put이 안되서 post해야 한다고 들었는데...
-//    @ApiOperation(value = "상품 정보 수정")
-//    @PutMapping
-//    public ResponseEntity<BaseResponseBody> productModify(@RequestPart ProductModifyPutReq productModify , HttpServletRequest request){
-//        log.info("productModify - 호출");
-//        if (productService.productModify(productModify) == null){
-//            log.error("productModify - This productId doesn't exist.");
-//            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "This productId doesn't exist."));
-//        } else {    // 정상 작동
-//            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success")); //post나 put 요청 성공시 201 사용
-//        }
-//    }
+    // 제목, 설명, 카테고리, 상품id 무조건 던져줘야함! 안주면 0으로 초기화... 댐..
+    @ApiOperation(value = "상품 정보 수정")
+    @PutMapping
+    public ResponseEntity<BaseResponseBody> productModify(@RequestBody ProductModifyPutReq productModifyPutReq ){
+        log.info("productModify - 호출");
+        if (productService.productModify(productModifyPutReq) == 0){
+            log.error("productModify - This productId doesn't exist.");
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "This productId doesn't exist."));
+        } else {    // 정상 작동
+            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success")); //post나 put 요청 성공시 201 사용
+        }
+    }
+
+    // 
 
 
     // Delete
