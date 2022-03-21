@@ -2,6 +2,7 @@ package com.nft.ncity.domain.guestbook.service;
 
 import com.nft.ncity.domain.guestbook.db.entity.Guestbook;
 import com.nft.ncity.domain.guestbook.db.repository.GuestbookRepository;
+import com.nft.ncity.domain.guestbook.request.GuestbookPostReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,5 +23,16 @@ public class GuestbookServiceImpl implements GuestbookService{
             return null;
         }
         return guestbooks;
+    }
+
+    @Override
+    public Boolean createGuestbook(GuestbookPostReq guestbookInfo) {
+        Guestbook newGuestbook = Guestbook.builder()
+                .guestbookOwnerId(guestbookInfo.getGuestbookOwnerId())
+                .guestbookWriterId(guestbookInfo.getGuestbookWriterId())
+                .guestbookContents(guestbookInfo.getGuestbookContents())
+                .build();
+        guestbookRepository.save(newGuestbook);
+        return true;
     }
 }
