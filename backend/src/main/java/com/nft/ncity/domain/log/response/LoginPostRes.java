@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@ApiModel(value = "LoginPostRes", description = "유저 로그인시 반환하는 정보")
+@ApiModel(value = "LoginPostRes", description = "유저 로그인 시 반환하는 정보")
 public class LoginPostRes extends BaseResponseBody {
     @ApiModelProperty(name = "JWT access token")
     String accessToken;
