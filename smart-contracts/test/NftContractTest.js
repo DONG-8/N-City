@@ -5,7 +5,14 @@
 
 const NftCreator = artifacts.require("NFTcreator");
 
-contract("NftCreator", (accounts) => {
+contract("NftCreator", async accounts => {
+    // it("my test", async () => {
+    //     const instance = await NftCreator.deployed();
+    //     // const tokenId = await instance.current();
+    //     assert.equal(0, 0, "FAIL");
+        
+
+    // });
     
     /**
      * 1. NFT를 주고받을 두 주소가 존재한다.
@@ -19,12 +26,33 @@ contract("NftCreator", (accounts) => {
      * 3. 저장한 tokenURI가 해당 tokenId로 조회한 tokenURI와 일치한다.
      */
     it("NFT mint, transfer, and compare URI", async () => {
+        const account_one = accounts[0];
+        const account_two = accounts[1];
+
+        const instance = await NftCreator.deployed();
+        const meta = instance;
+        console.log("------------------")
+        // console.log(meta)
+
+        const tokenId = await meta.create(account_one, "tokenURI123", { from: account_one });
+        // console.log(tokenId)
+        const tokenId2 = await meta.create(account_one, "tokenURI1234", { from: account_one });
+        // console.log("------------------")
+        // console.log(tokenId)
+        // console.log(tokenId2)
+        await meta.transferFrom.send(account_one, account_two, tokenId, { from: account_one });
 
         // TODO
         // 다음이 반드시 테스트되어야 합니다.
-        // assert.equal(sender, owner, "NFT Mint Failed");
-        // assert.equal(receiver, owner, "NFT Transfer Failed.");
-        // assert.equal(tokenURI, tokenURIFetched, "Wrong Token Id or URI.")
-    });
+        // const sender = account_one;
+        // const receiver = account_two;
+        // const owner = meta.ownerOf(tokenId);
+        // const tokenURIFetched = meta.tokenURI(tokenId);
 
+        // assert.equal(sender, owner, "NFT Mint Failed");
+        // assert.equal(tokenId, tokenId, "NFT Mint Failed");
+        // assert.equal(account_one, owner, "NFT Transfer Failed.");
+        // assert.equal(receiver, owner, "NFT Transfer Failed.");
+        // assert.equal("tokenURI123", tokenURIFetched, "Wrong Token Id or URI.")
+    });
 });
