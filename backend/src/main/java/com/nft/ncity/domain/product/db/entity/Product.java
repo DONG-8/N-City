@@ -61,4 +61,9 @@ public class Product {
 
     @Column(name = "product_thumbnail_url")
     private String productThumbnailUrl;
+
+    // DB table에 존재 X 따로 초기화 해야함
+    @Transient
+    @Setter
+    private long favoriteCount;
 }

@@ -2,6 +2,7 @@ package com.nft.ncity.domain.product.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.nft.ncity.domain.authentication.service.AwsS3Service;
+import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.repository.ProductRepository;
 import com.nft.ncity.domain.product.db.repository.ProductRepositorySupport;
@@ -39,6 +40,8 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     ProductRepositorySupport productRepositorySupport;
 
+    @Autowired
+    FavoriteRepositorySupport favoriteRepositorySupport;
 
     @Autowired
     AwsS3Service awsS3Service;
@@ -117,7 +120,9 @@ public class ProductServiceImpl implements ProductService{
     }
     @Override
     public Product productDetail(Long productId) {
-        return productRepository.findById(productId).get();
+        Product product = productRepository.findById(productId).get();
+        product.setFavoriteCount(favoriteRepositorySupport.getFavoriteCount(productId));
+        return product;
     }
 
     // UPDATE
