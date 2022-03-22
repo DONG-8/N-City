@@ -5,7 +5,14 @@
 
 const NftCreator = artifacts.require("NFTcreator");
 
-contract("NftCreator", (accounts) => {
+contract("NftCreator", async accounts => {
+    // it("my test", async () => {
+    //     const instance = await NftCreator.deployed();
+    //     // const tokenId = await instance.current();
+    //     assert.equal(0, 0, "FAIL");
+        
+
+    // });
     
     /**
      * 1. NFT를 주고받을 두 주소가 존재한다.
@@ -19,12 +26,47 @@ contract("NftCreator", (accounts) => {
      * 3. 저장한 tokenURI가 해당 tokenId로 조회한 tokenURI와 일치한다.
      */
     it("NFT mint, transfer, and compare URI", async () => {
+        const account_one = accounts[0];
+        const account_two = accounts[1];
 
+        const instance = await NftCreator.deployed();
+        const meta = instance;
+        console.log("------------------")
+        // console.log(meta)
+        await meta.create(account_one, "tokenURI123", { from: account_one });
+        
+        let tokenId = await meta.current();
+        // tokenId.toNumber();
+        // console.log(tokenId)
+        await meta.create(account_one, "tokenURI1234", { from: account_one });
+        let tokenId2 = await meta.current();
+        // console.log("------------------")
+        // console.log(tokenId.toNumber())
+        // console.log(tokenId)
+        // console.log(tokenId2)
+        const realTokenId = tokenId.toNumber()
+        const realTokenId2 = tokenId2.toNumber()
+        const firstOwner = await meta.ownerOf(realTokenId);
+        await meta.transferFrom(account_one, account_two, realTokenId, { from: account_one });
+        const secondOwner = await meta.ownerOf(realTokenId);
+        const afterTokenURI = await meta.tokenURI(realTokenId)
+        console.log(firstOwner)
+        console.log(secondOwner)
+        console.log(afterTokenURI)
+        assert.equal(account_one, firstOwner, "NFT Mint Failed");
+        assert.equal(account_two, secondOwner, "NFT Transfer Failed.");
+        assert.equal("tokenURI123", afterTokenURI, "Wrong Token Id or URI.")
         // TODO
         // 다음이 반드시 테스트되어야 합니다.
-        // assert.equal(sender, owner, "NFT Mint Failed");
-        // assert.equal(receiver, owner, "NFT Transfer Failed.");
-        // assert.equal(tokenURI, tokenURIFetched, "Wrong Token Id or URI.")
-    });
+        const sender = account_one;
+        const receiver = account_two;
+        const owner = meta.ownerOf(realTokenId);
+        // const tokenURIFetched = meta.tokenURI(realTokenId);
 
+        // assert.equal(sender, owner, "NFT Mint Failed");
+        // assert.equal(tokenId, tokenId, "NFT Mint Failed");
+        // assert.equal(account_one, owner, "NFT Transfer Failed.");
+        // assert.equal(receiver, owner, "NFT Transfer Failed.");
+        // assert.equal("tokenURI123", tokenURIFetched, "Wrong Token Id or URI.")
+    });
 });
