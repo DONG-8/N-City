@@ -17,6 +17,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
         log.error("CustomAuthenticationEntryPoint - 로그인하지 않은 사용자 접근");
-        response.sendRedirect("/login");
+        response.sendRedirect("https://j6e106.saffy.p.io");
     }
 }
