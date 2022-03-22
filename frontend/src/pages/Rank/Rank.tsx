@@ -380,7 +380,7 @@ const Rank = () => {
         console.log(data);
       },
       onError: (err: any) => {
-        console.log(err);
+        console.log(err, "에러떠쪄염");
       },
     }
   );
