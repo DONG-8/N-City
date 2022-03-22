@@ -8,7 +8,7 @@ export interface ModalBaseProps {
   visible: boolean;
   /** 닫기 버튼 혹은 백그라운드 클릭 시 실행할 함수 */
   onClose: React.MouseEventHandler<HTMLElement>;
-  setCategories: React.Dispatch<React.SetStateAction<string[]>>;
+  setCategory: React.Dispatch<React.SetStateAction<string>>;
   openStateHandler: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -176,7 +176,7 @@ const CategoryModal = ({
   children,
   visible,
   onClose,
-  setCategories,
+  setCategory,
   openStateHandler,
 }: ModalBaseProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -184,20 +184,13 @@ const CategoryModal = ({
     Icategory["category"][]
   >([
     { name: "음악", selected: false },
-    { name: "비디오", selected: false },
-    { name: "오디오", selected: false },
-    { name: "fsdaf", selected: false },
-    { name: "ㄴㅇㄻㄴㅇ", selected: false },
-    { name: "ㄴㅇ", selected: false },
-    { name: "ㄴㅇㄹㄴㅇ", selected: false },
-    { name: "ㄴㅇㄴㅇ", selected: false },
-    { name: "ㅁㄴㅇㄹ탁", selected: false },
-    { name: "동ㄴㅇㄹㄴㅇ", selected: false },
-    { name: "ㄹㄴㅇ", selected: false },
-    { name: "ㄴㄴㄴㄹㄴㅇ", selected: false },
-    { name: "ㅌㅊㅋㅍ", selected: false },
-    { name: "동ㅌㅊ", selected: false },
-    { name: "동ㅌㅋㅊㅍ탁", selected: false },
+    { name: "사진", selected: false },
+    { name: "동영상", selected: false },
+    { name: "예술", selected: false },
+    { name: "수집품", selected: false },
+    { name: "스포츠", selected: false },
+    { name: "트레이딩 카드", selected: false },
+    { name: "유틸리티", selected: false },
   ]);
 
   const onClickSelect = (category: { name: string; selected: boolean }) => {
@@ -209,8 +202,8 @@ const CategoryModal = ({
     setSelectedCategories(
       selectedCategories.map((item) =>
         item.name === category.name
-          ? { ...item, selected: !item.selected }
-          : item
+          ? { ...item, selected: true }
+          : { ...item, selected: false }
       )
     );
     console.log(selectedCategories);
@@ -229,8 +222,8 @@ const CategoryModal = ({
         }
       })
       .map((category) => category.name);
-    setCategories(temp);
-    console.log(temp);
+    setCategory(temp[0]);
+    console.log(temp[0]);
     openStateHandler(false);
   };
 
