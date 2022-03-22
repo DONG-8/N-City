@@ -29,7 +29,7 @@ public class ProductController {
     ProductService productService;
 
 
-    // Create
+    // CREATE
     @Transactional
     @ApiOperation(value = "상품 등록")
     @ApiResponses({
@@ -59,7 +59,7 @@ public class ProductController {
 
 
 
-    // Read
+    // READ
     // 프런트와 pagable 어떻게 구현할지 얘기
     // 카테고리별 조회 기능을 추가 해야함
     // 좋아요 기능 구현후 같이 던져줘야 함
@@ -80,8 +80,8 @@ public class ProductController {
 
 
 
-    // Update
-    // 제목, 설명, 카테고리, 상품id 무조건 던져줘야함! 안주면 0으로 초기화... 댐..
+    // UPDATE
+    // 제목, 설명, 카테고리, 상품id 무조건 던져줘야함! 안주면 0으로 초기화... 된다..
     @ApiOperation(value = "상품 정보 수정")
     @PutMapping
     public ResponseEntity<BaseResponseBody> productModify(@RequestBody ProductModifyPutReq productModifyPutReq ){
@@ -97,7 +97,7 @@ public class ProductController {
     // 
 
 
-    // Delete
+    // DELETE
     @ApiOperation(value="상품 삭제")
     @DeleteMapping("/{productId}")
     public ResponseEntity<BaseResponseBody> productRemove(@ApiParam(value = "상품 번호") @PathVariable Long productId){
