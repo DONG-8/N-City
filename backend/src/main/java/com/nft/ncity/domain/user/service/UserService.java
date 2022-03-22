@@ -7,6 +7,7 @@ import com.nft.ncity.domain.user.response.UserInfoRes;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  *	유저 관련 비즈니스 로직 처리를 위한 서비스 인터페이스 정의.
@@ -19,5 +20,6 @@ public interface UserService {
 	EmailAuth EmailAuthRegister(String emailAuthEmail);
 	void confirmEmail(String emailAuthEmail,String authToken);
 	UserInfoRes getUserInfo(User user);
+	List<User> searchUser(String userNick);
 
 }

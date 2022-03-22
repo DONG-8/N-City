@@ -111,7 +111,7 @@ public class MyRoomController {
         return ResponseEntity.status(200).body(myRoom);
     }
 
-    // 자정마다 today 리셋시켜주기 
+    // 자정마다 today 리셋시켜주기
     @Scheduled(cron = "0 0 0 * * *", zone="Asia/Seoul")
     public void resetMyRoomToday() {
         myRoomRepositorySupport.resetMyRoomToday();
