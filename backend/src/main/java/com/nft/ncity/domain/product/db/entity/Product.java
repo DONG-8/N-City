@@ -65,5 +65,5 @@ public class Product {
     // DB table에 존재 X 따로 초기화 해야함
     @Transient
     @Setter
-    private long favoriteCount;
+    private Long favoriteCount;
 }

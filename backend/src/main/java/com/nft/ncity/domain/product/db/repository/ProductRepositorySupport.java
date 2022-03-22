@@ -1,13 +1,18 @@
 package com.nft.ncity.domain.product.db.repository;
 
+import com.nft.ncity.domain.authentication.db.entity.Authentication;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.entity.QProduct;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public class ProductRepositorySupport {
@@ -17,6 +22,32 @@ public class ProductRepositorySupport {
 
     QProduct qProduct = QProduct.product;
 
+    public  Page<Product> findProductList(Pageable pageable) {
+        List<Product> productQueryResults = jpaQueryFactory.select(qProduct)
+                .from(qProduct)
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        if(productQueryResults.isEmpty()) return Page.empty();
+
+        return new PageImpl<Product>(productQueryResults, pageable, productQueryResults.size());
+
+    }
+
+    public Page<Product> findProductListByCode(Pageable pageable, int productCode) {
+        List<Product> productQueryResults = jpaQueryFactory.select(qProduct)
+                .from(qProduct)
+                .where(qProduct.productCode.eq(productCode))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        if(productQueryResults.isEmpty()) return Page.empty();
+
+        return new PageImpl<Product>(productQueryResults, pageable, productQueryResults.size());
+
+    }
 
 
     @Transactional

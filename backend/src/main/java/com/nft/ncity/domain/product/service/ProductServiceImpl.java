@@ -8,21 +8,22 @@ import com.nft.ncity.domain.product.db.repository.ProductRepository;
 import com.nft.ncity.domain.product.db.repository.ProductRepositorySupport;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
+import com.nft.ncity.domain.product.response.ProductListGetRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -110,20 +111,65 @@ public class ProductServiceImpl implements ProductService{
     }
 
 
-    
     // READ
+
     @Override
-    public Page<Product> productList(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page -1 , size , Sort.by("productId").descending());
-        Page<Product> productList = productRepository.findAll(pageRequest);
-        return productList;
+    public Page<ProductListGetRes> getProductList(Pageable pageable) {
+        Page<Product> products = productRepositorySupport.findProductList(pageable);
+        List<ProductListGetRes> productListGetRes = new ArrayList<>();
+
+        long total = products.getTotalElements();
+
+        for(Product p : products.getContent()){
+            ProductListGetRes productList = new ProductListGetRes();
+
+            productList.setProductTitle(p.getProductTitle());
+            productList.setProductPrice(p.getProductPrice());
+            productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
+            productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
+
+            productListGetRes.add(productList);
+        }
+
+        Page<ProductListGetRes> res = new PageImpl<>(productListGetRes, pageable, total);
+
+        return res;
+
     }
+
+    @Override
+    public Page<ProductListGetRes> getProductListByCode(Pageable pageable, int productCode) {
+        Page<Product> products = productRepositorySupport.findProductListByCode(pageable, productCode);
+        List<ProductListGetRes> productListGetRes = new ArrayList<>();
+
+        long total = products.getTotalElements();
+
+        for(Product p : products.getContent()){
+            ProductListGetRes productList = new ProductListGetRes();
+
+            productList.setProductTitle(p.getProductTitle());
+            productList.setProductPrice(p.getProductPrice());
+            productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
+            productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
+
+            productListGetRes.add(productList);
+        }
+
+        Page<ProductListGetRes> res = new PageImpl<>(productListGetRes, pageable, total);
+
+        return res;
+    }
+
     @Override
     public Product productDetail(Long productId) {
         Product product = productRepository.findById(productId).get();
         product.setFavoriteCount(favoriteRepositorySupport.getFavoriteCount(productId));
         return product;
     }
+
+
 
     // UPDATE
     @Override

@@ -1,14 +1,20 @@
 package com.nft.ncity.domain.product.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
+import com.nft.ncity.domain.authentication.db.entity.Authentication;
+import com.nft.ncity.domain.authentication.response.AuthenticationListGetRes;
+import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
+import com.nft.ncity.domain.product.response.ProductListGetRes;
 import com.nft.ncity.domain.product.service.ProductService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,16 +66,43 @@ public class ProductController {
 
 
     // READ
-    // 프런트와 pagable 어떻게 구현할지 얘기
-    // 카테고리별 조회 기능을 추가 해야함
-    // 좋아요 기능 구현후 같이 던져줘야 함
-    @ApiOperation(value = "상품 전체 조회")
+    @ApiOperation(value = "상품전체조회")
     @GetMapping
-    public Page<Product> productList (@ApiParam(value = "페이지 번호")@RequestParam int page, @ApiParam(value = "페이지당 게시글 개수") @RequestParam int size){
-        log.info("productList - 호출");
-        return productService.productList(page, size);
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = ProductListGetRes.class),
+            @ApiResponse(code = 404, message = "상품 없음.")
+    })
+    public ResponseEntity<Page<ProductListGetRes>> getProductList(@PageableDefault(page = 0, size = 10) Pageable pageable){
+        log.info("getProductList - 호출");
+        Page<ProductListGetRes> products = productService.getProductList(pageable);
+
+        if(products.isEmpty()) {
+            log.error("getProductList - Products doesn't exist.");
+            return ResponseEntity.status(404).body(null);
+        }
+
+        return ResponseEntity.status(200).body(products);
     }
 
+
+    @GetMapping("/{productCode}")
+    @ApiOperation(value = "카테고리별 조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = ProductListGetRes.class),
+            @ApiResponse(code = 404, message = "상품 없음.")
+    })
+    public ResponseEntity<Page<ProductListGetRes>> getProductListByCode(    @PageableDefault(page = 0, size = 10) Pageable pageable,
+                                                                            @PathVariable("productCode") int productCode){
+        log.info("getProductListByCode - 호출");
+        Page<ProductListGetRes> products = productService.getProductListByCode(pageable,productCode);
+
+        if(products.isEmpty()) {
+            log.error("getProductListByCode - Products doesn't exist on this category");
+            return ResponseEntity.status(404).body(null);
+        }
+
+        return ResponseEntity.status(200).body(products);
+    }
 
     @ApiOperation(value = "상품 상세 조회")
     @GetMapping("/detail/{productId}")
