@@ -7,7 +7,7 @@ import Bootstrap from './scenes/Bootstrap'
 
 const config: Phaser.Types.Core.GameConfig = { //건드릴거없을듯 ?
   type: Phaser.AUTO,
-  // parent: 'phaser-container',
+  parent: 'phaser-container',
   backgroundColor: '#93cbee',
   pixelArt: true, // 확대되었을때 깨지는것을 방지
   scale: {
@@ -28,6 +28,6 @@ const config: Phaser.Types.Core.GameConfig = { //건드릴거없을듯 ?
 
 const phaserGame = new Phaser.Game(config) // Phaser 시작
 
-;(window as any).game = phaserGame
-
+;(window as any).game = phaserGame;
+// (window as any).game.destroy(true);
 export default phaserGame

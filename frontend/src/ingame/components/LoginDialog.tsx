@@ -6,15 +6,10 @@ import Avatar from '@mui/material/Avatar'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
-
 import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperCore, { Navigation } from 'swiper'
 import 'swiper/swiper.min.css'
 import 'swiper/components/navigation/navigation.min.css'
-import Adam from '../../../public/essets/login/Adam_login.png'
-import Ash from '../../../public/essets/login/Ash_login.png'
-import Lucy from '../../../public/essets/login/Lucy_login.png'
-import Nancy from '../../../public/essets/login/Nancy_login.png'
 import { useAppSelector, useAppDispatch } from '../hooks'
 import { setLoggedIn } from '../stores/UserStore'
 import { getAvatarString, getColorByString } from '../util'
@@ -127,10 +122,10 @@ const Warning = styled.div`
 `
 
 const avatars = [
-  { name: 'adam', img: Adam },
-  { name: 'ash', img: Ash },
-  { name: 'lucy', img: Lucy },
-  { name: 'nancy', img: Nancy },
+  { name: 'adam', img: "/essets/login/Adam_login.png" },
+  { name: 'ash', img:"/essets/login/Ash_login.png" },
+  { name: 'lucy', img: "/essets/login/Lucy_login.png" },
+  { name: 'nancy', img: "/essets/login/Nancy_login.png" },
 ]
 
 

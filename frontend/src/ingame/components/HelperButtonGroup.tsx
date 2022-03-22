@@ -196,18 +196,17 @@ export default function HelperButtonGroup() {
           </>
         )}
         <Tooltip title="Visit Our GitHub">
-          <StyledFab
-            size="small"
-            href="https://github.com/bbnerino"
-            // target="_blank"
-          >
+          <StyledFab size="small"><a href="https://github.com/bbnerino" target="_blank" rel="noreferrer">
             <GitHubIcon />
+            </a>
           </StyledFab>
         </Tooltip>
         <Tooltip title="Follow Us on Twitter">
           {/* <StyledFab size="small" href="https://twitter.com/SkyOfficeApp" target="_blank"> */}
-          <StyledFab size="small" href="https://twitter.com/SkyOfficeApp" >
-            <TwitterIcon />
+          <StyledFab size="small">
+            <a href="https://twitter.com/SkyOfficeApp" target="_blank" rel="noreferrer">
+              <TwitterIcon />
+            </a>
           </StyledFab>
         </Tooltip>
         <Tooltip title="Switch Background Theme">
