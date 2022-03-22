@@ -7,6 +7,7 @@ import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
+import com.nft.ncity.domain.product.response.ProductDealListGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
 import com.nft.ncity.domain.product.service.ProductService;
 import io.swagger.annotations.*;
@@ -103,6 +104,45 @@ public class ProductController {
 
         return ResponseEntity.status(200).body(products);
     }
+
+    @ApiOperation(value = "상품판매 전체조회")
+    @GetMapping("/deal")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = ProductDealListGetRes.class),
+            @ApiResponse(code = 404, message = "상품 없음.")
+    })
+    public ResponseEntity<Page<ProductDealListGetRes>> getProductDealList(@PageableDefault(page = 0, size = 10) Pageable pageable){
+        log.info("getProductList - 호출");
+        Page<ProductDealListGetRes> deals = productService.getProductDealList(pageable);
+
+        if(deals.isEmpty()) {
+            log.error("getProductDealList - Deals doesn't exist.");
+            return ResponseEntity.status(404).body(null);
+        }
+
+        return ResponseEntity.status(200).body(deals);
+    }
+
+
+    @GetMapping("/deal/{productCode}")
+    @ApiOperation(value = "카테고리별 판매중인 상품조회")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = ProductDealListGetRes.class),
+            @ApiResponse(code = 404, message = "상품 없음.")
+    })
+    public ResponseEntity<Page<ProductDealListGetRes>> getProductDealListByCode(    @PageableDefault(page = 0, size = 10) Pageable pageable,
+                                                                                @ApiParam(value = "카테고리")@PathVariable("productCode") int productCode){
+        log.info("getProductListByCode - 호출");
+        Page<ProductDealListGetRes> products = productService.getProductDealListByCode(pageable,productCode);
+
+        if(products.isEmpty()) {
+            log.error("getProductDealListByCode - Products deal doesn't exist on this category");
+            return ResponseEntity.status(404).body(null);
+        }
+
+        return ResponseEntity.status(200).body(products);
+    }
+
 
 
     @GetMapping("/search/{productTitle}")

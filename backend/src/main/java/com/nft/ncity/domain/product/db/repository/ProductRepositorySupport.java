@@ -50,6 +50,36 @@ public class ProductRepositorySupport {
 
     }
 
+    public  Page<Product> findProductDealList(Pageable pageable) {
+        List<Product> productQueryResults = jpaQueryFactory.select(qProduct)
+                .from(qProduct)
+                .where(qProduct.productState.eq(1).or(qProduct.productState.eq(2)))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        if(productQueryResults.isEmpty()) return Page.empty();
+
+        return new PageImpl<Product>(productQueryResults, pageable, productQueryResults.size());
+
+    }
+    public Page<Product> findProductDealListByCode(Pageable pageable, int productCode) {
+        List<Product> productQueryResults = jpaQueryFactory.select(qProduct)
+                .from(qProduct)
+                .where(qProduct.productCode.eq(productCode).and(qProduct.productState.eq(1).or(qProduct.productState.eq(2))))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        if(productQueryResults.isEmpty()) return Page.empty();
+
+        return new PageImpl<Product>(productQueryResults, pageable, productQueryResults.size());
+
+    }
+
+
+
+    // 상품명으로 검색
     public Page<Product> findProductListByTitle(Pageable pageable, String productTitle) {
 
         // 대소문자 구문안하려고 무조건 대문자로 변경해서 검색

@@ -50,8 +50,6 @@ public class ProductListGetRes {
         for(Product p : products.getContent()){
             ProductListGetRes productList = new ProductListGetRes();
 
-
-
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());

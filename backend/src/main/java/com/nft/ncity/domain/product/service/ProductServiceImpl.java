@@ -8,6 +8,7 @@ import com.nft.ncity.domain.product.db.repository.ProductRepository;
 import com.nft.ncity.domain.product.db.repository.ProductRepositorySupport;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
+import com.nft.ncity.domain.product.response.ProductDealListGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -162,7 +163,58 @@ public class ProductServiceImpl implements ProductService{
         return res;
     }
 
+    @Override
+    public Page<ProductDealListGetRes> getProductDealList(Pageable pageable) {
+        Page<Product> products = productRepositorySupport.findProductDealList(pageable);
+        List<ProductDealListGetRes> productDealListGetRes = new ArrayList<>();
 
+        long total = products.getTotalElements();
+
+        for(Product p : products.getContent()){
+            ProductDealListGetRes productDealList = new ProductDealListGetRes();
+
+            productDealList.setProductTitle(p.getProductTitle());
+            productDealList.setProductPrice(p.getProductPrice());
+            productDealList.setProductRegDt(p.getProductRegDt());
+            productDealList.setProductThumbnailUrl(p.getProductThumbnailUrl());
+            productDealList.setProductState(p.getProductState());
+            productDealList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
+
+            productDealListGetRes.add(productDealList);
+        }
+
+        Page<ProductDealListGetRes> res = new PageImpl<>(productDealListGetRes, pageable, total);
+
+        return res;
+
+    }
+
+    @Override
+    public Page<ProductDealListGetRes> getProductDealListByCode(Pageable pageable, int productCode) {
+        Page<Product> products = productRepositorySupport.findProductDealListByCode(pageable, productCode);
+        List<ProductDealListGetRes> productDealListGetRes = new ArrayList<>();
+
+        long total = products.getTotalElements();
+
+        for(Product p : products.getContent()){
+            ProductDealListGetRes productDealList = new ProductDealListGetRes();
+
+            productDealList.setProductTitle(p.getProductTitle());
+            productDealList.setProductPrice(p.getProductPrice());
+            productDealList.setProductRegDt(p.getProductRegDt());
+            productDealList.setProductThumbnailUrl(p.getProductThumbnailUrl());
+            productDealList.setProductState(p.getProductState());
+            productDealList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
+
+            productDealListGetRes.add(productDealList);
+        }
+
+        Page<ProductDealListGetRes> res = new PageImpl<>(productDealListGetRes, pageable, total);
+
+        return res;
+    }
+
+    // 상품명으로 검색
     @Override
     public Page<ProductListGetRes> getProductListByTitle(Pageable pageable, String productTitle) {
         Page<Product> products = productRepositorySupport.findProductListByTitle(pageable, productTitle);
