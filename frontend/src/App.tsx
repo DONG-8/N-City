@@ -11,6 +11,7 @@ import ProfileSetting from "./pages/Mypage/ProfileSetting";
 import EventPage from "./pages/FAQ/EventPage";
 import EventDetail from "./pages/FAQ/EventDetail";
 import Rank from "./pages/Rank/Rank";
+import Test from "./pages/Rank/Test";
 import Mint from "./pages/Mint/Mint";
 import Artists from "./pages/NFTStore/Artists";
 import GameApp from "./ingame/GameApp";
@@ -39,11 +40,15 @@ function App() {
           <Route path="/event/detail" element={<EventDetail />} />
           <Route path="/rank" element={<Rank />} />
           <Route path="/artists" element={<Artists />} />
-          <Route path="/ingame" element={
-            <Provider store={gamestore}>
-              <GameApp />
-            </Provider>
-          } />
+          <Route
+            path="/ingame"
+            element={
+              <Provider store={gamestore}>
+                <GameApp />
+              </Provider>
+            }
+          />
+          <Route path="/test" element={<Test />} />
         </Routes>
         <Footer />
       </BrowserRouter>

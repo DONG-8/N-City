@@ -4,7 +4,16 @@ import App from "./App";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
-const client = new QueryClient();
+const client = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: false,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
