@@ -1,6 +1,7 @@
 import React from "react";
 import { FooterBlock, FooterWrapper } from "./Footer.style";
 export default function Footer() {
+  if (window.location.pathname === '/ingame') return null;
   return (
     <FooterWrapper>
       <FooterBlock>

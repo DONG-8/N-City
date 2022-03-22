@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
@@ -13,6 +13,10 @@ import EventDetail from "./pages/FAQ/EventDetail";
 import Rank from "./pages/Rank/Rank";
 import Mint from "./pages/Mint/Mint";
 import Artists from "./pages/NFTStore/Artists";
+import GameApp from "./ingame/GameApp";
+import { Provider } from "react-redux";
+import gamestore from "./ingame/stores";
+
 function App() {
   return (
     <>
@@ -35,6 +39,11 @@ function App() {
           <Route path="/event/detail" element={<EventDetail />} />
           <Route path="/rank" element={<Rank />} />
           <Route path="/artists" element={<Artists />} />
+          <Route path="/ingame" element={
+            <Provider store={gamestore}>
+              <GameApp />
+            </Provider>
+          } />
         </Routes>
         <Footer />
       </BrowserRouter>
