@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForward from "@material-ui/icons/ArrowForward";
+import RankArtistCard from "../../pages/Main/RankArtistCard";
 
 const SubBannerWrraper = styled.div`
   position: relative;
   width: 448px;
-  height: 250px;
+  height: 300px;
   /* background-color: black; */
   color: white;
   /* margin: -400px auto 0 10px; */
@@ -14,7 +15,7 @@ const SubBannerWrraper = styled.div`
 
 const SubBanner = styled.div`
   width: 420px;
-  height: 250px;
+  height: 300px;
   object-fit: cover;
   display: flex;
   flex-direction: column;
@@ -140,15 +141,15 @@ const SmallSlide = () => {
     }
   };
 
-  useEffect(() => {
-    moveSubAuto();
-  }, [subCheck]);
+  // useEffect(() => {
+  //   moveSubAuto();
+  // }, [subCheck]);
 
   return (
     <>
       <SubBannerWrraper>
         <SubBanner>
-          {subImages.map((value, idx) => {
+          {/* {subImages.map((value, idx) => {
             // style={{transform: `translate(${position}px)`, transition: `transform 0.5s`}}
             return (
               <div className="inner">
@@ -163,7 +164,8 @@ const SmallSlide = () => {
                 />
               </div>
             );
-          })}
+          })} */}
+          <RankArtistCard></RankArtistCard>
         </SubBanner>
         <SubPagenationBanner>
           <button
