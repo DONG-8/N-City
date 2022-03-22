@@ -1,7 +1,9 @@
 package com.nft.ncity.domain.guestbook.controller;
 
+import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.domain.guestbook.db.entity.Guestbook;
 import com.nft.ncity.domain.guestbook.request.GuestbookPostReq;
+import com.nft.ncity.domain.guestbook.request.GuestbookPutReq;
 import com.nft.ncity.domain.guestbook.service.GuestbookService;
 import com.nft.ncity.domain.myroom.db.entity.MyRoom;
 import io.swagger.annotations.*;
@@ -42,10 +44,25 @@ public class GuestbookController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
     })
-    public ResponseEntity<Page<Guestbook>> createGuestbook(@RequestBody @ApiParam(value = "방명록 작성 정보", required = true) GuestbookPostReq guestbookInfo) {
+    public ResponseEntity<? extends BaseResponseBody> createGuestbook(@RequestBody @ApiParam(value = "방명록 작성 정보", required = true) GuestbookPostReq guestbookInfo) {
         log.info("createGuestbook - Call");
 
         guestbookService.createGuestbook(guestbookInfo);
+        return ResponseEntity.status(200).body(null);
+    }
+
+    @ApiOperation(value = "방명록 수정")
+    @PutMapping
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 404, message = "존재하지 않는 guestbookId 입니다."),
+    })
+    public ResponseEntity<? extends BaseResponseBody> modifyGuestbook(@RequestBody @ApiParam(value = "방명록 수정 정보", required = true) GuestbookPutReq guestbookInfo) {
+        log.info("createGuestbook - Call");
+
+        if(guestbookService.modifyGuestbook(guestbookInfo) < 1) {   // 방명록 구분 id 잘못됐을 경우
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "존재하지 않는 guestbookId 입니다"));
+        }
         return ResponseEntity.status(200).body(null);
     }
 }

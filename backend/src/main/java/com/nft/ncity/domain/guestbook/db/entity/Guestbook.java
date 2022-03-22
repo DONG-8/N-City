@@ -7,6 +7,8 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 public class Guestbook {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "방명록 구분 id")
     private Long guestbookId;
 
