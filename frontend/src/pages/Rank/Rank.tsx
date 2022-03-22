@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-
+import { useQuery } from "react-query";
+import { getProductAll } from "../../store/apis/Main";
+import * as API from "../../store/apis/types";
 const MainH = styled.div`
   width: 100%;
   height: auto;
@@ -365,6 +367,27 @@ const Rank = () => {
       url: "https://lh3.googleusercontent.com/OjwqOOt3_po4pPlTYg43Us9_pp4Ji9X8JKZY4aCsjzHISKQL-u2oSX_q4NmK5qZZn5PPYfMCpDS8OKFXBzXzXA6ljfWfaxGdEvc8DA=w300",
     },
   ];
+
+  const { isLoading, data } = useQuery<API.TypeProductGetAll, Error>(
+    "query-prouductAll",
+    async () => {
+      return await getProductAll({ page: 1, size: 3 });
+    },
+    {
+      enabled: false,
+      onSuccess: (res) => {
+        console.log(res);
+        console.log(data);
+      },
+      onError: (err: any) => {
+        console.log(err);
+      },
+    }
+  );
+
+  // useEffect(() => {
+
+  // })
 
   return (
     <MainH>
