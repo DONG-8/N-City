@@ -1,12 +1,14 @@
 package com.nft.ncity.domain.user.service;
 
 import com.nft.ncity.domain.authentication.service.AwsS3Service;
+import com.nft.ncity.domain.follow.db.repository.FollowRepositorySupport;
 import com.nft.ncity.domain.user.db.entity.EmailAuth;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.EmailAuthRepositorySupport;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.nft.ncity.domain.user.db.repository.UserRepositorySupport;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
+import com.nft.ncity.domain.user.response.UserInfoRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     EmailAuthRepositorySupport emailAuthRepositorySupport;
+
+    @Autowired
+    FollowRepositorySupport followRepositorySupport;
 
     @Autowired
     EmailService emailService;
@@ -89,6 +94,32 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserEmail(emailAuthEmail).get();
         user.emailVerifiedSuccess();
 
+    }
+
+    @Override
+    public UserInfoRes getUserInfo(User user) {
+
+        // userId를 팔로우 하는사람 수
+        Long followerCnt = followRepositorySupport.getFollowerCount(user.getUserId());
+
+        // userId가 팔로우 하는사람 수
+        Long followeeCnt = followRepositorySupport.getFolloweeCount(user.getUserId());
+
+        UserInfoRes userInfoRes = UserInfoRes.builder()
+                .userId(user.getUserId())
+                .authId(user.getAuthId())
+                .followerCnt(followerCnt)
+                .followeeCnt(followeeCnt)
+                .userAddress(user.getUserAddress())
+                .userDescription(user.getUserDescription())
+                .userImgUrl(user.getUserImgUrl())
+                .userEmail(user.getUserEmail())
+                .userEmailConfirm(user.getUserEmailConfirm())
+                .userNick(user.getUserNick())
+                .userRole(user.getUserRole())
+                .build();
+
+        return userInfoRes;
     }
 
 }
