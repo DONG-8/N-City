@@ -4,6 +4,7 @@ import com.nft.ncity.domain.user.db.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -15,4 +16,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByUserId(Long userId);
     Optional<User> findUserByUserNick(String userNick);
     Optional<User> findByUserEmail(String userEmail);
+    List<User> findTop15ByUserNickContaining(String userNick);
 }

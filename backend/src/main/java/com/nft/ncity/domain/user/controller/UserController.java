@@ -8,10 +8,7 @@ import com.nft.ncity.domain.user.request.EmailAuthRegisterReq;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
 import com.nft.ncity.domain.user.response.UserInfoRes;
 import com.nft.ncity.domain.user.service.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -285,5 +283,25 @@ public class UserController {
         userService.confirmEmail(emailAuthEmail, authToken);
 
         return ResponseEntity.status(201).body(BaseResponseBody.of(201,"닉네임 변경 가능."));
+    }
+
+    /**
+     유저 검색
+     */
+    @GetMapping("/search/{userNick}")
+    @ApiOperation(value = "유저 닉네임으로 검색", notes = "<strong>유저 닉네임으로 검색</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "검색 완료", response = User.class),
+            @ApiResponse(code = 204, message = "검색 결과 없음"),
+    })
+    public ResponseEntity<List<User>> searchUser(@PathVariable @ApiParam(value = "검색할 유저 닉네임", required = true) String userNick) {
+        log.info("searchUser - 호출");
+
+        List<User> users = userService.searchUser(userNick);
+
+        if (users.size() == 0) {
+            return ResponseEntity.status(204).body(null);
+        }
+        return ResponseEntity.status(200).body(users);
     }
 }

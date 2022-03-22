@@ -2,6 +2,7 @@ package com.nft.ncity.domain.myroom.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.domain.myroom.db.entity.MyRoom;
+import com.nft.ncity.domain.myroom.db.repository.MyRoomRepositorySupport;
 import com.nft.ncity.domain.myroom.request.MyRoomBackgroundPutReq;
 import com.nft.ncity.domain.myroom.request.MyRoomCharacterPutReq;
 import com.nft.ncity.domain.myroom.service.MyRoomService;
@@ -9,12 +10,16 @@ import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
-
+@EnableScheduling
 @Slf4j
 @Api(value = "마이룸 API")
 @RestController
@@ -23,6 +28,9 @@ public class MyRoomController {
 
     @Autowired
     MyRoomService myRoomService;
+
+    @Autowired
+    MyRoomRepositorySupport myRoomRepositorySupport;
 
     @ApiOperation(value = "유저 방 입장하기")
     @PostMapping("/{userId}")
@@ -101,5 +109,11 @@ public class MyRoomController {
 
         MyRoom myRoom = myRoomService.getUserRoom(2, null);
         return ResponseEntity.status(200).body(myRoom);
+    }
+
+    // 자정마다 today 리셋시켜주기
+    @Scheduled(cron = "0 0 0 * * *", zone="Asia/Seoul")
+    public void resetMyRoomToday() {
+        myRoomRepositorySupport.resetMyRoomToday();
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -120,6 +121,11 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         return userInfoRes;
+    }
+
+    @Override
+    public List<User> searchUser(String userNick) {
+        return userRepository.findTop15ByUserNickContaining(userNick);
     }
 
 }
