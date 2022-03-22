@@ -1,4 +1,4 @@
-package com.nft.ncity.domain.log.Controller;
+package com.nft.ncity.domain.log.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.common.util.CookieUtil;
@@ -7,10 +7,9 @@ import com.nft.ncity.common.util.RedisUtil;
 import com.nft.ncity.domain.log.request.LoginPostReq;
 import com.nft.ncity.domain.log.response.LoginPostRes;
 import com.nft.ncity.domain.log.service.LogService;
+import com.nft.ncity.domain.myroom.db.entity.MyRoom;
 import com.nft.ncity.domain.user.db.entity.User;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +40,10 @@ public class LogController {
 
     @ApiOperation(value = "로그인")
     @PostMapping("/login")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "성공", response = LoginPostRes.class),
+            @ApiResponse(code = 401, message = "Incorrect Wallet")
+    })
     public ResponseEntity<LoginPostRes> userLogin(@RequestBody @ApiParam(value = "로그인 정보", required = true) LoginPostReq loginInfo, HttpServletResponse response) {
         log.info("userLogin - Call");
 
@@ -70,6 +73,10 @@ public class LogController {
 
     @ApiOperation(value = "로그아웃")
     @GetMapping("/logout")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "성공"),
+            @ApiResponse(code = 400, message = "이미 로그아웃한 유저입니다.")
+    })
     public ResponseEntity<? extends BaseResponseBody> userLogout(HttpServletRequest request, HttpServletResponse response) {
         log.info("userLogout - Call");
 
@@ -112,18 +119,9 @@ public class LogController {
         if(redisUtil.getData(refreshToken) != null) {
             redisUtil.deleteData(refreshToken);
             log.info("userLogout - refreshToken redis에서 삭제");
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+            return ResponseEntity.status(204).body(BaseResponseBody.of(200, "Success"));
         } else {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "이미 로그아웃한 유저입니다."));
         }
     }
-
-    @ApiOperation(value = "유저 아이디 반환 테스트")
-    @GetMapping("/test")
-    public Long test(Principal principal) {
-        Long userId = Long.valueOf(principal.getName());
-        log.warn(principal.getName());
-        return Long.valueOf(principal.getName());
-    }
-
 }
