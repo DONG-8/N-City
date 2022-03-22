@@ -19,9 +19,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "noImplicitAny": false,
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    
   },
   "include": [
     "src"
-  ]
+, "src/ingame/GameApp.tsx"  ]
 }
