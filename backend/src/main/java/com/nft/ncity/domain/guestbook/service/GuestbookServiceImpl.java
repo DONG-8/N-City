@@ -8,6 +8,7 @@ import com.nft.ncity.domain.guestbook.request.GuestbookPutReq;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,5 +46,15 @@ public class GuestbookServiceImpl implements GuestbookService {
     @Override
     public Long modifyGuestbook(GuestbookPutReq guestbookPutReq) {
         return guestbookRepositorySupport.modifyGuestbook(guestbookPutReq.getGuestbookId(), guestbookPutReq.getGuestbookContents());
+    }
+
+    @Override
+    public Boolean removeGuestbook(Long guestbookId) {
+        try {
+            guestbookRepository.deleteById(guestbookId);
+            return true;
+        } catch (EmptyResultDataAccessException e) {    // guestbookId 잘못된 경우
+            return false;
+        }
     }
 }

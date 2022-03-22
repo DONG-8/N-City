@@ -12,4 +12,5 @@ public interface GuestbookService {
     Page<Guestbook> getGuestbookList(Pageable pageable, Long guestbookOwnerId);
     Boolean createGuestbook(GuestbookPostReq guestbookInfo);
     Long modifyGuestbook(GuestbookPutReq guestbookPutReq);
+    Boolean removeGuestbook(Long guestbookId);
 }
