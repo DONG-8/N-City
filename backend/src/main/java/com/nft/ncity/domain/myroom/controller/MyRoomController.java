@@ -45,8 +45,8 @@ public class MyRoomController {
     @ApiOperation(value = "유저 방 변경")
     @PutMapping("/background")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "변경 성공"),
-            @ApiResponse(code = 404, message = "로그인 해주세요")
+            @ApiResponse(code = 204, message = "배경 변경 성공"),
+            @ApiResponse(code = 401, message = "로그인 해주세요")
     })
     public ResponseEntity<? extends BaseResponseBody> modifyMyRoomBackground(@RequestBody @ApiParam(value = "방 변경 정보", required = true) MyRoomBackgroundPutReq myRoomBackgroundInfo, Principal principal) {
         log.info("modifyMyRoomBackground - Call");
@@ -54,17 +54,17 @@ public class MyRoomController {
         Long userId = Long.valueOf(principal.getName());
 
         if (myRoomService.modifyMyRoom(1, userId, myRoomBackgroundInfo.getMyRoomBackground()) == true) {
-            return ResponseEntity.status(200).body(null);
+            return ResponseEntity.status(204).body(BaseResponseBody.of(204, "배경 변경 성공"));
         } else {
-            return ResponseEntity.status(404).body(null);
+            return ResponseEntity.status(401).body(BaseResponseBody.of(401, "로그인 해주세요"));
         }
     }
 
     @ApiOperation(value = "유저 캐릭터 변경")
     @PutMapping("/character")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 404, message = "로그인 해주세요")
+            @ApiResponse(code = 204, message = "캐릭터 변경 성공"),
+            @ApiResponse(code = 401, message = "로그인 해주세요")
     })
     public ResponseEntity<? extends BaseResponseBody> modifyMyRoomCharacter(@RequestBody @ApiParam(value = "캐릭터 변경 정보", required = true) MyRoomCharacterPutReq myRoomCharacterInfo,
                                                     Principal principal) {
@@ -73,9 +73,9 @@ public class MyRoomController {
         Long userId = Long.valueOf(principal.getName());
 
         if (myRoomService.modifyMyRoom(2, userId, myRoomCharacterInfo.getMyRoomCharacter()) == true) {
-            return ResponseEntity.status(200).body(null);
+            return ResponseEntity.status(204).body(BaseResponseBody.of(204, "캐릭터 변경 성공"));
         } else {
-            return ResponseEntity.status(404).body(null);
+            return ResponseEntity.status(401).body(BaseResponseBody.of(401, "로그인 해주세요"));
         }
     }
 

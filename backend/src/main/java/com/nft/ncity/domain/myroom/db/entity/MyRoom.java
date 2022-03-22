@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Getter
 @Entity
-@ApiModel(value = "User", description = "회원 정보")
+@ApiModel(value = "MyRoom", description = "마이룸 정보")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -20,25 +20,21 @@ public class MyRoom {
 
     @Id
     @ApiModelProperty(value = "회원 id")
-    Long userId;
+    private Long userId;
 
     @ApiModelProperty(value = "배경 이미지 경로")
     @Column(name = "myroom_background")
-    String myRoomBackground;
-
-    @ApiModelProperty(value = "배경 bgm")
-    @Column(name = "myroom_bgm")
-    String myRoomBgm;
+    private String myRoomBackground;
 
     @ApiModelProperty(value = "캐릭터 이미지 경로")
     @Column(name = "myroom_character")
-    String myRoomCharacter;
+    private String myRoomCharacter;
 
     @ApiModelProperty(value = "오늘 방문자 수")
     @Column(name = "myroom_today_cnt")
-    Integer myRoomTodayCnt;
+    private Integer myRoomTodayCnt;
 
     @ApiModelProperty(value = "총 방문자 수 ")
     @Column(name = "myroom_total_cnt")
-    Integer myRoomTotalCnt;
+    private Integer myRoomTotalCnt;
 }
