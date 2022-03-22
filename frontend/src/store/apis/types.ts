@@ -2,7 +2,7 @@
 
 // 권한요청 POST
 export interface TypeAutPost {
-  name: string;
+  name?: string;
   body : {
     authEmail: string,
     authName: string,
@@ -23,6 +23,13 @@ export interface TypeAutGetAll {
 export interface TypeAutGetDetail {
   authId : number;
 }
+
+// 좋아요 컨트롤을 위한 interface
+export interface TypeLike {
+  productId : number;
+}
+
+
 
 //---- 팔로우 컨트롤 api type
 
@@ -54,13 +61,6 @@ export interface TypeRoomJoinPost {
 
 
 // ------ 상품 관련 CRUD (product-controller)
-
-// export  interface TypeProductGetAll {
-//   param : {
-//     page : number; // 페이지 수
-//     size : number; // 페이지당 게시글 수
-//     }
-// }
 export interface TypeProductGetAll {
     page : number; // 페이지 수
     size : number; // 페이지당 게시글 수
