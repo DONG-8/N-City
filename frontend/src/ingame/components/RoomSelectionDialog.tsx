@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import logo from '../../../public/essets/login/logo.png'
 import styled from 'styled-components'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
@@ -168,7 +167,7 @@ export default function RoomSelectionDialog() {
             <>
               <Title>N-CITY에 오신것을 환영합니다</Title>
               <Content>
-                <img src={logo} alt="logo" />
+                <img src="/essets/login/logo.png" alt="logo" />
                 <Button variant="contained" color="secondary" onClick={handleConnect}>
                   연습용 방 만들기
                 </Button>

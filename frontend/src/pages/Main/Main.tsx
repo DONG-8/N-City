@@ -308,6 +308,9 @@ export interface IState {
 }
 
 export default function Main() {
+  useEffect(()=>{
+    (window as any).game.destroy(true)
+  },[])
   const [position, setPosition] = useState<number>(0);
   const [eventNumber, setEventNumber] = useState<number>(0);
   const [pageTextPosition, setPageTextPosition] = useState<number>(0);
