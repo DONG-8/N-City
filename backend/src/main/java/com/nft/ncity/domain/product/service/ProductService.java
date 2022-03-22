@@ -6,7 +6,6 @@ import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -23,6 +22,7 @@ public interface ProductService {
     // read
     Page<ProductListGetRes> getProductList(Pageable pageable); // 상품 전체 조회
     Page<ProductListGetRes> getProductListByCode(Pageable pageable, int productCode); // 카테고리별 상품 전체조회
+    Page<ProductListGetRes> getProductListByTitle(Pageable pageable, String productTitle); // 상품명 검색조회
 
     Product productDetail(Long productId); // 상품 상세 조회
 

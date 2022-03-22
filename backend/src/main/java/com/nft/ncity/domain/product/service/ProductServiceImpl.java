@@ -162,6 +162,32 @@ public class ProductServiceImpl implements ProductService{
         return res;
     }
 
+
+    @Override
+    public Page<ProductListGetRes> getProductListByTitle(Pageable pageable, String productTitle) {
+        Page<Product> products = productRepositorySupport.findProductListByTitle(pageable, productTitle);
+        List<ProductListGetRes> productListGetRes = new ArrayList<>();
+
+        long total = products.getTotalElements();
+
+        for(Product p : products.getContent()){
+            ProductListGetRes productList = new ProductListGetRes();
+
+            productList.setProductTitle(p.getProductTitle());
+            productList.setProductPrice(p.getProductPrice());
+            productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
+            productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
+
+            productListGetRes.add(productList);
+        }
+
+        Page<ProductListGetRes> res = new PageImpl<>(productListGetRes, pageable, total);
+
+        return res;
+    }
+
+
     @Override
     public Product productDetail(Long productId) {
         Product product = productRepository.findById(productId).get();

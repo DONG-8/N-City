@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Locale;
 
 @Repository
 public class ProductRepositorySupport {
@@ -49,6 +50,23 @@ public class ProductRepositorySupport {
 
     }
 
+    public Page<Product> findProductListByTitle(Pageable pageable, String productTitle) {
+
+        // 대소문자 구문안하려고 무조건 대문자로 변경해서 검색
+        String upperProductTitle = productTitle.toUpperCase(Locale.ROOT);
+
+        List<Product> productQueryResults = jpaQueryFactory.select(qProduct)
+                .from(qProduct)
+                .where(qProduct.productTitle.upper().like("%"+upperProductTitle+"%"))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        if(productQueryResults.isEmpty()) return Page.empty();
+
+        return new PageImpl<Product>(productQueryResults, pageable, productQueryResults.size());
+
+    }
 
     @Transactional
     public long updateProductByProductId(ProductModifyPutReq productModifyPutReq){

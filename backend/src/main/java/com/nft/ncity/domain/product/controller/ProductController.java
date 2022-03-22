@@ -92,7 +92,7 @@ public class ProductController {
             @ApiResponse(code = 404, message = "상품 없음.")
     })
     public ResponseEntity<Page<ProductListGetRes>> getProductListByCode(    @PageableDefault(page = 0, size = 10) Pageable pageable,
-                                                                            @PathVariable("productCode") int productCode){
+                                                                            @ApiParam(value = "카테고리")@PathVariable("productCode") int productCode){
         log.info("getProductListByCode - 호출");
         Page<ProductListGetRes> products = productService.getProductListByCode(pageable,productCode);
 
@@ -104,12 +104,38 @@ public class ProductController {
         return ResponseEntity.status(200).body(products);
     }
 
+
+    @GetMapping("/search/{productTitle}")
+    @ApiOperation(value = "상품 이름으로 검색")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = ProductListGetRes.class),
+            @ApiResponse(code = 404, message = "상품 없음.")
+    })
+    public ResponseEntity<Page<ProductListGetRes>> getProductListByTitle(@PageableDefault(page = 0, size = 10) Pageable pageable,
+                                                                        @ApiParam(value = "상품명") @PathVariable("productTitle") String productTitle){
+
+
+        log.info("productTitle - 호출");
+        Page<ProductListGetRes> products = productService.getProductListByTitle(pageable,productTitle);
+
+        if(products.isEmpty()){
+            log.error("getProductListByTitle - Products doesn't exit on this Title");
+            return ResponseEntity.status(404).body(null);
+        }
+
+        return ResponseEntity.status(200).body(products);
+
+
+    }
+
     @ApiOperation(value = "상품 상세 조회")
     @GetMapping("/detail/{productId}")
     public Product productDetail(@ApiParam(value = "상품 ID") @PathVariable("productId") Long productId){
         log.info("productDetail - 호출");
         return productService.productDetail(productId);
     }
+
+
 
 
 
