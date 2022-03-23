@@ -88,7 +88,7 @@ public class AuthenticationController {
             @ApiResponse(code = 201, message = "등록 성공"),
             @ApiResponse(code = 404, message = "등록 실패")
     })
-    public ResponseEntity<BaseResponseBody> authenticationRegister(@RequestPart(value = "body") AuthenticationRegisterPostReq authenticationRegisterPostReq,
+    public ResponseEntity<BaseResponseBody> authenticationRegister(@ModelAttribute AuthenticationRegisterPostReq authenticationRegisterPostReq,
                                                                    @RequestPart(value = "authFile") MultipartFile multipartFile,
                                                                    Principal principal) throws IOException {
 
