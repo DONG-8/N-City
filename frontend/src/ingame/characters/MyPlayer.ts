@@ -6,7 +6,7 @@ import Network from '../services/Network'
 import Chair from '../items/Chair'
 import Computer from '../items/Computer'
 import Whiteboard from '../items/Whiteboard'
-
+import VendingMachine from '../items/VendingMachine'
 import { phaserEvents, Event } from '../components/events/EventCenter'
 import store from '../stores'
 import { pushPlayerJoinedMessage } from '../stores/ChatStore'
@@ -49,7 +49,7 @@ export default class MyPlayer extends Player {
     this.anims.play(`${this.playerTexture}_idle_down`, true) // 아래보고있는 캐릭터로 시작하기
     phaserEvents.emit(Event.MY_PLAYER_TEXTURE_CHANGE, this.x, this.y, this.anims.currentAnim.key) //캐릭터 위치시키기
   }
-
+  
   update( // 아래 값들이 변경될 때 마다 캐릭터가 변화한다. 
     playerSelector: PlayerSelector,
     cursors: Phaser.Types.Input.Keyboard.CursorKeys,
@@ -73,7 +73,9 @@ export default class MyPlayer extends Player {
           break
         case ItemType.VENDINGMACHINE: // 화면을 띄운다.
           // window.open('https://www.google.com', '_blank')
-          window.open('https://www.google.com')
+          const vendingMachine = item as VendingMachine
+          vendingMachine.openDialog()
+
           break
       }
     }

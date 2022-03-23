@@ -4214,16 +4214,41 @@
          "objects":[
                 {
                  "gid":5488,
-                 "height":72,
+                 "height":32,
                  "id":1262,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":48,
+                 "width":32,
                  "x":378,
-                 "y":209
-                }],
+                 "y":180
+                },
+              {
+              "gid":5488,
+              "height":32,
+              "id":1262,
+              "name":"",
+              "rotation":0,
+              "type":"",
+              "visible":true,
+              "width":32,
+              "x":240,
+              "y":180
+              },
+                {
+              "gid":5488,
+              "height":32,
+              "id":1262,
+              "name":"",
+              "rotation":0,
+              "type":"",
+              "visible":true,
+              "width":32,
+              "x":300,
+              "y":525
+              }],
+                
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -27373,14 +27398,14 @@
          "columns":1,
          "firstgid":5488,
          "image":"..\/items\/vendingmachine.png",
-         "imageheight":72,
-         "imagewidth":48,
+         "imageheight":192,
+         "imagewidth":64,
          "margin":0,
          "name":"vendingmachine",
          "spacing":0,
-         "tilecount":1,
-         "tileheight":72,
-         "tilewidth":48
+         "tilecount":10,
+         "tileheight":64,
+         "tilewidth":64
         }],
  "tilewidth":32,
  "type":"map",

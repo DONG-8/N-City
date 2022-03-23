@@ -1,5 +1,8 @@
 import Item from './Item'
 import { ItemType } from './Item'
+import store from '../stores'
+
+import { openVendingMachineDialog } from '../stores/VendingMachineStore'
 
 export default class VendingMachine extends Item {
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
@@ -9,6 +12,9 @@ export default class VendingMachine extends Item {
   }
 
   onOverlapDialog() {
-    this.setDialogBox('Press R to buy a coffee :)')
+    this.setDialogBox('R-그림 자세히 보기')
+  }
+  openDialog(){
+    store.dispatch(openVendingMachineDialog())
   }
 }

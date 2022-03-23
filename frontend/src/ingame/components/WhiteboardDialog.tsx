@@ -10,8 +10,8 @@ const Backdrop = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 90%;
+  height: 90%;
   overflow: hidden;
   padding: 16px 180px 16px 16px;
 `
