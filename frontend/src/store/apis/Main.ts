@@ -6,7 +6,7 @@ import * as API from "./types"
 
 // axios 요청 baseinstance 생성
 const apiClient = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: "https://j6e106.p.ssafy.io/api",
   headers: {
     "Content-type": "application/json",
   },
