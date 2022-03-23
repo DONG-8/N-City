@@ -25,12 +25,12 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 //        SavedRequest savedRequest = requestCache.getRequest(request, response);
 //        String redirectUrl = savedRequest.getRedirectUrl();
 //        response.sendRedirect(redirectUrl);
-        response.sendRedirect("/login");
+//        response.sendRedirect("/login");
 //        String encodedRedirectURL = response.encodeRedirectURL(request.getContextPath() + "/login");
 
 //        response.setHeader("Access-Control-Allow-Origin", );
-//        response.setHeader("Location", "/login");
-//        response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+        response.setHeader("Location", "https://j6e106.p.ssafy.io/login");
+        response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 
 //        String sdf = "redirect:" + "https://www.naver.com";
 //        String referrer = request.getHeader("Referer");
