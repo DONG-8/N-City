@@ -68,7 +68,7 @@ public class ProductController {
 
     // READ
     @ApiOperation(value = "상품전체조회")
-    @GetMapping
+    @GetMapping("-all")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = ProductListGetRes.class),
             @ApiResponse(code = 404, message = "상품 없음.")
