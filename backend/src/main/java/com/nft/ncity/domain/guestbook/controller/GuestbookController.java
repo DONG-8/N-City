@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Api(value = "마이룸 방명록 API")
 @RestController
-@RequestMapping("/api/guestbook")
+@RequestMapping("/api/guestbooks")
 public class GuestbookController {
 
     @Autowired
     GuestbookService guestbookService;
 
     @ApiOperation(value = "방명록 조회")
-    @GetMapping("/{guestbookOwnerId}")
+    @GetMapping("/get-{guestbookOwnerId}")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = MyRoom.class),
     })

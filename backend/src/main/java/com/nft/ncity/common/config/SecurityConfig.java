@@ -68,8 +68,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler) // 액세스 할 수 없는 요청 했을 시 동작
                 .and()
                 .authorizeRequests()// 인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
-                .antMatchers("/api/favorites/**", "/api/users/change-info", "/api/users/confirm-email", "/api/follow/(\\d)",
-                        "/api/products", "/api/products/(\\d)", "/api/favorites/", "/api/authentication", "/api/guestbooks", "/api/deals", "/api/deals/purchase/**", "/api/myroom/**").hasAnyRole("USER", "ENTERPRISE", "ARTIST", "INFLUENCER", "ADMIN") // 로그인한 유저만 접근 가능 경로
+                .antMatchers("/api/favorites/(\\d)",
+                        "/api/users/change-info", "/api/users/confirm-email",
+                        "/api/follow/(\\d)",
+                        "/api/products", "/api/products/(\\d)",
+                        "/api/authentication",
+                        "/api/guestbooks", "/api/guestbooks/(\\d)",
+                        "/api/deals", "/api/deals/purchase/**",
+                        "/api/myroom/**").hasAnyRole("USER", "ENTERPRISE", "ARTIST", "INFLUENCER", "ADMIN") // 로그인한 유저만 접근 가능 경로
                 .antMatchers("/api/authentication/**").hasRole("ADMIN") // 관리자만 접근 가능 경로
                 .antMatchers("/v3/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/swagger-ui/**").permitAll()
     	        	    .anyRequest().permitAll()
