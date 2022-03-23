@@ -28,8 +28,7 @@ const DoUploadText = styled.div`
       color: red;
     }
   }
-
-`
+`;
 
 const ExplaneBox = styled.div`
   margin-top: 8px;
@@ -264,7 +263,7 @@ const Mint = () => {
   const [thumbnailSrc, setThumbnailSrc] = useState<string>("");
   const [tokenName, setTokenName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [categories, setCategories] = useState<string[]>([]);
+  const [category, setCategory] = useState<string>("");
   const [isVideo, setIsVideo] = useState<boolean>(false);
 
   // category modal
@@ -280,6 +279,17 @@ const Mint = () => {
 
   const onClickSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!file) {
+      alert("작품을 업로드 해주세요");
+      return;
+    } else if (isVideoAudio() && !thumbnail) {
+      alert("작품의 미리보기 파일을 업로드 해주세요");
+      return;
+    } else if (!tokenName) {
+      alert("작품이름을 입력해주세요");
+      return;
+    }
+
     const formdata = new FormData();
     formdata.append("file", file);
 
@@ -444,7 +454,9 @@ const Mint = () => {
         <span>*</span>필수
       </Required>
       <DoUploadText>
-        <p>작품을 업로드 해주세요<span>*</span></p>
+        <p>
+          작품을 업로드 해주세요<span>*</span>
+        </p>
       </DoUploadText>
       <FormBox>
         <UploadBox>
@@ -508,13 +520,9 @@ const Mint = () => {
         <CategoryBox>
           <p>카테고리</p>
         </CategoryBox>
-        {categories.length !== 0 ? (
+        {category ? (
           <Categories>
-            {categories.map((category) => (
-              <p key={category} onClick={handleModalOpen}>
-                # {category}
-              </p>
-            ))}
+            <p onClick={handleModalOpen}># {category}</p>
           </Categories>
         ) : (
           <HashtagBox onClick={handleModalOpen}>
@@ -530,7 +538,7 @@ const Mint = () => {
         visible={isOpen}
         onClose={handleModalClose}
         openStateHandler={setIsOpen}
-        setCategories={setCategories}
+        setCategory={setCategory}
       ></CategoryModal>
     </Wrapper>
   );
