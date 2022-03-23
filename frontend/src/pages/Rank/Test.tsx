@@ -26,11 +26,7 @@ const Test = () => {
   };
 
   // 요청 성공 시 다른 api 요청 보내기 test
-  const {
-    isLoading: PostLoginLoading,
-    data: PostLoginData,
-    mutate: postTutorial,
-  } = useMutation<any, Error>(
+  const PrLike = useMutation<any, Error>(
     "productLike",
     async () => {
       return await postProductLike(9);
@@ -60,7 +56,7 @@ const Test = () => {
       onSuccess: (res) => {
         const result = fortmatResponse(res);
         console.log(result, "로그인 성공");
-        sessionStorage.setItem("userToken", res.accessToken);
+        // sessionStorage.setItem("userToken", res.accessToken);
       },
       onError: (err: any) => {
         console.log(err, "로그인 요청 실패");
@@ -77,9 +73,14 @@ const Test = () => {
       onSuccess: (res) => {
         fortmatResponse(res);
         console.log(res, "좋아요 한 상품 조회");
+        console.log("조회 이후 좋아요 요청 시작");
+        PrLike.mutate();
+        console.log();
       },
       onError: (err: any) => {
         console.log(err, "좋아요한작품불러오기에러");
+        console.log("조회 이후 좋아요 요청 시작");
+        PrLike.mutate();
       },
     }
   );
@@ -94,7 +95,7 @@ const Test = () => {
 
   function postData() {
     try {
-      postTutorial();
+      // postTutorial();
     } catch (err) {
       setPostResult(fortmatResponse(err));
       console.log("에러에러에러에러에러ㅔㅓ");
