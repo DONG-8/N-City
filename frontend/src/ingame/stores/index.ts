@@ -5,7 +5,7 @@ import computerReducer from './ComputerStore'
 import whiteboardReducer from './WhiteboardStore'
 import chatReducer from './ChatStore'
 import roomReducer from './RoomStore'
-
+import vendingMachineReducer from './VendingMachineStore'
 enableMapSet()
 //  불변 버전의 Map을 지원합니다.
 // store의 모든 값들을 합쳐주기 
@@ -18,6 +18,7 @@ const gamestore = configureStore({
     room: roomReducer,
     computer: computerReducer,
     whiteboard: whiteboardReducer,
+    vendingMachine:vendingMachineReducer
   },
   middleware: (getDefaultMiddleware) => 
   // 클라이언트에게 요청이 오고 그 요청을 보내기 위해 응답하려는 중간(미들)에 목적에 맞게 처리를 하는, 

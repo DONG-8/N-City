@@ -4,11 +4,11 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ItemCard from '../../components/Card/ItemCard';
-import Background from '../../components/Card/Background';
+import Background from '../Card/Background';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { items as itm } from './items';
+import { items as itm } from '../../../src/pages/NFTStore/items'
+import GameItemCard from './GameItemCard';
 const etherURL = '/essets/images/ethereum.png'
 
 const Wrapper = styled.div`
@@ -196,8 +196,10 @@ const Head = styled.div`
     font-size:1.7rem;
   }
 `
-
-const DetailItem = () => {
+interface Iprops{
+  setMode :React.Dispatch<React.SetStateAction<string>>
+}
+const GameDetailItem:React.FC<Iprops> = ({setMode}) => {
   const [transactions,setTransactions] = useState([
     {event:'transfer', from:"59912",to:"24923", date:20220309},
     {event:'sale',price:1.04, from:"59912",to:"24923", date:20220305 },
@@ -214,7 +216,6 @@ const DetailItem = () => {
     const tmp = JSON.parse(localStorage.getItem("item")||"")
     if (item.id !==tmp.id){
       setItem(tmp)
-      window.scrollTo(0,0)
     }
     setChange(false)
   },[change])
@@ -289,7 +290,8 @@ const DetailItem = () => {
               <Buy>
                 <div className="price">
                   {item.price}
-                  <img style={{ height: "2rem" }} alt="이더" src={etherURL} />
+                  <img style={{ height: "2rem" }} alt="이더" 
+                  src='/essets/images/ethereum.png' />
                 </div>
                 <button className="buy_button">구매</button>
               </Buy>
@@ -356,7 +358,7 @@ const DetailItem = () => {
               {items.map((item) => {
                 return (
                   <div onClick={() => setChange(true)}>
-                    <ItemCard key={item.url} item={item} />
+                    <GameItemCard setMode={setMode} key={item.url} item={item} />
                   </div>
                 );
               })}
@@ -368,4 +370,4 @@ const DetailItem = () => {
   );
 }
 
-export default DetailItem
+export default GameDetailItem

@@ -133,16 +133,15 @@ export default function Navbar() {
   const [isLogin, setIsLogin] = useState<Boolean>(false);
   const navigate = useNavigate();
   const [openCoin, setOpenCoin] = useState(false);
-  {/* ⭐ */}
   
-  const goToGame = () => {
-    if (isLogin === true) {
-      navigate("/Game");
-    } else {
-      navigate("/Login");
-    }
-  };
-
+  // const goToGame = () => {
+  //   if (isLogin === true) {
+  //     navigate("/ingame");
+  //   } else {
+  //     navigate("/ingame");
+  //   }
+  // };
+  if (window.location.pathname === '/ingame') return null;
   return (
     <>
       <NavbarWrrap>
@@ -218,8 +217,8 @@ export default function Navbar() {
                 </Link> */}
               </>
             )}
-            <div className="game" onClick={() => goToGame()}>
-              <p>Game Start</p>
+            <div className="game" >
+              <a href="/ingame" >Game Start</a>
             </div>
           </div>
         </NavbarBox>

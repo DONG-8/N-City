@@ -12,6 +12,7 @@ import VideoConnectionDialog from './components/VideoConnectionDialog' // 캐릭
 import Chat from './components/Chat' // 채팅 관련 
 import HelperButtonGroup from './components/HelperButtonGroup' // 우측 하단 버튼들 
 import phaserGame from './PhaserGame'
+import VendingMachineDialog from './components/VendingMachineDialog'
 
 const Backdrop = styled.div`
   position: absolute;
@@ -36,14 +37,17 @@ const  GameApp: Function = ()=> {
   const whiteboardDialogOpen = useAppSelector((state) => state.whiteboard.whiteboardDialogOpen)
   const videoConnected = useAppSelector((state) => state.user.videoConnected)
   const roomJoined = useAppSelector((state) => state.room.roomJoined)
-
+  const VendingMachineDialogOpen = useAppSelector((state)=>state.vendingMachine.vendingMachineDialogOpen)
   let ui: JSX.Element
   if (loggedIn) { // ui가 비어있는데 컴퓨터가 연결이 되었으면 ui로 컴퓨터 화면이 뜬다.
     if (computerDialogOpen) { 
       ui = <ComputerDialog />
     } else if (whiteboardDialogOpen) {
       ui = <WhiteboardDialog />
-    } else {  // 그 외의 모든 상황에서는 채팅 과 비디오 화면을 띄워준다.
+    } else if (VendingMachineDialogOpen){
+      ui = <VendingMachineDialog />
+    }
+     else {  // 그 외의 모든 상황에서는 채팅 과 비디오 화면을 띄워준다.
       ui = (
         <div>
           <Chat />
