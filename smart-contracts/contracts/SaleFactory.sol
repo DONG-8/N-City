@@ -46,6 +46,12 @@ contract SaleFactory is Ownable {
         address nftAddress
     ) public returns (address) {
         // TODO
+        Sale instance = new Sale(admin, msg.sender, itemId, minPrice, purchasePrice, startTime, endTime, currencyAddress, nftAddress);
+        // return instance;
+        // emit NewSale(_saleContract, _owner, _workId);
+        sales.push(address(instance));
+        emit NewSale(address(instance), msg.sender, itemId);
+        return address(instance);
     }
     
     // 생성된 모든 Sale 주소를 반환
@@ -74,7 +80,7 @@ contract Sale {
     uint256 public purchasePrice;  // 즉시 구매가
     uint256 public tokenId; // 거래할 NFT tokenId
     address public currencyAddress; // 거래시 사용할 ERC-20의 주소
-    address public nftAddress; // 판매할 NFT 주소
+    address public nftAddress; // nft creator 주소
     bool public ended; // 판매상태(종료여부)
 
     // 현재 최고 입찰 상태
