@@ -42,8 +42,8 @@ contract("NftCreator", async accounts => {
         let tokenId2 = await meta.current();
         // console.log("------------------")
         // console.log(tokenId.toNumber())
-        // console.log(tokenId)
-        // console.log(tokenId2)
+        console.log(tokenId)
+        console.log(tokenId2)
         const realTokenId = tokenId.toNumber()
         const realTokenId2 = tokenId2.toNumber()
         const firstOwner = await meta.ownerOf(realTokenId);
