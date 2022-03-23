@@ -3,7 +3,6 @@ package com.nft.ncity.domain.authentication.db.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -51,4 +50,8 @@ public class Authentication {
     @ApiModelProperty(value="인증파일 url")
     @Column(name = "auth_url")
     private String authUrl;
+
+    public void authUrlRegister(String authUrl) {
+        this.authUrl = authUrl;
+    }
 }

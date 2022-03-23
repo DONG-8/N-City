@@ -32,8 +32,4 @@ public class AuthenticationRegisterPostReq {
     @ApiModelProperty(value="인증 타입", required = true)
     int authType;
 
-    @ApiModelProperty(value="인증파일 url")
-    private String authUrl;
-
-
 }

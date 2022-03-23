@@ -79,7 +79,6 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 .authName(authenticationRegisterPostReq.getAuthName())
                 .authEmail(authenticationRegisterPostReq.getAuthEmail())
                 .authType(authenticationRegisterPostReq.getAuthType())
-                .authUrl(authenticationRegisterPostReq.getAuthUrl())
                 .authRegAt(LocalDateTime.now())
                 .build();
 
@@ -118,6 +117,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         // 인증 등록에 사용된 파일 저장.
         authFileRepository.save(authFile);
 
+        // 인증등록한 파일 url 인증등록 정보에도 저장.
+        savedAuthentication.authUrlRegister(fileUrl);
 
         /**
          * 유저 아이디 받아와서 해당 유저에 인증 id 넣어야함.
