@@ -7,18 +7,17 @@ import com.nft.ncity.common.util.RedisUtil;
 import com.nft.ncity.domain.log.request.LoginPostReq;
 import com.nft.ncity.domain.log.response.LoginPostRes;
 import com.nft.ncity.domain.log.service.LogService;
-import com.nft.ncity.domain.myroom.db.entity.MyRoom;
 import com.nft.ncity.domain.user.db.entity.User;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.Principal;
 
 @Slf4j
 @Api(value = "로그인, 로그아웃 API")
@@ -124,4 +123,19 @@ public class LogController {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "이미 로그아웃한 유저입니다."));
         }
     }
+
+    @ApiOperation(value = "로그아웃")
+    @GetMapping("/test")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "성공"),
+            @ApiResponse(code = 400, message = "이미 로그아웃한 유저입니다.")
+    })
+    public RedirectView test(HttpServletRequest request, HttpServletResponse response) {
+        log.info("userLogout - Call");
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("localhost:3030/");
+        return redirectView;
+    }
+
+
 }
