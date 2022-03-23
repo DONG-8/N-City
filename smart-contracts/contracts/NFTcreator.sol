@@ -13,6 +13,8 @@ contract NFTcreator is ERC721 {
     uint256 private _tokenIds;
     mapping(uint256 => string) tokenURIs; // 토큰URI를 저장할 수 있는 mapping
 
+    event createNFT (uint256 indexed _tokenId, address indexed _owner);
+
     constructor() ERC721("N-city", "NCT") {}
 
     function current() public view returns (uint256) {
@@ -35,6 +37,7 @@ contract NFTcreator is ERC721 {
         tokenURIs[tokenId] = _tokenURI;
         _tokenIds = tokenId;
         _mint(to, tokenId);
+        emit createNFT(tokenId, to);
         return tokenId;
     }
 }
