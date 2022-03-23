@@ -25,7 +25,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 //        SavedRequest savedRequest = requestCache.getRequest(request, response);
 //        String redirectUrl = savedRequest.getRedirectUrl();
 //        response.sendRedirect(redirectUrl);
-        response.sendRedirect("https://j6e106.p.ssafy.io/login");
+        response.sendRedirect("/login");
 //        String encodedRedirectURL = response.encodeRedirectURL(request.getContextPath() + "/login");
 
 //        response.setHeader("Access-Control-Allow-Origin", );
