@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 // import { clearInterval } from 'timers';
-import ItemCard from "../../components/Card/ItemCard";
+import ItemCard2 from "../../components/Card/ItemCard2";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForward from "@material-ui/icons/ArrowForward";
@@ -11,6 +11,7 @@ import HotTokkenList from "./HotTokkenList";
 import NewTokkenList from "./NewTokkenList";
 import VideoGuide from "./VideoGuide";
 import Profile from "./Profile";
+import AOS from 'aos';
 
 const MainBackGround = styled.div`
   /* margin-top: 80px; */
@@ -289,6 +290,33 @@ const MainH = styled.div`
   height: auto;
 `;
 
+const NewTokken = styled.div`
+  width: 100%;
+  height: 70vh;
+  border: 1px solid black;
+  
+  .title{
+    font-size: 3.5rem;
+    color: #333;
+    margin-left: 10vw;
+  }
+  .sub{
+    color: #333;
+    margin-left: 10vw;
+    p{
+      margin: 1px;
+    }
+  }
+  .itemCards{
+    display: flex;
+    margin-left: 10vw;
+  } 
+  .down{
+    margin-top: 10vh;
+  }
+`
+
+
 export interface IState {
   item: {
     id: number;
@@ -307,10 +335,11 @@ export interface IState {
   }[];
 }
 
-export default function Main() {
-  // useEffect(()=>{
-  //   (window as any).game.destroy(true)
-  // },[])
+export default function Main2() {
+  useEffect(()=>{
+    // (window as any).game.destroy(true)
+    AOS.init()
+  },[])
   const [position, setPosition] = useState<number>(0);
   const [eventNumber, setEventNumber] = useState<number>(0);
   const [pageTextPosition, setPageTextPosition] = useState<number>(0);
@@ -629,11 +658,26 @@ export default function Main() {
       liked: 24,
       url: "https://lh3.googleusercontent.com/3usYOjVkwnra66EAhX4yJB-xmYCfFoTsREGVvVLCYWhtVG4pifdZLBRCSgv6wbjbV4rwPamlBDgganvgFO3xeifJyZQtqxwTYpXiqtc=w300",
     },
+    {
+      id: 5,
+      name: "Giks Home",
+      title: "#ghe23434",
+      price: 1.35,
+      liked: 43,
+      url: "https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352",
+    },
+    {
+      id: 4,
+      name: "Giks Home",
+      title: "#ghe254334",
+      price: 1.2,
+      liked: 24,
+      url: "https://lh3.googleusercontent.com/3usYOjVkwnra66EAhX4yJB-xmYCfFoTsREGVvVLCYWhtVG4pifdZLBRCSgv6wbjbV4rwPamlBDgganvgFO3xeifJyZQtqxwTYpXiqtc=w300",
+    },
   ]);
 
   return (
     <MainH>
-      <Popup></Popup>
       {/* <MainWord>
         <div className="typing">Welcome N-City</div>
       </MainWord> */}
@@ -721,70 +765,45 @@ export default function Main() {
             </button>
           </MainPagenationBanner>
         </MainBannerWrapper>
-        {/* <SubBannerWrraper>
-          <SubBanner>
-            {subImages.map((value, idx) => {
-              // style={{transform: `translate(${position}px)`, transition: `transform 0.5s`}}
-              return (
-                <div className="inner">
-                  <img
-                    src={value.pic}
-                    key={idx + value.name}
-                    alt="사진없노"
-                    style={{
-                      transform: `translate(${subPosition}px)`,
-                      transition: `transform 0.5s`,
-                    }}
-                  />
-                </div>
-              );
-            })}
-          </SubBanner>
-          <SubPagenationBanner>
-            <button
-              onClick={() => {
-                moveSubLeft();
-              }}
-            >
-              <ArrowBackIcon></ArrowBackIcon>
-            </button>
-            <button>
-              {subEventNumber + 1}/{subImages.length}
-            </button>
-            <button
-              onClick={() => {
-                moveSubRight();
-              }}
-            >
-              <ArrowForward></ArrowForward>
-            </button>
-          </SubPagenationBanner>
-          <SubBottomItem>
-            <div className="plus">+</div>
-            <h2>My Room</h2>
-            <div>Today's : 100</div>
-            <div>Total : 11111</div>
-            <div>follower : 1K</div>
-          </SubBottomItem>
-        </SubBannerWrraper> */}
         <Profile></Profile>
       </MainWrapper>
       <GuideWrapper>
         <Guide></Guide>
       </GuideWrapper>
-      <HotTokkenWrraper>
-        <HotTokken>
-          <h1>New Tokken</h1>
-          <NewTokkenList />
-        </HotTokken>
-      </HotTokkenWrraper>
-      <HotTokkenWrraper>
-        <HotTokken>
-          <h1>Hot Tokken</h1>
-          <HotTokkenList></HotTokkenList>
-        </HotTokken>
-      </HotTokkenWrraper>
-      <VideoGuide />
+      <NewTokken>
+        <div data-aos="fade-up"
+            data-aos-duration="2000"   >
+        <h1 className="title">
+          New Tokken
+        </h1>
+        <div className="sub">
+          <p>방금 막 새로 민팅된 작품들입니다. 누구보다 빠르게 작품을 구경하세요</p>
+          <p>N-city 의 상점 기능을 이용해 구입하고, 자신의 방에 전시할 수 있습니다. </p>
+        </div>
+        </div>
+        <div  className="itemCards">
+          <div data-aos="fade-up"
+            data-aos-duration="2000"   >
+            <ItemCard2 item={items[0]}/>
+          </div  >
+          <div data-aos="fade-up"
+            data-aos-duration="1000"  className="down">
+            <ItemCard2 item={items[1]}/>
+          </div>
+          <div data-aos="fade-up"
+            data-aos-duration="1500">
+          <ItemCard2 item={items[2]}/>
+          </div>
+          <div data-aos="fade-up"
+            data-aos-duration="1500" className="down">
+            <ItemCard2 item={items[3]}/>
+          </div>
+          <div data-aos="fade-up"
+            data-aos-duration="1800">
+            <ItemCard2 item={items[4]}/>
+          </div>
+        </div>
+      </NewTokken>
     </MainH>
   );
 }
