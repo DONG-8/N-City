@@ -1,15 +1,21 @@
 package com.nft.ncity.domain.deal.db.repository;
 
+import com.nft.ncity.domain.deal.db.entity.Deal;
 import com.nft.ncity.domain.deal.db.entity.QDeal;
 import com.nft.ncity.domain.deal.request.AuctionRegisterPostReq;
 import com.nft.ncity.domain.deal.request.BuyNowRegisterPostReq;
+import com.nft.ncity.domain.deal.response.DealListGetRes;
 import com.nft.ncity.domain.product.db.entity.QProduct;
 import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public class DealRepositorySupport {
@@ -56,6 +62,19 @@ public class DealRepositorySupport {
     }
 
 
+    // 거래내역
+    @Transactional
+    public Page<Deal> findDealListByProductId(Pageable pageable, Long productId){
+        List<Deal> dealListQueryResults = jpaQueryFactory.select(qDeal)
+                .from(qDeal)
+                .where(qDeal.productId.eq(productId))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+        if(dealListQueryResults.isEmpty()) return Page.empty();
+
+        return new PageImpl<Deal>(dealListQueryResults,pageable,dealListQueryResults.size());
+    }
 
 
 

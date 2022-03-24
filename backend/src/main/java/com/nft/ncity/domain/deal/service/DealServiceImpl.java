@@ -5,16 +5,33 @@ import com.nft.ncity.domain.deal.db.repository.DealRepository;
 import com.nft.ncity.domain.deal.db.repository.DealRepositorySupport;
 import com.nft.ncity.domain.deal.request.AuctionRegisterPostReq;
 import com.nft.ncity.domain.deal.request.BuyNowRegisterPostReq;
+import com.nft.ncity.domain.deal.response.DealListGetRes;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.repository.ProductRepository;
+import com.nft.ncity.domain.product.response.ProductDealListGetRes;
+import com.nft.ncity.domain.user.db.entity.User;
+import com.nft.ncity.domain.user.db.repository.UserRepository;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,6 +46,9 @@ public class DealServiceImpl implements DealService{
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     //CREATE
 
@@ -122,6 +142,42 @@ public class DealServiceImpl implements DealService{
     }
 
     //READ
+    // 해당상품 지난 거래내역
+
+    @Override
+    @Transactional
+    public Page<DealListGetRes> getDealListByProductId(Pageable pageable, Long productId) {
+        Page<Deal> deals = dealRepositorySupport.findDealListByProductId(pageable,productId);
+        List<DealListGetRes> dealListGetRes = new ArrayList<>();
+
+        long total = deals.getTotalElements();
+
+        for(Deal d : deals.getContent()){
+            DealListGetRes dealList = new DealListGetRes();
+
+            if(d.getDealFrom() != null){
+                User userFrom = userRepository.getById(d.getDealFrom());
+                dealList.setDealFrom(userFrom.getUserId());
+                dealList.setDealFromNickName(userFrom.getUserNick());
+            }
+            if( d.getDealTo() != null){
+
+                User userTo = userRepository.getById(d.getDealTo());
+                dealList.setDealTo(userTo.getUserId());
+                dealList.setDealToNickName(userTo.getUserNick());
+            }
+            dealList.setDealPrice(d.getDealPrice());
+            dealList.setDealType(d.getDealType());
+            dealList.setDealCreatedAt(d.getDealCreatedAt());
+
+            dealListGetRes.add(dealList);
+        }
+
+        Page<DealListGetRes> res = new PageImpl<>(dealListGetRes,pageable,total);
+
+        return res;
+    }
+
 
     //UPDATE
 
