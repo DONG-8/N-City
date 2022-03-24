@@ -194,7 +194,7 @@ const VendingMachineDialog = () => {
                 onClick={()=>{setMode('detail')}}
                 >작품구경가기</Button>
                 <Button color='info' variant="contained" className='btn'
-                  onClick={()=>{setMode('store')}}
+                  onClick={()=>{setMode('index')}}
                 >상점 이동</Button>
               </div>
             </div> 
