@@ -38,7 +38,7 @@ public class DealController {
             @ApiResponse(code = 201, message = "등록 성공"),
             @ApiResponse(code = 404, message = "등록 실패")
     })
-    @PostMapping("/buyNow")
+    @PostMapping("/register/buyNow")
     public ResponseEntity<BaseResponseBody> buyNowRegister(@RequestBody BuyNowRegisterPostReq buyNowRegisterPostReq, Principal principal){
 
         log.info("dealRegister - 호출");
@@ -58,7 +58,7 @@ public class DealController {
             @ApiResponse(code = 201, message = "등록 성공"),
             @ApiResponse(code = 404, message = "등록 실패")
     })
-    @PostMapping("/auction")
+    @PostMapping("/register/auction")
     public ResponseEntity<BaseResponseBody> auctionRegister(@RequestBody AuctionRegisterPostReq auctionRegisterPostReq, Principal principal){
 
         log.info("dealRegister - 호출");
