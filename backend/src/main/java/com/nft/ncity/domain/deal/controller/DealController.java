@@ -1,6 +1,7 @@
 package com.nft.ncity.domain.deal.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
+import com.nft.ncity.domain.deal.db.entity.Deal;
 import com.nft.ncity.domain.deal.request.AuctionRegisterPostReq;
 import com.nft.ncity.domain.deal.request.BuyNowRegisterPostReq;
 import com.nft.ncity.domain.deal.service.DealService;
@@ -72,9 +73,29 @@ public class DealController {
         }
 
     }
-    // 거래 생성 bid, 거래 완료 모두 create로
 
-    // 옥션 가격제안 type =
+    // auction 참가 (bid)
+
+    @PostMapping("/auction")
+    @ApiOperation(value = "경매참가")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "등록 성공"),
+            @ApiResponse(code = 404, message = "등록 실패")
+    })
+    public ResponseEntity<BaseResponseBody> bidRegister(@RequestBody BuyNowRegisterPostReq buyNowRegisterPostReq,Principal principal){
+        log.info("bidRegister - 호출");
+        Deal deal = dealService.bidRegister(buyNowRegisterPostReq,principal);
+        if(!deal.equals(null)) {
+            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
+        }
+        else {
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "등록 실패"));
+        }
+    }
+
+
+
+
 
     // READ
     // productId에 해당하는 지난 거래 내역들 조회

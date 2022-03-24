@@ -58,7 +58,7 @@ public class DealServiceImpl implements DealService{
            Deal savedDeal = dealRepository.save(deal);
 
             // 2. product 테이블 updates
-            return dealRepositorySupport.updateProductForBuyNowByProductId(buyNowRegisterPostReq);
+            return dealRepositorySupport.modifyProductForBuyNowByProductId(buyNowRegisterPostReq);
         }else{
             return  null;
         }
@@ -90,10 +90,35 @@ public class DealServiceImpl implements DealService{
             Deal savedDeal = dealRepository.save(deal);
 
             // 2. product 테이블 updates
-            return dealRepositorySupport.updateProductForAuctionByProductId(auctionRegisterPostReq);
+            return dealRepositorySupport.modifyProductForAuctionByProductId(auctionRegisterPostReq);
         }else{
             return  null;
         }
+    }
+
+    @Override
+    @Transactional
+    public Deal bidRegister(BuyNowRegisterPostReq buyNowRegisterPostReq,Principal principal){
+        Product product =  productRepository.getById(buyNowRegisterPostReq.getProductId());
+
+        // 기존가격보다 더 클때
+        if(product.getProductPrice() < buyNowRegisterPostReq.getDealPrice()){
+
+        Deal deal = Deal.builder()
+                .productId(buyNowRegisterPostReq.getProductId())
+                .dealFrom(Long.valueOf(principal.getName()))
+                .dealType(3)
+                .tokenId(product.getTokenId())
+                .dealPrice(buyNowRegisterPostReq.getDealPrice())
+                .dealCreatedAt(LocalDateTime.now())
+                .build();
+        Deal savedDeal = dealRepository.save(deal);
+        //기존가격 update
+        dealRepositorySupport.modifyProductPriceByProductId(buyNowRegisterPostReq);
+
+        return savedDeal;
+        }
+        return null;
     }
 
     //READ

@@ -24,7 +24,7 @@ public class DealRepositorySupport {
 
     // 즉시구매등록 - 상품table update
     @Transactional
-    public long updateProductForBuyNowByProductId(BuyNowRegisterPostReq buyNowRegisterPostReq){
+    public long modifyProductForBuyNowByProductId(BuyNowRegisterPostReq buyNowRegisterPostReq){
         long excute = jpaQueryFactory.update(qProduct)
                 .set(qProduct.productState,2)
                 .set(qProduct.productPrice, buyNowRegisterPostReq.getDealPrice())
@@ -35,12 +35,22 @@ public class DealRepositorySupport {
 
     // 경매등록 -  상품table update
     @Transactional
-    public long updateProductForAuctionByProductId(AuctionRegisterPostReq auctionRegisterPostReq){
+    public long modifyProductForAuctionByProductId(AuctionRegisterPostReq auctionRegisterPostReq){
         long excute = jpaQueryFactory.update(qProduct)
                 .set(qProduct.productState,1)
                 .set(qProduct.productAuctionEndTime, auctionRegisterPostReq.getProductAuctionEndTime())
                 .set(qProduct.productPrice, auctionRegisterPostReq.getDealPrice())
                 .where(qProduct.productId.eq(auctionRegisterPostReq.getProductId()))
+                .execute();
+        return excute;
+    }
+
+    // 경매참가 -  상품table 가격update
+    @Transactional
+    public long modifyProductPriceByProductId(BuyNowRegisterPostReq buyNowRegisterPostReq){
+        long excute = jpaQueryFactory.update(qProduct)
+                .set(qProduct.productPrice, buyNowRegisterPostReq.getDealPrice())
+                .where(qProduct.productId.eq(buyNowRegisterPostReq.getProductId()))
                 .execute();
         return excute;
     }
