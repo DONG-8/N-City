@@ -17,8 +17,18 @@ import Artists from "./pages/NFTStore/Artists";
 import GameApp from "./ingame/GameApp";
 import { Provider } from "react-redux";
 import gamestore from "./ingame/stores";
+import phaserGame from "./ingame/PhaserGame";
+import Main2 from "./pages/Main/Main2";
+
 
 function App() {
+  useEffect(()=>{
+    if (window.location.pathname==='/ingame'){
+      (window as any).game = phaserGame}
+      else{
+        (window as any).game.destroy(true)
+      }
+  },[])
   return (
     <>
       <GlobalStyle />

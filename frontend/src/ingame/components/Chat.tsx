@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from '../hooks'
 import { MessageType, setFocused, setShowChat } from '../stores/ChatStore'
 
 const Backdrop = styled.div`
+  margin-bottom: 5vh;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -26,6 +27,7 @@ const Backdrop = styled.div`
 `
 
 const Wrapper = styled.div`
+
   position: relative;
   height: 100%;
   padding: 16px;
@@ -41,7 +43,7 @@ const ChatHeader = styled.div`
   position: relative;
   height: 35px;
   background: #000000a7;
-  border-radius: 10px 10px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
 
   h3 {
     color: #fff;
@@ -59,8 +61,8 @@ const ChatHeader = styled.div`
 
 const ChatBox = styled(Box)`
   height: 100%;
-  width: 100%;
-  overflow: auto;
+  width: 99.5%;
+  overflow: hidden;
   background: #2c2c2c;
   border: 1px solid #00000029;
 `
@@ -96,17 +98,18 @@ const MessageWrapper = styled.div`
 
 const InputWrapper = styled.form`
   box-shadow: 10px 10px 10px #00000018;
-  border: 1px solid #42eacb;
-  border-radius: 0px 0px 10px 10px;
+  border: 1px solid orange;
+  border-radius: 0px 0px 5px 5px;
   display: flex;
   flex-direction: row;
   background: linear-gradient(180deg, #000000c1, #242424c0);
 `
 
 const InputTextField = styled(InputBase)`
-  border-radius: 0px 0px 10px 10px;
+  border-radius: 0px 0px 5px 5px;
   input {
     padding: 5px;
+    color: white;
   }
 `
 
@@ -237,7 +240,7 @@ export default function Chat() {
         ) : ( // 채팅창을 안열었을 경우 아이콘 보여주기
           <FabWrapper>
             <Fab
-              color="secondary"
+              color='warning'
               aria-label="showChat"
               onClick={() => {
                 dispatch(setShowChat(true))

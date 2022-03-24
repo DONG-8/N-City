@@ -17,8 +17,6 @@ import { toggleBackgroundMode } from '../stores/UserStore'
 import { useAppSelector, useAppDispatch } from '../hooks'
 import { getAvatarString, getColorByString } from '../util'
 import StoreModal from './StoreModal'
-import Bootstrap from '../scenes/Bootstrap'
-import phaserGame from '../PhaserGame'
 enum BackgroundMode {
   DAY,
   NIGHT,
@@ -67,6 +65,7 @@ const Wrapper = styled.div`
 const ButtonGroup = styled.div`
   display: flex;
   gap: 10px;
+  margin-bottom: 2vh;
 `
 
 const Title = styled.h3`
