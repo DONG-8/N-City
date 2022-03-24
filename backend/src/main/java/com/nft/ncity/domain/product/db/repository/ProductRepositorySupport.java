@@ -1,6 +1,7 @@
 package com.nft.ncity.domain.product.db.repository;
 
 import com.nft.ncity.domain.authentication.db.entity.Authentication;
+import com.nft.ncity.domain.deal.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.entity.QProduct;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
@@ -22,6 +23,17 @@ public class ProductRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
 
     QProduct qProduct = QProduct.product;
+
+    //CREATE
+    @Transactional
+    public long updateTokenByProductId(TokenRegisterPutReq tokenRegisterPutReq){
+        long execute = jpaQueryFactory.update(qProduct)
+                .set(qProduct.tokenId,tokenRegisterPutReq.getTokenId())
+                .where(qProduct.productId.eq(tokenRegisterPutReq.getProductId()))
+                .execute();
+        return execute;
+    }
+
 
     public  Page<Product> findProductList(Pageable pageable) {
         List<Product> productQueryResults = jpaQueryFactory.select(qProduct)

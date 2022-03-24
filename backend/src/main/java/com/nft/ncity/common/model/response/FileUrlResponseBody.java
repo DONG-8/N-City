@@ -20,6 +20,10 @@ public class FileUrlResponseBody {
     @ApiModelProperty(name="파일 URL", example = "https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/302c19ef-90f1-49fa-b25c-70c4db9821f6.png")
     String fileUrl = null;
 
+    @ApiModelProperty(name="파일 id", example = "1")
+    Long productId = null;
+
+
     public FileUrlResponseBody() {}
 
     public FileUrlResponseBody(Integer statusCode){
@@ -35,11 +39,12 @@ public class FileUrlResponseBody {
         this.fileUrl = fileUrl;
     }
 
-    public static FileUrlResponseBody of(Integer statusCode, String message, String fileUrl) {
+    public static FileUrlResponseBody of(Integer statusCode, String message, String fileUrl,Long productId) {
         FileUrlResponseBody body = new FileUrlResponseBody();
         body.message = message;
         body.statusCode = statusCode;
         body.fileUrl = fileUrl;
+        body.productId = productId;
         return body;
     }
 }

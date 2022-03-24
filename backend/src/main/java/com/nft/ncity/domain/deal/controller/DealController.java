@@ -43,12 +43,12 @@ public class DealController {
 
         log.info("dealRegister - 호출");
 
-        Deal deal = dealService.dealRegister(dealRegisterPostReq,principal);
-        if(!deal.equals(null)) {
+        Long res = dealService.dealRegister(dealRegisterPostReq,principal);
+        if(!res.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
         }
         else {
-            return ResponseEntity.status(201).body(BaseResponseBody.of(404, "등록 실패"));
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "등록 실패"));
         }
 
     }

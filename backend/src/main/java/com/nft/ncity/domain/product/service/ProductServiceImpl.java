@@ -5,6 +5,7 @@ import com.nft.ncity.domain.authentication.service.AwsS3Service;
 import com.nft.ncity.domain.deal.db.entity.Deal;
 import com.nft.ncity.domain.deal.db.repository.DealRepository;
 import com.nft.ncity.domain.deal.db.repository.DealRepositorySupport;
+import com.nft.ncity.domain.deal.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.repository.ProductRepository;
@@ -51,6 +52,8 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     DealRepository dealRepository;
 
+    @Autowired
+    DealRepositorySupport dealRepositorySupport;
     @Autowired
     AwsS3Service awsS3Service;
 
@@ -128,6 +131,14 @@ public class ProductServiceImpl implements ProductService{
         return savedProduct;
     }
 
+    @Override
+    public Long tokenRegister(TokenRegisterPutReq tokenRegisterPutReq){
+        if (productRepository.findById(tokenRegisterPutReq.getProductId()).isPresent()){
+            long  execute = productRepositorySupport.updateTokenByProductId(tokenRegisterPutReq);
+            dealRepositorySupport.updateTokenByProductId(tokenRegisterPutReq);
+            return execute;
+        }else return null;
+    }
 
     // READ
 

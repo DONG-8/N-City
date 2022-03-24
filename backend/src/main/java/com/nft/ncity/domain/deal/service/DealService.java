@@ -8,7 +8,7 @@ import java.security.Principal;
 public interface DealService {
 
     //CREATE
-    Deal dealRegister(DealRegisterPostReq dealRegisterPostReq, Principal principal);
+    Long dealRegister(DealRegisterPostReq dealRegisterPostReq, Principal principal);
     //READ
 
     //UPDATE

@@ -30,6 +30,9 @@ public class Deal {
     @ApiModelProperty(value = "보내는 사람 id")
     Long dealFrom;
 
+    @ApiModelProperty(value = "token Id")
+    Long tokenId;
+
     @ApiModelProperty(value = "받는 사람 id")
     Long dealTo;
 

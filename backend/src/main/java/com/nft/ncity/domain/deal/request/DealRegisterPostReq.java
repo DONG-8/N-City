@@ -25,7 +25,7 @@ public class DealRegisterPostReq {
     private int dealType;
 
     @ApiModelProperty(value = "금액")
-    private double price;
+    private double dealPrice;
 
 
 

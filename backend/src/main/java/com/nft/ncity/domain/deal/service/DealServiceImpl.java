@@ -33,10 +33,10 @@ public class DealServiceImpl implements DealService{
     // 내부 로직은 민팅때 생성된 deal Table 'UPDATE'
     @Override
     @Transactional
-    public Deal dealRegister(DealRegisterPostReq dealRegisterPostReq, Principal principal){
+    public Long dealRegister(DealRegisterPostReq dealRegisterPostReq, Principal principal){
 
         // 0. product 테이블에 productId에 해당하는 row있는지 검사 && 판매가능한 상품인지 검사
-        // 1. deal 테이블에 거래타입에 맞게 생성
+        // 1. deal 테이블에 productId 맞게 update
         // 2. product 테이블에서 productId에 해당하는 row 업데이트
             // 2.1 product type - 1.list, 2.auction
             // 2.2 product price - 가격 수정  단, auction의 경우 bid 가격 계속 업데이트!
@@ -47,20 +47,13 @@ public class DealServiceImpl implements DealService{
         product.getProductState() == 3 ){
 
             // 1
-            Deal deal = Deal.builder()
-                    .productId(dealRegisterPostReq.getProductId())
-                    .dealTo(Long.valueOf((principal.getName())))
-                    .dealType(dealRegisterPostReq.getDealType())
-                    .dealPrice(dealRegisterPostReq.getPrice())
-                    .build();
-
-            Deal savedDeal = dealRepository.save(deal);
+           Long res = dealRepositorySupport.updateDealByProductId(dealRegisterPostReq);
 
             // 2. product 테이블 update
             dealRepositorySupport.updateProductByProductId(dealRegisterPostReq);
 
 
-            return savedDeal;
+            return res;
         }else{
             return  null;
         }

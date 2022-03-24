@@ -26,8 +26,7 @@ public class Product {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column
-    private long tokenId;
+    private Long tokenId;
 
     @Column(name = "product_title")
     private String productTitle;

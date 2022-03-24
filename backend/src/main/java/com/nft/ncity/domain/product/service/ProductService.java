@@ -1,5 +1,6 @@
 package com.nft.ncity.domain.product.service;
 
+import com.nft.ncity.domain.deal.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
@@ -19,6 +20,7 @@ public interface ProductService {
                             MultipartFile productFile,
                             MultipartFile thumbnailFile,
                             Principal principal) throws IOException;
+    Long tokenRegister(TokenRegisterPutReq tokenRegisterPutReq);
 
     // read
     Page<ProductListGetRes> getProductList(Pageable pageable); // 상품 전체 조회
