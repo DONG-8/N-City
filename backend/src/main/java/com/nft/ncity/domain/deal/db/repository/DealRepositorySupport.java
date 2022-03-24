@@ -1,9 +1,10 @@
 package com.nft.ncity.domain.deal.db.repository;
 
 import com.nft.ncity.domain.deal.db.entity.QDeal;
-import com.nft.ncity.domain.deal.request.DealRegisterPostReq;
-import com.nft.ncity.domain.deal.request.TokenRegisterPutReq;
+import com.nft.ncity.domain.deal.request.AuctionRegisterPostReq;
+import com.nft.ncity.domain.deal.request.BuyNowRegisterPostReq;
 import com.nft.ncity.domain.product.db.entity.QProduct;
+import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -20,25 +21,34 @@ public class DealRepositorySupport {
 
     QProduct qProduct = QProduct.product;
 
+
+    // 즉시구매등록 - 상품table update
     @Transactional
-    public long updateDealByProductId(DealRegisterPostReq dealRegisterPostReq){
-        long excute = jpaQueryFactory.update(qDeal)
-                .set(qDeal.dealType,dealRegisterPostReq.getDealType())
-                .set(qDeal.dealPrice,dealRegisterPostReq.getDealPrice())
-                .where(qDeal.productId.eq(dealRegisterPostReq.getProductId()))
+    public long updateProductForBuyNowByProductId(BuyNowRegisterPostReq buyNowRegisterPostReq){
+        long excute = jpaQueryFactory.update(qProduct)
+                .set(qProduct.productState,2)
+                .set(qProduct.productPrice, buyNowRegisterPostReq.getDealPrice())
+                .where(qProduct.productId.eq(buyNowRegisterPostReq.getProductId()))
                 .execute();
         return excute;
     }
 
+    // 경매등록 -  상품table update
     @Transactional
-    public long updateProductByProductId(DealRegisterPostReq dealRegisterPostReq){
+    public long updateProductForAuctionByProductId(AuctionRegisterPostReq auctionRegisterPostReq){
         long excute = jpaQueryFactory.update(qProduct)
-                .set(qProduct.productState,dealRegisterPostReq.getDealType())
-                .set(qProduct.productPrice,dealRegisterPostReq.getDealPrice())
-                .where(qProduct.productId.eq(dealRegisterPostReq.getProductId()))
+                .set(qProduct.productState,1)
+                .set(qProduct.productAuctionEndTime, auctionRegisterPostReq.getProductAuctionEndTime())
+                .set(qProduct.productPrice, auctionRegisterPostReq.getDealPrice())
+                .where(qProduct.productId.eq(auctionRegisterPostReq.getProductId()))
                 .execute();
         return excute;
     }
+
+
+
+
+
     @Transactional
     public long updateTokenByProductId(TokenRegisterPutReq tokenRegisterPutReq){
         long execute = jpaQueryFactory.update(qDeal)

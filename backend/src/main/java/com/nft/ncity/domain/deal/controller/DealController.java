@@ -1,8 +1,8 @@
 package com.nft.ncity.domain.deal.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
-import com.nft.ncity.domain.deal.db.entity.Deal;
-import com.nft.ncity.domain.deal.request.DealRegisterPostReq;
+import com.nft.ncity.domain.deal.request.AuctionRegisterPostReq;
+import com.nft.ncity.domain.deal.request.BuyNowRegisterPostReq;
 import com.nft.ncity.domain.deal.service.DealService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,17 +33,17 @@ public class DealController {
 
     // Register 이지만 민팅때 생성된 Deal table 'UPDATE'
     @Transactional
-    @ApiOperation(value = "거래 등록 ")
+    @ApiOperation(value = "즉시구매 등록 ")
     @ApiResponses({
             @ApiResponse(code = 201, message = "등록 성공"),
             @ApiResponse(code = 404, message = "등록 실패")
     })
-    @PostMapping
-    public ResponseEntity<BaseResponseBody> dealRegister(@RequestBody DealRegisterPostReq dealRegisterPostReq, Principal principal){
+    @PostMapping("/buyNow")
+    public ResponseEntity<BaseResponseBody> buyNowRegister(@RequestBody BuyNowRegisterPostReq buyNowRegisterPostReq, Principal principal){
 
         log.info("dealRegister - 호출");
 
-        Long res = dealService.dealRegister(dealRegisterPostReq,principal);
+        Long res = dealService.buyNowRegister(buyNowRegisterPostReq,principal);
         if(!res.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
         }
@@ -52,7 +52,26 @@ public class DealController {
         }
 
     }
+    @Transactional
+    @ApiOperation(value = "경매 등록 ")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "등록 성공"),
+            @ApiResponse(code = 404, message = "등록 실패")
+    })
+    @PostMapping("/auction")
+    public ResponseEntity<BaseResponseBody> auctionRegister(@RequestBody AuctionRegisterPostReq auctionRegisterPostReq, Principal principal){
 
+        log.info("dealRegister - 호출");
+
+        Long res = dealService.auctionRegister(auctionRegisterPostReq,principal);
+        if(!res.equals(null)) {
+            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
+        }
+        else {
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "등록 실패"));
+        }
+
+    }
     // 거래 생성 bid, 거래 완료 모두 create로
 
     // 옥션 가격제안 type =
