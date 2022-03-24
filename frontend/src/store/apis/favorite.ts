@@ -18,7 +18,6 @@ export const getProductLike = async (productId : number) => {
   const response =await apiClient.get<any>(
     `/favorites/${productId}`,
   )
-  console.log('여기와쪄염')
   return response.data
 }
 
@@ -27,11 +26,7 @@ export const getProductLike = async (productId : number) => {
 export const postProductLike = async (productId : number ) => {
   const response = await apiClient.post<any>(
     `/favorites/${productId}`,
-    {
-      productId
-    }
   )
-  console.log('상품 좋아요 추가 진행중')
   return response.data
 }
 
@@ -40,7 +35,6 @@ export const delProductLike = async (productId : number ) => {
   const response = await apiClient.delete<any>(
     `/favorites/${productId}`,
   )
-  console.log('상품 좋아요 추가 진행중')
   return response.data
 }
 
@@ -51,6 +45,7 @@ export const getCountProductLike = async (productId : number) => {
   )
   return response.data
 }
+
 
 
 
