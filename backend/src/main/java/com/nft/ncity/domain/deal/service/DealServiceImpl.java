@@ -29,6 +29,8 @@ public class DealServiceImpl implements DealService{
     ProductRepository productRepository;
 
     //CREATE
+
+    // 내부 로직은 민팅때 생성된 deal Table 'UPDATE'
     @Override
     @Transactional
     public Deal dealRegister(DealRegisterPostReq dealRegisterPostReq, Principal principal){

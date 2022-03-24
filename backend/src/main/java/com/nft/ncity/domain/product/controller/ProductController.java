@@ -1,6 +1,7 @@
 package com.nft.ncity.domain.product.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
+import com.nft.ncity.common.model.response.FileUrlResponseBody;
 import com.nft.ncity.domain.authentication.db.entity.Authentication;
 import com.nft.ncity.domain.authentication.response.AuthenticationListGetRes;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
@@ -44,10 +45,10 @@ public class ProductController {
             @ApiResponse(code = 404, message = "등록 실패")
     })
     @PostMapping
-    public ResponseEntity<BaseResponseBody> productRegister(@ModelAttribute ProductRegisterPostReq productRegisterPostReq,
-                                            @RequestPart(value = "productFile")MultipartFile productFile,
-                                            @RequestPart(value = "thumbnailFile")MultipartFile thumbnailFile,
-                                            Principal principal) throws IOException {
+    public ResponseEntity<FileUrlResponseBody> productRegister(@ModelAttribute ProductRegisterPostReq productRegisterPostReq,
+                                                                            @RequestPart(value = "productFile")MultipartFile productFile,
+                                                                            @RequestPart(value = "thumbnailFile")MultipartFile thumbnailFile,
+                                                                            Principal principal) throws IOException {
 
         // 상품 정보는 productRegisterPostReq에, 파일은 productFile, 썸네일은 thumbnailFile에 담아온다.
         // 상품 정보와 file url을 Product 테이블에 저장한다. (민팅 개념임으로 file url은 변경 할 수 없다.)
@@ -58,10 +59,11 @@ public class ProductController {
         log.info("productRegister - 호출");
         Product product = productService.productRegister(productRegisterPostReq,productFile,thumbnailFile,principal);
         if(!product.equals(null)) {
-            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
+            return ResponseEntity.status(201).body(FileUrlResponseBody.of(201, "등록 성공" , product.getProductFileUrl()));
         }
         else {
-            return ResponseEntity.status(201).body(BaseResponseBody.of(404, "등록 실패"));
+            FileUrlResponseBody fileUrlResponseBody = new FileUrlResponseBody(404,"등록실패");
+            return ResponseEntity.status(404).body(fileUrlResponseBody);
         }
     }
 

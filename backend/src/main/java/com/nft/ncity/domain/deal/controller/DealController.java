@@ -30,16 +30,17 @@ public class DealController {
 
 
     // CREATE
-    // 거래등록  type = 6(minted) 보내는사람 - x 받는 사람 - 자기로 초기화 , 상품table -> 상품상태 변경
 
+    // Register 이지만 민팅때 생성된 Deal table 'UPDATE'
     @Transactional
-    @ApiOperation(value = "거래 등록")
+    @ApiOperation(value = "거래 등록 ")
     @ApiResponses({
             @ApiResponse(code = 201, message = "등록 성공"),
             @ApiResponse(code = 404, message = "등록 실패")
     })
     @PostMapping
     public ResponseEntity<BaseResponseBody> dealRegister(@RequestBody DealRegisterPostReq dealRegisterPostReq, Principal principal){
+
         log.info("dealRegister - 호출");
 
         Deal deal = dealService.dealRegister(dealRegisterPostReq,principal);
@@ -52,13 +53,15 @@ public class DealController {
 
     }
 
+    // 거래 생성 bid, 거래 완료 모두 create로
+
     // 옥션 가격제안 type =
 
     // READ
     // productId에 해당하는 지난 거래 내역들 조회
 
-    // UPDATE
 
+    // UPDATE
 
 
     // DELETE
