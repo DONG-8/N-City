@@ -30,19 +30,19 @@ public class FollowController {
     @Autowired
     FollowService followService;
 
-    @GetMapping("/follower")
+    @GetMapping("/follower/{userId}")
     @ApiOperation(value = "팔로우 조회", notes = "<strong>팔로우 조회</strong>한다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "팔로우 조회 성공"),
             @ApiResponse(code = 404, message = "팔로우 조회 실패")
     })
-    public ResponseEntity<List<FollowerListGetRes>> getFollowerList(Principal principal){
+    public ResponseEntity<List<FollowerListGetRes>> getFollowerList(@PathVariable(value = "userId") Long userId){
 
         // 0. 토큰으로부터 내 userId를 받아온다.
         // 1. Follower가 입력받은 userId인 값들을 받아온다.
 
         log.info("getFollowerList - 호출");
-        Long userId = Long.valueOf(principal.getName());
+//        Long userId = Long.valueOf(principal.getName());
 
         List<Follow> follow = followService.FolloweeList(userId);
 
@@ -54,19 +54,19 @@ public class FollowController {
         }
     }
 
-    @GetMapping("/followee")
+    @GetMapping("/followee/{userId}")
     @ApiOperation(value = "팔로워 조회", notes = "<strong>팔로워 조회</strong>한다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "팔로우 조회 성공"),
             @ApiResponse(code = 404, message = "팔로우 조회 실패")
     })
-    public ResponseEntity<List<FolloweeListGetRes>> getFolloweeList(Principal principal){
+    public ResponseEntity<List<FolloweeListGetRes>> getFolloweeList(@PathVariable(value = "userId") Long userId){
 
         // 0. 토큰으로부터 내 userId를 받아온다.
         // 1. Followee가 입력받은 userId인 값들을 받아온다.
 
         log.info("getFolloweeList - 호출");
-        Long userId = Long.valueOf(principal.getName());
+//        Long userId = Long.valueOf(principal.getName());
 
         List<Follow> follow = followService.FollowerList(userId);
 
