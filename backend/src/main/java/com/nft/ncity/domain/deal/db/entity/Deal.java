@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -29,6 +30,9 @@ public class Deal {
     @ApiModelProperty(value = "보내는 사람 id")
     Long dealFrom;
 
+    @ApiModelProperty(value = "token Id")
+    Long tokenId;
+
     @ApiModelProperty(value = "받는 사람 id")
     Long dealTo;
 
@@ -49,7 +53,7 @@ public class Deal {
     double dealPrice;
 
 
-    @CreatedDate
+    @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value="거래 요청시간")
     LocalDateTime dealCreatedAt;

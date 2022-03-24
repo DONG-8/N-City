@@ -26,6 +26,8 @@ public class Product {
     @Column(name = "user_id")
     private Long userId;
 
+    private Long tokenId;
+
     @Column(name = "product_title")
     private String productTitle;
 
@@ -61,6 +63,7 @@ public class Product {
 
     @Column(name = "product_thumbnail_url")
     private String productThumbnailUrl;
+
 
     // DB table에 존재 X 따로 초기화 해야함
     @Transient
