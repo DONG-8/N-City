@@ -51,6 +51,7 @@ public class ProductController {
 
         // 상품 정보는 productRegisterPostReq에, 파일은 productFile, 썸네일은 thumbnailFile에 담아온다.
         // 상품 정보와 file url을 Product 테이블에 저장한다. (민팅 개념임으로 file url은 변경 할 수 없다.)
+        // productId 받아와서 생성 deal Table에도 생성
         // 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
 
 
