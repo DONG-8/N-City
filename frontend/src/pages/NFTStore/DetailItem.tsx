@@ -206,13 +206,13 @@ const DetailItem = () => {
   ])
   const [items,setItems] = useState(itm)
   const [item,setItem] = useState(JSON.parse(localStorage.getItem("item")||""))
-  const [likes,setLikes] = useState(item.liked)
+  const [likes,setLikes] = useState(item.productFavorite)
   const [liked,setLiked] = useState(false)
 
   const [change,setChange] = useState(false)
   useEffect(()=>{
     const tmp = JSON.parse(localStorage.getItem("item")||"")
-    if (item.id !==tmp.id){
+    if (item.productTitle !==tmp.productTitle){
       setItem(tmp)
       window.scrollTo(0,0)
     }
@@ -225,7 +225,7 @@ const DetailItem = () => {
         <Top>
           <BigCard>
             <DetailItemCard>
-              <img alt="pic" src={item.url} />
+              <img alt="pic" src={item.productThumbnailUrl} />
               <div className="like">
                 <div
                   onClick={() => {
@@ -265,10 +265,10 @@ const DetailItem = () => {
                   />
                 )}
               </Artist>
-              <Title>{item.title}</Title>
-              <Owner>
+              <Title>{item.productTitle}</Title>
+              {/* <Owner>
                 owner: <div className="owner_name">{item.name}</div>
-              </Owner>
+              </Owner> */}
               <hr />
               <Contents>
                 <div className="des_title">작품설명</div>
@@ -288,7 +288,7 @@ const DetailItem = () => {
               <hr />
               <Buy>
                 <div className="price">
-                  {item.price}
+                  {item.productPrice}
                   <img style={{ height: "2rem" }} alt="이더" src={etherURL} />
                 </div>
                 <button className="buy_button">구매</button>
@@ -353,10 +353,10 @@ const DetailItem = () => {
           </TitleSee>
           <ArtistMore>
             <Cards>
-              {items.map((item) => {
+              {items.map((item,idx) => {
                 return (
                   <div onClick={() => setChange(true)}>
-                    <ItemCard key={item.url} item={item} />
+                    <ItemCard key={idx} item={item} />
                   </div>
                 );
               })}

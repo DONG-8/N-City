@@ -13,6 +13,7 @@ import VideoGuide from "./VideoGuide";
 import Profile from "./Profile";
 import AOS from 'aos';
 import ZigZag from "./ZigZag";
+import { items as itm } from "../NFTStore/items";
 
 const MainBackGround = styled.div`
   /* margin-top: 80px; */
@@ -295,13 +296,13 @@ const MainH = styled.div`
 
 
 export interface IState {
-  item: {
-    id: number;
-    name: string;
-    title: string;
-    price: number;
-    liked: number;
-    url: string;
+  item :{
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productRegDt:Object,
+    productFavorite: Number,
+    productCode: Number,
   }[];
   artist: {
     name: string;
@@ -610,48 +611,7 @@ export default function Main2() {
     }
   };
 
-  const [items, setItems] = useState<IState["item"]>([
-    {
-      id: 1,
-      name: "Hong Hosus",
-      title: "#Hong1535",
-      price: 1.24,
-      liked: 35,
-      url: "https://lh3.googleusercontent.com/MmtavcUNNiTpLFfDqqol8pwp1_TKSEv0AbkKSxmN2lffhgYtkxAdfAo72lZVSJ4hpRW87s9TCL-HYMEIpaJ8PdgWBQWVlPsMZkgM6A=w305",
-    },
-    {
-      id: 2,
-      name: "Giks Home",
-      title: "#ghe23434",
-      price: 1.35,
-      liked: 43,
-      url: "https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352",
-    },
-    {
-      id: 3,
-      name: "Giks Home",
-      title: "#ghe254334",
-      price: 1.2,
-      liked: 24,
-      url: "https://lh3.googleusercontent.com/3usYOjVkwnra66EAhX4yJB-xmYCfFoTsREGVvVLCYWhtVG4pifdZLBRCSgv6wbjbV4rwPamlBDgganvgFO3xeifJyZQtqxwTYpXiqtc=w300",
-    },
-    {
-      id: 5,
-      name: "Giks Home",
-      title: "#ghe23434",
-      price: 1.35,
-      liked: 43,
-      url: "https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352",
-    },
-    {
-      id: 4,
-      name: "Giks Home",
-      title: "#ghe254334",
-      price: 1.2,
-      liked: 24,
-      url: "https://lh3.googleusercontent.com/3usYOjVkwnra66EAhX4yJB-xmYCfFoTsREGVvVLCYWhtVG4pifdZLBRCSgv6wbjbV4rwPamlBDgganvgFO3xeifJyZQtqxwTYpXiqtc=w300",
-    },
-  ]);
+  const [items, setItems] = useState<IState["item"]>(itm);
 
   return (
     <MainH>

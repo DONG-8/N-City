@@ -93,11 +93,12 @@ const Title = styled.div`
 `;
 interface Iprops{
   item :{
-    name:string,
-    title:string,
-    price:number,
-    liked:number,
-    url:string
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
   }
 }
 
@@ -108,26 +109,25 @@ const ItemCard:React.FC<Iprops>= ({item}) => {
     localStorage.setItem("item",JSON.stringify(item))
   }
   const [liked,setLiked] = useState(false)
-  const [likes,setLikes] = useState(item.liked)
-
+  const [likes,setLikes] = useState(Number(item.productFavorite))
   return (
     <>
       <CardWrapper >
         <Image onClick={()=>{goDetailPage()}}>
           <img alt="pic" 
-          src={item.url}/>
+          src={item.productThumbnailUrl}/>
         </Image>
         <CardCenter onClick={()=>{goDetailPage()}}>
           <DesLeft>
-            <Artist>
+            {/* <Artist>
               {item.name}
-            </Artist>
+            </Artist> */}
             <Title>
-              {item.title}
+              {item.productTitle}
             </Title>
           </DesLeft>
           <DesRight>
-            <p className='number'> <img alt="💎" style={{"height":"2.5vh"}} src={ether}/>{item.price}</p>
+            <p className='number'> <img alt="💎" style={{"height":"2.5vh"}} src={ether}/>{item.productPrice}</p>
           </DesRight>
         </CardCenter>
         <CardBottom>

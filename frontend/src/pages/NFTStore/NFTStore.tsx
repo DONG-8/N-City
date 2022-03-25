@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import ItemCard from '../../components/Card/ItemCard'
-import { items as itm } from './items'
+// import { items as itm } from './items'
+import { getProductAll } from '../../store/apis/product'
+import { useQuery } from 'react-query'
+
 const Title = styled.div`
   display:flex ;
   justify-content:space-around;
@@ -83,26 +86,33 @@ const CategoryBar = styled.div`
   }
 `
 const ItemCards = styled.div`
-  margin:auto ;
+  margin-left:20vh ;
   width: 90% ;
   display: flex ;
   flex-wrap: wrap ;
-  justify-content:center ;
+  &:last-child {
+    margin-right: auto;
+  }
 `
 
 export interface IState{
   item :{
-    id:number,
-    name:string,
-    title:string,
-    price:number,
-    liked:number,
-    url:string
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productRegDt:Object,
+    productFavorite: Number,
+    productCode: Number,
   }[]
 }
 const NFTStore = () => {
-  const [items,setItems] = useState(itm)
   const [filter,setFilter] = useState("all")
+  // 상품 정보 모두 가져오기
+  const { isLoading, data:items } = useQuery<any>(
+    "query-prouductAll",
+    async () => {return (await getProductAll({ page: 1, size: 1000 }))
+    },
+  );
   return (
     <>
       <ColorBar>
@@ -200,11 +210,15 @@ const NFTStore = () => {
           </p>
         </li>
       </CategoryBar>
-      <ItemCards>
-        {items.map((item) => {
-          return <ItemCard key={item.id} item={item} />;
-        })}
-      </ItemCards>
+        {isLoading ? <div>로딩중</div>: 
+          <ItemCards>
+            {(items.content).map((item,idx) => {
+              return(
+                <ItemCard key={idx} item={item} />
+                )
+              })}
+          </ItemCards>      
+        }
     </>
   );
 }

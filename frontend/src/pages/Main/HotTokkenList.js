@@ -205,8 +205,8 @@ const HotTokkenList = () => {
     <MainBannerWrapper>
       <div>
         <Slider {...settings}>
-          {items.map((item) => {
-            return <ItemCard key={item.id} item={item} />;
+          {items.map((item,idx) => {
+            return <ItemCard key={idx} item={item} />;
           })}
         </Slider>
       </div>

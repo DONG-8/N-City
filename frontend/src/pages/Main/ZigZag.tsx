@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import ItemCard2 from '../../components/Card/ItemCard2'
+import { ItemType } from '../NFTStore/items'
 
 const NewTokken = styled.div`
   width: 100%;
@@ -30,11 +31,12 @@ const NewTokken = styled.div`
 `
 interface Iprops{
   items :{
-    name:string,
-    title:string,
-    price:number,
-    liked:number,
-    url:string
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productRegDt:Object,
+    productFavorite: Number,
+    productCode: Number,
   }[]
 }
 
