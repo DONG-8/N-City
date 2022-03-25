@@ -9,8 +9,8 @@ import { artists as art } from './items'
 
 const SearchTitle = styled.div`
   display: flex;
-  .color{
-    color: teal;
+  .color{//🎨메인색
+    color: #272793;
   }
   margin-left: 10vw;
   margin-top: 5vh;
@@ -22,7 +22,10 @@ const NoResult = styled.div`
 const ItemResults = styled.div`
   margin-left: 10vh;
   margin-right: 5vh;
-  
+  background-color: #F7F8FA ;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  border-radius: 30px;
+  margin-bottom: 5vh;
   .items{
     display: flex;
     flex-wrap: wrap;
@@ -33,6 +36,7 @@ const ItemResults = styled.div`
   h1{
     margin-left: 5vw;
     margin-top: 5vh;
+    padding-top: 5vh;
   }
 `
 

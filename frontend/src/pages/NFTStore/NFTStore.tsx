@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import ItemCard from '../../components/Card/ItemCard'
-// import { items as itm } from './items'
+import { items as itm } from './items'
 import { getProductAll } from '../../store/apis/product'
 import { useQuery } from 'react-query'
+import ItemCard2 from '../../components/Card/ItemCard2'
 
 const Title = styled.div`
   display:flex ;
@@ -59,7 +60,7 @@ const CategoryBar = styled.div`
     margin: auto;
   }
   p{
-    font-size:3vh;
+    font-size:2vh;
     font-weight:1000;
     cursor: pointer;
     transition: 0.3s;
@@ -70,7 +71,7 @@ const CategoryBar = styled.div`
     content: "";
     height: 5px;
     width: 0px;
-    background-color: #F43B00;
+    background-color: #272793;
     border-radius: 10px;
     transition: 0.3s;
     position: absolute;
@@ -78,22 +79,81 @@ const CategoryBar = styled.div`
   }
   p:hover::before{
     width: 100%;
-    background-color: #F43B00;
+    background-color: #272793;
   }
   #category::before{
     width: 100%;
-    background-color: #F43B00;
+    background-color: #272793;
   }
 `
 const ItemCards = styled.div`
-  margin-left:20vh ;
-  width: 90% ;
+  margin: auto;
+  width: 90vw ;
   display: flex ;
   flex-wrap: wrap ;
   &:last-child {
     margin-right: auto;
   }
 `
+const IntroBox = styled.div`
+  width: 85vw;
+  height: 50vh;
+  background-color: #F7F8FA ;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  border-radius: 30px;
+  margin: auto;
+  margin-top: 10vh;
+  display: flex;
+  margin-bottom:10vh;
+
+`
+const Left = styled.div`
+  flex: 1;
+  .text{
+    margin-left: 5vw;
+    margin-top: 8vh;
+  
+  .h1{
+    font-size: 8vh;
+    margin-bottom: 5vh;
+    font-weight: 600;
+  }
+  .h3{
+    font-size: 3vh;
+  }
+  .h4{
+    font-size : 2vh
+  }
+  .blue{
+    background:linear-gradient(to top,transparent 10%,skyblue 70%, transparent 10%);
+  }
+  .purple{
+    background:linear-gradient(to top, white 20% ,#BDBDFF 70% , white 20%);
+  }
+}
+`
+const Right = styled.div`
+  flex: 1;
+  .black {
+    height: 100%;
+    width: 100%;
+    background-color: #030338;
+    border-radius: 0 30px 30px 0;
+    .text {
+      color: white;
+      font-size: 3rem;
+      text-align: center;
+      margin-left: 1vw;
+      margin-bottom: 10vh;
+    }
+  }
+  img {
+    margin-left: 9vw;
+    margin-top: 4vh;
+    height: 60%;
+    width: 60%;
+  }
+`;
 
 export interface IState{
   item :{
@@ -108,14 +168,15 @@ export interface IState{
 const NFTStore = () => {
   const [filter,setFilter] = useState("all")
   // 상품 정보 모두 가져오기
-  const { isLoading, data:items } = useQuery<any>(
-    "query-prouductAll",
-    async () => {return (await getProductAll({ page: 1, size: 1000 }))
-    },
-  );
+  const [items,setItems] = useState(itm)
+  // const { isLoading, data:items } = useQuery<any>(
+  //   "query-prouductAll",
+  //   async () => {return (await getProductAll({ page: 1, size: 1000 }))
+  //   },
+  // );
   return (
     <>
-      <ColorBar>
+      {/* <ColorBar>
         {filter === "all" && (
           <img className="all" src="essets/images/오로라.jpg" alt="bg" />
         )}
@@ -134,8 +195,8 @@ const NFTStore = () => {
         {filter === "game" && (
           <img className="game" src="essets/images/game.jpg" alt="bg" />
         )}
-      </ColorBar>
-      <Title>
+      </ColorBar> */}
+      {/* <Title>
         <h1>Store</h1>
         <div>
           <p>
@@ -147,7 +208,23 @@ const NFTStore = () => {
             />
           </p>
         </div>
-      </Title>
+      </Title> */}
+      <IntroBox>
+        <Left>
+          <div className='text'>
+            <div className='h3'>NFT Marketplace</div>
+            <div className='h1'>N-city Store</div>
+            <div className='h4'>N-city는 다양한 <span className='blue'>NFT 작품</span>들을 판매하고 있습니다. </div>
+            <div className='h4'><span className='purple'>NCT 토큰</span>을 이용해 갤러리를 구경하고 거래할 수 있습니다. </div>
+            <div className='h4'>물건을 구입해 <span className='blue'>마이룸</span>을 꾸미세요. </div>
+          </div>
+        </Left>
+        <Right>
+          <div className='black'>
+          <img alt='black' src='https://i.gifer.com/7VA.gif' />            <div className='text'><p>N-city Store</p></div>
+          </div>
+        </Right>
+      </IntroBox>
       <CategoryBar>
         <li>
           <p
@@ -210,16 +287,25 @@ const NFTStore = () => {
           </p>
         </li>
       </CategoryBar>
-        {isLoading ? <div>로딩중</div>: 
-          <ItemCards>
+        {/* {isLoading ? <div>로딩중</div>: 
+            <>
+          {items ?
+            <ItemCards>
             {(items.content).map((item,idx) => {
               return(
                 <ItemCard key={idx} item={item} />
                 )
               })}
-          </ItemCards>      
-        }
-    </>
+            </ItemCards> 
+            :<></>} </>} */}
+            <ItemCards>
+             {(items).map((item,idx) => {
+              return(
+                <ItemCard2 key={idx} item={item} />
+                )
+              })}
+            </ItemCards>
+      </>
   );
 }
 

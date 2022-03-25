@@ -14,7 +14,7 @@ const CardWrapper = styled.div`
   border:0.5px solid #E9E4E4;
   margin: 30px ;
   &:hover{
-    box-shadow:0px 2px 2px  ;  
+    box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
     transform: translateY(-5px);
     .buy{
       visibility: visible ;

@@ -1,9 +1,20 @@
-import React from "react";
+import React, { Component } from "react";
 import Slider from "react-slick";
 import styled from "styled-components";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ArtistCard from "../../components/Card/ArtistCard";
+import ItemCard from "../../components/Card/ItemCard";
+import ItemCard2 from "../../components/Card/ItemCard2";
+interface Iprops{
+  items :{
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productRegDt:Object,
+    productFavorite: Number,
+    productCode: Number,
+  }[],
+}
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -28,6 +39,7 @@ const RCricle = styled.div`
 `;
 
 const LCricle = styled.div`
+  cursor: pointer;
   width: 60px;
   height: 60px;
   border-radius: 30px;
@@ -36,16 +48,16 @@ const LCricle = styled.div`
   position: absolute;
   top: 200px;
   left: -80px;
-  cursor: pointer;
-
 `;
 
 const settings = {
   dots: true,
   autoplay: true,
+  speed: 1000,
+  autoplaySpeed: 5000,
   arrows: true,
   infinite: true,
-  slidesToShow: 2,
+  slidesToShow: 4,
   slidesToScroll: 1,
   nextArrow: <NextArrow />,
   prevArrow: <PrevArrow />,
@@ -61,38 +73,20 @@ const settings = {
 };
 
 const MainBannerWrapper = styled.div`
-  width: 70vw;
+  width: 85vw;
   height: 600px;
   color: black;
-  margin: auto;
+  margin: 0 auto;
 `;
 
-
-
-interface Iprops{
-  artists:{
-    "authId": Number,
-    "followeeCnt": Number,
-    "followerCnt": Number,
-    "userAddress": String,
-    "userDescription": String,
-    "userEmail": String,
-    "userEmailConfirm": Boolean,
-    "userId": Number,
-    "userImgUrl": String,
-    "userNick": String,
-    "userRole": String
-  }[]
-}
-
-const ArtCarousel:React.FC<Iprops> = ({artists}) => {
+const NewTokkenList:React.FC<Iprops>= ({items}) => {
 
   return (
     <MainBannerWrapper>
       <div>
         <Slider {...settings}>
-          {artists.map((artist,idx) => {
-            return <ArtistCard  key={idx} artist={artist} />;
+          {items.map((item,idx) => {
+            return <ItemCard2 key={idx} item={item} />;
           })}
         </Slider>
       </div>
@@ -100,4 +94,4 @@ const ArtCarousel:React.FC<Iprops> = ({artists}) => {
   );
 };
 
-export default ArtCarousel;
+export default NewTokkenList;
