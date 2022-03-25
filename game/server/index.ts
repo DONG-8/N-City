@@ -25,12 +25,13 @@ const gameServer = new Server({
 // register room handlers
 gameServer.define(RoomType.LOBBY, LobbyRoom)
 gameServer.define(RoomType.PUBLIC, SkyOffice, {
+  roomId: 'asdf2as',
   name: 'Public Lobby',
   description: 'For making friends and familiarizing yourself with the controls',
   password: null,
   autoDispose: false,
 })
-gameServer.define(RoomType.CUSTOM, SkyOffice).enableRealtimeListing()
+gameServer.define(RoomType.CUSTOM, SkyOffice ).enableRealtimeListing()
 
 /**
  * Register @colyseus/social routes

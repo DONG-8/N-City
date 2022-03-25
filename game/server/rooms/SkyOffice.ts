@@ -21,21 +21,22 @@ export class SkyOffice extends Room<OfficeState> {
   private dispatcher = new Dispatcher(this)
   private name: string
   private description: string
-  private password: string | null = null
+  // private password: string | null = null
 
   async onCreate(options: IRoomData) {
-    const { name, description, password, autoDispose } = options
+    const { roomId, name, description, autoDispose } = options
+    this.roomId = roomId
     this.name = name
     this.description = description
     this.autoDispose = autoDispose
 
-    let hasPassword = false
-    if (password) {
-      const salt = await bcrypt.genSalt(10)
-      this.password = await bcrypt.hash(password, salt)
-      hasPassword = true
-    }
-    this.setMetadata({ name, description, hasPassword })
+    // let hasPassword = false
+    // if (password) {
+    //   const salt = await bcrypt.genSalt(10)
+    //   this.password = await bcrypt.hash(password, salt)
+    //   hasPassword = true
+    // }
+    // this.setMetadata({ name, description, hasPassword })
 
     this.setState(new OfficeState())
 
@@ -155,15 +156,15 @@ export class SkyOffice extends Room<OfficeState> {
     })
   }
 
-  async onAuth(client: Client, options: { password: string | null }) {
-    if (this.password) {
-      const validPassword = await bcrypt.compare(options.password, this.password)
-      if (!validPassword) {
-        throw new ServerError(403, 'Password is incorrect!')
-      }
-    }
-    return true
-  }
+  // async onAuth(client: Client, options: { password: string | null }) {
+  //   if (this.password) {
+  //     const validPassword = await bcrypt.compare(options.password, this.password)
+  //     if (!validPassword) {
+  //       throw new ServerError(403, 'Password is incorrect!')
+  //     }
+  //   }
+  //   return true
+  // }
 
   onJoin(client: Client, options: any) {
     this.state.players.set(client.sessionId, new Player())

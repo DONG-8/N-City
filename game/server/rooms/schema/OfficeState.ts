@@ -50,15 +50,16 @@ const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567
 const charactersLength = characters.length
 
 function getRoomId() {
-  let result = ''
-  for (let i = 0; i < 12; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-  }
-  if (!whiteboardRoomIds.has(result)) {
-    whiteboardRoomIds.add(result)
-    return result
-  } else {
-    console.log('roomId exists, remaking another one.')
-    getRoomId()
-  }
+  // let result = ''
+  // for (let i = 0; i < 12; i++) {
+  //   result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  // }
+  // if (!whiteboardRoomIds.has(result)) {
+  //   whiteboardRoomIds.add(result)
+  //   return result
+  // } else {
+  //   console.log('roomId exists, remaking another one.')
+  //   getRoomId()
+  // }
+  return 'asdfas'
 }
