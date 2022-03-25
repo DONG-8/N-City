@@ -603,6 +603,26 @@ const SaleFactoryAbi: AbiItem[] = [
 		"stateMutability": "view",
 		"type": "function",
 		"constant": true
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "getSaleContractAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function",
+		"constant": true
 	}
 ];
 const SaleAbi: AbiItem[] = [
@@ -694,6 +714,19 @@ const SaleAbi: AbiItem[] = [
 		],
 		"name": "SaleEnded",
 		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "NFTcreatorContract",
+		"outputs": [
+			{
+				"internalType": "contract NFTcreator",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -1394,9 +1427,9 @@ const SSFTokenAbi: AbiItem[] = [
 ];
 
 
-export const NFTcreatorAddress = "0x0b353ADd6B65aA2eE9334D41D5fAa30B05d5e108";
-export const SaleFactoryAddress = "0x119f2e509300CAe51d5d1aC5d128521C2FBDCfad";
-export const SSFTokenAddress = "0x4cCeA7d0C4C92Fc60F3659f2C6dD4B79C5D11738";
+export const NFTcreatorAddress = "0x3AC2e6064A61B5dB17A34DeDb833350a75DA42F4";
+export const SaleFactoryAddress = "0x4fB9e3C4e13379263Bc3f8e95296bb4Ffae7F14d";
+export const SSFTokenAddress = "0x5E3cB6879679674daCCb3Bb81D93Ae1EED0A2443";
 
 export const web3 = new Web3(window.ethereum);
 

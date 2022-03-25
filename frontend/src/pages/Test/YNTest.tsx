@@ -390,10 +390,15 @@ const YNTest = () => {
     
     //saleFactory로 권한 승인시키기
     await NFTcreatorContract.methods.approve(SaleFactoryAddress, tokenId).send({from: accounts[0]})
-
+    
+    //판매등록
     const response2 = await SaleFactoryContract.methods.createSale(tokenId, 10, 20, Math.round(date.getTime()/1000), Math.round(date.getTime()/1000) + 30, SSFTokenAddress, NFTcreatorAddress).send({from:accounts[0]});
+    
+    // Sale컨트랙트 목록
     const response3 = await SaleFactoryContract.methods.allSales().call()
     console.log('allsales', response3) // allsales
+
+    // 방금 판매등록한 토큰의 Sale컨트랙트 확인
     const saleAddress = response2.events.NewSale.returnValues._saleContract
     console.log('지금 판매등록한 Sale컨트랙트 주소', saleAddress) // 지금 판매등록한 Sale컨트랙트 주소
     const SaleContract = createSaleContract(saleAddress)
@@ -405,7 +410,17 @@ const YNTest = () => {
     // console.log(response6)
     const response7 = await NFTcreatorContract.methods.ownerOf(tokenId).call()
     console.log("판매등록 후 토큰의 owner", response7)
-  };
+
+    // 판매 취소
+    await SaleContract.methods.cancelSales().send({from: accounts[0]})
+    const response8 = await NFTcreatorContract.methods.ownerOf(tokenId).call()
+    console.log("판매 취소후 토큰의 owner", response8)
+
+    // 토큰아이디로 Sale컨트랙트address 찾기 (위의 Sale컨트랙트 주소와 일치해야됨)
+    const response9 = await SaleFactoryContract.methods.getSaleContractAddress(tokenId).call();
+    console.log("토큰아이디로 조회한 Sale컨트랙트 주소", response9)
+
+  }
 
   const encodeMainFileToBasek64 = (fileBlob: any) => {
     const reader: any = new FileReader();

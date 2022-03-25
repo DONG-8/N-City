@@ -17,7 +17,8 @@ import "./NFTcreator.sol";
   */
 contract SaleFactory is Ownable {
     address public admin; // 모든 판매의 수퍼권한을 갖는 address(owner)
-    address[] public sales; // 이 컨트랙트를 통해 생성된 Sale컨트랙트의 주소의 배역
+    address[] public sales; // 이 컨트랙트를 통해 생성된 Sale컨트랙트의 주소의 배열
+    mapping(uint256 => address) saleContractAddress; // 토큰id -> Salecontract address 맵핑
     NFTcreator public NFTcreatorContract;
 
     event NewSale(
@@ -56,6 +57,7 @@ contract SaleFactory is Ownable {
         // return instance;
         // emit NewSale(_saleContract, _owner, _workId);
         sales.push(address(instance));
+        saleContractAddress[itemId] = address(instance);
         emit NewSale(address(instance), msg.sender, itemId);
         return address(instance);
     }
@@ -63,6 +65,11 @@ contract SaleFactory is Ownable {
     // 생성된 모든 Sale 주소를 반환
     function allSales() public view returns (address[] memory) {
         return sales;
+    }
+
+    function getSaleContractAddress(uint256 tokenId) public view returns (address) {
+        require(saleContractAddress[tokenId] != address(0), "this token is not on sale");
+        return saleContractAddress[tokenId];
     }
 }
 
@@ -95,6 +102,7 @@ contract Sale {
 
     IERC20 public erc20Contract;
     IERC721 public erc721Constract;
+    NFTcreator public NFTcreatorContract;
 
     event HighestBidIncereased(address bidder, uint256 amount); // 현재 최고 제안자, 최고 제안가
     event SaleEnded(address winner, uint256 amount);  // 최종 구매자 정보
@@ -124,6 +132,7 @@ contract Sale {
         ended = false; 
         erc20Contract = IERC20(_currencyAddress);
         erc721Constract = IERC721(_nftAddress);
+        NFTcreatorContract = NFTcreator(_nftAddress);
     }
 
     /**
@@ -170,8 +179,21 @@ contract Sale {
         // TODO 
     }
     
+    /**
+    판매 종료 시간 이전에 판매자나 관리자가 판매를 철회하는 함수
+    - 철회 시점이 유효한 경우
+    - 호출자가 판매자 혹은 관리자인 경우
+    위 사항을 만족하는 경우
+    1. 환불을 진행한다.
+    2. NFT소유권을 판매자에게 되돌려 준다.
+    3. 컨트랙트의 거래 상태를 업데이트 한다.
+    */
     function cancelSales() public {
         // TODO
+        require(block.timestamp < saleEndTime, "Sale time has expired");
+        require(msg.sender == seller || msg.sender == admin, "caller is not approved");
+        // NFT 소유권을 판매자에게 되돌려주기
+        NFTcreatorContract.transferFrom(address(this), seller, tokenId);
     }
 
     function getTimeLeft() public view returns (int256) {
