@@ -4,6 +4,7 @@ pragma solidity ^0.8.4;
 import "./access/Ownable.sol";
 import "./token/ERC20/ERC20.sol";
 import "./token/ERC721/ERC721.sol";
+import "./NFTcreator.sol";
 
 /**
  * PJT Ⅲ - Req.1-SC1 SaleFactory 구현
@@ -17,6 +18,7 @@ import "./token/ERC721/ERC721.sol";
 contract SaleFactory is Ownable {
     address public admin; // 모든 판매의 수퍼권한을 갖는 address(owner)
     address[] public sales; // 이 컨트랙트를 통해 생성된 Sale컨트랙트의 주소의 배역
+    NFTcreator public NFTcreatorContract;
 
     event NewSale(
         address indexed _saleContract,
@@ -24,8 +26,9 @@ contract SaleFactory is Ownable {
         uint256 _workId
     );
 
-    constructor() {
+    constructor(address _NFTcreatorAddress) {
         admin = msg.sender;
+        NFTcreatorContract = NFTcreator(_NFTcreatorAddress);
     }
 
     /**
@@ -46,7 +49,10 @@ contract SaleFactory is Ownable {
         address nftAddress
     ) public returns (address) {
         // TODO
-        Sale instance = new Sale(admin, msg.sender, itemId, minPrice, purchasePrice, startTime, endTime, currencyAddress, nftAddress);
+        address seller = msg.sender;
+        Sale instance = new Sale(admin, seller, itemId, minPrice, purchasePrice, startTime, endTime, currencyAddress, nftAddress);
+        // 생성한 인스턴스에게 tokenid에 해당하는 토큰의 소유권 넘겨주기
+        NFTcreatorContract.transferFrom(seller, address(instance), itemId);
         // return instance;
         // emit NewSale(_saleContract, _owner, _workId);
         sales.push(address(instance));
@@ -170,6 +176,10 @@ contract Sale {
 
     function getTimeLeft() public view returns (int256) {
         return (int256)(saleEndTime - block.timestamp);
+    }
+
+    function getBlockTimeStamp() public view returns(uint256){
+        return block.timestamp;
     }
 
     function getSaleInfo()
