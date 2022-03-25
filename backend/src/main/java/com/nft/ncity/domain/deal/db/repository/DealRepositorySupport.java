@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.security.Principal;
 import java.util.List;
 
 @Repository
@@ -30,7 +31,7 @@ public class DealRepositorySupport {
 
     // 즉시구매등록 - 상품table update
     @Transactional
-    public long modifyProductForBuyNowByProductId(BuyNowRegisterPostReq buyNowRegisterPostReq){
+    public long modifyProductForBuyNowRegisterByProductId(BuyNowRegisterPostReq buyNowRegisterPostReq){
         long excute = jpaQueryFactory.update(qProduct)
                 .set(qProduct.productState,2)
                 .set(qProduct.productPrice, buyNowRegisterPostReq.getDealPrice())
@@ -76,7 +77,17 @@ public class DealRepositorySupport {
         return new PageImpl<Deal>(dealListQueryResults,pageable,dealListQueryResults.size());
     }
 
+    public long modifyProductForBuyNowByProductId(Long productId, Principal principal){
 
+        // x,y좌표, product view 초기화 해야하면 여기 추가!
+        long excute = jpaQueryFactory.update(qProduct)
+                .set(qProduct.userId,Long.valueOf(principal.getName()))
+                .set(qProduct.productState,3)
+                .where(qProduct.productId.eq(productId))
+                .execute();
+        return excute;
+
+    }
 
     @Transactional
     public long updateTokenByProductId(TokenRegisterPutReq tokenRegisterPutReq){

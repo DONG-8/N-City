@@ -78,7 +78,7 @@ public class DealServiceImpl implements DealService{
            Deal savedDeal = dealRepository.save(deal);
 
             // 2. product 테이블 updates
-            return dealRepositorySupport.modifyProductForBuyNowByProductId(buyNowRegisterPostReq);
+            return dealRepositorySupport.modifyProductForBuyNowRegisterByProductId(buyNowRegisterPostReq);
         }else{
             return  null;
         }
@@ -176,6 +176,34 @@ public class DealServiceImpl implements DealService{
         Page<DealListGetRes> res = new PageImpl<>(dealListGetRes,pageable,total);
 
         return res;
+    }
+    @Override
+    @Transactional
+    public Deal buyNow(Long productId,Principal principal){
+
+        Product product = productRepository.getById(productId);
+
+        if(product.getProductState() == 2){
+            //Deal transfer 생성
+            Deal deal = Deal.builder()
+                    .dealFrom(product.getUserId())
+                    .dealTo(Long.valueOf(principal.getName()))
+                    .dealType(5)
+                    .dealPrice(product.getProductPrice())
+                    .dealCreatedAt(LocalDateTime.now())
+                    .tokenId(product.getTokenId())
+                    .productId(productId)
+                    .build();
+            Deal savedDeal = dealRepository.save(deal);
+
+            // product update
+
+            dealRepositorySupport.modifyProductForBuyNowByProductId(productId, principal);
+
+            return savedDeal;
+
+        }
+        return null;
     }
 
 

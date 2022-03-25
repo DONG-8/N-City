@@ -15,6 +15,10 @@ public interface DealService {
     Long buyNowRegister(BuyNowRegisterPostReq buyNowRegisterPostReq, Principal principal);
     Long auctionRegister(AuctionRegisterPostReq auctionRegisterPostReq, Principal principal);
     Deal bidRegister(BuyNowRegisterPostReq buyNowRegisterPostReq,Principal principal);
+    Deal buyNow(Long productId,Principal principal);
+
+
+
     //READ
 
     Page<DealListGetRes> getDealListByProductId(Pageable pageable,Long productId);

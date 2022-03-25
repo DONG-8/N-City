@@ -74,7 +74,6 @@ public class DealController {
     }
 
     // auction 참가 (bid)
-
     @PostMapping("/auction")
     @ApiOperation(value = "경매참가")
     @ApiResponses({
@@ -92,7 +91,23 @@ public class DealController {
         }
     }
 
-
+    // auction 참가 (bid)
+    @PostMapping("/buy/now/{productId}")
+    @ApiOperation(value = "즉시구매")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "등록 성공"),
+            @ApiResponse(code = 404, message = "등록 실패")
+    })
+    public ResponseEntity<BaseResponseBody> buyNow( @ApiParam(value = "상품id") @PathVariable("productId") Long productId,Principal principal){
+        log.info("buyNow - 호출");
+        Deal deal = dealService.buyNow(productId,principal);
+        if(!deal.equals(null)) {
+            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
+        }
+        else {
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "등록 실패"));
+        }
+    }
 
 
 
