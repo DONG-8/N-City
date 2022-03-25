@@ -7,16 +7,15 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 const CardWrapper = styled.div`
   cursor: pointer;
-  height: 420px;
+  height: 420;
   width: 350px;
   background-color: #ffffff;
-  border-radius: 5px;
-  border:1px solid gray;
-  box-shadow:0px 3px 3px  ;
-  /* border: 0.5px solid gray; */
+  border-radius: 10px;
+  border:0.5px solid #E9E4E4;
   margin: 30px ;
   &:hover{
-    box-shadow:0px 5px 5px  ;    
+    box-shadow:0px 2px 2px  ;  
+    transform: translateY(-5px);
     .buy{
       visibility: visible ;
       transition: 1s ;

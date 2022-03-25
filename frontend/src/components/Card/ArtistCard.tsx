@@ -19,7 +19,7 @@ const Cards = styled.div`
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow:1px 3px 7px  ;
-  margin: 30px ;
+  margin: 5vh ;
   &:hover{
     &{
       transform:scale(1.01) ;
