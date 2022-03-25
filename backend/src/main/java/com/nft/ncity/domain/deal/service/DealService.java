@@ -16,6 +16,7 @@ public interface DealService {
     Long auctionRegister(AuctionRegisterPostReq auctionRegisterPostReq, Principal principal);
     Deal bidRegister(BuyNowRegisterPostReq buyNowRegisterPostReq,Principal principal);
     Deal buyNow(Long productId,Principal principal);
+    Deal buyAuction(Long productId,Principal principal);
 
 
 

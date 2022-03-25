@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -77,6 +78,8 @@ public class DealRepositorySupport {
         return new PageImpl<Deal>(dealListQueryResults,pageable,dealListQueryResults.size());
     }
 
+    //즉시구매
+    @Transactional
     public long modifyProductForBuyNowByProductId(Long productId, Principal principal){
 
         // x,y좌표, product view 초기화 해야하면 여기 추가!
@@ -86,8 +89,22 @@ public class DealRepositorySupport {
                 .where(qProduct.productId.eq(productId))
                 .execute();
         return excute;
-
     }
+
+    //경매 입찰
+    @Transactional
+    public long modifyProductForBuyAuctionByProductId(Long productId, Principal principal){
+
+        // x,y좌표, product view 초기화 해야하면 여기 추가!
+        long excute = jpaQueryFactory.update(qProduct)
+                .set(qProduct.userId,Long.valueOf(principal.getName()))
+                .set(qProduct.productState,3)
+                .where(qProduct.productId.eq(productId))
+                .execute();
+        return excute;
+    }
+
+
 
     @Transactional
     public long updateTokenByProductId(TokenRegisterPutReq tokenRegisterPutReq){

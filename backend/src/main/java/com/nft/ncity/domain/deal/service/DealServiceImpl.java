@@ -177,6 +177,8 @@ public class DealServiceImpl implements DealService{
 
         return res;
     }
+
+    //즉시구매
     @Override
     @Transactional
     public Deal buyNow(Long productId,Principal principal){
@@ -199,6 +201,36 @@ public class DealServiceImpl implements DealService{
             // product update
 
             dealRepositorySupport.modifyProductForBuyNowByProductId(productId, principal);
+
+            return savedDeal;
+
+        }
+        return null;
+    }
+
+    // 경매 입찰
+    @Override
+    @Transactional
+    public Deal buyAuction(Long productId,Principal principal){
+
+        Product product = productRepository.getById(productId);
+
+        if(product.getProductState() == 1){
+            //Deal transfer 생성
+            Deal deal = Deal.builder()
+                    .dealFrom(product.getUserId())
+                    .dealTo(Long.valueOf(principal.getName()))
+                    .dealType(5)
+                    .dealPrice(product.getProductPrice())
+                    .dealCreatedAt(LocalDateTime.now())
+                    .tokenId(product.getTokenId())
+                    .productId(productId)
+                    .build();
+            Deal savedDeal = dealRepository.save(deal);
+
+            // product update
+
+            dealRepositorySupport.modifyProductForBuyAuctionByProductId(productId, principal);
 
             return savedDeal;
 

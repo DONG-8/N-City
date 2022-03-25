@@ -91,7 +91,7 @@ public class DealController {
         }
     }
 
-    // auction 참가 (bid)
+    // 즉시 구매
     @PostMapping("/buy/now/{productId}")
     @ApiOperation(value = "즉시구매")
     @ApiResponses({
@@ -109,7 +109,23 @@ public class DealController {
         }
     }
 
-
+    // 경매 입찰
+    @PostMapping("/buy/auction/{productId}")
+    @ApiOperation(value = "경매 입찰")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "등록 성공"),
+            @ApiResponse(code = 404, message = "등록 실패")
+    })
+    public ResponseEntity<BaseResponseBody> buyAuction( @ApiParam(value = "상품id") @PathVariable("productId") Long productId,Principal principal){
+        log.info("buyAuction - 호출");
+        Deal deal = dealService.buyAuction(productId,principal);
+        if(!deal.equals(null)) {
+            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
+        }
+        else {
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "등록 실패"));
+        }
+    }
 
     // READ
     // productId에 해당하는 지난 거래 내역들 조회
