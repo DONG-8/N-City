@@ -710,6 +710,8 @@ export default function Main2() {
       </GuideWrapper>
       <ZigZag items={items}>
       </ZigZag>
+      <ZigZag items={items}>
+      </ZigZag>
     </MainH>
   );
 }

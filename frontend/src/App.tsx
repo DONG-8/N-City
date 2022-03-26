@@ -20,6 +20,7 @@ import gamestore from "./ingame/stores";
 import phaserGame from "./ingame/PhaserGame";
 import Main2 from "./pages/Main/Main2";
 import SearchPage from "./pages/NFTStore/SearchPage";
+import MapChoice from "./pages/Room/MapChoice";
 
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
             }
           />
           <Route path="/test" element={<Test />} />
+          <Route path="/mapchoice" element={<MapChoice />} />
         </Routes>
         <Footer />
       </BrowserRouter>
