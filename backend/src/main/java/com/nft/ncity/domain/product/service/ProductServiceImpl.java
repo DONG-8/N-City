@@ -142,6 +142,7 @@ public class ProductServiceImpl implements ProductService{
 
     // READ
 
+    //상품 전체조회
     @Override
     public Page<ProductListGetRes> getProductList(Pageable pageable) {
         Page<Product> products = productRepositorySupport.findProductList(pageable);
@@ -155,6 +156,7 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductId(p.getProductId());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
 
@@ -180,6 +182,7 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductId(p.getProductId());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
 
@@ -204,6 +207,7 @@ public class ProductServiceImpl implements ProductService{
             productDealList.setProductTitle(p.getProductTitle());
             productDealList.setProductPrice(p.getProductPrice());
             productDealList.setProductRegDt(p.getProductRegDt());
+            productDealList.setProductId(p.getProductId());
             productDealList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productDealList.setProductState(p.getProductState());
             productDealList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
@@ -230,6 +234,7 @@ public class ProductServiceImpl implements ProductService{
             productDealList.setProductTitle(p.getProductTitle());
             productDealList.setProductPrice(p.getProductPrice());
             productDealList.setProductRegDt(p.getProductRegDt());
+            productDealList.setProductId(p.getProductId());
             productDealList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productDealList.setProductState(p.getProductState());
             productDealList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
@@ -256,6 +261,7 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductId(p.getProductId());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
 

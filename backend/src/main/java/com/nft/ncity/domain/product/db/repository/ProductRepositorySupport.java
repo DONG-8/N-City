@@ -34,6 +34,7 @@ public class ProductRepositorySupport {
     }
 
 
+    //READ
     public  Page<Product> findProductList(Pageable pageable) {
         List<Product> productQueryResults = jpaQueryFactory.select(qProduct)
                 .from(qProduct)
