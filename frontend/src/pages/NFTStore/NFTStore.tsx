@@ -168,12 +168,21 @@ export interface IState{
 const NFTStore = () => {
   const [filter,setFilter] = useState("all")
   // 상품 정보 모두 가져오기
-  const [items,setItems] = useState(itm)
-  // const { isLoading, data:items } = useQuery<any>(
-  //   "query-prouductAll",
-  //   async () => {return (await getProductAll({ page: 1, size: 1000 }))
-  //   },
-  // );
+  // const [items,setItems] = useState(itm)
+  const { isLoading, data:items } = useQuery<any>(
+    "query-prouductAll",
+    async () => {return (await getProductAll({ page: 1, size: 1000 }))
+    },
+    {
+      onSuccess: (res) => {
+        console.log(res, "좋아요 결과");
+        // 여기서 이 result로 하고싶은 추가 작업을 실행시켜준다.
+      },
+      onError: (err: any) => {
+        console.log(err, "요청 실패");
+      },
+    }
+  );
   return (
     <>
       {/* <ColorBar>
@@ -299,7 +308,8 @@ const NFTStore = () => {
             </ItemCards> 
             :<></>} </>} */}
             <ItemCards>
-             {(items).map((item,idx) => {
+              {items &&
+             (items).map((item,idx) => {
               return(
                 <ItemCard2 key={idx} item={item} />
                 )

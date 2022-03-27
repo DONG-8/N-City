@@ -8,7 +8,8 @@ import ItemCard from '../../components/Card/ItemCard';
 import Background from '../../components/Card/Background';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { artists, items as itm } from './items';
+import { artists, itemdetail, itemdetail as itm } from './items';
+import { Button } from '@mui/material';
 const etherURL = '/essets/images/ethereum.png'
 
 const Wrapper = styled.div`
@@ -16,21 +17,28 @@ const Wrapper = styled.div`
 
 const Top = styled.div`
   width: 90vw;
-  height: 60vh;
+  height: 70vh;
   margin: auto;
   margin-top: 10vh;
   display: flex;
+  margin-bottom: 10vh;
 `
 const TopL = styled.div`
   flex: 4;
+  
 `
 const ArtistBox = styled.div`
-  height: 60%;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+
+  height: 55%;
   background-color: #F7F8FA ;
   border-radius: 30px;
   .top{
     display: flex;
     align-items: center;
+  }
+  .mid{
+    margin-left: 3vw;
   }
   .profile{
     border-radius: 100%;
@@ -42,9 +50,29 @@ const ArtistBox = styled.div`
     font-size: 2rem;
     font-weight: 800;
   }
+  overflow-x: hidden;
+    overflow-y: scroll;
+      &::-webkit-scrollbar { //스크롤바 🎨
+        visibility: hidden;
+        width: 7px;
+      }
+      &:hover {
+        &::-webkit-scrollbar {
+          visibility: visible;
+          width: 7px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: #272793;
+          border-radius: 10px;
+          background-clip: padding-box;
+          border: 1px solid transparent;
+        }
+      }
 `
 const ArtistDescription = styled.div`
-  height: 30%;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+
+  height: 26vh;
   margin-top: 5vh;
   background-color: #F7F8FA ;
   border-radius: 30px;
@@ -56,11 +84,12 @@ const ArtistDescription = styled.div`
   }
   .content{
     width: 90%;
-    height: 8vh;
+    height: 15vh;
+    font-size: 1.1rem;
     margin-left: 2vw;
     margin-top: 2vh;
     overflow-x: hidden;
-      overflow-y: scroll;
+    overflow-y: scroll;
       &::-webkit-scrollbar { //스크롤바 🎨
         visibility: hidden;
         width: 7px;
@@ -80,43 +109,94 @@ const ArtistDescription = styled.div`
   }
 `
 const TopR = styled.div`
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
   flex: 6;
-  background-color: blueviolet;
   background-color: #F7F8FA ;
   margin-left: 3vw;
   border-radius: 30px;
   .top{
-    height: 44vh;
-    background-color: yellowgreen;
+    height: 50vh;
     display: flex;
+    overflow-x: hidden;
+    overflow-y: scroll;
+      &::-webkit-scrollbar { //스크롤바 🎨
+        visibility: hidden;
+        width: 7px;
+      }
+      &:hover {
+        &::-webkit-scrollbar {
+          visibility: visible;
+          width: 7px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: #272793;
+          border-radius: 10px;
+          background-clip: padding-box;
+          border: 1px solid transparent;
+        }
+      }
   }
   .top-left{
     width: 30vw;
     .title{
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 1000;
+      margin-top: 3vh;
+      margin-left: 2vw;
+    }
+    .content{
       margin-top: 3vh;
       margin-left: 2vw;
     }
   }
   .img{
-    height: 40vh;
-    width: 40vh;
+    height: 45vh;
+    width: 45vh;
     margin-top: 2vh;
-    margin-left: 1vw;
+    margin-right: 1vw;
     border-radius: 30px;
+    border:1px solid #E0DEDE ;
   }
-  .bot{}
+  .bot{
+    display: flex;
+    height: 20vh;
+    .left{
+      flex: 1;
+      border-top: 0.5px solid #E0DEDE;
+      button{
+        border-radius:15px;
+        background-color: #F7F8FA ;
+        color: black;
+      }
+      }
+    }
+    .right{
+      flex: 1;
+      border-top: 0.5px solid #E0DEDE;
+      border-left: 0.5px solid #E0DEDE;
+      button{
+        border-radius:15px;
+        background-color: #272793;
+      }
+    }
 `
 
 interface ItemType{
-  item:{
-    productTitle: string, // 제목
-    productPrice: Number, // 가격
-    productThumbnailUrl: string, // 사진
-    productFavorite: Number, // 좋아요 갯수
-    productRegDt:Object, // 등록일자
-    productCode: Number, // 번호 
+  itemdetail:{
+    productId: Number,
+    userId: Number,
+    productTitle: string,
+    productDesc: string,
+    productCode: Number,
+    productXCoordinate: Number,
+    productYCoordinate: Number,
+    productView: Boolean,
+    productState: Number,
+    productPrice: Number,
+    productRegDt: string,
+    productFileUrl: string,
+    productThumbnailUrl: string,
+    favoriteCount: Number
   }, // 작가, 작가 정보, 거래 관련.. 
   artist:{
     "authId": Number,
@@ -147,19 +227,21 @@ const DetailItem = () => {
     {event:'minted', date:`20220301` }
   ])
   const [items,setItems] = useState(itm)
-  const [item,setItem] = useState<ItemType['item']>(JSON.parse(localStorage.getItem("item")||"")) 
-  const [likes,setLikes] = useState(Number(item.productFavorite))
+  // const [item,setItem] = useState<ItemType['itemdetail']>(JSON.parse(localStorage.getItem("item")||"")) 
+  const [item,setItem] = useState<ItemType['itemdetail']>(itemdetail) 
+  const [likes,setLikes] = useState(Number(item.favoriteCount))
   const [liked,setLiked] = useState(false)
   const [change,setChange] = useState(false)
   const [artist,setArtist] = useState<ItemType['artist']>(artists[0]) // item을 받고 artist 정보 받아오기(api)
-  useEffect(()=>{
-    const tmp = JSON.parse(localStorage.getItem("item")||"")
-    if (item.productTitle !==tmp.productTitle){
-      setItem(tmp)
-      window.scrollTo(0,0)
-    }
-    setChange(false)
-  },[change])
+  // useEffect(()=>{
+  //   const tmp = JSON.parse(localStorage.getItem("item")||"")
+  //   // item 바꿔주기 api 요청
+  //   if (item.productTitle !==tmp.productTitle){
+  //     setItem(tmp)
+  //     window.scrollTo(0,0)
+  //   }
+  //   setChange(false)
+  // },[change])
   return (
     <Wrapper>
       <Top>
@@ -170,11 +252,11 @@ const DetailItem = () => {
               <p className='name'>{artist.userNick}</p>
             </div>
             <div className='mid'>
-              <div className='email'>{artist.userEmail}</div>
               <div className='verified'>
                 {artist.userEmailConfirm && 
               <img alt="verified" style={{ height: "1.5rem" }}
               src="/essets/images/verified.png"/>}</div>
+              <div className='email'> email:{artist.userEmail}</div>
               <div>userId:{artist.userId}</div>
               <div>userRole:{artist.userRole}</div>
               <div>followeeCnt:{artist.followeeCnt}</div>
@@ -190,15 +272,34 @@ const DetailItem = () => {
           <div className='top'>
             <div className='top-left'>
               <div className='title'>{item.productTitle}</div>
-              <div>{item.productCode}</div>
-              <div>하트{item.productFavorite}</div>
-              <div>가격:{item.productPrice}</div>
-              <div>등록일자:{item.productRegDt}</div>
+              <div className='content'>
+                <div>productCode : {item.productCode}</div>
+                <div>하트{item.favoriteCount}</div>
+                <div>가격:{item.productPrice}</div>
+                <div>등록일자:{item.productRegDt}</div>
+                <div>productX:{item.productXCoordinate}</div>
+                <div>productY:{item.productYCoordinate}</div>
+                <div>productView:{item.productView}</div>
+                <div>productState:{item.productState}</div>
+                <div>productRegDt:{item.productRegDt}</div>
+              </div>
             </div>
-            <img className='img' alt='작품' src={item.productThumbnailUrl as any}/>
+            
+            {item.productFileUrl ? 
+            <img className='img' alt='작품' src={item.productFileUrl as any}/>:
+            <img className='img' alt='작품' src={item.productThumbnailUrl as any}/>}
           </div>
           <div className='bot'>
-
+            <div className='left'>
+              <div>직전 거래가 : </div>
+              <div>최고 거래가 : </div>
+              <Button variant="contained">제안하기</Button>
+            </div>
+            <div className='right'>
+              <div>판매가 : </div>
+              <div>판매 종료 : </div>
+              <Button variant="contained" >구매하기</Button>
+            </div>
           </div>
         </TopR>
       </Top>
