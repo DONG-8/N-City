@@ -69,33 +69,41 @@ const  GameApp: Function = ()=> {
 
   let game =  phaserGame.scene.keys.game as Game
   let bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
+  let isAvaliable = false
 
-  const isAvaliable = availableRooms.map(room => {  // 해당 방이 열려있는지 확인
-    console.log(room.roomId) 
-    if (room.roomId === 'userId') {
-      return true;
+  const checkRoomIsAvaliable = () => {
+    console.log(availableRooms)
+    for (var roomId in availableRooms) {
+      console.log(roomId, 'roomID')
+      if (roomId === 'test') {
+        return true
+      }
     }
-    return false;
-  })
+    return false
+  }
 
   const ConnectBootstrap = async () => { // ⭐ bootstrap 연결하기
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
-
-    if(isAvaliable) { // 방이 이미 존재한다면 참가 
-      bootstrap.network
-        .joinRoom('test')
-        .then(() => bootstrap.launchGame())
-        .catch((error) => console.error(error))
-    } else {  // 방 없었다면 만들기 
-      // setValues({ ...values, ['roomId']: 'useasrId'}) // 방 아이디 => 유저 아이디 
-      // setValues({ ...values, ['name']: 'asdfasdfasdf'}) // 방 이름 
-      // setValues({ ...values, ['description']: '혀농이 방이얌'}) // 방 설명 
-  
+    console.log(checkRoomIsAvaliable())
+    
+    // if(isAvaliable) { // 방이 이미 존재한다면 참가 
       await bootstrap.network
-        .createRoom(values)
+        .joinRoom('userId')
         .then(() => bootstrap.launchGame())
         .catch((error) => console.error(error))
-    }
+    // } else {  // 방 없었다면 만들기 
+    //   // setValues({ ...values, ['roomId']: 'useasrId'}) // 방 아이디 => 유저 아이디 
+    //   // setValues({ ...values, ['name']: 'asdfasdfasdf'}) // 방 이름 
+    //   // setValues({ ...values, ['description']: '혀농이 방이얌'}) // 방 설명 
+  
+    //   await bootstrap.network
+    //     .createRoom(values)
+    //     .then(() => bootstrap.launchGame())
+    //     .catch((error) => console.error(error))
+    //   isAvaliable = true
+        
+    // }
+    setTimeout( () => console.log(availableRooms), 10000)
   }
 
   const ConnectGame = () => { // 게임 접속
@@ -104,6 +112,8 @@ const  GameApp: Function = ()=> {
       game.myPlayer.setPlayerName('임현홍') // ❗ 내이름 설정해주기
       game.myPlayer.setPlayerTexture(avatars[1].name) // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
       game.network.readyToConnect() // 네트워크 연결
+
+      console.log(availableRooms)
   }
  
   let ui: JSX.Element
