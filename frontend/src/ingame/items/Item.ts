@@ -4,6 +4,10 @@ export enum ItemType {
   COMPUTER,
   WHITEBOARD,
   VENDINGMACHINE,
+  VENDINGMACHINE2,
+  VENDINGMACHINE3,
+  VENDINGMACHINE4,
+  VENDINGMACHINE5,
 }
 export default class Item extends Phaser.Physics.Arcade.Sprite { // 아이템 등록하기 
   private dialogBox!: Phaser.GameObjects.Container // 말풍선

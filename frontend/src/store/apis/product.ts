@@ -3,20 +3,18 @@ import * as API from "./types"
 
 const apiClient = axios.create({
   // baseURL: "https://j6e106.p.ssafy.io/api",
-  // baseURL: "http://localhost:8080/api",
   baseURL: "http://localhost:8080/api",
   headers: {
     "Content-type": "application/json",
   },
-});
+}); 
 
 const fileApiClient = axios.create({
   // baseURL: "https://j6e106.p.ssafy.io/api",
-  // baseURL: "http://localhost:8080/api",
   baseURL: "http://localhost:8080/api",
   headers: {
   'Content-Type': 'multipart/form-data'
-},
+  },
 });
 
 // 전체 조회 --> 변수 필요없을 수 있음 변경가능
@@ -68,7 +66,7 @@ export const deleteProduct = async (productId : number) => {
 }
 
 // 상품판매 전체 조회
-export const getSellProduct = async (productCode : number) => {
+export const getSellProduct = async () => {
   const response = await apiClient.get<any>(
     `/products/deal`
   )

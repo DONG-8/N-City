@@ -5,7 +5,7 @@ import CategoryModal, { Icategory } from "../../components/Mint/CategoryModal";
 import { NFTcreatorContract } from "../../web3Config";
 
 // 동준추가
-import { postProduct, putTokenID } from "../../store/apis/product";
+import { postProduct } from "../../store/apis/product";
 import { Mutation, useMutation, useQuery } from "react-query";
 
 const Wrapper = styled.div`
@@ -287,8 +287,6 @@ const Mint = () => {
     setIsOpen(false);
   };
 
-
-
   // code: 0,
   //           productDesc: "이잉",
   //           productTitle: "오엥",
@@ -296,20 +294,11 @@ const Mint = () => {
     "submitFile",
     async () => {
       const formdata = new FormData();
-      if (isVideoAudio()){
-        formdata.append("code", categoryCode);
-        formdata.append("productDesc", description);
-        formdata.append("productTitle", tokenName);
-        formdata.append("productFile", file);
-        formdata.append("thumbnailFile", thumbnail);
-      } else {
-        formdata.append("code", categoryCode);
-        formdata.append("productDesc", description);
-        formdata.append("productTitle", tokenName);
-        formdata.append("productFile", file);
-        formdata.append("thumbnailFile", file);
-      }
-
+      formdata.append("code", "5");
+      formdata.append("productDesc", "우어어엉");
+      formdata.append("productTitle", "와아앙앙");
+      formdata.append("productFile", file);
+      formdata.append("thumbnailFile", file);
       // formdata 확인
       for (var key of formdata.keys()) {
         console.log(key);
@@ -322,26 +311,9 @@ const Mint = () => {
     },
     {
       onSuccess: async (res) => {
-        setProductId(res.productId)
-        const uri = res.message;
-        const accounts = await ethereum.request({ method: "eth_accounts" });
-        if (!accounts[0]) {
-          alert("지갑을 연결해주세요")
-          return;
-        }
-        await setIsLoading(true);
-        const response = await NFTcreatorContract.methods
-          .create(accounts[0], uri)
-          .send({
-            from: accounts[0],
-          });
-        await setIsLoading(false);
-        console.log(accounts[0]); // owner --> 둘다 넣어야하는거잖아 그치
-        console.log(response.events.createNFT.returnValues._tokenId); // tokenId
-        await setTokenId(response.events.createNFT.returnValues._tokenId);
-        // 그럼 이 값을 이 컴포넌트에 순간 useState로 저장해도 상관 x 인거잖아 그치
-        // 아니다 여기서 또 useMutate 써서 여기 인자값으로 바로 post 요쳥 보내면
-        putToken.mutate();
+        
+        console.log('🎨',res); // tokenId
+        
       },
       onError: (err: any) => {
         console.log(err, "에러발생!");
@@ -349,24 +321,20 @@ const Mint = () => {
     }
   );
   // 민팅을 통해 받은 정보를 넣어준다.
-  const putToken = useMutation<any, Error>(
-    "putTokenId",
-    async () => {
-      const body = {
-        "productId": productId,
-        "tokenId": tokenId
-      }
-      return await putTokenID(body);
-    },
-    {
-      onSuccess: (res) => {
-        console.log(res, "정보 수정이 완료되었습니댜");
-      },
-      onError: (err: any) => {
-        console.log(err, "put 에러발생에러발생");
-      },
-    }
-  );
+  // const putToken = useMutation<any, Error>(
+  //   "putTokenId",
+  //   async () => {
+  //     return await putTokenID();
+  //   },
+  //   {
+  //     onSuccess: (res) => {
+  //       console.log(res, "정보 수정이 완료되었습니댜");
+  //     },
+  //     onError: (err: any) => {
+  //       console.log(err, "put 에러발생에러발생");
+  //     },
+  //   }
+  // );
 
   const onClickSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -381,27 +349,6 @@ const Mint = () => {
       return;
     }
 
-    // const formdata = new FormData();
-    // if (isVideoAudio()){
-    //   formdata.append("code", categoryCode);
-    //   formdata.append("productDesc", description);
-    //   formdata.append("productTitle", tokenName);
-    //   formdata.append("productFile", file);
-    //   formdata.append("thumbnailFile", thumbnail);
-    // } else {
-    //   formdata.append("code", categoryCode);
-    //   formdata.append("productDesc", description);
-    //   formdata.append("productTitle", tokenName);
-    //   formdata.append("productFile", file);
-    //   formdata.append("thumbnailFile", file);
-    // }
-    // for (var key of formdata.keys()) {
-    //   console.log(key);
-    // }
-
-    // for (var value of formdata.values()) {
-    //   console.log(value);
-    // }
     // const formdata = new FormData();
     // formdata.append("file", file);
 

@@ -7,13 +7,14 @@ import ItemCard from "../../components/Card/ItemCard";
 import ItemCard2 from "../../components/Card/ItemCard2";
 interface Iprops{
   items :{
+    productId: Number,
     productTitle: string,
     productPrice: Number,
     productThumbnailUrl: string,
-    productRegDt:Object,
     productFavorite: Number,
+    productRegDt:Object,
     productCode: Number,
-  }[],
+  }[]
 }
 
 function NextArrow(props) {

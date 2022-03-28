@@ -292,18 +292,16 @@ const MainH = styled.div`
   height: auto;
 `;
 
-
-
-
 export interface IState {
-  item :{
+  items :{
+    productId:Number,
     productTitle: string,
     productPrice: Number,
     productThumbnailUrl: string,
     productRegDt:Object,
     productFavorite: Number,
     productCode: Number,
-  }[];
+  }[],
   artist: {
     name: string;
     profileImg: string;
@@ -611,7 +609,7 @@ export default function Main2() {
     }
   };
 
-  const [items, setItems] = useState<IState["item"]>(itm);
+  const [items, setItems] = useState<IState["items"]>(itm);
 
   return (
     <MainH>
