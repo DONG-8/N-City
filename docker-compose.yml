@@ -32,7 +32,7 @@ services:
       context: game/
       dockerfile: Dockerfile
     ports:
-      - "2467:2467"  
+      - "2567:2567"  
         # [인증서 파일 저장 경로]:/root 
     volumes:
       - /home/ubuntu/docker-volume/ssl:/var/www/html
