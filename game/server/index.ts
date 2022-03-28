@@ -8,9 +8,9 @@ import { RoomType } from '../../frontend/src/types/Rooms'
 
 // import socialRoutes from "@colyseus/social/express"
 
-import { SkyOffice } from './rooms/SkyOffice'
+import { NCity } from './rooms/NCity'
 
-const port = Number(process.env.PORT || 2567)
+const port = Number(2567)
 const app = express()
 
 app.use(cors())
@@ -24,14 +24,14 @@ const gameServer = new Server({
 
 // register room handlers
 gameServer.define(RoomType.LOBBY, LobbyRoom)
-gameServer.define(RoomType.PUBLIC, SkyOffice, {
-  roomId: 'asdf2as',
-  name: 'Public Lobby',
-  description: 'For making friends and familiarizing yourself with the controls',
-  password: null,
-  autoDispose: false,
-})
-gameServer.define(RoomType.CUSTOM, SkyOffice ).enableRealtimeListing()
+// gameServer.define(RoomType.PUBLIC, SkyOffice, {
+//   roomId: 'asdf2as',
+//   name: 'Public Lobby',
+//   description: 'For making friends and familiarizing yourself with the controls',
+//   password: null,
+//   autoDispose: false,
+// })
+gameServer.define(RoomType.CUSTOM, NCity ).enableRealtimeListing()
 
 /**
  * Register @colyseus/social routes

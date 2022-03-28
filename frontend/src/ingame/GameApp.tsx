@@ -88,7 +88,7 @@ const  GameApp: Function = ()=> {
     
     // if(isAvaliable) { // 방이 이미 존재한다면 참가 
       await bootstrap.network
-        .joinRoom('userId')
+        .createRoom(values)
         .then(() => bootstrap.launchGame())
         .catch((error) => console.error(error))
     // } else {  // 방 없었다면 만들기 
