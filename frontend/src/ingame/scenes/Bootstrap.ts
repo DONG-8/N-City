@@ -30,7 +30,7 @@ export default class Bootstrap extends Phaser.Scene {
     this.load.image('sun_moon', 'essets/background/sun_moon.png')
     console.log('룸넘버이즈',ROOMNUM)
     console.log('오류없이 넘어왔다1')
-    this.load.tilemapTiledJSON('tilemap', `essets/map/map${ROOMNUM}.json`) // 배경 다 들고오기 
+    this.load.tilemapTiledJSON('tilemap', `essets/map/map.json`) // 배경 다 들고오기 
     console.log('오류없이 넘어왔다2')
     this.load.spritesheet('tiles_wall', 'essets/map/FloorAndGround.png', { // items 사이즈 지정 
       frameWidth: 32,
@@ -95,7 +95,7 @@ export default class Bootstrap extends Phaser.Scene {
   }
 
   launchGame() { // 
-    this.network.webRTC?.checkPreviousPermission()
+    // this.network.webRTC?.checkPreviousPermission()
     this.scene.launch('game', {
       network: this.network,
     })
