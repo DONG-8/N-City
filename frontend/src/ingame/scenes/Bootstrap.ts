@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import Network from '../services/Network'
 import store from '../stores'
 import { setRoomJoined } from '../stores/RoomStore'
-
+const ROOMNUM = localStorage.getItem('roomNum')
 enum BackgroundMode {
   DAY,
   NIGHT,
@@ -28,8 +28,10 @@ export default class Bootstrap extends Phaser.Scene {
     )
     this.load.image('backdrop_night', 'essets/background/backdrop_night.png')
     this.load.image('sun_moon', 'essets/background/sun_moon.png')
-    
-    this.load.tilemapTiledJSON('tilemap', 'essets/map/map.json') // 배경 다 들고오기 
+    console.log('룸넘버이즈',ROOMNUM)
+    console.log('오류없이 넘어왔다1')
+    this.load.tilemapTiledJSON('tilemap', `essets/map/map${ROOMNUM}.json`) // 배경 다 들고오기 
+    console.log('오류없이 넘어왔다2')
     this.load.spritesheet('tiles_wall', 'essets/map/FloorAndGround.png', { // items 사이즈 지정 
       frameWidth: 32,
       frameHeight: 32,

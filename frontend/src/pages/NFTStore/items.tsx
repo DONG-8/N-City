@@ -33,9 +33,40 @@ export interface ItemType{
     "userImgUrl": String,
     "userNick": String,
     "userRole": String
-  }
+  },
+  itemdetail:{
+    productId: Number,
+    userId: Number,
+    productTitle: string,
+    productDesc: string,
+    productCode: Number,
+    productXCoordinate: Number,
+    productYCoordinate: Number,
+    productView: Boolean,
+    productState: Number,
+    productPrice: Number,
+    productRegDt: string,
+    productFileUrl: string,
+    productThumbnailUrl: string,
+    favoriteCount: Number
+  },
 }
-
+export const itemdetail = {
+  "productId": 9,
+  "userId": 1,
+  "productTitle": "이 상품으로 말하자!!!면!!!",
+  "productDesc": "상품 설명이라 함은....",
+  "productCode": 1,
+  "productXCoordinate": 0,
+  "productYCoordinate": 0,
+  "productView": false,
+  "productState": 1,
+  "productPrice": 0,
+  "productRegDt": "2022-03-21 09:13:06",
+  "productFileUrl": "https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/302c19ef-90f1-49fa-b25c-70c4db9821f6.png",
+  "productThumbnailUrl": "https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/d4875988-d772-404c-b3cd-901aa561e909.png",
+  "favoriteCount": 3
+}
    
 export const artists = [
   { 
