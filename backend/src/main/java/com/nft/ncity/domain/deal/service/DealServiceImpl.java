@@ -184,6 +184,12 @@ public class DealServiceImpl implements DealService{
         return dealList;
     }
 
+    @Override
+    public Page<Deal> getDealListByUserId(Long userId, Pageable pageable) {
+        Page<Deal> dealList = dealRepositorySupport.findDealListByUserId(userId,pageable);
+        return dealList;
+    }
+
     //즉시구매
     @Override
     @Transactional

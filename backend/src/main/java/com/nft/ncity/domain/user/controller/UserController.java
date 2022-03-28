@@ -149,30 +149,27 @@ public class UserController {
     }
 
     /**
-     거래내역(deal) 테이블이 완료 되어야 진행 가능함.
      deal 테이블에서 deal_from 또는 deal_to가 입력받은 userId인 값들 받아오기.
      */
     @GetMapping("/{userId}/activities")
     @ApiOperation(value = "해당 유저의 거래 내역 조회", notes = "<strong>해당 유저의 거래 내역</strong>을 넘겨준다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공", response = User.class),
-            @ApiResponse(code = 404, message = "해당 유저 없음.")
+            @ApiResponse(code = 404, message = "해당 유저 거래내역 없음.")
     })
-    public ResponseEntity<Page<User>> getActivityListByUserId(@PathVariable("userId") Long userId,
+    public ResponseEntity<Page<Deal>> getActivityListByUserId(@PathVariable("userId") Long userId,
                                                                       @PageableDefault(page = 0, size = 10) Pageable pageable) {
-
         // 0. 유저 ID를 받음.
         // 1. 해당 유저의 거래 내역 DB에서 받아와서 보내주기.
 
         log.info("getActivityListByUserId - 호출");
-        User user = userRepository.getById(userId);
-        //Product product = productRepository.getById();
+        Page<Deal> deals = dealService.getDealListByUserId(userId, pageable);
 
-        if(user.equals(null)) {
+        if(deals.equals(null)) {
             log.error("getActivityListByUserId - This userId doesn't exist.");
             return ResponseEntity.status(404).body(null);
         }
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(201).body(deals);
     }
 
     /**
@@ -215,7 +212,6 @@ public class UserController {
             log.error("modifyUserInfoByUserId - 이메일 인증을 해주세요.");
             return ResponseEntity.status(404).body(BaseResponseBody.of(404,"이메일 인증 필요."));
         }
-
 
         // 수정한게 없다.
         if(execute < 1) {

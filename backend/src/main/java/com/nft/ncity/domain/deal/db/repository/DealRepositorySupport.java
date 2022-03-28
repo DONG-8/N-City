@@ -104,8 +104,6 @@ public class DealRepositorySupport {
         return excute;
     }
 
-
-
     @Transactional
     public long updateTokenByProductId(TokenRegisterPutReq tokenRegisterPutReq){
         long execute = jpaQueryFactory.update(qDeal)
@@ -126,6 +124,20 @@ public class DealRepositorySupport {
         if(dealList.isEmpty()) return Page.empty();
 
         return new PageImpl<Deal>(dealList,pageable,dealList.size());
+    }
 
+    public Page<Deal> findDealListByUserId(Long userId, Pageable pageable) {
+        List<Deal> deals = jpaQueryFactory.select(qDeal)
+                .from(qDeal)
+                .where(qDeal.dealType.ne(6)
+                        .and((qDeal.dealTo.eq(userId))
+                        .or(qDeal.dealFrom.eq(userId))))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        if (deals.isEmpty()) return Page.empty();
+
+        return new PageImpl<Deal>(deals, pageable, deals.size());
     }
 }
