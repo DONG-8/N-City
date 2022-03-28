@@ -19,6 +19,7 @@ import { Provider } from "react-redux";
 import gamestore from "./ingame/stores";
 import phaserGame from "./ingame/PhaserGame";
 import Main2 from "./pages/Main/Main2";
+import SearchPage from "./pages/NFTStore/SearchPage";
 
 
 function App() {
@@ -50,8 +51,8 @@ function App() {
           <Route path="/event/detail" element={<EventDetail />} />
           <Route path="/rank" element={<Rank />} />
           <Route path="/artists" element={<Artists />} />
-          <Route
-            path="/ingame"
+          <Route path="/search/:data" element={<SearchPage />}/>
+          <Route path="/ingame"
             element={
               <Provider store={gamestore}>
                 <GameApp />

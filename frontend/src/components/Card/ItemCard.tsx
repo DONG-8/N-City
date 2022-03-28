@@ -7,16 +7,15 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 const CardWrapper = styled.div`
   cursor: pointer;
-  height: 420px;
+  height: 420;
   width: 350px;
   background-color: #ffffff;
-  border-radius: 5px;
-  border:1px solid gray;
-  box-shadow:0px 3px 3px  ;
-  /* border: 0.5px solid gray; */
+  border-radius: 10px;
+  border:0.5px solid #E9E4E4;
   margin: 30px ;
   &:hover{
-    box-shadow:0px 5px 5px  ;    
+    box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+    transform: translateY(-5px);
     .buy{
       visibility: visible ;
       transition: 1s ;
@@ -94,11 +93,12 @@ const Title = styled.div`
 `;
 interface Iprops{
   item :{
-    name:string,
-    title:string,
-    price:number,
-    liked:number,
-    url:string
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
   }
 }
 
@@ -109,26 +109,25 @@ const ItemCard:React.FC<Iprops>= ({item}) => {
     localStorage.setItem("item",JSON.stringify(item))
   }
   const [liked,setLiked] = useState(false)
-  const [likes,setLikes] = useState(item.liked)
-
+  const [likes,setLikes] = useState(Number(item.productFavorite))
   return (
     <>
       <CardWrapper >
         <Image onClick={()=>{goDetailPage()}}>
           <img alt="pic" 
-          src={item.url}/>
+          src={item.productThumbnailUrl}/>
         </Image>
         <CardCenter onClick={()=>{goDetailPage()}}>
           <DesLeft>
-            <Artist>
+            {/* <Artist>
               {item.name}
-            </Artist>
+            </Artist> */}
             <Title>
-              {item.title}
+              {item.productTitle}
             </Title>
           </DesLeft>
           <DesRight>
-            <p className='number'> <img alt="💎" style={{"height":"2.5vh"}} src={ether}/>{item.price}</p>
+            <p className='number'> <img alt="💎" style={{"height":"2.5vh"}} src={ether}/>{item.productPrice}</p>
           </DesRight>
         </CardCenter>
         <CardBottom>
