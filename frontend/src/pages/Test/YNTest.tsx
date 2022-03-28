@@ -277,6 +277,7 @@ const YNTest = () => {
   const [tokenName, setTokenName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [category, setCategory] = useState<string>("");
+  const [categoryCode, setCategoryCode] = useState<any>(null);
   const [isVideo, setIsVideo] = useState<boolean>(false);
   const { ethereum } = window;
 
@@ -896,6 +897,7 @@ const YNTest = () => {
         onClose={handleModalClose}
         openStateHandler={setIsOpen}
         setCategory={setCategory}
+        setCategoryCode={setCategoryCode}
       ></CategoryModal>
     </Wrapper>
   );
