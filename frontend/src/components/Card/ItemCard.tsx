@@ -93,13 +93,14 @@ const Title = styled.div`
 `;
 interface Iprops{
   item :{
+    productId: Number,
     productTitle: string,
     productPrice: Number,
     productThumbnailUrl: string,
     productFavorite: Number,
     productRegDt:Object,
     productCode: Number,
-  }
+  },
 }
 
 const ItemCard:React.FC<Iprops>= ({item}) => {

@@ -90,6 +90,7 @@ const DesCenter = styled.div`
 `
 interface Iprops{
   item :{
+    productId: Number,
     productTitle: string,
     productPrice: Number,
     productThumbnailUrl: string,
@@ -112,8 +113,9 @@ const ItemCard2:React.FC<Iprops>= ({item}) => {
     <>
       <CardWrapper >
         <Image onClick={()=>{goDetailPage()}}>
-          <img alt="pic" 
-          src={item.productThumbnailUrl}/>
+          { item.productThumbnailUrl ?
+          <img alt="pic" src={item.productThumbnailUrl}/>:
+          <img alt="pic" src="https://search.pstatic.net/sunny/?src=http%3A%2F%2Ftx01-az3199.ktics.co.kr%2F13301240351_t_article.png&type=sc960_832"/>}
         </Image>
         <CardCenter >
           <DesLeft>

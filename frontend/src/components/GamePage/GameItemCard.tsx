@@ -93,11 +93,12 @@ const Title = styled.div`
 `;
 interface Iprops{
   item :{
+    productId: Number,
     productTitle: string,
     productPrice: Number,
     productThumbnailUrl: string,
-    productRegDt:Object,
     productFavorite: Number,
+    productRegDt:Object,
     productCode: Number,
   },
   setMode :React.Dispatch<React.SetStateAction<string>>

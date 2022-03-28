@@ -1,8 +1,8 @@
+import { ItemType } from './../items/Item';
 import { IComputer,IWhiteboard,IOfficeState,IPlayer } from '../../types/IOfficeState';
 import { Client, Room } from 'colyseus.js'
 import { Message } from '../../types/Messages'
 import { IRoomData, RoomType } from '../../types/Rooms'
-import { ItemType } from '../../types/Items'
 import WebRTC from '../web/WebRTC'
 import { phaserEvents, Event } from '../components/events/EventCenter'
 import store from '../stores'

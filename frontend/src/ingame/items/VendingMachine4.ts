@@ -4,11 +4,10 @@ import store from '../stores'
 
 import { openVendingMachineDialog } from '../stores/VendingMachineStore'
 
-export default class VendingMachine extends Item {
+export default class VendingMachine4 extends Item {
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame)
-
-    this.itemType = ItemType.VENDINGMACHINE
+    this.itemType = ItemType.VENDINGMACHINE4
   }
 
   onOverlapDialog() {

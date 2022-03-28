@@ -1,25 +1,24 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice,PayloadAction } from '@reduxjs/toolkit'
 
 interface VendingMachineState{
   vendingMachineDialogOpen:boolean
+  nftnumber:Number
 }
 
 const initialState : VendingMachineState={
-  vendingMachineDialogOpen : false
+  vendingMachineDialogOpen : false,
+  nftnumber:1
 }
 
 export const vendingMachineSlice = createSlice({
   name:'vendingMachine',
   initialState,
   reducers:{
-    openVendingMachineDialog:(
-      state,
-    ) =>{
-      state.vendingMachineDialogOpen = true
-    },
-    closeVendingMachineDialogOpen:(state)=>{
-      state.vendingMachineDialogOpen = false
-    }
+    openVendingMachineDialog:(state,action: PayloadAction<Number>) =>{ 
+        state.nftnumber = action.payload
+        state.vendingMachineDialogOpen = true
+      },
+    closeVendingMachineDialogOpen:(state)=>{state.vendingMachineDialogOpen = false}
   }
 })
 export const {
