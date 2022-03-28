@@ -39,4 +39,6 @@ public interface ProductService {
     // delete
     boolean productRemove(Long productId);
 
+    Page<Product> getProductListByUserId(Long userId, Pageable pageable);
+
 }

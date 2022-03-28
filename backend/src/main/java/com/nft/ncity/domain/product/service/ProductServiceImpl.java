@@ -302,4 +302,10 @@ public class ProductServiceImpl implements ProductService{
             return true;
         }else return false;
     }
+
+    @Override
+    public Page<Product> getProductListByUserId(Long userId, Pageable pageable) {
+        Page<Product> productList = productRepositorySupport.findProductListByUserId(userId, pageable);
+        return productList;
+    }
 }

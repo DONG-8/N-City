@@ -122,5 +122,18 @@ public class ProductRepositorySupport {
     }
 
 
+    public Page<Product> findProductListByUserId(Long userId, Pageable pageable) {
 
+        List<Product> productList = jpaQueryFactory.select(qProduct)
+                .from(qProduct)
+                .where(qProduct.userId.eq(userId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        if(productList.isEmpty()) return Page.empty();
+
+        return  new PageImpl<Product>(productList,pageable, productList.size());
+
+    }
 }
