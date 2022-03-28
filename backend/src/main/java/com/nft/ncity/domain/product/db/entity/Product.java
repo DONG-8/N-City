@@ -61,9 +61,12 @@ public class Product {
     @Column(name = "product_file_url")
     private String productFileUrl;
 
+
     @Column(name = "product_thumbnail_url")
     private String productThumbnailUrl;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    private LocalDateTime productAuctionEndTime;
 
     // DB table에 존재 X 따로 초기화 해야함
     @Transient
