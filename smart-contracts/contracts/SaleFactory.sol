@@ -101,14 +101,11 @@ contract Sale {
     address public highestBidder; // 현재 최고 제안자 정보
     uint256 public highestBid;  // 현재 최고 제안가
 
-    IERC20 public erc20Contract;
-    IERC721 public erc721Constract;
     NFTcreator public NFTcreatorContract;
     SSFToken public SSFTokenContract;
 
     event HighestBidIncereased(address bidder, uint256 amount); // 현재 최고 제안자, 최고 제안가
     event SaleEnded(address winner, uint256 amount);  // 최종 구매자 정보
-
 
     constructor(
         address _admin,
@@ -132,8 +129,6 @@ contract Sale {
         currencyAddress = _currencyAddress; 
         nftAddress = _nftAddress; 
         ended = false; 
-        erc20Contract = IERC20(_currencyAddress);
-        erc721Constract = IERC721(_nftAddress);
         NFTcreatorContract = NFTcreator(_nftAddress);
         SSFTokenContract = SSFToken(_currencyAddress);
     }
@@ -154,11 +149,11 @@ contract Sale {
         // TODO
         require(msg.sender != seller, "seller can't call this function");
         require(block.timestamp < saleEndTime, "Sale time has expired");
+        require(SSFTokenContract.balanceOf(msg.sender) >= bid_amount, "buyer do not have enough ERC20 token");
         require(SSFTokenContract.allowance(msg.sender, address(this)) != 0, "buyer did not approve this contract");
         require(SSFTokenContract.allowance(msg.sender, address(this)) >= bid_amount, "caller approve less amount of token");
         require(bid_amount >= minPrice, "bid_amount is less than minPrice");
         require(bid_amount > getHighestBid(), "bid_amount is less than highestBid");
-        require(bid_amount < purchasePrice, "bid_amount is larger than purchasePrice");
         if (highestBidder != address(0)) { // 기존 제안자가 있으면 환불
             SSFTokenContract.approve(address(this), getHighestBid());
             SSFTokenContract.transferFrom(address(this), highestBidder, highestBid);
@@ -184,6 +179,7 @@ contract Sale {
         // TODO 
         require(msg.sender != seller, "seller can't call this function");
         require(block.timestamp < saleEndTime, "Sale time has expired");
+        require(SSFTokenContract.balanceOf(msg.sender) >= bid_amount, "buyer do not have enough ERC20 token");
         require(SSFTokenContract.allowance(msg.sender, address(this)) != 0, "buyer did not approve this contract");
         require(SSFTokenContract.allowance(msg.sender, address(this)) >= bid_amount, "caller approve less amount of token");
         require(bid_amount >= purchasePrice, "bid_amount is less than purchasePrice");
@@ -203,9 +199,8 @@ contract Sale {
     2. NFT 소유권을 구매자에게 이전한다.
     3. 컨트랙트의 거래 상태와 구매자 정보를 업데이트한다.
     */
-    function confirmItem() public {
+    function confirmItem() public onlyAfterEnd {
         // TODO 
-        require(block.timestamp > saleEndTime, "Sale time has not expired");
         require(msg.sender == highestBidder || msg.sender == seller, "caller is not highestBidder or seller");
         NFTcreatorContract.transferFrom(address(this), highestBidder, tokenId);
         SSFTokenContract.approve(address(this), getHighestBid());
@@ -236,7 +231,6 @@ contract Sale {
     // 경매종료시 판매자 cancel함수 (아무도 입찰 안했을때 NFT돌려받기)
     function cancelAuction() public {
         // TODO
-        // require(block.timestamp > saleEndTime, "Sale time has not expired");
         require(msg.sender == seller || msg.sender == admin, "caller is not approved");
         require(highestBidder == address(0), "bidder exist");
         // NFT 소유권을 판매자에게 되돌려주기
@@ -289,18 +283,13 @@ contract Sale {
     }
 
     function _getCurrencyAmount() private view returns (uint256) {
-        return erc20Contract.balanceOf(msg.sender);
+        return SSFTokenContract.balanceOf(msg.sender);
     }
 
     // modifier를 사용하여 함수 동작 조건을 재사용하는 것을 권장합니다. 
-    modifier onlySeller() {
-        require(msg.sender == seller, "Sale: You are not seller.");
-        _;
-    }
-
-    modifier onlyAfterStart() {
+    modifier onlyAfterEnd() {
         require(
-            block.timestamp >= saleStartTime,
+            block.timestamp > saleEndTime,
             "Sale: This sale is not started."
         );
         _;
