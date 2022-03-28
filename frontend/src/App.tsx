@@ -54,8 +54,6 @@ function App() {
           <Route path="/rank" element={<Rank />} />
           <Route path="/artists" element={<Artists />} />
           <Route path="/YNTest" element={<YNTest />} />
-          <Route
-            path="/ingame"
           <Route path="/search/:data" element={<SearchPage />}/>
           <Route path="/ingame"
             element={

@@ -290,7 +290,7 @@ const Mint = () => {
     "submitFile",
     async () => {
       const formdata = new FormData();
-      formdata.append("code", 3);
+      formdata.append("code", "3");
       formdata.append("productDesc", "이잉");
       formdata.append("productTitle", "이이잉");
       formdata.append("productFile", file);
