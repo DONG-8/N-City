@@ -4,6 +4,8 @@ pragma solidity ^0.8.4;
 import "./access/Ownable.sol";
 import "./token/ERC20/ERC20.sol";
 import "./token/ERC721/ERC721.sol";
+import "./NFTcreator.sol";
+import "./SSFToken.sol";
 
 /**
  * PJT Ⅲ - Req.1-SC1 SaleFactory 구현
@@ -13,10 +15,12 @@ import "./token/ERC721/ERC721.sol";
  Sale 컨트랙트를 생성하는 역할을 하는 스마트 컨트랙트
  특정계정이 보유하고있는 NFT를 ERC-20토큰을 받고 판매하고자 할때 호출되는 컨트랙트
  SaleFactory는 새로운 Sale 컨트랙트를 배포하게 되며 각 Sale컨트랙트는 판매하고자 하는 NFT를 임시보유한다.
-  */
+ */
 contract SaleFactory is Ownable {
     address public admin; // 모든 판매의 수퍼권한을 갖는 address(owner)
-    address[] public sales; // 이 컨트랙트를 통해 생성된 Sale컨트랙트의 주소의 배역
+    address[] public sales; // 이 컨트랙트를 통해 생성된 Sale컨트랙트의 주소의 배열
+    mapping(uint256 => address) saleContractAddress; // 토큰id -> Salecontract address 맵핑
+    NFTcreator public NFTcreatorContract;
 
     event NewSale(
         address indexed _saleContract,
@@ -24,8 +28,9 @@ contract SaleFactory is Ownable {
         uint256 _workId
     );
 
-    constructor() {
+    constructor(address _NFTcreatorAddress) {
         admin = msg.sender;
+        NFTcreatorContract = NFTcreator(_NFTcreatorAddress);
     }
 
     /**
@@ -46,17 +51,26 @@ contract SaleFactory is Ownable {
         address nftAddress
     ) public returns (address) {
         // TODO
-        Sale instance = new Sale(admin, msg.sender, itemId, minPrice, purchasePrice, startTime, endTime, currencyAddress, nftAddress);
+        address seller = msg.sender;
+        Sale instance = new Sale(admin, seller, itemId, minPrice, purchasePrice, startTime, endTime, currencyAddress, nftAddress);
+        // 생성한 인스턴스에게 tokenid에 해당하는 토큰의 소유권 넘겨주기
+        NFTcreatorContract.transferFrom(seller, address(instance), itemId);
         // return instance;
         // emit NewSale(_saleContract, _owner, _workId);
         sales.push(address(instance));
+        saleContractAddress[itemId] = address(instance);
         emit NewSale(address(instance), msg.sender, itemId);
         return address(instance);
     }
-    
+
     // 생성된 모든 Sale 주소를 반환
     function allSales() public view returns (address[] memory) {
         return sales;
+    }
+
+    function getSaleContractAddress(uint256 tokenId) public view returns (address) {
+        require(saleContractAddress[tokenId] != address(0), "this token is not on sale");
+        return saleContractAddress[tokenId];
     }
 }
 
@@ -87,12 +101,11 @@ contract Sale {
     address public highestBidder; // 현재 최고 제안자 정보
     uint256 public highestBid;  // 현재 최고 제안가
 
-    IERC20 public erc20Contract;
-    IERC721 public erc721Constract;
+    NFTcreator public NFTcreatorContract;
+    SSFToken public SSFTokenContract;
 
     event HighestBidIncereased(address bidder, uint256 amount); // 현재 최고 제안자, 최고 제안가
     event SaleEnded(address winner, uint256 amount);  // 최종 구매자 정보
-
 
     constructor(
         address _admin,
@@ -109,15 +122,15 @@ contract Sale {
         tokenId = _tokenId; 
         minPrice = _minPrice; 
         purchasePrice = _purchasePrice;
-        seller = _seller; 
-        admin = _admin; 
+        seller = _seller;
+        admin = _admin;
         saleStartTime = startTime;
-        saleEndTime = endTime; 
+        saleEndTime = endTime;
         currencyAddress = _currencyAddress; 
         nftAddress = _nftAddress; 
         ended = false; 
-        erc20Contract = IERC20(_currencyAddress);
-        erc721Constract = IERC721(_nftAddress);
+        NFTcreatorContract = NFTcreator(_nftAddress);
+        SSFTokenContract = SSFToken(_currencyAddress);
     }
 
     /**
@@ -134,6 +147,21 @@ contract Sale {
      */
     function bid(uint256 bid_amount) public {
         // TODO
+        require(msg.sender != seller, "seller can't call this function");
+        require(block.timestamp < saleEndTime, "Sale time has expired");
+        require(SSFTokenContract.balanceOf(msg.sender) >= bid_amount, "buyer do not have enough ERC20 token");
+        require(SSFTokenContract.allowance(msg.sender, address(this)) != 0, "buyer did not approve this contract");
+        require(SSFTokenContract.allowance(msg.sender, address(this)) >= bid_amount, "caller approve less amount of token");
+        require(bid_amount >= minPrice, "bid_amount is less than minPrice");
+        require(bid_amount > getHighestBid(), "bid_amount is less than highestBid");
+        if (highestBidder != address(0)) { // 기존 제안자가 있으면 환불
+            SSFTokenContract.approve(address(this), getHighestBid());
+            SSFTokenContract.transferFrom(address(this), highestBidder, highestBid);
+        }
+        highestBidder = msg.sender;
+        highestBid = bid_amount;
+        SSFTokenContract.transferFrom(highestBidder, address(this), bid_amount);
+        emit HighestBidIncereased(highestBidder, highestBid);
     }
 
     /**
@@ -147,8 +175,19 @@ contract Sale {
     3. NFT 소유권을 구매자에게 이전한다.
     4. 컨트랙트의 거래상태와 구매자 정보를 업데이트 한다.
      */
-    function purchase() public {
+    function purchase(uint256 bid_amount) public {
         // TODO 
+        require(msg.sender != seller, "seller can't call this function");
+        require(block.timestamp < saleEndTime, "Sale time has expired");
+        require(SSFTokenContract.balanceOf(msg.sender) >= bid_amount, "buyer do not have enough ERC20 token");
+        require(SSFTokenContract.allowance(msg.sender, address(this)) != 0, "buyer did not approve this contract");
+        require(SSFTokenContract.allowance(msg.sender, address(this)) >= bid_amount, "caller approve less amount of token");
+        require(bid_amount >= purchasePrice, "bid_amount is less than purchasePrice");
+        buyer = msg.sender;
+        SSFTokenContract.transferFrom(buyer, seller, bid_amount);
+        NFTcreatorContract.transferFrom(address(this), buyer, tokenId);
+        emit SaleEnded(buyer, bid_amount);
+        _end();
     }
 
     /**
@@ -160,16 +199,50 @@ contract Sale {
     2. NFT 소유권을 구매자에게 이전한다.
     3. 컨트랙트의 거래 상태와 구매자 정보를 업데이트한다.
     */
-    function confirmItem() public {
+    function confirmItem() public onlyAfterEnd {
         // TODO 
+        require(msg.sender == highestBidder || msg.sender == seller, "caller is not highestBidder or seller");
+        NFTcreatorContract.transferFrom(address(this), highestBidder, tokenId);
+        SSFTokenContract.approve(address(this), getHighestBid());
+        SSFTokenContract.transferFrom(address(this), seller, getHighestBid());
+        emit SaleEnded(highestBidder, getHighestBid());
+        _end(); 
     }
     
+    /**
+    판매 종료 시간 이전에 판매자나 관리자가 판매를 철회하는 함수
+    - 철회 시점이 유효한 경우
+    - 호출자가 판매자 혹은 관리자인 경우
+    위 사항을 만족하는 경우
+    1. 환불을 진행한다.
+    2. NFT소유권을 판매자에게 되돌려 준다.
+    3. 컨트랙트의 거래 상태를 업데이트 한다.
+    */
+    // 즉시구매 취소하는 함수
     function cancelSales() public {
         // TODO
+        require(block.timestamp < saleEndTime, "Sale time has expired");
+        require(msg.sender == seller || msg.sender == admin, "caller is not approved");
+        // NFT 소유권을 판매자에게 되돌려주기
+        NFTcreatorContract.transferFrom(address(this), seller, tokenId);
+        _end();
+    }
+
+    // 경매종료시 판매자 cancel함수 (아무도 입찰 안했을때 NFT돌려받기)
+    function cancelAuction() public {
+        // TODO
+        require(msg.sender == seller || msg.sender == admin, "caller is not approved");
+        require(highestBidder == address(0), "bidder exist");
+        // NFT 소유권을 판매자에게 되돌려주기
+        NFTcreatorContract.transferFrom(address(this), seller, tokenId);
     }
 
     function getTimeLeft() public view returns (int256) {
         return (int256)(saleEndTime - block.timestamp);
+    }
+
+    function getBlockTimeStamp() public view returns(uint256){
+        return block.timestamp;
     }
 
     function getSaleInfo()
@@ -210,18 +283,13 @@ contract Sale {
     }
 
     function _getCurrencyAmount() private view returns (uint256) {
-        return erc20Contract.balanceOf(msg.sender);
+        return SSFTokenContract.balanceOf(msg.sender);
     }
 
     // modifier를 사용하여 함수 동작 조건을 재사용하는 것을 권장합니다. 
-    modifier onlySeller() {
-        require(msg.sender == seller, "Sale: You are not seller.");
-        _;
-    }
-
-    modifier onlyAfterStart() {
+    modifier onlyAfterEnd() {
         require(
-            block.timestamp >= saleStartTime,
+            block.timestamp > saleEndTime,
             "Sale: This sale is not started."
         );
         _;

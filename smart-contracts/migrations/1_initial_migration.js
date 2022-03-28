@@ -13,8 +13,16 @@ const SaleFactory = artifacts.require("SaleFactory");
  * PJT Ⅲ - NFTcreator, SSFToken, SaleFactory
  * 가 배포되어야 합니다. 
  */
-module.exports = function (deployer) {
-  deployer.deploy(NFTcreator); 
-  deployer.deploy(SSFToken, "SSAFY", "SSF", 0);
-  deployer.deploy(SaleFactory);
+module.exports = async (deployer) => {
+  deployer.deploy(NFTcreator).then(
+    function() {
+      return deployer.deploy(SaleFactory, NFTcreator.address)
+    }
+  ).then(
+    function() {
+      return deployer.deploy(SSFToken, "N-city", "NCT", 0);
+    }
+  )
+  // deployer.deploy(SSFToken, "SSAFY", "SSF", 0);
+  // deployer.deploy(SaleFactory, NFTcreator.address);
 };
