@@ -730,6 +730,19 @@ const SaleAbi: AbiItem[] = [
 	},
 	{
 		"inputs": [],
+		"name": "SSFTokenContract",
+		"outputs": [
+			{
+				"internalType": "contract SSFToken",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "buyer",
 		"outputs": [
 			{
@@ -924,7 +937,13 @@ const SaleAbi: AbiItem[] = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "bid_amount",
+				"type": "uint256"
+			}
+		],
 		"name": "purchase",
 		"outputs": [],
 		"stateMutability": "nonpayable",
@@ -940,6 +959,13 @@ const SaleAbi: AbiItem[] = [
 	{
 		"inputs": [],
 		"name": "cancelSales",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "cancelAuction",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1427,9 +1453,9 @@ const SSFTokenAbi: AbiItem[] = [
 ];
 
 
-export const NFTcreatorAddress = "0x3AC2e6064A61B5dB17A34DeDb833350a75DA42F4";
-export const SaleFactoryAddress = "0x4fB9e3C4e13379263Bc3f8e95296bb4Ffae7F14d";
-export const SSFTokenAddress = "0x5E3cB6879679674daCCb3Bb81D93Ae1EED0A2443";
+export const NFTcreatorAddress = "0xcEce77d2aE606eC0F96e4f129896b798A8a94c1A";
+export const SaleFactoryAddress = "0xCAc7ddcbeFa9BD1374Ea6258430b7d0128150c44";
+export const SSFTokenAddress = "0xCe7d2E1196327c400f272e54E40ab63936dF92B7";
 
 export const web3 = new Web3(window.ethereum);
 
@@ -1443,6 +1469,11 @@ export const SaleFactoryContract = new web3.eth.Contract(
 	SaleFactoryAbi,
 	SaleFactoryAddress
 );
+
+export const SSFTokenContract = new web3.eth.Contract(
+	SSFTokenAbi,
+	SSFTokenAddress
+)
 
 // 생성한 Sale컨트랙트의 주소를 인자로 받아 SaleContract를 생성해주는 함수
 export const createSaleContract = (SaleAddress) => {

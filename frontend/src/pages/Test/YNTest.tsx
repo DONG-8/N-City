@@ -2,7 +2,15 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios, { AxiosRequestConfig } from "axios";
 import CategoryModal, { Icategory } from "../../components/Mint/CategoryModal";
-import { createSaleContract, NFTcreatorAddress, NFTcreatorContract, SaleFactoryAddress, SaleFactoryContract, SSFTokenAddress } from "../../web3Config";
+import {
+  createSaleContract,
+  NFTcreatorAddress,
+  NFTcreatorContract,
+  SaleFactoryAddress,
+  SaleFactoryContract,
+  SSFTokenAddress,
+  SSFTokenContract,
+} from "../../web3Config";
 
 // 동준추가
 import { postProduct } from "../../store/apis/product";
@@ -382,45 +390,243 @@ const YNTest = () => {
     // console.log(accounts[0]);
     // console.log(response);
     // console.log(response.events.createNFT.returnValues._tokenId);
-    const tokenId = response.events.createNFT.returnValues._tokenId
-    console.log('방금 민팅한 토큰 id', tokenId)
-    console.log("방금 민팅한 토큰의 owner", await NFTcreatorContract.methods.ownerOf(tokenId).call())
+    const tokenId = response.events.createNFT.returnValues._tokenId;
+    console.log("방금 민팅한 토큰 id", tokenId);
+    console.log(
+      "방금 민팅한 토큰의 owner",
+      await NFTcreatorContract.methods.ownerOf(tokenId).call()
+    );
     // createSale
     const date = new Date();
-    
+
     //saleFactory로 권한 승인시키기
-    await NFTcreatorContract.methods.approve(SaleFactoryAddress, tokenId).send({from: accounts[0]})
-    
+    await NFTcreatorContract.methods
+      .approve(SaleFactoryAddress, tokenId)
+      .send({ from: accounts[0] });
+
     //판매등록
-    const response2 = await SaleFactoryContract.methods.createSale(tokenId, 10, 20, Math.round(date.getTime()/1000), Math.round(date.getTime()/1000) + 30, SSFTokenAddress, NFTcreatorAddress).send({from:accounts[0]});
-    
+    const response2 = await SaleFactoryContract.methods
+      .createSale(
+        tokenId,
+        10,
+        20,
+        Math.round(date.getTime() / 1000),
+        Math.round(date.getTime() / 1000) + 30,
+        SSFTokenAddress,
+        NFTcreatorAddress
+      )
+      .send({ from: accounts[0] });
+
     // Sale컨트랙트 목록
-    const response3 = await SaleFactoryContract.methods.allSales().call()
-    console.log('allsales', response3) // allsales
+    const response3 = await SaleFactoryContract.methods.allSales().call();
+    console.log("allsales", response3); // allsales
 
     // 방금 판매등록한 토큰의 Sale컨트랙트 확인
-    const saleAddress = response2.events.NewSale.returnValues._saleContract
-    console.log('지금 판매등록한 Sale컨트랙트 주소', saleAddress) // 지금 판매등록한 Sale컨트랙트 주소
-    const SaleContract = createSaleContract(saleAddress)
+    const saleAddress = response2.events.NewSale.returnValues._saleContract;
+    console.log("지금 판매등록한 Sale컨트랙트 주소", saleAddress); // 지금 판매등록한 Sale컨트랙트 주소
+    const SaleContract = createSaleContract(saleAddress);
     const response4 = await SaleContract.methods.getSaleInfo().call();
-    console.log('sale컨트랙트주소에 맞는 Sale컨트랙트의 정보',response4) 
+    console.log("sale컨트랙트주소에 맞는 Sale컨트랙트의 정보", response4);
     // const response5 = await SaleContract.methods.getBlockTimeStamp().call();
     // console.log(response5)
     // const response6 = await SaleContract.methods.getTimeLeft().call();
     // console.log(response6)
-    const response7 = await NFTcreatorContract.methods.ownerOf(tokenId).call()
-    console.log("판매등록 후 토큰의 owner", response7)
+    const response7 = await NFTcreatorContract.methods.ownerOf(tokenId).call();
+    console.log("판매등록 후 토큰의 owner", response7);
 
     // 판매 취소
-    await SaleContract.methods.cancelSales().send({from: accounts[0]})
-    const response8 = await NFTcreatorContract.methods.ownerOf(tokenId).call()
-    console.log("판매 취소후 토큰의 owner", response8)
+    await SaleContract.methods.cancelSales().send({ from: accounts[0] });
+    const response8 = await NFTcreatorContract.methods.ownerOf(tokenId).call();
+    console.log("판매 취소후 토큰의 owner", response8);
 
     // 토큰아이디로 Sale컨트랙트address 찾기 (위의 Sale컨트랙트 주소와 일치해야됨)
-    const response9 = await SaleFactoryContract.methods.getSaleContractAddress(tokenId).call();
-    console.log("토큰아이디로 조회한 Sale컨트랙트 주소", response9)
+    const response9 = await SaleFactoryContract.methods
+      .getSaleContractAddress(tokenId)
+      .call();
+    console.log("토큰아이디로 조회한 Sale컨트랙트 주소", response9);
 
+    /////////////////// ERC20 민팅 테스트
+    // await SSFTokenContract.methods.mint(1000).send({from: accounts[0]});
+  };
+
+  const [tokenId, setTokenId] = useState();
+  const [account, setAccount] = useState("");
+  const [saleContract, setSaleContract] = useState<any>()
+  const [saleContractAddress, setSaleContractAddress] = useState<any>()
+
+  const [bidAmount, setBidAmount] = useState<any>("")
+  const [purchaseAmount, setPurchaseAmount] = useState<any>("")
+  const accountCall = async () => {
+    const accounts = await ethereum.request({ method: "eth_accounts" })
+    setAccount(accounts[0])
   }
+  useEffect(() => {
+    accountCall()
+  }, [account]);
+
+  const onClickUpdate = async (e) => {
+    e.preventDefault();
+    accountCall()
+  }
+
+  const onClickMint = async (e) => {
+    e.preventDefault();
+    if (!account) return ;
+    const response = await NFTcreatorContract.methods
+      .create(account, "testURI2")
+      .send({
+        from: account,
+      });
+    await setTokenId(response.events.createNFT.returnValues._tokenId);
+    console.log("방금 민팅한 토큰 id", response.events.createNFT.returnValues._tokenId);
+    console.log(
+      "방금 민팅한 토큰의 owner",
+      await NFTcreatorContract.methods.ownerOf(response.events.createNFT.returnValues._tokenId).call()
+    );
+  }
+
+  const onClickCreateSale = async (e) => {
+    e.preventDefault();
+    //saleFactory로 권한 승인시키기
+    await NFTcreatorContract.methods
+      .approve(SaleFactoryAddress, tokenId)
+      .send({ from: account });
+
+    //판매등록
+    const date = new Date();
+    const response2 = await SaleFactoryContract.methods
+      .createSale(
+        tokenId,
+        20,
+        20,
+        Math.round(date.getTime() / 1000),
+        Math.round(date.getTime() / 1000) + 999999999999,
+        SSFTokenAddress,
+        NFTcreatorAddress
+      )
+      .send({ from: account });
+
+    // 방금 판매등록한 토큰의 Sale컨트랙트 확인
+    const temp = (response2.events.NewSale.returnValues._saleContract);
+    console.log("지금 판매등록한 Sale컨트랙트 주소", temp); // 지금 판매등록한 Sale컨트랙트 주소
+    await setSaleContractAddress(temp);
+    const nowSaleContract = await createSaleContract(temp)
+    await setSaleContract(nowSaleContract);
+    const response4 = await nowSaleContract.methods.getSaleInfo().call();
+    console.log("sale컨트랙트주소에 맞는 Sale컨트랙트의 정보", response4);
+    // const response5 = await SaleContract.methods.getBlockTimeStamp().call();
+    // console.log(response5)
+    // const response6 = await SaleContract.methods.getTimeLeft().call();
+    // console.log(response6)
+    const response7 = await NFTcreatorContract.methods.ownerOf(tokenId).call();
+    console.log("판매등록 후 토큰의 owner", response7);
+  }
+
+  const onClickCancelSale = async (e) => {
+    e.preventDefault();
+    await saleContract.methods.cancelSales().send({ from: account });
+    const response8 = await NFTcreatorContract.methods.ownerOf(tokenId).call();
+    console.log("판매 취소후 토큰의 owner", response8);
+  }
+
+  const onClickCreateAuction = async (e) => {
+    e.preventDefault();
+    //saleFactory로 권한 승인시키기
+    await NFTcreatorContract.methods
+      .approve(SaleFactoryAddress, tokenId)
+      .send({ from: account });
+
+    //경매등록
+    const date = new Date();
+    const response2 = await SaleFactoryContract.methods
+      .createSale(
+        tokenId,
+        20,
+        99999999999,
+        Math.round(date.getTime() / 1000),
+        Math.round(date.getTime() / 1000) + 90,
+        SSFTokenAddress,
+        NFTcreatorAddress
+      )
+      .send({ from: account });
+
+    // 방금 경매등록한 토큰의 Sale컨트랙트 확인
+    const temp = (response2.events.NewSale.returnValues._saleContract);
+    await setSaleContractAddress(temp);
+    console.log("지금 경매등록한 Sale컨트랙트 주소", temp); // 지금 판매등록한 Sale컨트랙트 주소
+    const nowSaleContract = await createSaleContract(temp)
+    await setSaleContract(nowSaleContract);
+    const response4 = await nowSaleContract.methods.getSaleInfo().call();
+    console.log("sale컨트랙트주소에 맞는 Sale컨트랙트의 정보", response4);
+    // const response5 = await SaleContract.methods.getBlockTimeStamp().call();
+    // console.log(response5)
+    // const response6 = await SaleContract.methods.getTimeLeft().call();
+    // console.log(response6)
+    const response7 = await NFTcreatorContract.methods.ownerOf(tokenId).call();
+    console.log("경매등록 후 토큰의 owner", response7);
+  }
+
+  const onClickCancelAuction = async (e) => {
+    e.preventDefault();
+    await saleContract.methods.cancelAuction().send({ from: account });
+    const response8 = await NFTcreatorContract.methods.ownerOf(tokenId).call();
+    console.log("경매 취소후 토큰의 owner", response8);
+  }
+
+  const onClickBid = async (e) => {
+    e.preventDefault();
+    //sale로 권한 승인시키기
+    await SSFTokenContract.methods
+      .approve(saleContractAddress, bidAmount)
+      .send({ from: account });
+    
+    //bid 요청
+    const response = await saleContract.methods.bid(bidAmount).send({ from: account });
+    const temp = (response.events.HighestBidIncereased.returnValues.bidder);
+    const temp2 = (response.events.HighestBidIncereased.returnValues.amount);
+    console.log("현재 최고 제안자", temp)
+    console.log("현재 최고 제안가", temp2)
+  }
+
+  const onClickPurchase = async (e) => {
+    e.preventDefault();
+    //sale로 권한 승인시키기
+    await SSFTokenContract.methods
+      .approve(saleContractAddress, purchaseAmount)
+      .send({ from: account });
+
+    //purchase 요청
+    const response = await saleContract.methods.purchase(purchaseAmount).send({ from: account });
+    const temp = (response.events.SaleEnded.returnValues.winner);
+    const temp2 = (response.events.SaleEnded.returnValues.amount);
+    console.log("구매자", temp)
+    console.log("구매가격", temp2)
+  }
+
+  const onClickConfirmItem = async (e) => {
+    e.preventDefault();
+    const response = await saleContract.methods.confirmItem().send({ from: account });
+    const temp = (response.events.SaleEnded.returnValues.winner);
+    const temp2 = (response.events.SaleEnded.returnValues.amount);
+    console.log("경매끝 최종 구매자", temp)
+    console.log("경매끝 최종 구매 가격", temp2)
+  }
+
+  const onClickAddCoin = async (e) => {
+    e.preventDefault();
+    await SSFTokenContract.methods.mint(2000).send({ from: account });
+  }
+
+  const onClickSendCoin = async (e) => {
+    e.preventDefault();
+    await SSFTokenContract.methods.forceToTransfer(account, "0x90625F5d2178762ab068dA30ECbca1810E42A027", 1000).send({ from: account });
+  }
+
+  const onClickTokenOwner = async (e) => {
+    e.preventDefault();
+    console.log(await NFTcreatorContract.methods.ownerOf(tokenId).call());
+  }
+
 
   const encodeMainFileToBasek64 = (fileBlob: any) => {
     const reader: any = new FileReader();
@@ -453,6 +659,16 @@ const YNTest = () => {
 
   const onChangeDescription = (e: React.ChangeEvent) => {
     setDescription((e.target as HTMLInputElement).value);
+    console.log((e.target as HTMLInputElement).value);
+  };
+
+  const onChangeBid = async (e: React.ChangeEvent) => {
+    await setBidAmount((e.target as HTMLInputElement).value);
+    console.log(bidAmount);
+  };
+
+  const onChangePurchase = async (e: React.ChangeEvent) => {
+    await setPurchaseAmount((e.target as HTMLInputElement).value);
     console.log((e.target as HTMLInputElement).value);
   };
 
@@ -634,8 +850,45 @@ const YNTest = () => {
             <HashtagPlus />
           </HashtagBox>
         )}
+        <p>지금 연결된 지갑: {account}</p>
+        <p>ERC20 address: {SSFTokenAddress}</p>
         <ButtonBox>
-          <button onClick={onClickSubmit}>작품등록</button>
+          <button onClick={onClickUpdate}>지갑업데이트</button>
+        </ButtonBox>
+        <ButtonBox>
+          <button onClick={onClickTokenOwner}>토큰주인이 누구?</button>
+        </ButtonBox>
+        <ButtonBox>
+          <button onClick={onClickMint}>민팅</button>
+        </ButtonBox>
+        <ButtonBox>
+          <button onClick={onClickCreateSale}>판매등록</button>
+        </ButtonBox>
+        <ButtonBox>
+          <button onClick={onClickCancelSale}>cancelSales</button>
+        </ButtonBox>
+        <ButtonBox>
+          <button onClick={onClickCreateAuction}>경매등록</button>
+        </ButtonBox>
+        <ButtonBox>
+          <button onClick={onClickCancelAuction}>cancelAuction</button>
+        <ButtonBox>
+          <button onClick={onClickAddCoin}>돈충전</button>
+        </ButtonBox>
+        <ButtonBox>
+          <button onClick={onClickSendCoin}>지갑2에게 돈나눠주기</button>
+        </ButtonBox>
+        </ButtonBox>
+        <input type="text" onChange={onChangeBid} value={bidAmount} />
+        <ButtonBox>
+          <button onClick={onClickBid}>bid</button>
+        </ButtonBox>
+        <input type="text" onChange={onChangePurchase} value={purchaseAmount} />
+        <ButtonBox>
+          <button onClick={onClickPurchase}>purchase</button>
+        </ButtonBox>
+        <ButtonBox>
+          <button onClick={onClickConfirmItem}>confirmItem</button>
         </ButtonBox>
       </FormBox>
       <CategoryModal

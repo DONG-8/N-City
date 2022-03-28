@@ -20,7 +20,7 @@ module.exports = async (deployer) => {
     }
   ).then(
     function() {
-      return deployer.deploy(SSFToken, "SSAFY", "SSF", 0);
+      return deployer.deploy(SSFToken, "N-city", "NCT", 0);
     }
   )
   // deployer.deploy(SSFToken, "SSAFY", "SSF", 0);

@@ -10627,19 +10627,19 @@
     "absolutePath": "project:/contracts/SSFToken.sol",
     "exportedSymbols": {
       "Context": [
-        3103
+        3428
       ],
       "ERC20": [
-        1301
+        1626
       ],
       "IERC20": [
-        1379
+        1704
       ],
       "IERC20Metadata": [
-        1404
+        1729
       ],
       "Ownable": [
-        747
+        1072
       ],
       "SSFToken": [
         177
@@ -10667,7 +10667,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 178,
-        "sourceUnit": 1302,
+        "sourceUnit": 1627,
         "src": "60:33:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -10679,7 +10679,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 178,
-        "sourceUnit": 748,
+        "sourceUnit": 1073,
         "src": "95:30:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -10692,7 +10692,7 @@
               "id": 126,
               "name": "ERC20",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 1301,
+              "referencedDeclaration": 1626,
               "src": "290:5:2"
             },
             "id": 127,
@@ -10704,7 +10704,7 @@
               "id": 128,
               "name": "Ownable",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 747,
+              "referencedDeclaration": 1072,
               "src": "297:7:2"
             },
             "id": 129,
@@ -10725,11 +10725,11 @@
         "id": 177,
         "linearizedBaseContracts": [
           177,
-          747,
-          1301,
-          1404,
-          1379,
-          3103
+          1072,
+          1626,
+          1729,
+          1704,
+          3428
         ],
         "name": "SSFToken",
         "nameLocation": "278:8:2",
@@ -10791,7 +10791,7 @@
                   "id": 137,
                   "name": "ERC20",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 1301,
+                  "referencedDeclaration": 1626,
                   "src": "386:5:2"
                 },
                 "nodeType": "ModifierInvocation",
@@ -10918,7 +10918,7 @@
                           "name": "_msgSender",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 3093,
+                          "referencedDeclaration": 3418,
                           "src": "492:10:2",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$__$returns$_t_address_$",
@@ -10968,7 +10968,7 @@
                       "name": "_mint",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1161,
+                      "referencedDeclaration": 1486,
                       "src": "486:5:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$__$",
@@ -11008,7 +11008,7 @@
                   "id": 148,
                   "name": "onlyOwner",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 689,
+                  "referencedDeclaration": 1014,
                   "src": "466:9:2"
                 },
                 "nodeType": "ModifierInvocation",
@@ -11129,7 +11129,7 @@
                       "name": "_transfer",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1105,
+                      "referencedDeclaration": 1430,
                       "src": "627:9:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -11169,7 +11169,7 @@
                   "id": 166,
                   "name": "onlyOwner",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 689,
+                  "referencedDeclaration": 1014,
                   "src": "607:9:2"
                 },
                 "nodeType": "ModifierInvocation",
@@ -11293,19 +11293,19 @@
     "absolutePath": "project:/contracts/SSFToken.sol",
     "exportedSymbols": {
       "Context": [
-        3103
+        3428
       ],
       "ERC20": [
-        1301
+        1626
       ],
       "IERC20": [
-        1379
+        1704
       ],
       "IERC20Metadata": [
-        1404
+        1729
       ],
       "Ownable": [
-        747
+        1072
       ],
       "SSFToken": [
         177
@@ -11333,7 +11333,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 178,
-        "sourceUnit": 1302,
+        "sourceUnit": 1627,
         "src": "60:33:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -11345,7 +11345,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 178,
-        "sourceUnit": 748,
+        "sourceUnit": 1073,
         "src": "95:30:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -11358,7 +11358,7 @@
               "id": 126,
               "name": "ERC20",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 1301,
+              "referencedDeclaration": 1626,
               "src": "290:5:2"
             },
             "id": 127,
@@ -11370,7 +11370,7 @@
               "id": 128,
               "name": "Ownable",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 747,
+              "referencedDeclaration": 1072,
               "src": "297:7:2"
             },
             "id": 129,
@@ -11391,11 +11391,11 @@
         "id": 177,
         "linearizedBaseContracts": [
           177,
-          747,
-          1301,
-          1404,
-          1379,
-          3103
+          1072,
+          1626,
+          1729,
+          1704,
+          3428
         ],
         "name": "SSFToken",
         "nameLocation": "278:8:2",
@@ -11457,7 +11457,7 @@
                   "id": 137,
                   "name": "ERC20",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 1301,
+                  "referencedDeclaration": 1626,
                   "src": "386:5:2"
                 },
                 "nodeType": "ModifierInvocation",
@@ -11584,7 +11584,7 @@
                           "name": "_msgSender",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 3093,
+                          "referencedDeclaration": 3418,
                           "src": "492:10:2",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$__$returns$_t_address_$",
@@ -11634,7 +11634,7 @@
                       "name": "_mint",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1161,
+                      "referencedDeclaration": 1486,
                       "src": "486:5:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$__$",
@@ -11674,7 +11674,7 @@
                   "id": 148,
                   "name": "onlyOwner",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 689,
+                  "referencedDeclaration": 1014,
                   "src": "466:9:2"
                 },
                 "nodeType": "ModifierInvocation",
@@ -11795,7 +11795,7 @@
                       "name": "_transfer",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1105,
+                      "referencedDeclaration": 1430,
                       "src": "627:9:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -11835,7 +11835,7 @@
                   "id": 166,
                   "name": "onlyOwner",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 689,
+                  "referencedDeclaration": 1014,
                   "src": "607:9:2"
                 },
                 "nodeType": "ModifierInvocation",
@@ -12033,12 +12033,12 @@
         }
       },
       "links": {},
-      "address": "0x5E3cB6879679674daCCb3Bb81D93Ae1EED0A2443",
-      "transactionHash": "0xf3883535805761661293a387432e9930c185a791013c66c75e4c269cebfa53f7"
+      "address": "0xCe7d2E1196327c400f272e54E40ab63936dF92B7",
+      "transactionHash": "0xe234573ac17690ea1062777adbc2cc0104dcd8d548b923019996c1b0c08a0332"
     }
   },
   "schemaVersion": "3.4.5",
-  "updatedAt": "2022-03-25T08:55:51.559Z",
+  "updatedAt": "2022-03-27T16:48:20.936Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

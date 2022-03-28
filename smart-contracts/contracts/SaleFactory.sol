@@ -5,6 +5,7 @@ import "./access/Ownable.sol";
 import "./token/ERC20/ERC20.sol";
 import "./token/ERC721/ERC721.sol";
 import "./NFTcreator.sol";
+import "./SSFToken.sol";
 
 /**
  * PJT Ⅲ - Req.1-SC1 SaleFactory 구현
@@ -14,7 +15,7 @@ import "./NFTcreator.sol";
  Sale 컨트랙트를 생성하는 역할을 하는 스마트 컨트랙트
  특정계정이 보유하고있는 NFT를 ERC-20토큰을 받고 판매하고자 할때 호출되는 컨트랙트
  SaleFactory는 새로운 Sale 컨트랙트를 배포하게 되며 각 Sale컨트랙트는 판매하고자 하는 NFT를 임시보유한다.
-  */
+ */
 contract SaleFactory is Ownable {
     address public admin; // 모든 판매의 수퍼권한을 갖는 address(owner)
     address[] public sales; // 이 컨트랙트를 통해 생성된 Sale컨트랙트의 주소의 배열
@@ -61,7 +62,7 @@ contract SaleFactory is Ownable {
         emit NewSale(address(instance), msg.sender, itemId);
         return address(instance);
     }
-    
+
     // 생성된 모든 Sale 주소를 반환
     function allSales() public view returns (address[] memory) {
         return sales;
@@ -103,6 +104,7 @@ contract Sale {
     IERC20 public erc20Contract;
     IERC721 public erc721Constract;
     NFTcreator public NFTcreatorContract;
+    SSFToken public SSFTokenContract;
 
     event HighestBidIncereased(address bidder, uint256 amount); // 현재 최고 제안자, 최고 제안가
     event SaleEnded(address winner, uint256 amount);  // 최종 구매자 정보
@@ -123,16 +125,17 @@ contract Sale {
         tokenId = _tokenId; 
         minPrice = _minPrice; 
         purchasePrice = _purchasePrice;
-        seller = _seller; 
-        admin = _admin; 
+        seller = _seller;
+        admin = _admin;
         saleStartTime = startTime;
-        saleEndTime = endTime; 
+        saleEndTime = endTime;
         currencyAddress = _currencyAddress; 
         nftAddress = _nftAddress; 
         ended = false; 
         erc20Contract = IERC20(_currencyAddress);
         erc721Constract = IERC721(_nftAddress);
         NFTcreatorContract = NFTcreator(_nftAddress);
+        SSFTokenContract = SSFToken(_currencyAddress);
     }
 
     /**
@@ -149,6 +152,21 @@ contract Sale {
      */
     function bid(uint256 bid_amount) public {
         // TODO
+        require(msg.sender != seller, "seller can't call this function");
+        require(block.timestamp < saleEndTime, "Sale time has expired");
+        require(SSFTokenContract.allowance(msg.sender, address(this)) != 0, "buyer did not approve this contract");
+        require(SSFTokenContract.allowance(msg.sender, address(this)) >= bid_amount, "caller approve less amount of token");
+        require(bid_amount >= minPrice, "bid_amount is less than minPrice");
+        require(bid_amount > getHighestBid(), "bid_amount is less than highestBid");
+        require(bid_amount < purchasePrice, "bid_amount is larger than purchasePrice");
+        if (highestBidder != address(0)) { // 기존 제안자가 있으면 환불
+            SSFTokenContract.approve(address(this), getHighestBid());
+            SSFTokenContract.transferFrom(address(this), highestBidder, highestBid);
+        }
+        highestBidder = msg.sender;
+        highestBid = bid_amount;
+        SSFTokenContract.transferFrom(highestBidder, address(this), bid_amount);
+        emit HighestBidIncereased(highestBidder, highestBid);
     }
 
     /**
@@ -162,8 +180,18 @@ contract Sale {
     3. NFT 소유권을 구매자에게 이전한다.
     4. 컨트랙트의 거래상태와 구매자 정보를 업데이트 한다.
      */
-    function purchase() public {
+    function purchase(uint256 bid_amount) public {
         // TODO 
+        require(msg.sender != seller, "seller can't call this function");
+        require(block.timestamp < saleEndTime, "Sale time has expired");
+        require(SSFTokenContract.allowance(msg.sender, address(this)) != 0, "buyer did not approve this contract");
+        require(SSFTokenContract.allowance(msg.sender, address(this)) >= bid_amount, "caller approve less amount of token");
+        require(bid_amount >= purchasePrice, "bid_amount is less than purchasePrice");
+        buyer = msg.sender;
+        SSFTokenContract.transferFrom(buyer, seller, bid_amount);
+        NFTcreatorContract.transferFrom(address(this), buyer, tokenId);
+        emit SaleEnded(buyer, bid_amount);
+        _end();
     }
 
     /**
@@ -177,6 +205,13 @@ contract Sale {
     */
     function confirmItem() public {
         // TODO 
+        require(block.timestamp > saleEndTime, "Sale time has not expired");
+        require(msg.sender == highestBidder || msg.sender == seller, "caller is not highestBidder or seller");
+        NFTcreatorContract.transferFrom(address(this), highestBidder, tokenId);
+        SSFTokenContract.approve(address(this), getHighestBid());
+        SSFTokenContract.transferFrom(address(this), seller, getHighestBid());
+        emit SaleEnded(highestBidder, getHighestBid());
+        _end(); 
     }
     
     /**
@@ -188,10 +223,22 @@ contract Sale {
     2. NFT소유권을 판매자에게 되돌려 준다.
     3. 컨트랙트의 거래 상태를 업데이트 한다.
     */
+    // 즉시구매 취소하는 함수
     function cancelSales() public {
         // TODO
         require(block.timestamp < saleEndTime, "Sale time has expired");
         require(msg.sender == seller || msg.sender == admin, "caller is not approved");
+        // NFT 소유권을 판매자에게 되돌려주기
+        NFTcreatorContract.transferFrom(address(this), seller, tokenId);
+        _end();
+    }
+
+    // 경매종료시 판매자 cancel함수 (아무도 입찰 안했을때 NFT돌려받기)
+    function cancelAuction() public {
+        // TODO
+        // require(block.timestamp > saleEndTime, "Sale time has not expired");
+        require(msg.sender == seller || msg.sender == admin, "caller is not approved");
+        require(highestBidder == address(0), "bidder exist");
         // NFT 소유권을 판매자에게 되돌려주기
         NFTcreatorContract.transferFrom(address(this), seller, tokenId);
     }
