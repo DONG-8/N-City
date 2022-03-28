@@ -3,6 +3,8 @@ package com.nft.ncity.domain.user.controller;
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.domain.deal.db.entity.Deal;
 import com.nft.ncity.domain.deal.service.DealService;
+import com.nft.ncity.domain.favorite.db.entity.Favorite;
+import com.nft.ncity.domain.favorite.service.FavoriteService;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.service.ProductService;
 import com.nft.ncity.domain.user.db.entity.EmailAuth;
@@ -43,6 +45,9 @@ public class UserController {
 
     @Autowired
     DealService dealService;
+
+    @Autowired
+    FavoriteService favoriteService;
 
     @GetMapping("/{userId}")
     @ApiOperation(value = "유저 정보 조회", notes = "<strong>UserId에 해당하는 유저의 정보</strong>을 넘겨준다.")
@@ -118,30 +123,29 @@ public class UserController {
     }
 
     /**
-      상품좋아요(favorite) 테이블이 완료 되어야 진행 가능함.
      favorite 테이블의 user_id가 입력받은 userId와 동일한 값들 받아오기.
      */
     @GetMapping("/{userId}/favorites")
     @ApiOperation(value = "유저가 좋아요한 작품 조회", notes = "<strong>해당 유저가 좋아요한 작품 목록</strong>을 넘겨준다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공", response = User.class),
-            @ApiResponse(code = 404, message = "해당 유저 없음.")
+            @ApiResponse(code = 404, message = "좋아요 한 작품 없음.")
     })
-    public ResponseEntity<Page<User>> getFavoritesProductListByUserId(@PathVariable("userId") Long userId,
+    public ResponseEntity<Page<Product>> getFavoritesProductListByUserId(@PathVariable("userId") Long userId,
                                                                       @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
         // 0. 받아올 유저 ID를 받음
         // 1. 해당 유저가 좋아요한 작품 목록을 넘겨준다.
 
         log.info("getFavoritesProductListByUserId - 호출");
-        User user = userRepository.getById(userId);
-        //Product product = productRepository.getById();
+        Page<Favorite> favorites = favoriteService.getFavoriteListByUserId(userId, pageable);
+        Page<Product> products = productService.getFavoriteProduct(favorites);
 
-        if(user.equals(null)) {
-            log.error("getFavoritesProductListByUserId - This userId doesn't exist.");
+        if(products.equals(null)) {
+            log.error("getFavoritesProductListByUserId - There are no products that this user likes.");
             return ResponseEntity.status(404).body(null);
         }
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(201).body(products);
     }
 
     /**
