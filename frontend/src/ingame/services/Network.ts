@@ -68,22 +68,24 @@ export default class Network {
     this.initialize()
   }
 
-  // 커스텀 방 들어가기 (패스워드 존재)
-  async joinCustomById(roomId: string, password: string | null) {
-    this.room = await this.client.joinById(roomId, { password })
+  // ❗ 방 들어가기 
+  async joinRoom(roomId: string) {
+    this.room = await this.client.joinById(roomId)
     this.initialize()
   }
 
-  // 커스텀 방 만들기
-  async createCustom(roomData: IRoomData) {
-    const { name, description, password, autoDispose } = roomData
+  // ❗ 방 만들기
+  async createRoom(roomData: IRoomData) {
+    const { roomId, name, description, password, autoDispose } = roomData
     this.room = await this.client.create(RoomType.CUSTOM, {
+      roomId,
       name,
       description,
       password,
       autoDispose,
     })
     this.initialize()
+    console.log(this.room)
   }
 
   // 시작 전 네트워크 설정

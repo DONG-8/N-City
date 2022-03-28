@@ -28,6 +28,14 @@ const avatars = [
   { name: 'nancy', img: "/essets/login/Nancy_login.png" },
 ]
 
+export interface IRoomData {
+  roomId : string
+  name: string
+  description: string
+  password: null
+  autoDispose: boolean
+}
+
 window.addEventListener("keydown", function(e) {
   if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
       e.preventDefault();
@@ -45,6 +53,15 @@ const  GameApp: Function = ()=> {
     }
   },[])
 
+  const [values, setValues] = useState<IRoomData>({ // 방이름 방설명 패스워드
+    roomId : 'userId',  // userId 넣어주기 
+    name: '혀농이방',
+    description: '혀농이방이야',
+    password: null,
+    autoDispose: false, // 마지막 사용자가 나오면 자동으로 방 없애기 (화이트보드 때문에 지금은 false)
+  })
+
+  const availableRooms = useAppSelector((state) => state.room.availableRooms) //가능한 방들 표시 해주기
   const computerDialogOpen = useAppSelector((state) => state.computer.computerDialogOpen)
   const whiteboardDialogOpen = useAppSelector((state) => state.whiteboard.whiteboardDialogOpen)
   // const videoConnected = useAppSelector((state) => state.user.videoConnected)
@@ -52,14 +69,41 @@ const  GameApp: Function = ()=> {
 
   let game =  phaserGame.scene.keys.game as Game
   let bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
+  let isAvaliable = false
 
-  const ConnectBootstrap = async () => { // ⭐ bootstrap 연결하기 
+  const checkRoomIsAvaliable = () => {
+    console.log(availableRooms)
+    for (var roomId in availableRooms) {
+      console.log(roomId, 'roomID')
+      if (roomId === 'test') {
+        return true
+      }
+    }
+    return false
+  }
+
+  const ConnectBootstrap = async () => { // ⭐ bootstrap 연결하기
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
-
-    await bootstrap.network
-      .joinOrCreatePublic()
-      .then(() => bootstrap.launchGame())
-      .catch((error) => console.error(error))
+    console.log(checkRoomIsAvaliable())
+    
+    // if(isAvaliable) { // 방이 이미 존재한다면 참가 
+      await bootstrap.network
+        .createRoom(values)
+        .then(() => bootstrap.launchGame())
+        .catch((error) => console.error(error))
+    // } else {  // 방 없었다면 만들기 
+    //   // setValues({ ...values, ['roomId']: 'useasrId'}) // 방 아이디 => 유저 아이디 
+    //   // setValues({ ...values, ['name']: 'asdfasdfasdf'}) // 방 이름 
+    //   // setValues({ ...values, ['description']: '혀농이 방이얌'}) // 방 설명 
+  
+    //   await bootstrap.network
+    //     .createRoom(values)
+    //     .then(() => bootstrap.launchGame())
+    //     .catch((error) => console.error(error))
+    //   isAvaliable = true
+        
+    // }
+    setTimeout( () => console.log(availableRooms), 10000)
   }
 
   const ConnectGame = () => { // 게임 접속
@@ -68,10 +112,12 @@ const  GameApp: Function = ()=> {
       game.myPlayer.setPlayerName('임현홍') // ❗ 내이름 설정해주기
       game.myPlayer.setPlayerTexture(avatars[1].name) // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
       game.network.readyToConnect() // 네트워크 연결
+
+      console.log(availableRooms)
   }
  
   let ui: JSX.Element
-  ui = <MainDialog/>
+  
     if (computerDialogOpen) {   // 화면 공유 
       ui = <ComputerDialog />
     } else if (whiteboardDialogOpen) {  // 화이트보드 
@@ -93,6 +139,7 @@ const  GameApp: Function = ()=> {
       <>
         <Backdrop>
           {ui}
+          <MainDialog></MainDialog>
           {!computerDialogOpen && !whiteboardDialogOpen && (
             <HelperButtonGroup />
           )}

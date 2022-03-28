@@ -13,6 +13,7 @@ import phaserGame from '../PhaserGame'
 import Bootstrap from '../scenes/Bootstrap'
 
 export interface IRoomData {
+  roomId : string
   name: string
   description: string
   password: string | null
@@ -28,6 +29,7 @@ const CreateRoomFormWrapper = styled.form`
 
 export const CreateRoomForm = () => {
   const [values, setValues] = useState<IRoomData>({ // 방이름 방설명 패스워드
+    roomId: '',
     name: '',
     description: '',
     password: null,
@@ -54,7 +56,7 @@ export const CreateRoomForm = () => {
     if (isValidName && isValidDescription && lobbyJoined ) { // 빈값이 없고 , 로비로 들어왔다면?
       const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap // ⭐ 부트스트랩 시작
       bootstrap.network // ⭐ 게임시작하기
-        .createCustom(values)
+        .createRoom(values)
         .then(() => bootstrap.launchGame())
         .catch((error) => console.error(error))
     }
