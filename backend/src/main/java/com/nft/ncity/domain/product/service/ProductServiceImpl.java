@@ -5,6 +5,7 @@ import com.nft.ncity.domain.authentication.service.AwsS3Service;
 import com.nft.ncity.domain.deal.db.entity.Deal;
 import com.nft.ncity.domain.deal.db.repository.DealRepository;
 import com.nft.ncity.domain.deal.db.repository.DealRepositorySupport;
+import com.nft.ncity.domain.favorite.db.entity.Favorite;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.repository.ProductRepository;
@@ -56,8 +57,6 @@ public class ProductServiceImpl implements ProductService{
     DealRepositorySupport dealRepositorySupport;
     @Autowired
     AwsS3Service awsS3Service;
-
-
 
     // CREATE
     @Override
@@ -127,7 +126,6 @@ public class ProductServiceImpl implements ProductService{
                 .build();
 
         dealRepository.save(deal);
-
         return savedProduct;
     }
 
@@ -141,7 +139,6 @@ public class ProductServiceImpl implements ProductService{
     }
 
     // READ
-
     //상품 전체조회
     @Override
     public Page<ProductListGetRes> getProductList(Pageable pageable) {
@@ -162,11 +159,8 @@ public class ProductServiceImpl implements ProductService{
 
             productListGetRes.add(productList);
         }
-
         Page<ProductListGetRes> res = new PageImpl<>(productListGetRes, pageable, total);
-
         return res;
-
     }
 
     @Override
@@ -218,7 +212,6 @@ public class ProductServiceImpl implements ProductService{
         Page<ProductDealListGetRes> res = new PageImpl<>(productDealListGetRes, pageable, total);
 
         return res;
-
     }
 
     @Override
@@ -301,5 +294,35 @@ public class ProductServiceImpl implements ProductService{
             productRepository.deleteById(productId);
             return true;
         }else return false;
+    }
+
+    @Override
+    public Page<Product> getProductListByUserId(Long userId, Pageable pageable) {
+        Page<Product> productList = productRepositorySupport.findProductListByUserId(userId, pageable);
+        return productList;
+    }
+
+    @Override
+    public Page<Product> getMintedProductList(Page<Deal> dealList) {
+
+        List<Product> productList = new ArrayList<>();
+
+        for(Deal d : dealList.getContent()){
+            Product product = productRepositorySupport.findProductByUserId(d.getProductId());
+            productList.add(product);
+        }
+        Page<Product> res = new PageImpl<Product>(productList, dealList.getPageable(), productList.size());
+        return res;
+    }
+
+    @Override
+    public Page<Product> getFavoriteProduct(Page<Favorite> favorites) {
+        List<Product> productList = new ArrayList<>();
+        for(Favorite f : favorites.getContent()){
+            Product product = productRepositorySupport.findProductByUserId(f.getProductId());
+            productList.add(product);
+        }
+        Page<Product> res = new PageImpl<Product>(productList, favorites.getPageable(), productList.size());
+        return res;
     }
 }
