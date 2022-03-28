@@ -22,7 +22,7 @@ const fileApiClient = axios.create({
 // 전체 조회 --> 변수 필요없을 수 있음 변경가능
 export const getProductAll =async ({page,size}:API.TypeProductGetAll) => {
   const response = await apiClient.get<API.TypeProductGetAll>(
-    '/products', 
+    '/products/all', 
     {"params" :{page,size}}
   );
   return response.data

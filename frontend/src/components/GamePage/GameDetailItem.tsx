@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Background from '../Card/Background';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { items as itm } from '../../../src/pages/NFTStore/items'
+import { items as itm, ItemType } from '../../pages/NFTStore/items';
 import GameItemCard from './GameItemCard';
 const etherURL = '/essets/images/ethereum.png'
 
@@ -197,8 +197,9 @@ const Head = styled.div`
   }
 `
 interface Iprops{
-  setMode :React.Dispatch<React.SetStateAction<string>>
+  setMode :React.Dispatch<React.SetStateAction<string>>, 
 }
+
 const GameDetailItem:React.FC<Iprops> = ({setMode}) => {
   const [transactions,setTransactions] = useState([
     {event:'transfer', from:"59912",to:"24923", date:20220309},
@@ -207,18 +208,20 @@ const GameDetailItem:React.FC<Iprops> = ({setMode}) => {
     {event:'minted', date:20220301 }
   ])
   const [items,setItems] = useState(itm)
-  const [item,setItem] = useState(JSON.parse(localStorage.getItem("item")||""))
-  const [likes,setLikes] = useState(item.liked)
+  const [item,setItem] = useState<ItemType['item']>(JSON.parse(localStorage.getItem("item")||""))
+  const [likes,setLikes] = useState(Number(item.productFavorite))
   const [liked,setLiked] = useState(false)
 
   const [change,setChange] = useState(false)
   useEffect(()=>{
     const tmp = JSON.parse(localStorage.getItem("item")||"")
-    if (item.id !==tmp.id){
+    if (item.productRegDt !==tmp.productRegDt){
       setItem(tmp)
     }
     setChange(false)
   },[change])
+
+  
   return (
     <Wrapper>
       <Background imgsrc="https://cdn.notefolio.net/img/d7/5b/d75bf02e2a35f76dba6ed5eeccde793c45d74edd83df838e31290603ceb5c5c9_v1.jpg" />
@@ -226,7 +229,7 @@ const GameDetailItem:React.FC<Iprops> = ({setMode}) => {
         <Top>
           <BigCard>
             <DetailItemCard>
-              <img alt="pic" src={item.url} />
+              <img alt="pic" src={item.productThumbnailUrl} />
               <div className="like">
                 <div
                   onClick={() => {
@@ -257,19 +260,19 @@ const GameDetailItem:React.FC<Iprops> = ({setMode}) => {
             </DetailItemCard>
             <Description>
               <Artist>
-                {item.name}
-                {item.verfied && (
+                {/* {item.name} */}
+                {/* {item.verfied && (
                   <img
                     alt="verified"
                     style={{ height: "1.5rem" }}
                     src="/essets/images/verified.png"
                   />
-                )}
+                )} */}
               </Artist>
-              <Title>{item.title}</Title>
-              <Owner>
-                owner: <div className="owner_name">{item.name}</div>
-              </Owner>
+              <Title>{item.productTitle}</Title>
+              {/* <Owner>
+                owner: <div className="owner_name">{item.name}⭐</div>
+              </Owner> */}
               <hr />
               <Contents>
                 <div className="des_title">작품설명</div>
@@ -289,7 +292,7 @@ const GameDetailItem:React.FC<Iprops> = ({setMode}) => {
               <hr />
               <Buy>
                 <div className="price">
-                  {item.price}
+                  {item.productPrice}
                   <img style={{ height: "2rem" }} alt="이더" 
                   src='/essets/images/ethereum.png' />
                 </div>
@@ -349,16 +352,17 @@ const GameDetailItem:React.FC<Iprops> = ({setMode}) => {
         <Bottom>
           <TitleSee>
             <div style={{ display: "flex" }}>
-              <h1 style={{ color: "#F43B00" }}>{item.name}</h1>
+              <h1 style={{ color: "#F43B00" }}>{item.productTitle}</h1>
+              {/* <h1 style={{ color: "#F43B00" }}>{item.name}</h1> */}
               <h1 style={{ marginLeft: "1rem" }}>의 작품 보기</h1>
             </div>
           </TitleSee>
           <ArtistMore>
             <Cards>
-              {items.map((item) => {
+              {items.map((item,idx) => {
                 return (
                   <div onClick={() => setChange(true)}>
-                    <GameItemCard setMode={setMode} key={item.url} item={item} />
+                    <GameItemCard setMode={setMode} key={idx} item={item} />
                   </div>
                 );
               })}

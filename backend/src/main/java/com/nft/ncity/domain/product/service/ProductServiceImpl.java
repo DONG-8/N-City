@@ -5,13 +5,13 @@ import com.nft.ncity.domain.authentication.service.AwsS3Service;
 import com.nft.ncity.domain.deal.db.entity.Deal;
 import com.nft.ncity.domain.deal.db.repository.DealRepository;
 import com.nft.ncity.domain.deal.db.repository.DealRepositorySupport;
-import com.nft.ncity.domain.deal.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.repository.ProductRepository;
 import com.nft.ncity.domain.product.db.repository.ProductRepositorySupport;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
+import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.response.ProductDealListGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
 import lombok.RequiredArgsConstructor;
@@ -142,6 +142,7 @@ public class ProductServiceImpl implements ProductService{
 
     // READ
 
+    //상품 전체조회
     @Override
     public Page<ProductListGetRes> getProductList(Pageable pageable) {
         Page<Product> products = productRepositorySupport.findProductList(pageable);
@@ -155,6 +156,7 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductId(p.getProductId());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
 
@@ -180,6 +182,7 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductId(p.getProductId());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
 
@@ -204,6 +207,7 @@ public class ProductServiceImpl implements ProductService{
             productDealList.setProductTitle(p.getProductTitle());
             productDealList.setProductPrice(p.getProductPrice());
             productDealList.setProductRegDt(p.getProductRegDt());
+            productDealList.setProductId(p.getProductId());
             productDealList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productDealList.setProductState(p.getProductState());
             productDealList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
@@ -230,6 +234,7 @@ public class ProductServiceImpl implements ProductService{
             productDealList.setProductTitle(p.getProductTitle());
             productDealList.setProductPrice(p.getProductPrice());
             productDealList.setProductRegDt(p.getProductRegDt());
+            productDealList.setProductId(p.getProductId());
             productDealList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productDealList.setProductState(p.getProductState());
             productDealList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
@@ -256,6 +261,7 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductId(p.getProductId());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
 

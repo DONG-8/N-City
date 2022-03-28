@@ -4,12 +4,18 @@ import styled from 'styled-components'
 
 interface Iprops{
   artist:{
-    name:string,
-    profileImg:string,
-    verified:boolean,
-    sumnailImg:string,
-    descreption:string
-  }
+    "authId": Number,
+    "followeeCnt": Number,
+    "followerCnt": Number,
+    "userAddress": String,
+    "userDescription": String,
+    "userEmail": String,
+    "userEmailConfirm": Boolean,
+    "userId": Number,
+    "userImgUrl": String,
+    "userNick": String,
+    "userRole": String
+  },
 }
 
 const Cards = styled.div`
@@ -18,11 +24,11 @@ const Cards = styled.div`
   width: 500px;
   background-color: #ffffff;
   border-radius: 10px;
-  box-shadow:1px 3px 7px  ;
-  margin: 30px ;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  margin: 5vh ;
   &:hover{
     &{
-      transform:scale(1.01) ;
+      transform:translateY(-5px) ;
     }
   }
 `
@@ -41,7 +47,6 @@ const ProfileImg = styled.div`
     height:70px;
     width:70px;
     border-radius:100%;
-    box-shadow:1px 3px 7px  ;
     }
 `
 const CardBottom = styled.div`
@@ -70,22 +75,22 @@ const ArtistCard:React.FC<Iprops> = ({artist}) => {
     <Cards onClick={()=>{goMyPage()}}>
         <SumnailImg>
           <img alt="pic" 
-          src={artist.sumnailImg}/>
+          src={artist.userImgUrl as any}/>
         </SumnailImg>
         <ProfileImg>
           <img alt="pic"
-          src={artist.profileImg} />
+          src={artist.userImgUrl as any} />
         </ProfileImg>
         <CardBottom>
           <div className='name'>
-            {artist.name}
-            {artist.verified &&
+            {artist.userNick}
+            {artist.userEmailConfirm &&
             <img alt="verified" style={{"height":'1.5rem'}} src= "/essets/images/verified.png" />}
           </div>
           
 
           <div className='description'>
-            {artist.descreption}
+            {artist.userDescription}
           </div>
         </CardBottom>
         

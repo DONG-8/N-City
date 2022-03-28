@@ -2,10 +2,10 @@ package com.nft.ncity.domain.product.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.common.model.response.FileUrlResponseBody;
-import com.nft.ncity.domain.deal.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
+import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.response.ProductDealListGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
 import com.nft.ncity.domain.product.service.ProductService;
@@ -72,7 +72,6 @@ public class ProductController {
     public ResponseEntity<BaseResponseBody> tokenRegister(@RequestBody TokenRegisterPutReq tokenRegisterPutReq){
 
         log.info("tokenRegister - 호출");
-        System.out.println(tokenRegisterPutReq);
 
         if ( productService.tokenRegister(tokenRegisterPutReq) == 0){
             log.error("tokenRegister - This productId or tokenId doesn't exist.");

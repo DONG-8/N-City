@@ -20,6 +20,8 @@ import gamestore from "./ingame/stores";
 import phaserGame from "./ingame/PhaserGame";
 import Main2 from "./pages/Main/Main2";
 import YNTest from "./pages/Test/YNTest";
+import SearchPage from "./pages/NFTStore/SearchPage";
+import MapChoice from "./pages/Room/MapChoice";
 
 
 function App() {
@@ -54,6 +56,8 @@ function App() {
           <Route path="/YNTest" element={<YNTest />} />
           <Route
             path="/ingame"
+          <Route path="/search/:data" element={<SearchPage />}/>
+          <Route path="/ingame"
             element={
               <Provider store={gamestore}>
                 <GameApp />
@@ -61,6 +65,7 @@ function App() {
             }
           />
           <Route path="/test" element={<Test />} />
+          <Route path="/mapchoice" element={<MapChoice />} />
         </Routes>
         <Footer />
       </BrowserRouter>

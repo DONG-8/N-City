@@ -12,6 +12,8 @@ import NewTokkenList from "./NewTokkenList";
 import VideoGuide from "./VideoGuide";
 import Profile from "./Profile";
 import AOS from 'aos';
+import ZigZag from "./ZigZag";
+import { items as itm } from "../NFTStore/items";
 
 const MainBackGround = styled.div`
   /* margin-top: 80px; */
@@ -290,41 +292,17 @@ const MainH = styled.div`
   height: auto;
 `;
 
-const NewTokken = styled.div`
-  width: 100%;
-  height: 70vh;
-  border: 1px solid black;
-  
-  .title{
-    font-size: 3.5rem;
-    color: #333;
-    margin-left: 10vw;
-  }
-  .sub{
-    color: #333;
-    margin-left: 10vw;
-    p{
-      margin: 1px;
-    }
-  }
-  .itemCards{
-    display: flex;
-    margin-left: 10vw;
-  } 
-  .down{
-    margin-top: 10vh;
-  }
-`
+
 
 
 export interface IState {
-  item: {
-    id: number;
-    name: string;
-    title: string;
-    price: number;
-    liked: number;
-    url: string;
+  item :{
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productRegDt:Object,
+    productFavorite: Number,
+    productCode: Number,
   }[];
   artist: {
     name: string;
@@ -633,48 +611,7 @@ export default function Main2() {
     }
   };
 
-  const [items, setItems] = useState<IState["item"]>([
-    {
-      id: 1,
-      name: "Hong Hosus",
-      title: "#Hong1535",
-      price: 1.24,
-      liked: 35,
-      url: "https://lh3.googleusercontent.com/MmtavcUNNiTpLFfDqqol8pwp1_TKSEv0AbkKSxmN2lffhgYtkxAdfAo72lZVSJ4hpRW87s9TCL-HYMEIpaJ8PdgWBQWVlPsMZkgM6A=w305",
-    },
-    {
-      id: 2,
-      name: "Giks Home",
-      title: "#ghe23434",
-      price: 1.35,
-      liked: 43,
-      url: "https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352",
-    },
-    {
-      id: 3,
-      name: "Giks Home",
-      title: "#ghe254334",
-      price: 1.2,
-      liked: 24,
-      url: "https://lh3.googleusercontent.com/3usYOjVkwnra66EAhX4yJB-xmYCfFoTsREGVvVLCYWhtVG4pifdZLBRCSgv6wbjbV4rwPamlBDgganvgFO3xeifJyZQtqxwTYpXiqtc=w300",
-    },
-    {
-      id: 5,
-      name: "Giks Home",
-      title: "#ghe23434",
-      price: 1.35,
-      liked: 43,
-      url: "https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352",
-    },
-    {
-      id: 4,
-      name: "Giks Home",
-      title: "#ghe254334",
-      price: 1.2,
-      liked: 24,
-      url: "https://lh3.googleusercontent.com/3usYOjVkwnra66EAhX4yJB-xmYCfFoTsREGVvVLCYWhtVG4pifdZLBRCSgv6wbjbV4rwPamlBDgganvgFO3xeifJyZQtqxwTYpXiqtc=w300",
-    },
-  ]);
+  const [items, setItems] = useState<IState["item"]>(itm);
 
   return (
     <MainH>
@@ -690,6 +627,7 @@ export default function Main2() {
             {images.map((value, idx) => {
               return (
                 <div
+                  key={idx}
                   className="inner"
                   style={{
                     transform: `translate(${position}px)`,
@@ -770,40 +708,10 @@ export default function Main2() {
       <GuideWrapper>
         <Guide></Guide>
       </GuideWrapper>
-      <NewTokken>
-        <div data-aos="fade-up"
-            data-aos-duration="2000"   >
-        <h1 className="title">
-          New Tokken
-        </h1>
-        <div className="sub">
-          <p>방금 막 새로 민팅된 작품들입니다. 누구보다 빠르게 작품을 구경하세요</p>
-          <p>N-city 의 상점 기능을 이용해 구입하고, 자신의 방에 전시할 수 있습니다. </p>
-        </div>
-        </div>
-        <div  className="itemCards">
-          <div data-aos="fade-up"
-            data-aos-duration="2000"   >
-            <ItemCard2 item={items[0]}/>
-          </div  >
-          <div data-aos="fade-up"
-            data-aos-duration="1000"  className="down">
-            <ItemCard2 item={items[1]}/>
-          </div>
-          <div data-aos="fade-up"
-            data-aos-duration="1500">
-          <ItemCard2 item={items[2]}/>
-          </div>
-          <div data-aos="fade-up"
-            data-aos-duration="1500" className="down">
-            <ItemCard2 item={items[3]}/>
-          </div>
-          <div data-aos="fade-up"
-            data-aos-duration="1800">
-            <ItemCard2 item={items[4]}/>
-          </div>
-        </div>
-      </NewTokken>
+      <ZigZag items={items}>
+      </ZigZag>
+      <ZigZag items={items}>
+      </ZigZag>
     </MainH>
   );
 }
