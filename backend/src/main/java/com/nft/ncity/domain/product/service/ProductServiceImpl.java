@@ -308,4 +308,19 @@ public class ProductServiceImpl implements ProductService{
         Page<Product> productList = productRepositorySupport.findProductListByUserId(userId, pageable);
         return productList;
     }
+
+    @Override
+    public Page<Product> getMintedProductList(Page<Deal> dealList) {
+
+        List<Product> productList = new ArrayList<>();
+
+        for(Deal d : dealList.getContent()){
+            Product product = productRepositorySupport.findProductByUserId(d.getProductId());
+            productList.add(product);
+        }
+
+        Page<Product> res = new PageImpl<Product>(productList, dealList.getPageable(), productList.size());
+
+        return res;
+    }
 }

@@ -24,6 +24,8 @@ public interface DealService {
 
     Page<DealListGetRes> getDealListByProductId(Pageable pageable,Long productId);
 
+    Page<Deal> getDealMintedListByUserId(Long userId, Pageable pageable);
+
     //UPDATE
 
     //DELETE

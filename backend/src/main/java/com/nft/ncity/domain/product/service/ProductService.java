@@ -1,5 +1,6 @@
 package com.nft.ncity.domain.product.service;
 
+import com.nft.ncity.domain.deal.db.entity.Deal;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
@@ -41,4 +42,5 @@ public interface ProductService {
 
     Page<Product> getProductListByUserId(Long userId, Pageable pageable);
 
+    Page<Product> getMintedProductList(Page<Deal> dealList);
 }

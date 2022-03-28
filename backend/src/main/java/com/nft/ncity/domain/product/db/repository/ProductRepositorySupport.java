@@ -136,4 +136,14 @@ public class ProductRepositorySupport {
         return  new PageImpl<Product>(productList,pageable, productList.size());
 
     }
+
+    public Product findProductByUserId(Long productId) {
+
+        Product product = jpaQueryFactory.select(qProduct)
+                .from(qProduct)
+                .where(qProduct.productId.eq(productId))
+                .fetchOne();
+
+        return product;
+    }
 }

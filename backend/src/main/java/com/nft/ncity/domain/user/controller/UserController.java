@@ -1,6 +1,8 @@
 package com.nft.ncity.domain.user.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
+import com.nft.ncity.domain.deal.db.entity.Deal;
+import com.nft.ncity.domain.deal.service.DealService;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.service.ProductService;
 import com.nft.ncity.domain.user.db.entity.EmailAuth;
@@ -38,6 +40,9 @@ public class UserController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    DealService dealService;
 
     @GetMapping("/{userId}")
     @ApiOperation(value = "유저 정보 조회", notes = "<strong>UserId에 해당하는 유저의 정보</strong>을 넘겨준다.")
@@ -79,14 +84,15 @@ public class UserController {
         Page<Product> productList = productService.getProductListByUserId(userId, pageable);
 
         if(productList == null) {
-            log.error("getProductListByUserId - This userId don't have Product.");
+            log.error("getProductListByUserId - This userId has no Product.");
             return ResponseEntity.status(404).body(null);
         }
         return ResponseEntity.status(201).body(productList);
     }
 
     /**
-     거래 테이블에서 보내는 사람id가 입력받은 userId이고 받는 사람 id는 NullAddress이면서 , 거래타입이 minted인 값들 받아오기
+     거래 테이블에서 받는 사람id가 입력받은 userId이고, 거래타입이 minted(6)인 거래 받아와서
+     해당 거래에 있는 productId로 뽑아서 넣어주기.
      */
     @GetMapping("/{userId}/created")
     @ApiOperation(value = "유저가 생성한 작품 조회", notes = "<strong>해당 유저가 생성한 작품 목록</strong>을 넘겨준다.")
@@ -94,21 +100,21 @@ public class UserController {
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "해당 유저 없음.")
     })
-    public ResponseEntity<Page<User>>getCreatedProductListByUserId(@PathVariable("userId") Long userId,
+    public ResponseEntity<Page<Product>>getCreatedProductListByUserId(@PathVariable("userId") Long userId,
                                                             @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
         // 0. 받아올 유저 ID를 받음
         // 1. 해당 유저가 생성한 작품 목록을 넘겨준다.
 
         log.info("getCreatedProductListByUserId - 호출");
-        User user = userRepository.getById(userId);
-        //Product product = productRepository.getById();
+        Page<Deal> dealList = dealService.getDealMintedListByUserId(userId, pageable);
+        Page<Product> productList = productService.getMintedProductList(dealList);
 
-        if(user.equals(null)) {
-            log.error("getCreatedProductListByUserId - This userId doesn't exist.");
+        if(productList.equals(null)) {
+            log.error("getCreatedProductListByUserId - There are no products created by this user.");
             return ResponseEntity.status(404).body(null);
         }
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(201).body(productList);
     }
 
     /**

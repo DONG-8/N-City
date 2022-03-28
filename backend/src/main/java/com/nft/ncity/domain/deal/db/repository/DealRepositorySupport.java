@@ -115,4 +115,17 @@ public class DealRepositorySupport {
         return execute;
     }
 
+    public Page<Deal> findDealMintedListByUserId(Long userId, Pageable pageable) {
+        List<Deal> dealList = jpaQueryFactory.select(qDeal)
+                .from(qDeal)
+                .where(qDeal.dealType.eq(6).and(qDeal.dealTo.eq(userId)))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        if(dealList.isEmpty()) return Page.empty();
+
+        return new PageImpl<Deal>(dealList,pageable,dealList.size());
+
+    }
 }
