@@ -13,6 +13,8 @@ import { Button } from '@mui/material';
 import { useMutation, useQuery } from 'react-query';
 import { getProductDetail } from '../../store/apis/product';
 import { getUserInfo } from '../../store/apis/user';
+import { postProductLike } from '../../store/apis/Main';
+import { delProductLike } from '../../store/apis/favorite';
 const etherURL = '/essets/images/ethereum.png'
 
 const Wrapper = styled.div`
@@ -42,6 +44,16 @@ const ArtistBox = styled.div`
   }
   .mid{
     margin-left: 3vw;
+    display: flex;
+    .mid-l{
+      flex:1;
+    }
+    .mid-r{
+      flex:1;
+      button{
+        font-size: 3rem;
+      }
+    }
   }
   .profile{
     border-radius: 100%;
@@ -286,6 +298,32 @@ const DetailItem = () => {
       setArtist(res)
     }}
   )
+  const LikeIt = useMutation<any,Error>(
+    'postProductLike',
+    async()=>{ return (
+      await ( postProductLike(Number(item.productId)))
+      )
+    },
+    {onSuccess: (res)=>console.log(res),
+      onError:(err)=>console.log(err)}
+  )
+  const cancelLikeIt = useMutation<any,Error>(
+    'delProductLike',
+    async()=>{ return (
+      await ( delProductLike(Number(item.productId)))
+      )
+    },
+    {onSuccess: (res)=>console.log(res),
+    onError:(err)=>console.log(err)}
+  )
+  const Like =()=>{
+    setLikes(likes+1)
+    LikeIt.mutate()
+  }
+  const cancelLike  =()=>{
+    setLikes(likes-1)
+    cancelLikeIt.mutate()
+  }
   useEffect(()=>{
     const tmp = JSON.parse(localStorage.getItem("item")||"")
     if (item.productTitle !==tmp.productTitle){
@@ -309,6 +347,7 @@ const DetailItem = () => {
               <p className='name'>{artist.userNick}</p>
             </div>
             <div className='mid'>
+              <div className='mid-l'>
               <div className='verified'>
                 {artist.userEmailConfirm && 
               <img alt="verified" style={{ height: "1.5rem" }}
@@ -318,6 +357,12 @@ const DetailItem = () => {
               <div>userRole:{artist.userRole}</div>
               <div>followeeCnt:{artist.followeeCnt}</div>
               <div>followerCnt:{artist.followerCnt}</div>
+              </div>
+              <div className='mid-r'>
+                <button onClick={()=>{Like()}}>♡</button>
+                <button onClick={()=>{cancelLike()}}>❤</button>
+              </div>
+              
             </div>
           </ArtistBox>
           <ArtistDescription>
