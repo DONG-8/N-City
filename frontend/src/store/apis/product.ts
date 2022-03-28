@@ -40,6 +40,17 @@ export const postProduct = async (formdata : any) => {
   return response.data
 }
 
+// 상품정보업데이트
+export const putTokenID = async (data : any) => {
+  const response = await apiClient.put<any>(
+    `/products/token`,
+    data
+  )
+  console.log("상품정보업데이트")
+  return response.data
+}
+
+
 // 카테고리별 조회
 export const getProductCategori = async (productCode : number) => {
   const response = await fileApiClient.post<any>(
