@@ -3,6 +3,7 @@ package com.nft.ncity.domain.product.response;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
 import com.nft.ncity.domain.favorite.service.FavoriteService;
 import com.nft.ncity.domain.product.db.entity.Product;
+import com.nft.ncity.domain.user.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -36,12 +37,14 @@ public class ProductListGetRes {
     @ApiModelProperty(value = "상품 생성일")
     LocalDateTime productRegDt;
 
-    @ApiModelProperty(value = "좋아요 수")
-    Long productFavorite;
-
     @ApiModelProperty(value = "상품 카테고리")
     int productCode;
 
+    @ApiModelProperty(value = "좋아요 수")
+    Long productFavorite;
+
+    @ApiModelProperty(value = "좋아요 누른 사람")
+    List<User> productFavoriteUser;
 
     public static Page<ProductListGetRes> of(Page<Product> products){
         List<ProductListGetRes> productListGetRes = new ArrayList<>();

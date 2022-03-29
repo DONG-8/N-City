@@ -10,5 +10,5 @@ import lombok.Setter;
 @ApiModel(value = "MyRoomBackgroundPutReq", description = "방 꾸미기 시 필요한 정보")
 public class MyRoomBackgroundPutReq {
     @ApiModelProperty(value = "유저 방 정보")
-    String myRoomBackground;
+    Object myRoomBackground;
 }

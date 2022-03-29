@@ -2,8 +2,11 @@ package com.nft.ncity.domain.favorite.service;
 
 import com.nft.ncity.domain.favorite.db.entity.Favorite;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
+import com.nft.ncity.domain.user.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("favoriteService")
 public class FavoriteServiceImpl implements FavoriteService {
@@ -31,8 +34,6 @@ public class FavoriteServiceImpl implements FavoriteService {
 
         return favoriteRepositorySupport.getFavoriteCount(productId);
     }
-
-
 
 
     // Delete
