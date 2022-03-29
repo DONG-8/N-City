@@ -23,11 +23,12 @@ class Editmap extends Phaser.Scene {
   private keyA!: Phaser.Input.Keyboard.Key;
   private mk !: MakingMode
   // private data = new Data 
+  private controls
+
   constructor() {
     super('Editmap')
   }
 
-  
 
   preload() { // 시작전 세팅 
 
@@ -86,6 +87,7 @@ class Editmap extends Phaser.Scene {
     this.network = new Network()
   }
 
+  
 
   create(data: { network: Network }) { // 백그라운드 시작
 
@@ -186,7 +188,17 @@ class Editmap extends Phaser.Scene {
     );
     this.addGroupFromTiled("Basement", "basement", "Basement", true);
 
-    
+    var cursors = this.input.keyboard.createCursorKeys();
+    var controlConfig = {
+        camera: this.cameras.main,
+        left: cursors.left,
+        right: cursors.right,
+        down : cursors.down,
+        up: cursors.up,
+        speed: 0.5
+    };
+
+    this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
   }
 
   private handleItemSelectorOverlap(playerSelector, selectionItem) {
@@ -270,6 +282,10 @@ class Editmap extends Phaser.Scene {
   
 
   update(t: number, dt: number) {  // 매 프레임 update
+
+    // 카메라 무빙 with 키보드
+    this.controls.update(dt)
+
     var worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
     var pointTilex = this.map.worldToTileX(this.game.input.mousePointer.worldX)
     var pointTileY = this.map.worldToTileY(this.game.input.mousePointer.worldY);
@@ -281,8 +297,11 @@ class Editmap extends Phaser.Scene {
   
     if (this.mk === MakingMode.CREATE) {
       console.log('생성모드')
+     
+    
     } else {
       console.log('삭제모드')
+
     }
 
     
