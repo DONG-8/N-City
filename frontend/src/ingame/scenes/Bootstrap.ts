@@ -2,11 +2,27 @@ import Phaser from 'phaser'
 import Network from '../services/Network'
 import store from '../stores'
 import { setRoomJoined } from '../stores/RoomStore'
+import phaserGame from '../PhaserGame'
+import Game from "./Game"
+
 
 enum BackgroundMode {
   DAY,
   NIGHT,
 }
+
+enum GameMode {
+  GAME,
+  EDIT
+}
+
+const avatars = [
+  { name: "adam", img: "/essets/login/Adam_login.png" },
+  { name: "ash", img: "/essets/login/Ash_login.png" },
+  { name: "lucy", img: "/essets/login/Lucy_login.png" },
+  { name: "nancy", img: "/essets/login/Nancy_login.png" },
+];
+
 export default class Bootstrap extends Phaser.Scene {
   network!: Network
 
@@ -92,7 +108,7 @@ export default class Bootstrap extends Phaser.Scene {
     this.scene.launch('background', { backgroundMode })
   }
 
-  launchGame() { // 
+  launchGame(gameMode : GameMode) { 
     this.network.webRTC?.checkPreviousPermission()
     this.scene.launch('game', {
       network: this.network,
@@ -104,5 +120,27 @@ export default class Bootstrap extends Phaser.Scene {
   changeBackgroundMode(backgroundMode: BackgroundMode) {
     this.scene.stop('background')
     this.launchBackground(backgroundMode)
+  }
+
+  changeGameMode(gameMode : GameMode) {
+    if (gameMode === GameMode.EDIT) {
+      this.scene.stop('game')
+      this.scene.launch('Editmap')
+      console.log('게임모드 변경')
+    }
+    else {
+      this.scene.stop('Editmap')
+      this.network.webRTC?.checkPreviousPermission()
+      this.scene.launch('game', {network: this.network})
+      console.log('게임모드 변경')
+      store.dispatch(setRoomJoined(true))
+      console.log('완료')
+      // const game = phaserGame.scene.keys.game as Game;
+      // game.registerKeys(); // 키 설정
+      // game.myPlayer.setPlayerName("임현홍"); // ❗ 내이름 설정해주기
+      // game.myPlayer.setPlayerTexture(avatars[1].name); // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
+      // game.network.readyToConnect(); // 네트워크 연결
+      // console.log( "ConnectGame?!");
+    }
   }
 }
