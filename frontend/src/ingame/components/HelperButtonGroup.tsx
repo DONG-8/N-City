@@ -15,8 +15,12 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import AudiotrackRoundedIcon from "@mui/icons-material/AudiotrackRounded";
 import CottageRoundedIcon from "@mui/icons-material/CottageRounded";
 import { toggleBackgroundMode } from "../stores/UserStore";
-import { EditModeChange } from "../stores/EditStore";
+
+// 스토어
+import { EditModeChange, MakingModeChange } from "../stores/EditStore";
 import { useAppSelector, useAppDispatch } from "../hooks";
+
+// 기타등등
 import { getAvatarString, getColorByString } from "../util";
 import StoreModal from "./StoreModal";
 import { Route } from "react-router-dom";
@@ -25,6 +29,11 @@ import { WindowRounded } from "@mui/icons-material";
 enum BackgroundMode {
   DAY,
   NIGHT,
+}
+
+enum MakingMode {
+  CREATE,
+  DELETE,
 }
 
 const Backdrop = styled.div`
@@ -175,6 +184,15 @@ export default function HelperButtonGroup() {
   const ClickModeChange = () => {
     dispatch(EditModeChange());
     console.log("변경중");
+  };
+
+  const CreateMode = () => {
+    console.log("와쩌염");
+    dispatch(MakingModeChange(MakingMode.CREATE));
+  };
+
+  const DeleteMode = () => {
+    dispatch(MakingModeChange(MakingMode.DELETE));
   };
 
   useEffect(() => {
@@ -329,6 +347,16 @@ export default function HelperButtonGroup() {
         </Tooltip>
         <Tooltip title="Map Editing">
           <StyledFab size="small" onClick={() => ClickModeChange()}></StyledFab>
+        </Tooltip>
+        <Tooltip title="CreateMode">
+          <StyledFab size="small" onClick={() => CreateMode()}>
+            C
+          </StyledFab>
+        </Tooltip>
+        <Tooltip title="DeleteMode">
+          <StyledFab size="small" onClick={() => DeleteMode()}>
+            D
+          </StyledFab>
         </Tooltip>
       </ButtonGroup>
     </Backdrop>

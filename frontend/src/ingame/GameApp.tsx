@@ -17,14 +17,16 @@ import Bootstrap from "./scenes/Bootstrap";
 import Game from "./scenes/Game";
 import EditBar from "./components/EditBar";
 import Background from "./scenes/Background";
-import Editmap from "./scenes/Editmap";
-import { render } from "react-dom";
-import EditPhaserGame from "./EditPhaserGame";
 import store from "./stores";
 
 enum GameMode {
   GAME,
   EDIT,
+}
+
+enum MakingMode {
+  CREATE,
+  DELETE,
 }
 
 const Backdrop = styled.div`
@@ -76,6 +78,8 @@ const GameApp: Function = () => {
   );
 
   const gameMode = useAppSelector((state) => state.edit.EditMode);
+  // const makingMode = useAppSelector((state) => state.edit.makingMode)
+
   let game = phaserGame.scene.keys.game as Game;
   let bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
 
