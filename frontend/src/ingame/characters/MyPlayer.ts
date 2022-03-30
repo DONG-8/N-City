@@ -8,10 +8,6 @@ import Chair from '../items/Chair'
 import Computer from '../items/Computer'
 import Whiteboard from '../items/Whiteboard'
 import VendingMachine from '../items/VendingMachine'
-import VendingMachine2 from '../items/VendingMachine2'
-import VendingMachine3 from '../items/VendingMachine2'
-import VendingMachine4 from '../items/VendingMachine2'
-import VendingMachine5 from '../items/VendingMachine2'
 import { phaserEvents, Event } from '../components/events/EventCenter'
 import store from '../stores'
 import { pushPlayerJoinedMessage } from '../stores/ChatStore'
@@ -75,23 +71,6 @@ export default class MyPlayer extends Player {
           const vendingMachine = item as VendingMachine
           vendingMachine.openDialog(1)
           break
-        case ItemType.VENDINGMACHINE2: // 화면을 띄운다.
-          const vendingMachine2 = item as VendingMachine2
-          vendingMachine2.openDialog(2) 
-          break
-        case ItemType.VENDINGMACHINE3: // 화면을 띄운다.
-          const vendingMachine3 = item as VendingMachine3
-          vendingMachine3.openDialog(3)
-          break
-        case ItemType.VENDINGMACHINE4: // 화면을 띄운다.
-          const vendingMachine4 = item as VendingMachine4
-          vendingMachine4.openDialog(4)
-          break
-        case ItemType.VENDINGMACHINE5: // 화면을 띄운다.
-          const vendingMachine5 = item as VendingMachine5
-          vendingMachine5.openDialog(5)
-          break
- 
       }
     }
 

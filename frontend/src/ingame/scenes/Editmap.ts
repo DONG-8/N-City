@@ -285,6 +285,7 @@ class Editmap extends Phaser.Scene {
 
     // 카메라 무빙 with 키보드
     this.controls.update(dt)
+    console.log('dkdkdk')
 
     var worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
     var pointTilex = this.map.worldToTileX(this.game.input.mousePointer.worldX)
@@ -297,11 +298,8 @@ class Editmap extends Phaser.Scene {
   
     if (this.mk === MakingMode.CREATE) {
       console.log('생성모드')
-     
-    
     } else {
       console.log('삭제모드')
-
     }
 
     

@@ -7,10 +7,6 @@ import Chair from '../items/Chair'
 import Computer from '../items/Computer'
 import Whiteboard from '../items/Whiteboard'
 import VendingMachine from '../items/VendingMachine'
-import VendingMachine2 from '../items/VendingMachine2'
-import VendingMachine3 from '../items/VendingMachine3'
-import VendingMachine4 from '../items/VendingMachine4'
-import VendingMachine5 from '../items/VendingMachine5'
 import '../characters/MyPlayer'
 import '../characters/OtherPlayer'
 import MyPlayer from '../characters/MyPlayer'
@@ -141,28 +137,7 @@ export default class Game extends Phaser.Scene {
     const vendingMachineLayer = this.map.getObjectLayer('VendingMachine')
     console.log(vendingMachineLayer)
     vendingMachineLayer.objects.forEach((obj, i) => {
-      this.addObjectFromTiled(vendingMachines, obj, 'vendingmachines', 'VM')
-    })
-
-    const vendingMachines2 = this.physics.add.staticGroup({ classType: VendingMachine2 })
-    const vendingMachine2Layer = this.map.getObjectLayer('VendingMachine2')
-    vendingMachine2Layer.objects.forEach((obj, i) => {
-      this.addObjectFromTiled(vendingMachines2, obj, 'vendingmachines2', 'VM')
-    })
-    const vendingMachines3 = this.physics.add.staticGroup({ classType: VendingMachine3 })
-    const vendingMachine3Layer = this.map.getObjectLayer('VendingMachine3')
-    vendingMachine3Layer.objects.forEach((obj, i) => {
-      this.addObjectFromTiled(vendingMachines3, obj, 'vendingmachines3', 'VM')
-    })
-    const vendingMachines4 = this.physics.add.staticGroup({ classType: VendingMachine4 })
-    const vendingMachine4Layer = this.map.getObjectLayer('VendingMachine4')
-    vendingMachine4Layer.objects.forEach((obj, i) => {
-      this.addObjectFromTiled(vendingMachines4, obj, 'vendingmachines4', 'VM')
-    })
-    const vendingMachines5 = this.physics.add.staticGroup({ classType: VendingMachine5 })
-    const vendingMachine5Layer = this.map.getObjectLayer('VendingMachine5')
-    vendingMachine5Layer.objects.forEach((obj, i) => {
-      this.addObjectFromTiled(vendingMachines5, obj, 'vendingmachines5', 'VM')
+      this.addObjectFromTiled(vendingMachines, obj, 'vendingmachines', 'vendingmachine')
     })
     
     this.addGroupFromTiled('Wall', 'tiles_wall', 'FloorAndGround', false)
@@ -177,14 +152,10 @@ export default class Game extends Phaser.Scene {
 
     this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], groundLayer) // 충돌나는 물건들 
     this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines) //  충돌
-    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines2) //   충돌
-    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines3) //   충돌
-    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines4) //   충돌
-    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines5) //   충돌
-
+   
     this.physics.add.overlap( // ⭐ 이거 없으면 상호작용 불가
       this.playerSelector,
-      [chairs, computers, whiteboards, vendingMachines,vendingMachines2,vendingMachines3,vendingMachines4,vendingMachines5],
+      [chairs, computers, whiteboards, vendingMachines],
       this.handleItemSelectorOverlap,
       undefined,
       this
