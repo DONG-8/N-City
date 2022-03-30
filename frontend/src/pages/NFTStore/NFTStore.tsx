@@ -198,7 +198,6 @@ const NFTStore = () => {
       },
     }
   );
-  console.log('😀',saleitems)
   return (
     <>
       {/* <ColorBar>

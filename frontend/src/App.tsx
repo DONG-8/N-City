@@ -25,13 +25,13 @@ import MapChoice from "./pages/Room/MapChoice";
 
 
 function App() {
-  useEffect(()=>{
-    if (window.location.pathname==='/ingame'){
-      (window as any).game = phaserGame}
-      else{
-        (window as any).game.destroy(true)
-      }
-  },[])
+  useEffect(() => {
+    if (window.location.pathname === "/ingame") {
+      (window as any).game = phaserGame;
+    } else {
+      (window as any).game.destroy(true);
+    }
+  }, []);
   return (
     <>
       <GlobalStyle />

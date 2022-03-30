@@ -1,10 +1,13 @@
 package com.nft.ncity.domain.myroom.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.domain.myroom.db.entity.MyRoom;
 import com.nft.ncity.domain.myroom.db.repository.MyRoomRepositorySupport;
 import com.nft.ncity.domain.myroom.request.MyRoomBackgroundPutReq;
 import com.nft.ncity.domain.myroom.request.MyRoomCharacterPutReq;
+import com.nft.ncity.domain.myroom.response.MyRoomGetRes;
 import com.nft.ncity.domain.myroom.service.MyRoomService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +17,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.*;
 import java.security.Principal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @EnableScheduling
 @Slf4j
@@ -38,15 +41,19 @@ public class MyRoomController {
             @ApiResponse(code = 200, message = "성공", response = MyRoom.class),
             @ApiResponse(code = 404, message = "존재하지 않는 userId 입니다.")
     })
-    public ResponseEntity<MyRoom> getUserRoom(@PathVariable @ApiParam(value = "방 주인의 유저 id", required = true) Long userId) {
-        log.info("getMyRoom - Call");
+    public ResponseEntity<MyRoomGetRes> getUserRoom(@PathVariable @ApiParam(value = "방 주인의 유저 id", required = true) Long userId) throws JsonProcessingException {
+        log.info("getUserRoom - Call");
 
         MyRoom userRoom = myRoomService.getUserRoom(1, userId);
+
         if(userRoom == null) {  // userId 존재하지 않는 경우
             return ResponseEntity.status(404).body(null);
         } else {
+            // json으로 변환하기
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, String> mapInfo = mapper.readValue(userRoom.getMyRoomBackground(), Map.class);
 
-            return ResponseEntity.status(200).body(userRoom);
+            return ResponseEntity.status(200).body(MyRoomGetRes.of(200, "마이룸 불러오기 성공", userRoom, mapInfo));
         }
     }
 
@@ -56,12 +63,16 @@ public class MyRoomController {
             @ApiResponse(code = 204, message = "배경 변경 성공"),
             @ApiResponse(code = 401, message = "로그인 해주세요")
     })
-    public ResponseEntity<? extends BaseResponseBody> modifyMyRoomBackground(@RequestBody @ApiParam(value = "방 변경 정보", required = true) MyRoomBackgroundPutReq myRoomBackgroundInfo, Principal principal) {
+    public ResponseEntity<? extends BaseResponseBody> modifyMyRoomBackground(@RequestBody @ApiParam(value = "방 변경 정보", required = true) MyRoomBackgroundPutReq myRoomBackgroundInfo) throws IOException {
         log.info("modifyMyRoomBackground - Call");
 
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1);
 
-        if (myRoomService.modifyMyRoom(1, userId, myRoomBackgroundInfo.getMyRoomBackground()) == true) {
+        // JSON -> String
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = mapper.writeValueAsString(myRoomBackgroundInfo.getMyRoomBackground());
+
+        if (myRoomService.modifyMyRoom(1, userId, jsonInString) == true) {
             return ResponseEntity.status(204).body(BaseResponseBody.of(204, "배경 변경 성공"));
         } else {
             return ResponseEntity.status(401).body(BaseResponseBody.of(401, "로그인 해주세요"));

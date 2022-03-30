@@ -1,26 +1,39 @@
-import { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 
-import { useAppSelector } from './hooks'
+import { useAppSelector } from "./hooks";
 // typescript에서 useSelector 사용 하려면 hooks를 만들어서 불러와야한다.
 
-import MainDialog from './components/MainDialog' // 캐릭터 고르는 화면
-import ComputerDialog from './components/ComputerDialog' // 컴퓨터 사용
-import WhiteboardDialog from './components/WhiteboardDialog' // 화이트보드 사용
-// import VideoConnectionDialog from './components/VideoConnectionDialog' // 캐릭터 고를때 웹캠 연결됐나 확인용 
-import Chat from './components/Chat' // 채팅 관련 
-import HelperButtonGroup from './components/HelperButtonGroup' // 우측 하단 버튼들 
-import phaserGame from './PhaserGame'
-import VendingMachineDialog from './components/VendingMachineDialog'
+import MainDialog from "./components/MainDialog"; // 캐릭터 고르는 화면
+import ComputerDialog from "./components/ComputerDialog"; // 컴퓨터 사용
+import WhiteboardDialog from "./components/WhiteboardDialog"; // 화이트보드 사용
+// import VideoConnectionDialog from './components/VideoConnectionDialog' // 캐릭터 고를때 웹캠 연결됐나 확인용
+import Chat from "./components/Chat"; // 채팅 관련
+import HelperButtonGroup from "./components/HelperButtonGroup"; // 우측 하단 버튼들
+import phaserGame from "./PhaserGame";
+import VendingMachineDialog from "./components/VendingMachineDialog";
 
-import Bootstrap from './scenes/Bootstrap'
-import Game from './scenes/Game'
+import Bootstrap from "./scenes/Bootstrap";
+import Game from "./scenes/Game";
+import EditBar from "./components/EditBar";
+import Background from "./scenes/Background";
+import store from "./stores";
+
+enum GameMode {
+  GAME,
+  EDIT,
+}
+
+enum MakingMode {
+  CREATE,
+  DELETE,
+}
 
 const Backdrop = styled.div`
   position: absolute;
   height: 100%;
   width: 100%;
-`
+`;
 const avatars = [
   { name: 'adam', img: "/essets/login/Adam_login.png" },
   { name: 'ash', img:"/essets/login/Ash_login.png" },
@@ -39,19 +52,25 @@ export interface IRoomData {
 window.addEventListener("keydown", function(e) {
   if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
       e.preventDefault();
-  }
-}, false);
-
-
-const  GameApp: Function = ()=> {
-  useEffect(()=>{
-    (window as any).game = phaserGame
-    setTimeout( () => ConnectBootstrap(), 1000) // Bootstrap 연결   
-    setTimeout( () => ConnectGame(), 1500)  // 게임 접속 
-    return()=>{
-      (window as any).game.destroy(true)
     }
-  },[])
+  },
+  false
+);
+
+const GameApp: Function = () => {
+  const availableRooms = useAppSelector((state) => state.room.availableRooms);
+
+  const Setting = useAppSelector((state) => state.edit.EditMode);
+
+  useEffect(() => {
+    (window as any).game = phaserGame;
+    setTimeout(() => ConnectBootstrap(), 1000); // Bootstrap 연결
+    setTimeout(() => ConnectGame(), 1500); // 게임 접속
+    console.log(availableRooms, "로드중?!");
+    return () => {
+      (window as any).game.destroy(true);
+    };
+  }, []);
 
   const [values, setValues] = useState<IRoomData>({ // 방이름 방설명 패스워드
     roomId : 'userId',  // userId 넣어주기 
@@ -64,8 +83,14 @@ const  GameApp: Function = ()=> {
   const availableRooms = useAppSelector((state) => state.room.availableRooms) //가능한 방들 표시 해주기
   const computerDialogOpen = useAppSelector((state) => state.computer.computerDialogOpen)
   const whiteboardDialogOpen = useAppSelector((state) => state.whiteboard.whiteboardDialogOpen)
+
   // const videoConnected = useAppSelector((state) => state.user.videoConnected)
-  const VendingMachineDialogOpen = useAppSelector((state)=>state.vendingMachine.vendingMachineDialogOpen)
+  const VendingMachineDialogOpen = useAppSelector(
+    (state) => state.vendingMachine.vendingMachineDialogOpen
+  );
+
+  const gameMode = useAppSelector((state) => state.edit.EditMode);
+  // const makingMode = useAppSelector((state) => state.edit.makingMode)
 
   let game =  phaserGame.scene.keys.game as Game
   let bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
@@ -146,6 +171,6 @@ const  GameApp: Function = ()=> {
         </Backdrop>
       </>  
   );
-}
+};
 
-export default GameApp
+export default GameApp;
