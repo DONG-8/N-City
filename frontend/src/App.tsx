@@ -48,7 +48,7 @@ function App() {
           <Route path="/store" element={<NFTStore />} />
           <Route path="/store/detail/:productId" element={<DetailItem />} />
           <Route path="/mint" element={<Mint />} />
-          <Route path="/profilesetting" element={<ProfileSetting />} />
+          <Route path="/profilesetting/:userId" element={<ProfileSetting />} />
           <Route path="/event" element={<EventPage />} />
           <Route path="/event/detail" element={<EventDetail />} />
           <Route path="/rank" element={<Rank />} />
