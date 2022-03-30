@@ -295,6 +295,12 @@ const Mint = () => {
   const submitFile = useMutation<any, Error>(
     "submitFile",
     async () => {
+      const accounts = await ethereum.request({ method: "eth_accounts" });
+      if (!accounts[0]) {
+        alert("지갑을 연결해주세요")
+        return;
+      }
+
       const formdata = new FormData();
       if (isVideoAudio()){
         formdata.append("code", categoryCode);
@@ -322,13 +328,9 @@ const Mint = () => {
     },
     {
       onSuccess: async (res) => {
+        const accounts = await ethereum.request({ method: "eth_accounts" });
         setProductId(res.productId)
         const uri = res.message;
-        const accounts = await ethereum.request({ method: "eth_accounts" });
-        if (!accounts[0]) {
-          alert("지갑을 연결해주세요")
-          return;
-        }
         await setIsLoading(true);
         const response = await NFTcreatorContract.methods
           .create(accounts[0], uri)
@@ -336,11 +338,10 @@ const Mint = () => {
             from: accounts[0],
           });
         await setIsLoading(false);
-        console.log(accounts[0]); // owner --> 둘다 넣어야하는거잖아 그치
+        console.log(accounts[0]); 
         console.log(response.events.createNFT.returnValues._tokenId); // tokenId
         await setTokenId(response.events.createNFT.returnValues._tokenId);
-        // 그럼 이 값을 이 컴포넌트에 순간 useState로 저장해도 상관 x 인거잖아 그치
-        // 아니다 여기서 또 useMutate 써서 여기 인자값으로 바로 post 요쳥 보내면
+
         putToken.mutate();
       },
       onError: (err: any) => {
@@ -380,52 +381,7 @@ const Mint = () => {
       alert("작품이름을 입력해주세요");
       return;
     }
-
-    // const formdata = new FormData();
-    // if (isVideoAudio()){
-    //   formdata.append("code", categoryCode);
-    //   formdata.append("productDesc", description);
-    //   formdata.append("productTitle", tokenName);
-    //   formdata.append("productFile", file);
-    //   formdata.append("thumbnailFile", thumbnail);
-    // } else {
-    //   formdata.append("code", categoryCode);
-    //   formdata.append("productDesc", description);
-    //   formdata.append("productTitle", tokenName);
-    //   formdata.append("productFile", file);
-    //   formdata.append("thumbnailFile", file);
-    // }
-    // for (var key of formdata.keys()) {
-    //   console.log(key);
-    // }
-
-    // for (var value of formdata.values()) {
-    //   console.log(value);
-    // }
-    // const formdata = new FormData();
-    // formdata.append("file", file);
-
-    // console.log(formdata, "formdata");
-    // // formdata 확인
-    // for (var key of formdata.keys()) {
-    //   console.log(key);
-    // }
-
-    // for (var value of formdata.values()) {
-    //   console.log(value);
-    // }
-
     submitFile.mutate();
-    // const accounts = await ethereum.request({ method: "eth_accounts" });
-    // if (!accounts[0]) return;
-    // const response = await NFTcreatorContract.methods
-    //   .create(accounts[0], "testURI2")
-    //   .send({
-    //     from: accounts[0],
-    //   });
-    // console.log(accounts[0]);
-    // console.log(response);
-    // console.log(response.events.createNFT.returnValues._tokenId);
   };
 
   const encodeMainFileToBasek64 = (fileBlob: any) => {

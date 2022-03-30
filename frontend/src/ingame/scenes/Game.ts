@@ -2,7 +2,6 @@ import { ItemType } from './../items/Item';
 import { IPlayer } from './../../types/IOfficeState';
 import Phaser from 'phaser'
 import { createCharacterAnims } from '../anims/CharacterAnims'
-
 import Item from '../items/Item'
 import Chair from '../items/Chair'
 import Computer from '../items/Computer'
@@ -21,10 +20,15 @@ import Network from '../services/Network'
 import { PlayerBehavior } from '../../types/PlayerBehavior'
 import store from '../stores'
 import { setFocused, setShowChat } from '../stores/ChatStore'
+import stores from "../stores"
 
+enum GameModeSet {
+  GAME,
+  EDIT
+}
 
 export default class Game extends Phaser.Scene {
-  network!: Network
+  network!: Network // null이 될수가 없는 변수에 대해서 지정
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private keyE!: Phaser.Input.Keyboard.Key
   private keyR!: Phaser.Input.Keyboard.Key
@@ -35,7 +39,7 @@ export default class Game extends Phaser.Scene {
   private otherPlayerMap = new Map<string, OtherPlayer>()
   computerMap = new Map<string, Computer>()
   private whiteboardMap = new Map<string, Whiteboard>()
-
+  private Setting = stores.getState().edit.EditMode
   constructor() {
     super('game')
   }
@@ -67,12 +71,16 @@ export default class Game extends Phaser.Scene {
     this.input.keyboard.enabled = true
   }
 
-  create(data: { network: Network }) {
+  create(data: { network: Network}) {
     if (!data.network) {
       throw new Error('server instance missing')
     } else {
       this.network = data.network
     }
+    
+    this.cameras.main.zoom = 1.6
+    
+    
 
     createCharacterAnims(this.anims)
 
@@ -107,8 +115,13 @@ export default class Game extends Phaser.Scene {
       this.computerMap.set(id, item)
     })
 
+    // import whiteboards objects from Tiled map to Phaser
+    // whiteboard 에서 가지는 물리법칙 적용
     const whiteboards = this.physics.add.staticGroup({ classType: Whiteboard })
+    // 화이트보드 레이어를 map.json 에서 가져옴
     const whiteboardLayer = this.map.getObjectLayer('Whiteboard')
+    // 이 화이트 보드 레이어의 모든 정보를 순회하면서, wihteboard 물리 법칙과,
+    // whiteboard.ts 에서 상속받은 함수들을 적용시켜줌
     whiteboardLayer.objects.forEach((obj, i) => {
       const item = this.addObjectFromTiled(
         whiteboards,
@@ -116,8 +129,10 @@ export default class Game extends Phaser.Scene {
         'whiteboards',
         'whiteboard'
       ) as Whiteboard
+      console.log(item,'아이템 뽑아왔어요')
       const id = `${i}`
       item.id = id
+      console.log(this.whiteboardMap, '화이트보트맵', id)
       this.whiteboardMap.set(id, item)
     })
 
@@ -308,5 +323,61 @@ export default class Game extends Phaser.Scene {
       this.playerSelector.update(this.myPlayer, this.cursors)
       this.myPlayer.update(this.playerSelector, this.cursors, this.keyE, this.keyR, this.network)
     }
-  }
+
+    var worldPoint = this.input.activePointer.positionToCamera(
+      this.cameras.main
+    )
+    var pointTilex = this.map.worldToTileX(this.game.input.mousePointer.worldX)
+    var pointTileY = this.map.worldToTileY(this.game.input.mousePointer.worldY);
+    let marker = this.add.graphics(); 
+    marker.x = this.map.tileToWorldX(pointTilex);
+    marker.y = this.map.tileToWorldY(pointTileY);
+
+    // if (this.input.manager.activePointer.isDown)
+    // { 
+    //       console.log('여기와쯤')
+    //       var worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
+    //       var pointTilex = this.map.worldToTileX(this.game.input.mousePointer.worldX)
+    //       var pointTileY = this.map.worldToTileY(this.game.input.mousePointer.worldY);
+    //       // console.log(pointTilex, pointTileY)
+    //       let marker = this.add.graphics(); 
+    //       marker.x = this.map.tileToWorldX(pointTilex);
+    //       marker.y = this.map.tileToWorldY(pointTileY);
+    //       // 여기가 클릭한거별로 바뀌어야함
+    //       const chairs = this.physics.add.staticGroup({ classType: VendingMachine })
+    //       const chairLayer = this.map.getObjectLayer('Chair')
+    //       // chairLayer.objects.forEach((chairObj) => {
+    //         const item = this.addObjectFromTiled(chairs, {"gid":2566,
+    //         "height":64,
+    //         "id":1262,
+    //         "name":"",
+    //         "properties":[
+    //               {
+    //               "name":"direction",
+    //               "type":"string",
+    //               "value":"down"
+    //               }],
+    //         "rotation":0,
+    //         "type":"",
+    //         "visible":true,
+    //         "width":32,
+    //         "x":this.game.input.mousePointer.worldX,
+    //         "y":this.game.input.mousePointer.worldY
+    //       }, 'chairs', 'chair') as Chair
+    //         item.itemDirection = "up"
+
+    //         this.physics.add.overlap( // ⭐ 이거 없으면 상호작용 불가
+    //         this.playerSelector,
+    //         [chairs],
+    //         this.handleItemSelectorOverlap,
+    //         undefined,
+    //         this
+    //       )
+    //       console.log(this.map,'맵정보')
+    //       // console.log(data,'데이터')
+    //       // console.log(data.layers[2].objects)
+    //     }
+      }
 }
+
+

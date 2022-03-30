@@ -4,10 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Entity
@@ -23,7 +20,7 @@ public class MyRoom {
     private Long userId;
 
     @ApiModelProperty(value = "맵 정보")
-    @Column(name = "myroom_background", columnDefinition = "JSON")
+    @Column(name = "myroom_background", columnDefinition = "Json")
     private String myRoomBackground;
 
     @ApiModelProperty(value = "캐릭터 이미지 경로")

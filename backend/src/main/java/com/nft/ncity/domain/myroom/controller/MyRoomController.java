@@ -7,6 +7,7 @@ import com.nft.ncity.domain.myroom.db.entity.MyRoom;
 import com.nft.ncity.domain.myroom.db.repository.MyRoomRepositorySupport;
 import com.nft.ncity.domain.myroom.request.MyRoomBackgroundPutReq;
 import com.nft.ncity.domain.myroom.request.MyRoomCharacterPutReq;
+import com.nft.ncity.domain.myroom.response.MyRoomGetRes;
 import com.nft.ncity.domain.myroom.service.MyRoomService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @EnableScheduling
 @Slf4j
@@ -41,15 +41,19 @@ public class MyRoomController {
             @ApiResponse(code = 200, message = "성공", response = MyRoom.class),
             @ApiResponse(code = 404, message = "존재하지 않는 userId 입니다.")
     })
-    public ResponseEntity<MyRoom> getUserRoom(@PathVariable @ApiParam(value = "방 주인의 유저 id", required = true) Long userId) {
-        log.info("getMyRoom - Call");
+    public ResponseEntity<MyRoomGetRes> getUserRoom(@PathVariable @ApiParam(value = "방 주인의 유저 id", required = true) Long userId) throws JsonProcessingException {
+        log.info("getUserRoom - Call");
 
         MyRoom userRoom = myRoomService.getUserRoom(1, userId);
+
         if(userRoom == null) {  // userId 존재하지 않는 경우
             return ResponseEntity.status(404).body(null);
         } else {
+            // json으로 변환하기
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, String> mapInfo = mapper.readValue(userRoom.getMyRoomBackground(), Map.class);
 
-            return ResponseEntity.status(200).body(userRoom);
+            return ResponseEntity.status(200).body(MyRoomGetRes.of(200, "마이룸 불러오기 성공", userRoom, mapInfo));
         }
     }
 
