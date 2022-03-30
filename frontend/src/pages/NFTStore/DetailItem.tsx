@@ -1,21 +1,87 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ItemCard from '../../components/Card/ItemCard';
-import Background from '../../components/Card/Background';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { artists, itemdetail, itemdetail as itm } from './items';
+import { artists as users } from './items';
 import { Button } from '@mui/material';
 import { useMutation, useQuery } from 'react-query';
-import { getProductDetail } from '../../store/apis/product';
-import { getUserInfo } from '../../store/apis/user';
+import {  getProductDetail, getSellProduct } from '../../store/apis/product';
+import { getUsercollectedInfo, getUserInfo } from '../../store/apis/user';
 import { postProductLike } from '../../store/apis/Main';
 import { delProductLike } from '../../store/apis/favorite';
-const etherURL = '/essets/images/ethereum.png'
+import { useParams } from 'react-router-dom';
+import Slider from 'react-slick';
+import ItemCard2 from '../../components/Card/ItemCard2';
+
+
+
+function NextArrow(props) {
+  const { className, style, onClick } = props;
+  return <RCricle onClick={onClick} />;
+}
+
+function PrevArrow(props) {
+  const { className, style, onClick } = props;
+  return <LCricle onClick={onClick} />;
+}
+
+const RCricle = styled.div`
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  /* background-color: red; */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' %3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z'/%3E%3C/svg%3E");
+  position: absolute;
+  top: 200px;
+  right: -80px;
+  cursor: pointer;
+`;
+
+const LCricle = styled.div`
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  /* background-color: red; */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z'/%3E%3C/svg%3E");
+  position: absolute;
+  top: 200px;
+  left: -80px;
+`;
+
+const settings = {
+  dots: true,
+  autoplay: true,
+  speed: 1000,
+  autoplaySpeed: 5000,
+  arrows: true,
+  infinite: true,
+  slidesToShow: 4,
+  slidesToScroll: 1,
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
+  responsive: [
+    {
+      breakpoint: 768,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      },
+    },
+  ],
+};
+
+const MainBannerWrapper = styled.div`
+  padding-top: 5vh;
+  width: 90vw;
+  height: 450px;
+  color: black;
+  margin: 0 auto;
+  background-color: #F7F8FA ;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  border-radius: 30px;
+  margin-bottom: 10vh;
+`;
+
+
 
 const Wrapper = styled.div`
 `
@@ -32,7 +98,7 @@ const TopL = styled.div`
   flex: 4;
   
 `
-const ArtistBox = styled.div`
+const UserBox = styled.div`
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
 
   height: 55%;
@@ -83,8 +149,10 @@ const ArtistBox = styled.div`
           border: 1px solid transparent;
         }
       }
+    
+    
 `
-const ArtistDescription = styled.div`
+const UserDescription = styled.div`
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
 
   height: 26vh;
@@ -185,16 +253,25 @@ const TopR = styled.div`
       }
       }
     }
-    .right{
-      flex: 1;
-      border-top: 0.5px solid #E0DEDE;
-      border-left: 0.5px solid #E0DEDE;
-      button{
-        border-radius:15px;
-        background-color: #272793;
-      }
+  .right{
+    flex: 1;
+    border-top: 0.5px solid #E0DEDE;
+    border-left: 0.5px solid #E0DEDE;
+    button{
+      border-radius:15px;
+      background-color: #272793;
     }
+  }
 `
+
+const Mid = styled.div`
+  h1{
+    margin-top: 7vw;
+    margin-left: 7vw;
+    margin-bottom: 3vw;
+  }
+`
+  
 
 interface ItemType{
   itm :{
@@ -206,6 +283,15 @@ interface ItemType{
     productRegDt:Object,
     productCode: Number,
   },
+  itms:{
+    productId: Number,
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
+  }[],
   itemdetail:{
     productId: Number,
     userId: Number,
@@ -222,7 +308,7 @@ interface ItemType{
     productThumbnailUrl: string,
     favoriteCount: Number
   }, // 작가, 작가 정보, 거래 관련.. 
-  artist:{
+  user:{
     "authId": Number,
     "followeeCnt": Number,
     "followerCnt": Number,
@@ -250,13 +336,20 @@ const DetailItem = () => {
     {event:'list',price:1.01, date:`20220306` },
     {event:'minted', date:`20220301` }
   ])
-  const [items,setItems] = useState(itm)
-  // const [item,setItem] = useState<ItemType['itemdetail']>(JSON.parse(localStorage.getItem("item")||"")) 
   const [rawitem,setRawItem] = useState<ItemType['itm']>(JSON.parse(localStorage.getItem("item")||""))
   const [likes,setLikes] = useState(Number(rawitem.productFavorite))
-  const [liked,setLiked] = useState(false)
   const [change,setChange] = useState(false)
-  const [artist,setArtist] = useState<ItemType['artist']>(artists[0]) // item을 받고 artist 정보 받아오기(api)
+  const [user,setUser] = useState(users[0])
+  const [items,setItems ] = useState<ItemType['itms']>([{
+    productId: 0,
+    productTitle: 'string',
+    productPrice: 0,
+    productThumbnailUrl: 'string',
+    productFavorite: 0,
+    productRegDt:[],
+    productCode: 0,
+  }])
+  const [id,setId] = useState(useParams().productId)
   const [item,setItem] = useState<ItemType['itemdetail']>(
     {
       productId: 1,
@@ -275,29 +368,37 @@ const DetailItem = () => {
       favoriteCount: 1
     }
   )
+
+  const { isLoading:ILA, data:newItem } = useQuery<any>( // 추가 // 추천 데이터 
+  "getSellProduct",
+  async () => {return (await (getSellProduct()))
+  },
+  { onError: (err: any) => {console.log(err, "판매중 데이터")}}
+  );
+  
+  const {isLoading:ILC,data:collection} = useQuery<any>( // 이 유저가 가진 그림
+    "getUserCollection",
+    async()=>{return (await(getUsercollectedInfo(user.userId as number)))},
+    {onError:(err)=>{console.log(err)}}
+  )
+
   const getProduct = useMutation<any, Error>(
     "productDetail",
     async () => { return(
-      await (getProductDetail(Number(rawitem.productId)))
-    )},
-    {
-      onSuccess: (res) => {
-        setItem(res)
-      },
-      onError: (err: any) => {
-        console.log(err, "❌디테일 페이지 실패!");
-      },
-    }
-  );
+      await (getProductDetail(Number(id)))
+    )},{
+      onSuccess: (res) => {setItem(res)},
+      onError: (err: any) => {console.log(err, "❌디테일 페이지 실패!")}});
+
   const getUser = useMutation<any,Error>(
     "getuserdetail",
     async()=>{return(
       await (getUserInfo(Number(item.userId)))
     )},
-    {onSuccess:(res)=>{
-      setArtist(res)
-    }}
+    {onSuccess:(res)=>{setUser(res)}
+  }
   )
+
   const LikeIt = useMutation<any,Error>(
     'postProductLike',
     async()=>{ return (
@@ -325,38 +426,42 @@ const DetailItem = () => {
     cancelLikeIt.mutate()
   }
   useEffect(()=>{
-    const tmp = JSON.parse(localStorage.getItem("item")||"")
-    if (item.productTitle !==tmp.productTitle){
-      setRawItem(tmp)
-      window.scrollTo(0,0)
-    }
-    setChange(false)
     getProduct.mutate()
     getUser.mutate()
-  },[change])
+    console.log(item)
+  },[id])
+
+  if (newItem && collection){
+    if (items.length <5){
+      setItems(items.concat(collection.content))
+      setItems(items.concat(newItem.content))
+      setItems(items.concat(newItem.content))
+    }
+  }
   return (
     <Wrapper>
       <Top>
         <TopL>
-          <ArtistBox>
+          {user!== undefined &&<>
+          <UserBox>
             <div className='top'>
-              {artist.userImgUrl ? 
-              <img className='profile' src={artist.userImgUrl as any} alt='profile'/>
+              {user.userImgUrl ? 
+              <img className='profile' src={user.userImgUrl as any} alt='profile'/>
               :
               <img className='profile' src='https://www.taggers.io/common/img/default_profile.png' alt='profile'/>} 
-              <p className='name'>{artist.userNick}</p>
+              <p className='name'>{user.userNick}</p>
             </div>
             <div className='mid'>
               <div className='mid-l'>
               <div className='verified'>
-                {artist.userEmailConfirm && 
+                {user.userEmailConfirm && 
               <img alt="verified" style={{ height: "1.5rem" }}
               src="/essets/images/verified.png"/>}</div>
-              <div className='email'> email:{artist.userEmail}</div>
-              <div>userId:{artist.userId}</div>
-              <div>userRole:{artist.userRole}</div>
-              <div>followeeCnt:{artist.followeeCnt}</div>
-              <div>followerCnt:{artist.followerCnt}</div>
+              <div className='email'> email:{user.userEmail}</div>
+              <div>userId:{user.userId}</div>
+              <div>userRole:{user.userRole}</div>
+              <div>followeeCnt:{user.followeeCnt}</div>
+              <div>followerCnt:{user.followerCnt}</div>
               </div>
               <div className='mid-r'>
                 <button onClick={()=>{Like()}}>♡</button>
@@ -364,36 +469,35 @@ const DetailItem = () => {
               </div>
               
             </div>
-          </ArtistBox>
-          <ArtistDescription>
+          </UserBox>
+          <UserDescription>
             <div className='title'>Description</div>
-            {artist.userDescription ?
-            <div className='content'>{artist.userDescription}</div>:
-            <div className='content'>아직 글이 없어요~ 😀</div>}
-          </ArtistDescription>
+            {user.userDescription ?
+            <div className='content'>{user.userDescription}</div>:
+            <div className='content'>아직 소개 글이 없어요~ 😀</div>}
+          </UserDescription>
+          </>}
         </TopL>
+          {item !== undefined &&
         <TopR>
-          {item &&
           <div className='ITEM'>
           <div className='top'>
             <div className='top-left'>
               <div className='title'>{item.productTitle}</div>
               <div className='content'>
                 <div>productCode : {item.productCode}</div>
-                <div>하트{item.favoriteCount}</div>
-                <div>가격:{item.productPrice}</div>
+                <div>좋아요 : {item.favoriteCount}</div>
                 <div>등록일자:{item.productRegDt}</div>
-                <div>productX:{item.productXCoordinate}</div>
-                <div>productY:{item.productYCoordinate}</div>
                 <div>productView:{item.productView}</div>
                 <div>productState:{item.productState}</div>
-                <div>productRegDt:{item.productRegDt}</div>
+                <div>작품설명:{item.productDesc}</div>
               </div>
             </div>
             
             {item.productFileUrl ? 
             <img className='img' alt='작품' src={item.productFileUrl as any}/>:
-            <img className='img' alt='작품' src={item.productThumbnailUrl as any}/>}
+            <img className='img' alt='작품' src={item.productThumbnailUrl as any}/>
+            }
           </div>
           <div className='bot'>
             <div className='left'>
@@ -402,17 +506,31 @@ const DetailItem = () => {
               <Button variant="contained">제안하기</Button>
             </div>
             <div className='right'>
-              <div>판매가 : </div>
+              <div>판매가 : {item.productPrice} </div>
               <div>판매 종료 : </div>
               <Button variant="contained" >구매하기</Button>
             </div>
           </div>
           </div>
-}
         </TopR>
+        }
       </Top>
+      <Mid>
+        {items.length >0 &&
+        <>
+        <h1>이 작가의 다른 작품 & 판매중인 작품</h1>
+        <MainBannerWrapper onClick={()=>{}}>
+            <Slider {...settings}>
+              { items.length >0 &&
+              items.map((item,idx) => {
+                return <div onClick={()=>{setId(item.productId as any )}}><ItemCard2 key={idx} item={item}/> </div> ;
+              }) }
+            </Slider>
+        </MainBannerWrapper>
+        </>
+      }
+      </Mid>
     </Wrapper>
   );
 }
-
 export default DetailItem
