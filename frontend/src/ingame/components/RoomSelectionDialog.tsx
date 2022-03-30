@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
-import LinearProgress from '@mui/material/LinearProgress'
-import Alert from '@mui/material/Alert'
-import Snackbar from '@mui/material/Snackbar'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import React, { useState } from "react";
+import styled from "styled-components";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import LinearProgress from "@mui/material/LinearProgress";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-import { CustomRoomTable } from './CustomRoomTable'
-import { CreateRoomForm } from './CreateRoomForm'
-import { useAppSelector } from '../hooks'
+import { CustomRoomTable } from "./CustomRoomTable";
+import { CreateRoomForm } from "./CreateRoomForm";
+import { useAppSelector } from "../hooks";
 
-import phaserGame from '../PhaserGame'
-import Bootstrap from '../scenes/Bootstrap'
+import phaserGame from "../PhaserGame";
+import Bootstrap from "../scenes/Bootstrap";
 
 const Backdrop = styled.div`
   position: absolute;
@@ -25,14 +25,14 @@ const Backdrop = styled.div`
   flex-direction: column;
   gap: 60px;
   align-items: center;
-`
+`;
 
 const Wrapper = styled.div`
   background: #222639;
   border-radius: 16px;
   padding: 36px 60px;
   box-shadow: 0px 0px 5px #0000006f;
-`
+`;
 
 const CustomRoomWrapper = styled.div`
   position: relative;
@@ -45,19 +45,19 @@ const CustomRoomWrapper = styled.div`
   .tip {
     font-size: 18px;
   }
-`
+`;
 
 const BackButtonWrapper = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-`
+`;
 
 const Title = styled.h1`
   font-size: 24px;
   color: #eee;
   text-align: center;
-`
+`;
 
 const Content = styled.div`
   display: flex;
@@ -71,7 +71,7 @@ const Content = styled.div`
     border-radius: 8px;
     height: 120px;
   }
-`
+`;
 
 const ProgressBarWrapper = styled.div`
   display: flex;
@@ -81,51 +81,52 @@ const ProgressBarWrapper = styled.div`
   h3 {
     color: #33ac96;
   }
-`
+`;
 
 const ProgressBar = styled(LinearProgress)`
   width: 360px;
-`
+`;
 
 export default function RoomSelectionDialog() {
-  const [showCustomRoom, setShowCustomRoom] = useState(false) 
-  const [showCreateRoomForm, setShowCreateRoomForm] = useState(false)
-  const [showSnackbar, setShowSnackbar] = useState(false)
-  const lobbyJoined = useAppSelector((state) => state.room.lobbyJoined)
-
-  const handleConnect = () => { // ⭐ bootstrap 연결하기 
+  const [showCustomRoom, setShowCustomRoom] = useState(false);
+  const [showCreateRoomForm, setShowCreateRoomForm] = useState(false);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const lobbyJoined = useAppSelector((state) => state.room.lobbyJoined);
+  const Setting = useAppSelector((state) => state.edit.EditMode);
+  const handleConnect = () => {
+    // ⭐ bootstrap 연결하기
     if (lobbyJoined) {
-      const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
-      bootstrap.network
-        .joinOrCreatePublic()
-        .then(() => bootstrap.launchGame())
-        .catch((error) => console.error(error))
+      const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
+      // bootstrap.network
+      //   .joinOrCreatePublic()
+      //   .then(() => bootstrap.launchGame(Setting))
+      //   .catch((error) => console.error(error));
     } else {
-      setShowSnackbar(true)
+      setShowSnackbar(true);
     }
-  }
+  };
 
   return (
     <>
       <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={showSnackbar}
         autoHideDuration={3000}
         onClose={() => {
-          setShowSnackbar(false)
+          setShowSnackbar(false);
         }}
       >
         <Alert
           severity="error"
           variant="outlined"
-          style={{ background: '#fdeded', color: '#7d4747' }}
+          style={{ background: "#fdeded", color: "#7d4747" }}
         >
-          서버가 연결이 안되었습니다. 
+          서버가 연결이 안되었습니다.
         </Alert>
       </Snackbar>
       <Backdrop>
         <Wrapper>
-          {showCreateRoomForm ? (  // 방만들기 눌렀을때 
+          {showCreateRoomForm ? ( // 방만들기 눌렀을때
             <CustomRoomWrapper>
               <Title>방 만들기</Title>
               <BackButtonWrapper>
@@ -135,15 +136,11 @@ export default function RoomSelectionDialog() {
               </BackButtonWrapper>
               <CreateRoomForm />
             </CustomRoomWrapper>
-          ) :  
-          showCustomRoom ? (  //방만들기x 방 보기o
+          ) : showCustomRoom ? ( //방만들기x 방 보기o
             <CustomRoomWrapper>
               <Title>
-                open rooms 
-                <Tooltip
-                  title="방 보러오세요"
-                  placement="top"
-                >
+                open rooms
+                <Tooltip title="방 보러오세요" placement="top">
                   <IconButton>
                     <HelpOutlineIcon className="tip" />
                   </IconButton>
@@ -163,18 +160,27 @@ export default function RoomSelectionDialog() {
                 방 만들러가기
               </Button>
             </CustomRoomWrapper>
-          ) : ( // 방만들기x 방 보기x => 메인
+          ) : (
+            // 방만들기x 방 보기x => 메인
             <>
               <Title>N-CITY에 오신것을 환영합니다</Title>
               <Content>
                 <img src="/essets/login/logo.png" alt="logo" />
-                <Button variant="contained" color="secondary" onClick={handleConnect}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleConnect}
+                >
                   연습용 방 만들기
                 </Button>
                 <Button
                   variant="outlined"
                   color="secondary"
-                  onClick={() => (lobbyJoined ? setShowCustomRoom(true) : setShowSnackbar(true))}
+                  onClick={() =>
+                    lobbyJoined
+                      ? setShowCustomRoom(true)
+                      : setShowSnackbar(true)
+                  }
                 >
                   방 참가하기/만들기
                 </Button>
@@ -190,5 +196,5 @@ export default function RoomSelectionDialog() {
         )}
       </Backdrop>
     </>
-  )
+  );
 }

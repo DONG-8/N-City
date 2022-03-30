@@ -1,34 +1,34 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import Button from '@mui/material/Button'
-import Paper from '@mui/material/Paper'
-import TableContainer from '@mui/material/TableContainer'
-import Table from '@mui/material/Table'
-import TableRow from '@mui/material/TableRow'
-import TableCell from '@mui/material/TableCell'
-import TableHead from '@mui/material/TableHead'
-import TableBody from '@mui/material/TableBody'
-import Tooltip from '@mui/material/Tooltip'
-import TextField from '@mui/material/TextField'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import Alert from '@mui/material/Alert'
-import Avatar from '@mui/material/Avatar'
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt'
-import LockIcon from '@mui/icons-material/Lock'
-import { useAppSelector } from '../hooks'
-import { getAvatarString, getColorByString } from '../util'
+import React, { useState } from "react";
+import styled from "styled-components";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import TableContainer from "@mui/material/TableContainer";
+import Table from "@mui/material/Table";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableBody from "@mui/material/TableBody";
+import Tooltip from "@mui/material/Tooltip";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import Alert from "@mui/material/Alert";
+import Avatar from "@mui/material/Avatar";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import LockIcon from "@mui/icons-material/Lock";
+import { useAppSelector } from "../hooks";
+import { getAvatarString, getColorByString } from "../util";
 
-import phaserGame from '../PhaserGame'
-import Bootstrap from '../scenes/Bootstrap'
+import phaserGame from "../PhaserGame";
+import Bootstrap from "../scenes/Bootstrap";
 
 const MessageText = styled.p`
   margin: 10px;
   font-size: 18px;
   color: #eee;
   text-align: center;
-`
+`;
 
 const CustomRoomTableContainer = styled(TableContainer)`
   max-height: 500px;
@@ -36,7 +36,7 @@ const CustomRoomTableContainer = styled(TableContainer)`
   table {
     min-width: 650px;
   }
-`
+`;
 
 const TableRowWrapper = styled(TableRow)`
   &:last-child td,
@@ -69,7 +69,7 @@ const TableRowWrapper = styled(TableRow)`
   .lock-icon {
     font-size: 18px;
   }
-`
+`;
 
 const PasswordDialog = styled(Dialog)`
   .dialog-content {
@@ -81,49 +81,52 @@ const PasswordDialog = styled(Dialog)`
   .MuiDialog-paper {
     background: #222639;
   }
-`
+`;
 
 export const CustomRoomTable = () => {
-  const [password, setPassword] = useState('') // 비밀번호input
-  const [selectedRoom, setSelectedRoom] = useState('')  // 방 고르기 몇번방 ?
-  const [showPasswordDialog, setShowPasswordDialog] = useState(false) // 비밀번호 입력창
-  const [showPasswordError, setShowPasswordError] = useState(false) // 틀렸다는 표시 뜨는 state
-  const [passwordFieldEmpty, setPasswordFieldEmpty] = useState(false) // 비었다는 표시 -> required
-  const lobbyJoined = useAppSelector((state) => state.room.lobbyJoined) // 로비입장 
-  const availableRooms = useAppSelector((state) => state.room.availableRooms) //가능한 방들 표시 해주기
-
+  const [password, setPassword] = useState(""); // 비밀번호input
+  const [selectedRoom, setSelectedRoom] = useState(""); // 방 고르기 몇번방 ?
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false); // 비밀번호 입력창
+  const [showPasswordError, setShowPasswordError] = useState(false); // 틀렸다는 표시 뜨는 state
+  const [passwordFieldEmpty, setPasswordFieldEmpty] = useState(false); // 비었다는 표시 -> required
+  const lobbyJoined = useAppSelector((state) => state.room.lobbyJoined); // 로비입장
+  const availableRooms = useAppSelector((state) => state.room.availableRooms); //가능한 방들 표시 해주기
+  const Setting = useAppSelector((state) => state.edit.EditMode);
   const handleJoinClick = (roomId: string, password: string | null) => {
-    if (!lobbyJoined) return // ⭐ 로비로 입장 불가면 돌아가기
-    const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap //⭐ 부트스트랩 시작
-    bootstrap.network
-      .joinCustomById(roomId, password)
-      .then(() => bootstrap.launchGame())
-      .catch((error) => {
-        console.error(error)
-        if (password) setShowPasswordError(true)
-      })
-  }
+    if (!lobbyJoined) return; // ⭐ 로비로 입장 불가면 돌아가기
+    const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap; //⭐ 부트스트랩 시작
+    // bootstrap.network
+    //   .joinCustomById(roomId, password)
+    //   .then(() => bootstrap.launchGame(Setting))
+    //   .catch((error) => {
+    //     console.error(error);
+    //     if (password) setShowPasswordError(true);
+    //   });
+  };
 
-  const handlePasswordSubmit = (event: React.FormEvent<HTMLFormElement>) => { // 패스워드 제출
-    event.preventDefault()
-    const isValidPassword = password !== ''
+  const handlePasswordSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    // 패스워드 제출
+    event.preventDefault();
+    const isValidPassword = password !== "";
 
-    if (isValidPassword === passwordFieldEmpty) setPasswordFieldEmpty(!passwordFieldEmpty)
-    if (isValidPassword) handleJoinClick(selectedRoom, password)
-  }
+    if (isValidPassword === passwordFieldEmpty)
+      setPasswordFieldEmpty(!passwordFieldEmpty);
+    if (isValidPassword) handleJoinClick(selectedRoom, password);
+  };
 
-  const resetPasswordDialog = () => { // cancel 시 초기화
-    setShowPasswordDialog(false)
-    setPassword('')
-    setPasswordFieldEmpty(false)
-    setShowPasswordError(false)
-  }
+  const resetPasswordDialog = () => {
+    // cancel 시 초기화
+    setShowPasswordDialog(false);
+    setPassword("");
+    setPasswordFieldEmpty(false);
+    setShowPasswordError(false);
+  };
 
   return availableRooms.length === 0 ? ( // 방이 하나도 없으면
     <MessageText>만들어진 방이 없어요. 방을 새로 만드세요</MessageText>
   ) : (
     <>
-      <CustomRoomTableContainer >
+      <CustomRoomTableContainer>
         <Table>
           <TableHead>
             <TableRow>
@@ -139,12 +142,15 @@ export const CustomRoomTable = () => {
           </TableHead>
           <TableBody>
             {availableRooms.map((room) => {
-              const { roomId, metadata, clients } = room
-              const { name, description, hasPassword } = metadata
+              const { roomId, metadata, clients } = room;
+              const { name, description, hasPassword } = metadata;
               return (
                 <TableRowWrapper key={roomId}>
                   <TableCell>
-                    <Avatar className="avatar" style={{ background: getColorByString(name) }}>
+                    <Avatar
+                      className="avatar"
+                      style={{ background: getColorByString(name) }}
+                    >
                       {getAvatarString(name)}
                     </Avatar>
                   </TableCell>
@@ -157,16 +163,16 @@ export const CustomRoomTable = () => {
                   <TableCell>{roomId}</TableCell>
                   <TableCell align="center">{clients}</TableCell>
                   <TableCell align="center">
-                    <Tooltip title={hasPassword ? 'Password required' : ''}>
+                    <Tooltip title={hasPassword ? "Password required" : ""}>
                       <Button
                         variant="outlined"
                         color="secondary"
                         onClick={() => {
                           if (hasPassword) {
-                            setShowPasswordDialog(true)
-                            setSelectedRoom(roomId)
+                            setShowPasswordDialog(true);
+                            setSelectedRoom(roomId);
                           } else {
-                            handleJoinClick(roomId, null)
+                            handleJoinClick(roomId, null);
                           }
                         }}
                       >
@@ -178,7 +184,7 @@ export const CustomRoomTable = () => {
                     </Tooltip>
                   </TableCell>
                 </TableRowWrapper>
-              )
+              );
             })}
           </TableBody>
         </Table>
@@ -186,19 +192,19 @@ export const CustomRoomTable = () => {
       <PasswordDialog open={showPasswordDialog} onClose={resetPasswordDialog}>
         <form onSubmit={handlePasswordSubmit}>
           <DialogContent className="dialog-content">
-            <MessageText>비공개 방입니다. 패스워드를 입력하세요  </MessageText>
+            <MessageText>비공개 방입니다. 패스워드를 입력하세요 </MessageText>
             <TextField
               autoFocus
               fullWidth
               error={passwordFieldEmpty}
-              helperText={passwordFieldEmpty && 'Required'}
+              helperText={passwordFieldEmpty && "Required"}
               value={password}
               label="Password"
               type="password"
               variant="outlined"
               color="secondary"
               onInput={(e) => {
-                setPassword((e.target as HTMLInputElement).value)
+                setPassword((e.target as HTMLInputElement).value);
               }}
             />
             {showPasswordError && (
@@ -218,5 +224,5 @@ export const CustomRoomTable = () => {
         </form>
       </PasswordDialog>
     </>
-  )
-}
+  );
+};
