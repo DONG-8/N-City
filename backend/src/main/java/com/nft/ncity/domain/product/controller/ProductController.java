@@ -161,19 +161,25 @@ public class ProductController {
     @ApiOperation(value = "상품 이름으로 검색")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = ProductListGetRes.class),
-            @ApiResponse(code = 404, message = "상품 없음.")
+//            @ApiResponse(code = 204, message = "검색 결과 없음",
+            // 에러 없이 검색하면 그냥 무조건 리턴 .... 빈 객체라도 리턴 해달래.. !
     })
     public ResponseEntity<Page<ProductListGetRes>> getProductListByTitle(@PageableDefault(page = 0, size = 10) Pageable pageable,
-                                                                        @ApiParam(value = "상품명") @PathVariable("productTitle") String productTitle) {
+                                                                         @ApiParam(value = "상품명") @PathVariable("productTitle") String productTitle){
+
 
         log.info("productTitle - 호출");
-        Page<ProductListGetRes> products = productService.getProductListByTitle(pageable, productTitle);
+        Page<ProductListGetRes> products = productService.getProductListByTitle(pageable,productTitle);
 
-        if (products.isEmpty()) {
-            log.error("getProductListByTitle - Products doesn't exit on this Title");
-            return ResponseEntity.status(404).body(null);
-        }
+//        if(products.isEmpty()){
+//            log.info("productTitle - 검색없음");
+//            // 빈 객체 리턴
+//            return ResponseEntity.status(204).body(products);
+//        }
+
         return ResponseEntity.status(200).body(products);
+
+
     }
 
     @ApiOperation(value = "상품 상세 조회")
