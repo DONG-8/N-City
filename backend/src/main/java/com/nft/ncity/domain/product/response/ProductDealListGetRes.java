@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @ApiModel("ProductDealListGetRes")
 public class ProductDealListGetRes {
 
-
-
+    @ApiModelProperty(value = "상품ID")
+    Long productId;
 
     @ApiModelProperty(value = "상품명")
     String productTitle;

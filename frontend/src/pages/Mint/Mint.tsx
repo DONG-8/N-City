@@ -5,7 +5,7 @@ import CategoryModal, { Icategory } from "../../components/Mint/CategoryModal";
 import { NFTcreatorContract } from "../../web3Config";
 
 // 동준추가
-import { postProduct } from "../../store/apis/product";
+import { postProduct, putTokenID } from "../../store/apis/product";
 import { Mutation, useMutation, useQuery } from "react-query";
 
 const Wrapper = styled.div`
@@ -262,13 +262,17 @@ const Required = styled.div`
 
 //// component
 const Mint = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [file, setFile] = useState<any>();
   const [fileSrc, setFileSrc] = useState<string>("");
   const [thumbnail, setThumbnail] = useState<any>();
   const [thumbnailSrc, setThumbnailSrc] = useState<string>("");
   const [tokenName, setTokenName] = useState<string>("");
+  const [tokenId, setTokenId] = useState<string>("");
+  const [productId, setProductId] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
+  const [category, setCategory] = useState<any>(null);
+  const [categoryCode, setCategoryCode] = useState<any>(null);
   const [isVideo, setIsVideo] = useState<boolean>(false);
   const { ethereum } = window;
 
@@ -283,6 +287,8 @@ const Mint = () => {
     setIsOpen(false);
   };
 
+
+
   // code: 0,
   //           productDesc: "이잉",
   //           productTitle: "오엥",
@@ -290,11 +296,20 @@ const Mint = () => {
     "submitFile",
     async () => {
       const formdata = new FormData();
-      formdata.append("code", 3);
-      formdata.append("productDesc", "이잉");
-      formdata.append("productTitle", "이이잉");
-      formdata.append("productFile", file);
-      formdata.append("thumbnailFile", file);
+      if (isVideoAudio()){
+        formdata.append("code", categoryCode);
+        formdata.append("productDesc", description);
+        formdata.append("productTitle", tokenName);
+        formdata.append("productFile", file);
+        formdata.append("thumbnailFile", thumbnail);
+      } else {
+        formdata.append("code", categoryCode);
+        formdata.append("productDesc", description);
+        formdata.append("productTitle", tokenName);
+        formdata.append("productFile", file);
+        formdata.append("thumbnailFile", file);
+      }
+
       // formdata 확인
       for (var key of formdata.keys()) {
         console.log(key);
@@ -307,19 +322,26 @@ const Mint = () => {
     },
     {
       onSuccess: async (res) => {
+        setProductId(res.productId)
         const uri = res.message;
         const accounts = await ethereum.request({ method: "eth_accounts" });
-        if (!accounts[0]) return;
+        if (!accounts[0]) {
+          alert("지갑을 연결해주세요")
+          return;
+        }
+        await setIsLoading(true);
         const response = await NFTcreatorContract.methods
           .create(accounts[0], uri)
           .send({
             from: accounts[0],
           });
+        await setIsLoading(false);
         console.log(accounts[0]); // owner --> 둘다 넣어야하는거잖아 그치
         console.log(response.events.createNFT.returnValues._tokenId); // tokenId
+        await setTokenId(response.events.createNFT.returnValues._tokenId);
         // 그럼 이 값을 이 컴포넌트에 순간 useState로 저장해도 상관 x 인거잖아 그치
         // 아니다 여기서 또 useMutate 써서 여기 인자값으로 바로 post 요쳥 보내면
-        // putToken.mutate();
+        putToken.mutate();
       },
       onError: (err: any) => {
         console.log(err, "에러발생!");
@@ -327,20 +349,24 @@ const Mint = () => {
     }
   );
   // 민팅을 통해 받은 정보를 넣어준다.
-  // const putToken = useMutation<any, Error>(
-  //   "putTokenId",
-  //   async () => {
-  //     return await putTokenID();
-  //   },
-  //   {
-  //     onSuccess: (res) => {
-  //       console.log(res, "정보 수정이 완료되었습니댜");
-  //     },
-  //     onError: (err: any) => {
-  //       console.log(err, "put 에러발생에러발생");
-  //     },
-  //   }
-  // );
+  const putToken = useMutation<any, Error>(
+    "putTokenId",
+    async () => {
+      const body = {
+        "productId": productId,
+        "tokenId": tokenId
+      }
+      return await putTokenID(body);
+    },
+    {
+      onSuccess: (res) => {
+        console.log(res, "정보 수정이 완료되었습니댜");
+      },
+      onError: (err: any) => {
+        console.log(err, "put 에러발생에러발생");
+      },
+    }
+  );
 
   const onClickSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -355,6 +381,27 @@ const Mint = () => {
       return;
     }
 
+    // const formdata = new FormData();
+    // if (isVideoAudio()){
+    //   formdata.append("code", categoryCode);
+    //   formdata.append("productDesc", description);
+    //   formdata.append("productTitle", tokenName);
+    //   formdata.append("productFile", file);
+    //   formdata.append("thumbnailFile", thumbnail);
+    // } else {
+    //   formdata.append("code", categoryCode);
+    //   formdata.append("productDesc", description);
+    //   formdata.append("productTitle", tokenName);
+    //   formdata.append("productFile", file);
+    //   formdata.append("thumbnailFile", file);
+    // }
+    // for (var key of formdata.keys()) {
+    //   console.log(key);
+    // }
+
+    // for (var value of formdata.values()) {
+    //   console.log(value);
+    // }
     // const formdata = new FormData();
     // formdata.append("file", file);
 
@@ -407,7 +454,7 @@ const Mint = () => {
 
   const onChangeTokenName = (e: React.ChangeEvent) => {
     setTokenName((e.target as HTMLInputElement).value);
-    // console.log((e.target as HTMLInputElement).value)
+    console.log((e.target as HTMLInputElement).value)
   };
 
   const onChangeDescription = (e: React.ChangeEvent) => {
@@ -536,7 +583,7 @@ const Mint = () => {
             onChange={handleFileOnChange}
           ></input>
           <ExplaneBox>
-            <p className="secondpart">100MB를 넘지않는</p>
+            <p className="secondpart">10MB를 넘지않는</p>
             <p>JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG</p>
             <p>파일만 가능합니다.</p>
           </ExplaneBox>
@@ -568,7 +615,7 @@ const Mint = () => {
           <input
             type="text"
             onChange={onChangeTokenName}
-            value={tokenName}
+            // value={tokenName}
             spellCheck={false}
           />
         </NameInputBox>
@@ -602,6 +649,7 @@ const Mint = () => {
         onClose={handleModalClose}
         openStateHandler={setIsOpen}
         setCategory={setCategory}
+        setCategoryCode={setCategoryCode}
       ></CategoryModal>
     </Wrapper>
   );

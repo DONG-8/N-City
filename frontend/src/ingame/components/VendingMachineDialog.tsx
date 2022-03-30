@@ -9,7 +9,7 @@ import GameItemCard from '../../components/GamePage/GameItemCard'
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import GameDetailItem from '../../components/GamePage/GameDetailItem'
 import { items as itm } from '../../pages/NFTStore/items'
-
+import { TOKENS } from '../scenes/Bootstrap'
 
 const Wrapper = styled.div`
   border-radius: 5px;
@@ -174,12 +174,12 @@ const StoreWapper = styled.div`
 `
 
 const VendingMachineDialog = () => {
-  const [imgurl,setImgurl] = useState('https://img.insight.co.kr/static/2021/12/05/700/img_20211205093152_ec60g1vj.webp')
+  const [nftnumber,setNftnumber] = useState(useAppSelector((state)=>state.vendingMachine.nftnumber))
+  const [imgurl,setImgurl] = useState(TOKENS[Number(nftnumber)])
   const dispatch = useAppDispatch()
   const [mode,setMode]  = useState('display')
   const [filter,setFilter] = useState("all")
   const [items,setItems] = useState(itm)
-
   return (
     <ModalWrapper>
         {mode ==='display' &&
@@ -274,8 +274,8 @@ const VendingMachineDialog = () => {
                   </li>
                 </CategoryBar>
               <ItemCards>
-                {items.map((item) => {
-                  return <GameItemCard setMode={setMode} key={item.id} item={item} />;
+                {items.map((item,idx) => {
+                  return <GameItemCard setMode={setMode} key={idx} item={item} />;
                 })}
               </ItemCards>
             </div>

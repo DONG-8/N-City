@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   width: 100vw;
 `;
 
-const H1 = styled.h1`
+const H1 = styled.h1` 
   font-size: 35px;
   margin-top: 120px;
   margin-bottom: 10vh;

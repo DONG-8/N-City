@@ -59,7 +59,7 @@ public class MyRoomServiceImpl implements MyRoomService{
         }
 
         MyRoom myNewRoom = MyRoom.builder()
-                .userId(userId)
+                .userId(myOldRoom.getUserId())
                 .myRoomBackground(myRoomBackground)
                 .myRoomCharacter(myRoomCharacter)
                 // 기존값 넣기

@@ -10,7 +10,8 @@ import com.nft.ncity.domain.user.db.repository.UserRepositorySupport;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
 import com.nft.ncity.domain.user.response.UserInfoRes;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +19,6 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -126,6 +126,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> searchUser(String userNick) {
         return userRepository.findTop15ByUserNickContaining(userNick);
+    }
+
+    @Override
+    public Page<User> getUserList(Pageable pageable) {
+        return userRepositorySupport.findUserList(pageable);
+    }
+
+    @Override
+    public Page<User> getNewUserList(Pageable pageable) {
+        return userRepositorySupport.findNewUserList(pageable);
+    }
+
+    @Override
+    public Long modifyUserRole(Long userId) {
+        Long execute = userRepositorySupport.updateUserRole(userId);
+        return execute;
     }
 
 }

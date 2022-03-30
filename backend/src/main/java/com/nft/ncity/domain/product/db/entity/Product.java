@@ -10,10 +10,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Table(name = "product") // table 명 대소문자 구분 하나?? , 이 Annotation 역할이 table명 다를때 연결 시키는거 맞지?
 @ApiModel(value = "Product", description = "상품 CRUD") // swagger
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @Builder
 @ToString
 public class Product {
@@ -61,9 +60,12 @@ public class Product {
     @Column(name = "product_file_url")
     private String productFileUrl;
 
+
     @Column(name = "product_thumbnail_url")
     private String productThumbnailUrl;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    private LocalDateTime productAuctionEndTime;
 
     // DB table에 존재 X 따로 초기화 해야함
     @Transient

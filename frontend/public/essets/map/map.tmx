@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="40" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="15" nextobjectid="1269">
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="40" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="1290">
  <editorsettings>
-  <export target="map.json" format="json"/>
+  <export format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="FloorAndGround" tilewidth="32" tileheight="32" tilecount="2560" columns="64">
-  <image source="FloorAndGround.png" width="2048" height="1280"/>
+  <image source="../../../../../SkyOffice/client/public/assets/map/FloorAndGround.png" width="2048" height="1280"/>
   <tile id="0">
    <properties>
     <property name="collides" type="bool" value="false"/>
@@ -12807,25 +12807,25 @@
   </tile>
  </tileset>
  <tileset firstgid="2561" name="chair" tilewidth="32" tileheight="64" tilecount="23" columns="1">
-  <image source="../items/chair.png" width="32" height="1472"/>
+  <image source="../../../../../SkyOffice/client/public/assets/items/chair.png" width="32" height="1472"/>
  </tileset>
  <tileset firstgid="2584" name="Modern_Office_Black_Shadow" tilewidth="32" tileheight="32" tilecount="848" columns="16">
-  <image source="../items/Modern_Office_Black_Shadow.png" width="512" height="1696"/>
+  <image source="../../../../../SkyOffice/client/public/assets/items/Modern_Office_Black_Shadow.png" width="512" height="1696"/>
  </tileset>
  <tileset firstgid="3432" name="Generic" tilewidth="32" tileheight="32" tilecount="1248" columns="16">
-  <image source="../items/Generic.png" width="512" height="2496"/>
+  <image source="../../../../../SkyOffice/client/public/assets/items/Generic.png" width="512" height="2496"/>
  </tileset>
  <tileset firstgid="4680" name="computer" tilewidth="96" tileheight="64" tilecount="5" columns="5">
-  <image source="../items/computer.png" width="480" height="64"/>
+  <image source="../../../../../SkyOffice/client/public/assets/items/computer.png" width="480" height="64"/>
  </tileset>
  <tileset firstgid="4685" name="whiteboard" tilewidth="64" tileheight="64" tilecount="3" columns="1">
-  <image source="../items/whiteboard.png" width="64" height="192"/>
+  <image source="../../../../../SkyOffice/client/public/assets/items/whiteboard.png" width="64" height="192"/>
  </tileset>
  <tileset firstgid="4688" name="Basement" tilewidth="32" tileheight="32" tilecount="800" columns="16">
-  <image source="../items/Basement.png" width="512" height="1600"/>
+  <image source="../../../../../SkyOffice/client/public/assets/items/Basement.png" width="512" height="1600"/>
  </tileset>
- <tileset firstgid="5488" name="vendingmachine" tilewidth="48" tileheight="72" tilecount="1" columns="1">
-  <image source="../items/vendingmachine.png" width="48" height="72"/>
+ <tileset firstgid="5488" name="VM" tilewidth="48" tileheight="72" tilecount="1" columns="1">
+  <image source="../../../../../SkyOffice/client/public/assets/items/vendingmachine.png" width="48" height="72"/>
  </tileset>
  <layer id="2" name="Ground" width="40" height="30" locked="1">
   <data encoding="csv">
@@ -13306,7 +13306,7 @@
   <object id="879" gid="4683" x="1152" y="800" width="96" height="64"/>
  </objectgroup>
  <objectgroup id="10" name="Whiteboard">
-  <object id="880" gid="4685" x="928" y="320" width="64" height="64"/>
+  <object id="880" gid="4685" x="864" y="480" width="64" height="64"/>
   <object id="881" gid="4686" x="832" y="96" width="64" height="64"/>
   <object id="1263" gid="4687" x="512" y="544" width="64" height="64"/>
  </objectgroup>
@@ -13335,7 +13335,19 @@
   <object id="1241" gid="5127" x="320" y="321" width="32" height="32"/>
   <object id="1242" gid="5105" x="256" y="289" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="14" name="VendingMachine" locked="1">
-  <object id="1262" gid="5488" x="378" y="209" width="48" height="72"/>
+ <objectgroup id="14" name="VendingMachine">
+  <object id="1262" gid="5488" x="352" y="288" width="48" height="72"/>
+ </objectgroup>
+ <objectgroup id="15" name="VendingMachine2">
+  <object id="1279" gid="5488" x="768" y="192" width="48" height="72"/>
+ </objectgroup>
+ <objectgroup id="16" name="VendingMachine3">
+  <object id="1283" gid="5488" x="384" y="672" width="48" height="72"/>
+ </objectgroup>
+ <objectgroup id="17" name="VendingMachine4">
+  <object id="1286" gid="5488" x="1056" y="416" width="48" height="72"/>
+ </objectgroup>
+ <objectgroup id="18" name="VendingMachine5">
+  <object id="1285" gid="5488" x="1024" y="736" width="48" height="72"/>
  </objectgroup>
 </map>

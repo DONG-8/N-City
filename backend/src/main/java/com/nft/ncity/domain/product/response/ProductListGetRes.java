@@ -21,6 +21,8 @@ import java.util.List;
 @ApiModel("ProductListGetRes")
 public class ProductListGetRes {
 
+    @ApiModelProperty(value = "상품Id")
+    Long productId;
 
     @ApiModelProperty(value = "상품명")
     String productTitle;

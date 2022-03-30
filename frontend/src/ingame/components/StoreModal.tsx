@@ -164,8 +164,8 @@ const StoreModal = () => {
           </li>
         </CategoryBar>
       <ItemCards>
-        {items.map((item) => {
-          return <GameItemCard setMode={setMode} key={item.id} item={item} />;
+        {items.map((item,idx) => {
+          return <GameItemCard setMode={setMode} key={idx} item={item} />;
         })}
       </ItemCards>
     </div>

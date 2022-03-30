@@ -9,7 +9,12 @@ import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class FavoriteRepositorySupport {
@@ -75,5 +80,19 @@ public class FavoriteRepositorySupport {
         favoriteRepository.delete(favorite);
 
         return favorite;
+    }
+
+    public Page<Favorite> getFavoriteListByUserId(Long userId, Pageable pageable) {
+
+        List<Favorite> favorites = jpaQueryFactory.select(qFavorite)
+                .from(qFavorite)
+                .where(qFavorite.userId.eq(userId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        if(favorites.isEmpty()) return Page.empty();
+
+        return new PageImpl<Favorite>(favorites, pageable, favorites.size());
     }
 }

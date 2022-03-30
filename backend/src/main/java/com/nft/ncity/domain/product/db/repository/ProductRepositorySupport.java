@@ -1,10 +1,9 @@
 package com.nft.ncity.domain.product.db.repository;
 
-import com.nft.ncity.domain.authentication.db.entity.Authentication;
-import com.nft.ncity.domain.deal.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.entity.QProduct;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
+import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,6 +34,7 @@ public class ProductRepositorySupport {
     }
 
 
+    //READ
     public  Page<Product> findProductList(Pageable pageable) {
         List<Product> productQueryResults = jpaQueryFactory.select(qProduct)
                 .from(qProduct)
@@ -122,5 +122,28 @@ public class ProductRepositorySupport {
     }
 
 
+    public Page<Product> findProductListByUserId(Long userId, Pageable pageable) {
 
+        List<Product> productList = jpaQueryFactory.select(qProduct)
+                .from(qProduct)
+                .where(qProduct.userId.eq(userId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        if(productList.isEmpty()) return Page.empty();
+
+        return  new PageImpl<Product>(productList,pageable, productList.size());
+
+    }
+
+    public Product findProductByUserId(Long productId) {
+
+        Product product = jpaQueryFactory.select(qProduct)
+                .from(qProduct)
+                .where(qProduct.productId.eq(productId))
+                .fetchOne();
+
+        return product;
+    }
 }
