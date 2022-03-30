@@ -1,0 +1,410 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_NFTcreatorAddress",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_saleContract",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_owner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "_workId",
+						"type": "uint256"
+					}
+				],
+				"name": "NewSale",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "NFTcreatorContract",
+				"outputs": [
+					{
+						"internalType": "contract NFTcreator",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "admin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "allSales",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "itemId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "minPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "purchasePrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "startTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "endTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "currencyAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "nftAddress",
+						"type": "address"
+					}
+				],
+				"name": "createSale",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "getSaleContractAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "sales",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"createSale(uint256,uint256,uint256,uint256,uint256,address,address)": {
+					"details": "반드시 구현해야하는 함수입니다. "
+				},
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"notice": "PJT Ⅲ - Req.1-SC1 SaleFactory 구현 상태 변수나 함수의 시그니처, 이벤트는 구현에 따라 변경할 수 있습니다.",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/SaleFactory.sol": "SaleFactory"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/NFTcreator.sol": {
+			"keccak256": "0x7e3a2e04905a3652342956c415e8d42e3723ba37a941d18897fd414ea4383258",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c339d0094dd214f1844688ac574f196392b3acf246a5f51ca792b6af041b0609",
+				"dweb:/ipfs/QmNb3pyqbjZknvvf2y3HmwFvPUmNKw9YKpSHPDTcTJywcV"
+			]
+		},
+		"contracts/SSFToken.sol": {
+			"keccak256": "0x48fae4efb17f7812d68e6ee258966844606efe10d3929da6f7e391d6fa03c5d7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c937fc4b48e34e6c3f4209a1f96ccf23189c6c2cd42ecb850c445d2e9dd712c6",
+				"dweb:/ipfs/QmUimnJ3FsreEGx51LBn5D46v2E1ut5wwfEUXkpAfTqmVE"
+			]
+		},
+		"contracts/SaleFactory.sol": {
+			"keccak256": "0xe381619c94fe2f8472abe5a5ac0f2bb44840b0351812fed925f74c7549cf5090",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://cff839d5a6bc381bf274d358ed8d75b8d88df03e9e20621bb20e54b3c4d556d0",
+				"dweb:/ipfs/QmSCrvWerE6FnYqovj3Maz9xr42apiUw9jvomirAnbSevo"
+			]
+		},
+		"contracts/access/Ownable.sol": {
+			"keccak256": "0xd361a9c6589bb6d6616e5181ced8ce7b06f751d191c20fe3eb50fe1422f83734",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f4ac7e3ec3b0f103d9c4ebe6f485bff79d58e781531fa157f02cd3a128d877dd",
+				"dweb:/ipfs/Qmf2azYYcqzpCFMZH99oveaAzkTurCQQuV6Q7LeT8d1DSy"
+			]
+		},
+		"contracts/token/ERC20/ERC20.sol": {
+			"keccak256": "0x40d568bcce1ee4f5ebb7d05ecb93b55eae3546df2c2215268072be7bf360ecc2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://11e2f55e55d44bfdff043eaa22ace9d4751acd8a203446ed008e235d84a80faf",
+				"dweb:/ipfs/QmQqFU1N6Z5qKhLW2eeNdXWXkJ35i4wj1Uyac4fbowJ9Cv"
+			]
+		},
+		"contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0x74ae1a773c1ce27b59c22903469389a6aeb2c882c2485e014aaf50710b9bc32c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c399a2b2bcac88e61c5c617ef7f1341429fa589aba5a9563df6f422996a48b76",
+				"dweb:/ipfs/QmWEdyWLZLUy8aMSyYk4E4mD2WhPvrvtxC2KvA5pjBAzXn"
+			]
+		},
+		"contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+			"keccak256": "0x625b87cf2c51463b99de1dda2afd18075618faafac512850ee78c205c82d1f93",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://02d72e8ea6e5c90e628b3b9391947658561c90809e4f9f18c76037ed2b3f61a9",
+				"dweb:/ipfs/QmXtdaEkMFehAN5C4F8TEW2HknLBhxfDzqorn3R1ZaGZaK"
+			]
+		},
+		"contracts/token/ERC721/ERC721.sol": {
+			"keccak256": "0xe50949f02820ddcfed5e4ae3ee000f3943d44d324351a94e66124cf2ad5032f4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fad0a29968872f9fcea1a311b0a11dacbace83bc9393645c54344d81afbffdc1",
+				"dweb:/ipfs/QmSMxKGGku2UumFTZnynrXDB1CrERiLWpGEgNY5HuGXRhV"
+			]
+		},
+		"contracts/token/ERC721/IERC721.sol": {
+			"keccak256": "0x7d46ae705c48880d435f3128a5f36e102452c1035a880eb314f9cab5cb3248b6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://114d79b2fba48981056703bd70200b528331f6e7b3c85f7fa0fcaed7d91f6025",
+				"dweb:/ipfs/QmReeV1Z7UiW73Zr4iLbqvoRB9YiW9V68uEiNqXcjzi8xh"
+			]
+		},
+		"contracts/token/ERC721/IERC721Receiver.sol": {
+			"keccak256": "0x967c9153abb26ea570e631b52ad31801439177c056168ab670d0d20049c99149",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://12f5fd78340cbbe489a535a141f00fd91ae92908d26b6e25b5359b95880cabd5",
+				"dweb:/ipfs/QmVoGtz29ZqbjEhKjSLc3V6HTza6WCR4E6EZeaTcBnBeWe"
+			]
+		},
+		"contracts/token/ERC721/extensions/ERC721Enumerable.sol": {
+			"keccak256": "0x18d948798178a07de23bb1c061dc69134e6532d99ddbe8451b9c313aa2012afb",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f362805e17232f764aa628f3889b41054640979eff1fc698c4685cb2ff3fc8b7",
+				"dweb:/ipfs/QmbkgMwFMAbTbaDJzucrYWrKg3XbEizdWZtmuXAKZGvGhL"
+			]
+		},
+		"contracts/token/ERC721/extensions/IERC721Enumerable.sol": {
+			"keccak256": "0x921634b2b0f35058d8b2fbefef4147fabb966e2a9688282452e291cb5e6972a7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://5ab75c38ea2d78b8f5b40f383b16e1f6311253410675f5b2f67636be30ad0b00",
+				"dweb:/ipfs/QmaPijzBtBPX52xYT3pCLy1PFhTWLaFTwrAh2k2QaciawC"
+			]
+		},
+		"contracts/token/ERC721/extensions/IERC721Metadata.sol": {
+			"keccak256": "0xb61391c8adec70c983c47cff53d490d8ddc71bf37a12da18dc053b45b4d813ae",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://5d08e865414ac6e52f1a61c93acc173079fb3471db5138e3a2c23db2550114cd",
+				"dweb:/ipfs/QmUhQ71H29HyjX9GnSWXdZ1Lnh4EPWAbXPhMyuWgSrDxby"
+			]
+		},
+		"contracts/utils/Address.sol": {
+			"keccak256": "0x4cdad91fcb345358c77f4c752b2b3983f783fb6bcd4c6f7f42dba588612907be",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://678c1bfbb9fc26b0aaa34d404adbe08aa36b88b51c9eba6eba13389dac8580b7",
+				"dweb:/ipfs/QmZdv53JrE4MtTR915KRpDjao32uCg6TPAXs3p95HMFvw1"
+			]
+		},
+		"contracts/utils/Context.sol": {
+			"keccak256": "0xdb19f5cb22f6551fbb03ba38b8af9e543e26deb4d23788f2946f25c091256ca3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9381d108c93f3fdd1e5a4580834362f20d0f5e919d97820afd55be553ef10c19",
+				"dweb:/ipfs/QmWjioeW1kKfZHtmgrpxDYhwF2sVZ8gXoWTA9mKZvWvZot"
+			]
+		},
+		"contracts/utils/Strings.sol": {
+			"keccak256": "0x90bf9a67cda8539274966706149096a2c6df1c5504aa1a4c36e8be275db822e8",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://29937e4bb514219e1873d0b765e9980c86d2815e521e2b8608c981e284e808cd",
+				"dweb:/ipfs/QmeJTbsBXFsdkL1KQERnwr1GPqsqci2dB4jzzcVrgGtBHi"
+			]
+		},
+		"contracts/utils/introspection/ERC165.sol": {
+			"keccak256": "0x1ddc5fa72d956fb7cedf2b3bece580bef31a0e61762331556f6a7201d156c543",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2410a30c2105252b53212542653e01d5cd06bb6b0db981e91227ab7c47d3c6f8",
+				"dweb:/ipfs/QmdHFN4WSeXWm1KVhhx1TDhTxkdoQLpLdo6YT1Uev7pVUR"
+			]
+		},
+		"contracts/utils/introspection/IERC165.sol": {
+			"keccak256": "0xe09bdf91dde6872fa597c6554ced17e679727988578019bf8aa7954e4479ef76",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d262e8e7efe5037ade4db603f32b45e320609777241d01498b988acbad81c8e4",
+				"dweb:/ipfs/Qme5ngXzkphT96C1qKWz7XP7yFhYboiP9tVt8AMQHBEkYZ"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import ItemCard from '../../components/Card/ItemCard'
 import { items as itm } from './items'
-import { getProductAll } from '../../store/apis/product'
+import { getProductAll, getSellProduct } from '../../store/apis/product'
 import { useQuery } from 'react-query'
 import ItemCard2 from '../../components/Card/ItemCard2'
 
@@ -157,26 +157,41 @@ const Right = styled.div`
 
 export interface IState{
   item :{
+    productId: Number,
     productTitle: string,
     productPrice: Number,
     productThumbnailUrl: string,
-    productRegDt:Object,
     productFavorite: Number,
+    productRegDt:Object,
     productCode: Number,
   }[]
 }
+const FilterButton = styled.div`
+
+`
 const NFTStore = () => {
-  const [filter,setFilter] = useState("all")
-  // 상품 정보 모두 가져오기
+  const [filter,setFilter] = useState("all") 
+  const [status,setStatus]  = useState('all')
+    // 상품 정보 모두 가져오기
   // const [items,setItems] = useState(itm)
-  const { isLoading, data:items } = useQuery<any>(
-    "query-prouductAll",
-    async () => {return (await getProductAll({ page: 1, size: 1000 }))
-    },
+  const { isLoading:ILA, data:allitems } = useQuery<any>(
+    "prouductAll",
+    async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))
+      },
     {
       onSuccess: (res) => {
-        console.log(res, "좋아요 결과");
-        // 여기서 이 result로 하고싶은 추가 작업을 실행시켜준다.
+      },
+      onError: (err: any) => {
+        console.log(err, "요청 실패");
+      },
+    }
+  );
+  const { isLoading:ILS, data:saleitems } = useQuery<any>(
+    "getSellProduct",
+    async () => {return (await (getSellProduct()))
+      },
+    {
+      onSuccess: (res) => {
       },
       onError: (err: any) => {
         console.log(err, "요청 실패");
@@ -234,6 +249,10 @@ const NFTStore = () => {
           </div>
         </Right>
       </IntroBox>
+      <FilterButton>
+        <button onClick={()=>{setStatus('all')}}>모든 상품</button>
+        <button onClick={()=>{setStatus('sale')}}>판매중</button>
+      </FilterButton>
       <CategoryBar>
         <li>
           <p
@@ -308,8 +327,14 @@ const NFTStore = () => {
             </ItemCards> 
             :<></>} </>} */}
             <ItemCards>
-              {items &&
-             (items).map((item,idx) => {
+              {status==='all' && allitems &&
+             (allitems.content).map((item,idx) => {
+              return(
+                <ItemCard2 key={idx} item={item} />
+                )
+              })}
+              {status==='sale' && saleitems &&
+             (saleitems.content).map((item,idx) => {
               return(
                 <ItemCard2 key={idx} item={item} />
                 )

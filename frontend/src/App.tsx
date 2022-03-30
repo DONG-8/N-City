@@ -25,13 +25,13 @@ import MapChoice from "./pages/Room/MapChoice";
 
 
 function App() {
-  useEffect(()=>{
-    if (window.location.pathname==='/ingame'){
-      (window as any).game = phaserGame}
-      else{
-        (window as any).game.destroy(true)
-      }
-  },[])
+  useEffect(() => {
+    if (window.location.pathname === "/ingame") {
+      (window as any).game = phaserGame;
+    } else {
+      (window as any).game.destroy(true);
+    }
+  }, []);
   return (
     <>
       <GlobalStyle />
@@ -43,7 +43,7 @@ function App() {
           <Route path="/signup" element={<Login />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/admin" element={<Admin />} />
-          <Route path="/mypage" element={<Mypage />} />
+          <Route path="/mypage/:userId" element={<Mypage />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/store" element={<NFTStore />} />
           <Route path="/store/detail" element={<DetailItem />} />

@@ -31,6 +31,7 @@ const NewTokken = styled.div`
 `
 interface Iprops{
   items :{
+    productId:Number,
     productTitle: string,
     productPrice: Number,
     productThumbnailUrl: string,

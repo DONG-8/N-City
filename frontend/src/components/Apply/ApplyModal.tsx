@@ -1,5 +1,7 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
+import { useMutation, useQuery } from 'react-query';
+import {postAuthentiaction} from '../../store/apis/authentication'
 
 export type ModalBaseProps = {
   /** 모달에 들어갈 컴포넌트 */
@@ -235,6 +237,32 @@ const ModalBase = ({
   const [extra, setExtra] = useState<string>("");
   const [files, setFiles] = useState<any>([]);
   // const [fileNames, setFileNames] = useState<string[]>([]);
+
+  const postAuth = useMutation<any, Error>(
+    "postAuthentiaction",
+    async () => { 
+      const formdata = new FormData();
+      formdata.append("authName", name);
+      formdata.append("authEmail", email);
+      formdata.append("authType", '3');
+      formdata.append("name", extra);
+      formdata.append("authFile", files);
+      console.log('후휘후휘히',formdata)
+      console.log('❌❌❌❌❌❌❌❌❌❌로그인문제?')
+      return(
+        await (postAuthentiaction(formdata)
+    ))
+    },
+    {
+      onSuccess: (res) => {
+      },
+      onError: (err: any) => {
+        console.log(err, "❌APPLY 실패!");
+        console.log(err, "❌❌❌❌❌❌❌❌❌");
+
+      },
+    }
+  );
   const handleFileOnChange = (e: React.ChangeEvent) => {
     setFiles((e.target as HTMLInputElement).files);
     console.log((e.target as HTMLInputElement).files);
@@ -257,7 +285,19 @@ const ModalBase = ({
   // submit
   const onClickSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 여기서 나중에 post 요청
+    if (!name) {
+      alert("이름을 적어주세요");
+      return;
+    } 
+    else if (!email) {
+      alert("이메일을 적어주세요");
+      return;
+    } 
+    else if (!files) {
+      alert("파일을 업로드 해주세요");
+      return;
+    } 
+    postAuth.mutate()
   };
 
   useEffect(() => {

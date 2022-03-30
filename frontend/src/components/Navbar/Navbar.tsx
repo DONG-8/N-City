@@ -203,7 +203,7 @@ export default function Navbar() {
                       {/* ⭐ */}
                     </div>
                     <div>
-                      <Link to="mypage">
+                      <Link to={"mypage/" + localStorage.getItem("userId")}>
                         <p>마이페이지</p>
                       </Link>
                     </div>

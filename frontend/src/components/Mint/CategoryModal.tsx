@@ -9,6 +9,7 @@ export interface ModalBaseProps {
   /** 닫기 버튼 혹은 백그라운드 클릭 시 실행할 함수 */
   onClose: React.MouseEventHandler<HTMLElement>;
   setCategory: React.Dispatch<React.SetStateAction<string>>;
+  setCategoryCode: React.Dispatch<React.SetStateAction<string>>;
   openStateHandler: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -16,6 +17,7 @@ export interface Icategory {
   category: {
     name: string;
     selected: boolean;
+    code: string;
   };
 }
 
@@ -177,20 +179,21 @@ const CategoryModal = ({
   visible,
   onClose,
   setCategory,
+  setCategoryCode,
   openStateHandler,
 }: ModalBaseProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<
     Icategory["category"][]
   >([
-    { name: "음악", selected: false },
-    { name: "사진", selected: false },
-    { name: "동영상", selected: false },
-    { name: "예술", selected: false },
-    { name: "수집품", selected: false },
-    { name: "스포츠", selected: false },
-    { name: "트레이딩 카드", selected: false },
-    { name: "유틸리티", selected: false },
+    { name: "음악", selected: false, code:"1" },
+    { name: "사진", selected: false, code:"2" },
+    { name: "동영상", selected: false, code:"3" },
+    { name: "예술", selected: false, code:"4" },
+    { name: "수집품", selected: false, code:"5" },
+    { name: "스포츠", selected: false, code:"6" },
+    { name: "트레이딩 카드", selected: false, code:"7" },
+    { name: "유틸리티", selected: false, code:"8" },
   ]);
 
   const onClickSelect = (category: { name: string; selected: boolean }) => {
@@ -215,15 +218,23 @@ const CategoryModal = ({
   // submit
   const onClickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
-    const temp: any = selectedCategories
-      .filter((category) => {
-        if (category.selected) {
-          return category.name;
-        }
-      })
-      .map((category) => category.name);
-    setCategory(temp[0]);
-    console.log(temp[0]);
+    let categoryCode = null;
+    // const temp: any = selectedCategories
+    //   .filter((category) => {
+    //     if (category.selected) {
+    //       return category.name;
+    //     }
+    //   })
+    //   .map((category) => category.name);
+    // setCategory(temp[0]);
+    // console.log(temp[0]);
+
+    selectedCategories.filter((category) => {
+      if (category.selected) {
+        setCategory(category.name)
+        setCategoryCode(category.code)
+      }
+    })
     openStateHandler(false);
   };
 

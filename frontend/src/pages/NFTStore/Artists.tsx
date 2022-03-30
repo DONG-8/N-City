@@ -160,7 +160,7 @@ const Right = styled.div`
 
 
 export interface IState{
-  artist:{
+  user:{
     "authId": Number,
     "followeeCnt": Number,
     "followerCnt": Number,
@@ -178,7 +178,7 @@ export interface IState{
 
 
 const Artists = () => {
-  const [artists,setArtists] = useState<IState["artist"]>(art)
+  const [users,setUsers] = useState<IState["user"]>(art)
   const [status,setStatus] = useState("all")
 
   return (
@@ -280,8 +280,8 @@ const Artists = () => {
       </FilterBar> */}
 
       <ArtistCards>
-        {artists.map((artist,idx) => {
-          return <ArtistCard key={idx} artist={artist} />;
+        {users.map((user,idx) => {
+          return <ArtistCard key={idx} user={user} />;
         })}
       </ArtistCards>
     </div>

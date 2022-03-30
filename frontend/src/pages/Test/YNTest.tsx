@@ -277,6 +277,7 @@ const YNTest = () => {
   const [tokenName, setTokenName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [category, setCategory] = useState<string>("");
+  const [categoryCode, setCategoryCode] = useState<any>(null);
   const [isVideo, setIsVideo] = useState<boolean>(false);
   const { ethereum } = window;
 
@@ -627,6 +628,20 @@ const YNTest = () => {
     console.log(await NFTcreatorContract.methods.ownerOf(tokenId).call());
   }
 
+  const onClickSetApprovedForAll = async (e) => {
+    e.preventDefault();
+    await NFTcreatorContract.methods
+      .setApprovalForAll(SaleFactoryAddress, true)
+      .send({ from: account });
+  }
+
+  const onClickSetApprovedForAllERC20 = async (e) => {
+    e.preventDefault();
+    await SSFTokenContract.methods
+      .setApprovalForAll(SaleFactoryAddress, true)
+      .send({ from: account });
+  }
+
 
   const encodeMainFileToBasek64 = (fileBlob: any) => {
     const reader: any = new FileReader();
@@ -890,12 +905,19 @@ const YNTest = () => {
         <ButtonBox>
           <button onClick={onClickConfirmItem}>confirmItem</button>
         </ButtonBox>
+        <ButtonBox>
+          <button onClick={onClickSetApprovedForAll}>setApprovedForAll to SaleFactory</button>
+        </ButtonBox>
+        <ButtonBox>
+          <button onClick={onClickSetApprovedForAllERC20}>setApprovedForAll to SaleFactory ERC20</button>
+        </ButtonBox>
       </FormBox>
       <CategoryModal
         visible={isOpen}
         onClose={handleModalClose}
         openStateHandler={setIsOpen}
         setCategory={setCategory}
+        setCategoryCode={setCategoryCode}
       ></CategoryModal>
     </Wrapper>
   );

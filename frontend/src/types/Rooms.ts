@@ -5,6 +5,7 @@ export enum RoomType {
 }
 
 export interface IRoomData {
+  roomId : string
   name: string
   description: string
   password: string | null

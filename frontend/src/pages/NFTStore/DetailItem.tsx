@@ -10,6 +10,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { artists, itemdetail, itemdetail as itm } from './items';
 import { Button } from '@mui/material';
+import { useMutation, useQuery } from 'react-query';
+import { getProductDetail } from '../../store/apis/product';
+import { getUserInfo } from '../../store/apis/user';
+import { postProductLike } from '../../store/apis/Main';
+import { delProductLike } from '../../store/apis/favorite';
 const etherURL = '/essets/images/ethereum.png'
 
 const Wrapper = styled.div`
@@ -39,6 +44,16 @@ const ArtistBox = styled.div`
   }
   .mid{
     margin-left: 3vw;
+    display: flex;
+    .mid-l{
+      flex:1;
+    }
+    .mid-r{
+      flex:1;
+      button{
+        font-size: 3rem;
+      }
+    }
   }
   .profile{
     border-radius: 100%;
@@ -182,6 +197,15 @@ const TopR = styled.div`
 `
 
 interface ItemType{
+  itm :{
+    productId: Number,
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
+  },
   itemdetail:{
     productId: Number,
     userId: Number,
@@ -228,30 +252,102 @@ const DetailItem = () => {
   ])
   const [items,setItems] = useState(itm)
   // const [item,setItem] = useState<ItemType['itemdetail']>(JSON.parse(localStorage.getItem("item")||"")) 
-  const [item,setItem] = useState<ItemType['itemdetail']>(itemdetail) 
-  const [likes,setLikes] = useState(Number(item.favoriteCount))
+  const [rawitem,setRawItem] = useState<ItemType['itm']>(JSON.parse(localStorage.getItem("item")||""))
+  const [likes,setLikes] = useState(Number(rawitem.productFavorite))
   const [liked,setLiked] = useState(false)
   const [change,setChange] = useState(false)
   const [artist,setArtist] = useState<ItemType['artist']>(artists[0]) // item을 받고 artist 정보 받아오기(api)
-  // useEffect(()=>{
-  //   const tmp = JSON.parse(localStorage.getItem("item")||"")
-  //   // item 바꿔주기 api 요청
-  //   if (item.productTitle !==tmp.productTitle){
-  //     setItem(tmp)
-  //     window.scrollTo(0,0)
-  //   }
-  //   setChange(false)
-  // },[change])
+  const [item,setItem] = useState<ItemType['itemdetail']>(
+    {
+      productId: 1,
+      userId: 1,
+      productTitle: 'string',
+      productDesc: 'string',
+      productCode: 1,
+      productXCoordinate: 1,
+      productYCoordinate: 1,
+      productView: false,
+      productState: 1,
+      productPrice: 1,
+      productRegDt: 'string',
+      productFileUrl: 'string',
+      productThumbnailUrl: 'string',
+      favoriteCount: 1
+    }
+  )
+  const getProduct = useMutation<any, Error>(
+    "productDetail",
+    async () => { return(
+      await (getProductDetail(Number(rawitem.productId)))
+    )},
+    {
+      onSuccess: (res) => {
+        setItem(res)
+      },
+      onError: (err: any) => {
+        console.log(err, "❌디테일 페이지 실패!");
+      },
+    }
+  );
+  const getUser = useMutation<any,Error>(
+    "getuserdetail",
+    async()=>{return(
+      await (getUserInfo(Number(item.userId)))
+    )},
+    {onSuccess:(res)=>{
+      setArtist(res)
+    }}
+  )
+  const LikeIt = useMutation<any,Error>(
+    'postProductLike',
+    async()=>{ return (
+      await ( postProductLike(Number(item.productId)))
+      )
+    },
+    {onSuccess: (res)=>console.log(res),
+      onError:(err)=>console.log(err)}
+  )
+  const cancelLikeIt = useMutation<any,Error>(
+    'delProductLike',
+    async()=>{ return (
+      await ( delProductLike(Number(item.productId)))
+      )
+    },
+    {onSuccess: (res)=>console.log(res),
+    onError:(err)=>console.log(err)}
+  )
+  const Like =()=>{
+    setLikes(likes+1)
+    LikeIt.mutate()
+  }
+  const cancelLike  =()=>{
+    setLikes(likes-1)
+    cancelLikeIt.mutate()
+  }
+  useEffect(()=>{
+    const tmp = JSON.parse(localStorage.getItem("item")||"")
+    if (item.productTitle !==tmp.productTitle){
+      setRawItem(tmp)
+      window.scrollTo(0,0)
+    }
+    setChange(false)
+    getProduct.mutate()
+    getUser.mutate()
+  },[change])
   return (
     <Wrapper>
       <Top>
         <TopL>
           <ArtistBox>
             <div className='top'>
+              {artist.userImgUrl ? 
               <img className='profile' src={artist.userImgUrl as any} alt='profile'/>
+              :
+              <img className='profile' src='https://www.taggers.io/common/img/default_profile.png' alt='profile'/>} 
               <p className='name'>{artist.userNick}</p>
             </div>
             <div className='mid'>
+              <div className='mid-l'>
               <div className='verified'>
                 {artist.userEmailConfirm && 
               <img alt="verified" style={{ height: "1.5rem" }}
@@ -261,14 +357,24 @@ const DetailItem = () => {
               <div>userRole:{artist.userRole}</div>
               <div>followeeCnt:{artist.followeeCnt}</div>
               <div>followerCnt:{artist.followerCnt}</div>
+              </div>
+              <div className='mid-r'>
+                <button onClick={()=>{Like()}}>♡</button>
+                <button onClick={()=>{cancelLike()}}>❤</button>
+              </div>
+              
             </div>
           </ArtistBox>
           <ArtistDescription>
             <div className='title'>Description</div>
-            <div className='content'>{artist.userDescription}</div>
+            {artist.userDescription ?
+            <div className='content'>{artist.userDescription}</div>:
+            <div className='content'>아직 글이 없어요~ 😀</div>}
           </ArtistDescription>
         </TopL>
         <TopR>
+          {item &&
+          <div className='ITEM'>
           <div className='top'>
             <div className='top-left'>
               <div className='title'>{item.productTitle}</div>
@@ -301,6 +407,8 @@ const DetailItem = () => {
               <Button variant="contained" >구매하기</Button>
             </div>
           </div>
+          </div>
+}
         </TopR>
       </Top>
     </Wrapper>

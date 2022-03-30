@@ -96,7 +96,7 @@ export const CustomRoomTable = () => {
     if (!lobbyJoined) return // ⭐ 로비로 입장 불가면 돌아가기
     const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap //⭐ 부트스트랩 시작
     bootstrap.network
-      .joinCustomById(roomId, password)
+      .joinRoom(roomId)
       .then(() => bootstrap.launchGame())
       .catch((error) => {
         console.error(error)

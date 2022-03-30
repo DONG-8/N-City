@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useMutation } from "react-query";
 import styled from "styled-components";
 import ConfirmModal from "../../components/admin/ConfirmModal";
+import { getAllAuthentication, patchAutentication } from "../../store/apis/authentication";
 
 const Wrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
@@ -160,6 +162,33 @@ const Admin = () => {
   const [control, setControl] = useState("");
   const [selectedItem, setSelectedItem] = useState<IApply>();
   // 이름, 이메일, 파일
+
+  const getDesiner = useMutation<any,Error>(
+    "getDesiner",
+    async () => {return (await (getAllAuthentication(0)))},
+    {onSuccess:(res)=>{setDesigner(res) }}
+  );
+  const getInfluencer= useMutation<any,Error>(
+    "getInfluencer",
+    async () => {return (await (getAllAuthentication(1)))},
+    {onSuccess:(res)=>{setInfluencer(res) }}
+  );
+  const getEnterpise = useMutation<any,Error>(
+    "getEnterpise",
+    async () => {return (await (getAllAuthentication(2)))},
+    {onSuccess:(res)=>{setEnterprise(res) }}
+  );
+  const patchApprove = useMutation<any,Error>(
+    "patchApprove",
+    async () => {return (await (patchAutentication(2,0)))},
+    {onSuccess:(res)=>{setEnterprise(res) }}
+  );
+  useEffect(()=>{
+    getDesiner.mutate()
+    getInfluencer.mutate()
+    getEnterpise.mutate()
+    console.log('❌❌❌❌❌❌')
+  },[])
 
   const onClickApprove = (apply: IApply, idx: number) => {
     setControl("승인");
