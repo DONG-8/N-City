@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { IState } from "../NFTStore/NFTStore";
 import ItemCard from "../../components/Card/ItemCard";
 import { Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
@@ -206,7 +205,6 @@ const Event = styled.div`
     font-weight: 500;
   }
 `
-
 interface IUserInfo {
   userId: number;
   authId: number;
@@ -230,12 +228,31 @@ interface IUsers {
   userRole: string,
   userId: number,
 }
+interface Iitem{
+  productId: Number,
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    }[]
+}
 
 export default function Mypage() {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState<IUserInfo>();
   const [status, setStatus] = useState("myNFT");
-  const [items, setItems] = useState<IState["item"]>(itm);
   const [followers, setFollowers] = useState<IUsers[]>([]);
   const [followees, setFollowees] = useState<IUsers[]>([]);
   const [isFollower, setIsFollower] = useState(false);

@@ -273,8 +273,8 @@ const Mid = styled.div`
 `
   
 
-interface ItemType{
-  itm :{
+interface Istate{
+  item :{
     productId: Number,
     productTitle: string,
     productPrice: Number,
@@ -282,16 +282,18 @@ interface ItemType{
     productFavorite: Number,
     productRegDt:Object,
     productCode: Number,
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    }[],
   },
-  itms:{
-    productId: Number,
-    productTitle: string,
-    productPrice: Number,
-    productThumbnailUrl: string,
-    productFavorite: Number,
-    productRegDt:Object,
-    productCode: Number,
-  }[],
   itemdetail:{
     productId: Number,
     userId: Number,
@@ -330,27 +332,38 @@ interface ItemType{
   }[]
 }
 const DetailItem = () => {
-  const [transactions,setTransactions] = useState<ItemType['transactions']>([
+  const [transactions,setTransactions] = useState<Istate['transactions']>([
     {event:'transfer', from:"59912",to:"24923", date:`20220309`},
     {event:'sale',price:1.04, from:"59912",to:"24923", date:`20220305` },
     {event:'list',price:1.01, date:`20220306` },
     {event:'minted', date:`20220301` }
   ])
-  const [rawitem,setRawItem] = useState<ItemType['itm']>(JSON.parse(localStorage.getItem("item")||""))
+  const [rawitem,setRawItem] = useState<Istate['item']>(JSON.parse(localStorage.getItem("item")||""))
   const [likes,setLikes] = useState(Number(rawitem.productFavorite))
   const [change,setChange] = useState(false)
   const [user,setUser] = useState(users[0])
-  const [items,setItems ] = useState<ItemType['itms']>([{
-    productId: 0,
-    productTitle: 'string',
-    productPrice: 0,
-    productThumbnailUrl: 'string',
-    productFavorite: 0,
-    productRegDt:[],
-    productCode: 0,
-  }])
+  const [items,setItems ] = useState<Istate['item'][]>([{
+      productId: 1,
+      productTitle: 'string',
+      productPrice: 1,
+      productThumbnailUrl: 'string',
+      productFavorite: 1,
+      productRegDt:1,
+      productCode: 1,
+      productFavoriteUser:[
+      {authId: 1,
+      userAddress: 'string',
+      userDescription: 'string',
+      userEmail: 'string',
+      userEmailConfirm: true,
+      userId: 0,
+      userImgUrl: 'string',
+      userNick: 'string',
+      userRole: 'string'}]
+    }
+    ])
   const [id,setId] = useState(useParams().productId)
-  const [item,setItem] = useState<ItemType['itemdetail']>(
+  const [item,setItem] = useState<Istate['itemdetail']>(
     {
       productId: 1,
       userId: 1,
@@ -523,7 +536,8 @@ const DetailItem = () => {
             <Slider {...settings}>
               { items.length >0 &&
               items.map((item,idx) => {
-                return <div onClick={()=>{setId(item.productId as any )}}><ItemCard2 key={idx} item={item}/> </div> ;
+                return <div onClick={()=>{setId(item.productId as any )}}>
+                  <ItemCard2 key={idx} item={item}/> </div> ;
               }) }
             </Slider>
         </MainBannerWrapper>

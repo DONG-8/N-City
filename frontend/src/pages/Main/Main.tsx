@@ -290,22 +290,40 @@ const MainH = styled.div`
   height: auto;
 `;
 
-export interface IState {
-  item: {
-    id: number;
-    name: string;
-    title: string;
-    price: number;
-    liked: number;
-    url: string;
-  }[];
-  artist: {
-    name: string;
-    profileImg: string;
-    verified: boolean;
-    sumnailImg: string;
-    descreption: string;
-  }[];
+interface IState {
+  items :{
+    productId: Number,
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    }[],
+  },
+  users:{
+    "authId": Number,
+    "followeeCnt": Number,
+    "followerCnt": Number,
+    "userAddress": String,
+    "userDescription": String,
+    "userEmail": String,
+    "userEmailConfirm": Boolean,
+    "userId": Number,
+    "userImgUrl": String,
+    "userNick": String,
+    "userRole": String
+  }[]
 }
 
 export default function Main() {
@@ -605,32 +623,7 @@ export default function Main() {
     }
   };
 
-  const [items, setItems] = useState<IState["item"]>([
-    {
-      id: 1,
-      name: "Hong Hosus",
-      title: "#Hong1535",
-      price: 1.24,
-      liked: 35,
-      url: "https://lh3.googleusercontent.com/MmtavcUNNiTpLFfDqqol8pwp1_TKSEv0AbkKSxmN2lffhgYtkxAdfAo72lZVSJ4hpRW87s9TCL-HYMEIpaJ8PdgWBQWVlPsMZkgM6A=w305",
-    },
-    {
-      id: 2,
-      name: "Giks Home",
-      title: "#ghe23434",
-      price: 1.35,
-      liked: 43,
-      url: "https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352",
-    },
-    {
-      id: 3,
-      name: "Giks Home",
-      title: "#ghe254334",
-      price: 1.2,
-      liked: 24,
-      url: "https://lh3.googleusercontent.com/3usYOjVkwnra66EAhX4yJB-xmYCfFoTsREGVvVLCYWhtVG4pifdZLBRCSgv6wbjbV4rwPamlBDgganvgFO3xeifJyZQtqxwTYpXiqtc=w300",
-    },
-  ]);
+  // const [items, setItems] = useState<IState["items"]>([]);
 
   return (
     <MainH>
@@ -776,7 +769,7 @@ export default function Main() {
       <HotTokkenWrraper>
         <HotTokken>
           <h1>New Tokken</h1>
-          <NewTokkenList items={itm}/>
+          {/* <NewTokkenList items={itm}/> */}
         </HotTokken>
       </HotTokkenWrraper>
       <HotTokkenWrraper>

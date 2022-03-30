@@ -5,8 +5,6 @@ import styled from 'styled-components'
 import ItemCard2 from '../../components/Card/ItemCard2'
 import { getSearchUserNick } from '../../store/apis/user'
 import UserCarousel from './UserCarousel'
-import { items as itm, ItemType } from './items'
-import { artists as usrs } from './items'
 import { getProductAll } from '../../store/apis/product'
 
 
@@ -57,10 +55,31 @@ const ItemResults = styled.div`
     padding-top: 5vh;
   }
 `
-
+interface ItemType{
+  item :{
+    productId: Number,
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    }[],
+  }
+}
 const SearchPage = () => {
   // const [data,setData] = useState(useParams().data)
-  const [items,setItems] = useState<Object[]>([])
+  const [items,setItems] = useState<ItemType['item'][]>([])
   const [users, setUsers] = useState<any[]>()
   // const users = usrs
   const {data} = useParams();
@@ -71,13 +90,13 @@ const SearchPage = () => {
     {
       onSuccess: (res) => {
         let itms = res.content
-        let tmp : Object[] = []
+        let tmp : ItemType['item'][] = []
         itms.map(
           (itm:ItemType['item'])=>{
             if((itm.productTitle).includes(String(data)))
              {tmp.push(itm)} })
         console.log(tmp)
-        setItems(tmp as any[])
+        setItems(tmp)
       },
       onError: (err: any) => {
         console.log(err, "요청 실패");

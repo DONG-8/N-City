@@ -18,7 +18,7 @@ export interface ProductType{
       userImgUrl: string,
       userNick: string,
       userRole: string,
-    },
+    }[],
   },
   artist:{
     "authId": Number,
