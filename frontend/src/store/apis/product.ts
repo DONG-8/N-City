@@ -93,7 +93,7 @@ export const getProductDetail = async (productId : number) => {
 // 상품이름으로 검색
 export const getProductSearch = async (productTitle : string) => {
   const response = await apiClient.get<any>(
-    `/products/detail/${productTitle}`
+    `/products/search/${productTitle}`
   )
   return response.data
 }
