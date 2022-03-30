@@ -54,7 +54,7 @@ public class DealServiceImpl implements DealService{
 
     @Override
     @Transactional
-    public Long buyNowRegister(BuyNowRegisterPostReq buyNowRegisterPostReq, Principal principal){
+    public Long buyNowRegister(BuyNowRegisterPostReq buyNowRegisterPostReq, Long userId){
 
         // 0. product 테이블에 productId에 해당하는 row있는지 검사 && 판매가능한 상품인지 검사
         // 1. deal 테이블의 productId에 맞게 update
@@ -71,7 +71,7 @@ public class DealServiceImpl implements DealService{
                    .productId(buyNowRegisterPostReq.getProductId())
                    .dealType(2)
                    .dealPrice(buyNowRegisterPostReq.getDealPrice())
-                   .dealFrom(Long.valueOf(principal.getName()))
+                   .dealFrom(Long.valueOf(1L))
                    .tokenId(product.getTokenId())
                    .dealCreatedAt(LocalDateTime.now())
                            .build();
@@ -86,7 +86,7 @@ public class DealServiceImpl implements DealService{
 
     @Override
     @Transactional
-    public Long auctionRegister(AuctionRegisterPostReq auctionRegisterPostReq, Principal principal){
+    public Long auctionRegister(AuctionRegisterPostReq auctionRegisterPostReq, Long userId){
 
         // 0. product 테이블에 productId에 해당하는 row있는지 검사 && 판매가능한 상품인지 검사
         // 1. deal 테이블의 productId에 맞게 update
@@ -103,7 +103,7 @@ public class DealServiceImpl implements DealService{
                     .productId(auctionRegisterPostReq.getProductId())
                     .dealType(1)
                     .dealPrice(auctionRegisterPostReq.getDealPrice())
-                    .dealFrom(Long.valueOf(principal.getName()))
+                    .dealFrom(Long.valueOf(1L))
                     .tokenId(product.getTokenId())
                     .dealCreatedAt(LocalDateTime.now())
                     .build();
@@ -118,7 +118,7 @@ public class DealServiceImpl implements DealService{
 
     @Override
     @Transactional
-    public Deal bidRegister(BuyNowRegisterPostReq buyNowRegisterPostReq,Principal principal){
+    public Deal bidRegister(BuyNowRegisterPostReq buyNowRegisterPostReq,Long userId){
         Product product =  productRepository.getById(buyNowRegisterPostReq.getProductId());
 
         // 기존가격보다 더 클때
@@ -126,7 +126,7 @@ public class DealServiceImpl implements DealService{
 
         Deal deal = Deal.builder()
                 .productId(buyNowRegisterPostReq.getProductId())
-                .dealFrom(Long.valueOf(principal.getName()))
+                .dealFrom(Long.valueOf(1L))
                 .dealType(3)
                 .tokenId(product.getTokenId())
                 .dealPrice(buyNowRegisterPostReq.getDealPrice())
@@ -193,7 +193,7 @@ public class DealServiceImpl implements DealService{
     //즉시구매
     @Override
     @Transactional
-    public Deal buyNow(Long productId,Principal principal){
+    public Deal buyNow(Long productId,Long userId){
 
         Product product = productRepository.getById(productId);
 
@@ -201,7 +201,7 @@ public class DealServiceImpl implements DealService{
             //Deal transfer 생성
             Deal deal = Deal.builder()
                     .dealFrom(product.getUserId())
-                    .dealTo(Long.valueOf(principal.getName()))
+                    .dealTo(Long.valueOf(1L))
                     .dealType(5)
                     .dealPrice(product.getProductPrice())
                     .dealCreatedAt(LocalDateTime.now())
@@ -212,7 +212,7 @@ public class DealServiceImpl implements DealService{
 
             // product update
 
-            dealRepositorySupport.modifyProductForBuyNowByProductId(productId, principal);
+            dealRepositorySupport.modifyProductForBuyNowByProductId(productId, 1L);
 
             return savedDeal;
 
@@ -223,7 +223,7 @@ public class DealServiceImpl implements DealService{
     // 경매 입찰
     @Override
     @Transactional
-    public Deal buyAuction(Long productId,Principal principal){
+    public Deal buyAuction(Long productId,Long userId){
 
         Product product = productRepository.getById(productId);
 
@@ -231,7 +231,7 @@ public class DealServiceImpl implements DealService{
             //Deal transfer 생성
             Deal deal = Deal.builder()
                     .dealFrom(product.getUserId())
-                    .dealTo(Long.valueOf(principal.getName()))
+                    .dealTo(Long.valueOf(1L))
                     .dealType(5)
                     .dealPrice(product.getProductPrice())
                     .dealCreatedAt(LocalDateTime.now())
@@ -242,7 +242,7 @@ public class DealServiceImpl implements DealService{
 
             // product update
 
-            dealRepositorySupport.modifyProductForBuyAuctionByProductId(productId, principal);
+            dealRepositorySupport.modifyProductForBuyAuctionByProductId(productId, 1L);
 
             return savedDeal;
 

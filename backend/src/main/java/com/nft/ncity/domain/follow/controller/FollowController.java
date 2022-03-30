@@ -38,12 +38,10 @@ public class FollowController {
     })
     public ResponseEntity<List<FollowerListGetRes>> getFollowerList(@PathVariable(value = "userId") Long userId){
 
-        // 0. 토큰으로부터 내 userId를 받아온다.
         // 1. Follower가 입력받은 userId인 값들을 받아온다.
 
         log.info("getFollowerList - 호출");
 //        Long userId = Long.valueOf(principal.getName());
-
         List<Follow> follow = followService.FolloweeList(userId);
 
         if(null != follow) {
@@ -62,12 +60,9 @@ public class FollowController {
     })
     public ResponseEntity<List<FolloweeListGetRes>> getFolloweeList(@PathVariable(value = "userId") Long userId){
 
-        // 0. 토큰으로부터 내 userId를 받아온다.
         // 1. Followee가 입력받은 userId인 값들을 받아온다.
 
         log.info("getFolloweeList - 호출");
-//        Long userId = Long.valueOf(principal.getName());
-
         List<Follow> follow = followService.FollowerList(userId);
 
         if(null != follow) {
@@ -92,9 +87,7 @@ public class FollowController {
 
         log.info("FollowRegister - 호출");
         Long userId = Long.valueOf(principal.getName());
-
         Follow follow = followService.FollowRegister(followeeId,userId);
-
 
         if(null != follow) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "신청 성공"));
@@ -126,6 +119,4 @@ public class FollowController {
             return ResponseEntity.status(201).body(BaseResponseBody.of(404, "취소 실패"));
         }
     }
-
-
 }

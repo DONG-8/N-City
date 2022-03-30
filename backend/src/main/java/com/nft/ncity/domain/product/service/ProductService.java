@@ -8,6 +8,8 @@ import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
 import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.response.ProductDealListGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
+import com.nft.ncity.domain.user.response.UserMintProductRes;
+import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +23,7 @@ public interface ProductService {
     Product productRegister(ProductRegisterPostReq productRegisterPostReq,
                             MultipartFile productFile,
                             MultipartFile thumbnailFile,
-                            Principal principal) throws IOException;
+                            Long userId) throws IOException;
     Long tokenRegister(TokenRegisterPutReq tokenRegisterPutReq);
 
     // read
@@ -39,7 +41,7 @@ public interface ProductService {
     // delete
     boolean productRemove(Long productId);
 
-    Page<Product> getProductListByUserId(Long userId, Pageable pageable);
-    Page<Product> getMintedProductList(Page<Deal> dealList);
+    Page<UserProductWithIsFavoriteRes> getProductListByUserId(Long userId, Pageable pageable);
+    Page<UserMintProductRes> getMintedProductList(Long userId, Pageable pageable);
     Page<Product> getFavoriteProduct(Page<Favorite> favorites);
 }

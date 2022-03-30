@@ -1,8 +1,6 @@
 package com.nft.ncity.domain.user.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
-import com.nft.ncity.domain.deal.db.entity.Deal;
-import com.nft.ncity.domain.deal.service.DealService;
 import com.nft.ncity.domain.favorite.db.entity.Favorite;
 import com.nft.ncity.domain.favorite.service.FavoriteService;
 import com.nft.ncity.domain.product.db.entity.Product;
@@ -12,6 +10,9 @@ import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.nft.ncity.domain.user.request.EmailAuthRegisterReq;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
+import com.nft.ncity.domain.user.response.UserDealInfoWithProductRes;
+import com.nft.ncity.domain.user.response.UserMintProductRes;
+import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
 import com.nft.ncity.domain.user.response.UserInfoRes;
 import com.nft.ncity.domain.user.service.UserService;
 import io.swagger.annotations.*;
@@ -42,9 +43,6 @@ public class UserController {
 
     @Autowired
     ProductService productService;
-
-    @Autowired
-    DealService dealService;
 
     @Autowired
     FavoriteService favoriteService;
@@ -79,14 +77,14 @@ public class UserController {
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "해당 유저 없음.")
     })
-    public ResponseEntity<Page<Product>>getProductListByUserId(@PathVariable("userId") Long userId,
+    public ResponseEntity<Page<UserProductWithIsFavoriteRes>>getProductListByUserId(@PathVariable("userId") Long userId,
                                                        @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
         // 0. 받아올 유저 ID를 받음
         // 1. 해당 유저가 가진 작품 목록을 넘겨준다.
 
         log.info("getProductListByUserId - 호출");
-        Page<Product> productList = productService.getProductListByUserId(userId, pageable);
+        Page<UserProductWithIsFavoriteRes> productList = productService.getProductListByUserId(userId, pageable);
 
         if(productList == null) {
             log.error("getProductListByUserId - This userId has no Product.");
@@ -105,15 +103,14 @@ public class UserController {
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "해당 유저 없음.")
     })
-    public ResponseEntity<Page<Product>>getCreatedProductListByUserId(@PathVariable("userId") Long userId,
+    public ResponseEntity<Page<UserMintProductRes>>getCreatedProductListByUserId(@PathVariable("userId") Long userId,
                                                             @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
         // 0. 받아올 유저 ID를 받음
         // 1. 해당 유저가 생성한 작품 목록을 넘겨준다.
 
         log.info("getCreatedProductListByUserId - 호출");
-        Page<Deal> dealList = dealService.getDealMintedListByUserId(userId, pageable);
-        Page<Product> productList = productService.getMintedProductList(dealList);
+        Page<UserMintProductRes> productList = productService.getMintedProductList(userId, pageable);
 
         if(productList.equals(null)) {
             log.error("getCreatedProductListByUserId - There are no products created by this user.");
@@ -131,7 +128,7 @@ public class UserController {
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "좋아요 한 작품 없음.")
     })
-    public ResponseEntity<Page<Product>> getFavoritesProductListByUserId(@PathVariable("userId") Long userId,
+    public ResponseEntity<Page<UserProductWithIsFavoriteRes>> getFavoritesProductListByUserId(@PathVariable("userId") Long userId,
                                                                       @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
         // 0. 받아올 유저 ID를 받음
@@ -140,12 +137,12 @@ public class UserController {
         log.info("getFavoritesProductListByUserId - 호출");
         Page<Favorite> favorites = favoriteService.getFavoriteListByUserId(userId, pageable);
         Page<Product> products = productService.getFavoriteProduct(favorites);
-
-        if(products.equals(null)) {
+        Page<UserProductWithIsFavoriteRes> userProductWithIsFavoriteRes = userService.getUserProductWithIsFavorite(products, userId);
+        if(userProductWithIsFavoriteRes.equals(null)) {
             log.error("getFavoritesProductListByUserId - There are no products that this user likes.");
             return ResponseEntity.status(404).body(null);
         }
-        return ResponseEntity.status(201).body(products);
+        return ResponseEntity.status(201).body(userProductWithIsFavoriteRes);
     }
 
     /**
@@ -157,19 +154,20 @@ public class UserController {
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "해당 유저 거래내역 없음.")
     })
-    public ResponseEntity<Page<Deal>> getActivityListByUserId(@PathVariable("userId") Long userId,
+    public ResponseEntity<Page<UserDealInfoWithProductRes>> getActivityListByUserId(@PathVariable("userId") Long userId,
                                                                       @PageableDefault(page = 0, size = 10) Pageable pageable) {
         // 0. 유저 ID를 받음.
         // 1. 해당 유저의 거래 내역 DB에서 받아와서 보내주기.
 
         log.info("getActivityListByUserId - 호출");
-        Page<Deal> deals = dealService.getDealListByUserId(userId, pageable);
 
-        if(deals.equals(null)) {
+        Page<UserDealInfoWithProductRes> userDealInfoWithProductRes = userService.getUserDealInfoWithProduct(userId, pageable);
+
+        if(userDealInfoWithProductRes.equals(null)) {
             log.error("getActivityListByUserId - This userId doesn't exist.");
             return ResponseEntity.status(404).body(null);
         }
-        return ResponseEntity.status(201).body(deals);
+        return ResponseEntity.status(201).body(userDealInfoWithProductRes);
     }
 
     /**

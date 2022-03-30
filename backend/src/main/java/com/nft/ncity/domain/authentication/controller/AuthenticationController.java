@@ -100,8 +100,9 @@ public class AuthenticationController {
         // 0. 인증 등록 정보를 AuthenticationRegisterPostReq에 담고, 파일 정보를 Param으로 MultipartFiles에 담아 온다.
         // 1. 인증 등록 정보를 Authentication 테이블에 저장하고, 해당 인증 ID와 함께 인증 파일들을 AuthFile 테이블에 저장한다.
         // 2. 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
+        Long userId = Long.valueOf(principal.getName());
         log.info("AuthenticationRegister - 호출");
-        Authentication authentication = authenticationService.AuthenticationRegister(authenticationRegisterPostReq,multipartFile, principal);
+        Authentication authentication = authenticationService.AuthenticationRegister(authenticationRegisterPostReq,multipartFile, userId);
 
         if(!authentication.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));

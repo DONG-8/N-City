@@ -70,7 +70,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
     @Override
     @Transactional
-    public Authentication AuthenticationRegister(AuthenticationRegisterPostReq authenticationRegisterPostReq, MultipartFile multipartFile, Principal principal) throws IOException{
+    public Authentication AuthenticationRegister(AuthenticationRegisterPostReq authenticationRegisterPostReq, MultipartFile multipartFile, Long userId) throws IOException{
 
         // 1. 인증 등록 정보를 Authentication 테이블에 저장하고, 해당 인증 ID와 함께 인증 파일들을 AuthFile 테이블에 저장한다.
         // 2. 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
@@ -124,7 +124,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
          * 유저 아이디 받아와서 해당 유저에 인증 id 넣어야함.
          */
         // 등록한 인증 Id를 유저 테이블에도 저장
-        Long userId = Long.valueOf(principal.getName());
+
         User user = userRepository.findUserByUserId(userId).get();
         user.authIdRegister(savedAuthentication.getAuthId());
         //userRepository.save(user);
