@@ -13,10 +13,9 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import Tooltip from "@mui/material/Tooltip";
 import { items as itm } from "../NFTStore/items";
 import { QueryClient, useMutation, useQuery } from "react-query";
-import { getUserInfo } from "../../store/apis/Main";
 import FollowModal from "../../components/Mypage/FollowModal";
 import { deleteFollow, getFollowee, getFollower, postFollow } from "../../store/apis/follow";
-import { getUsercollectedInfo, getUsercreatedInfo, getUserfavoritesInfo, getUserTradeInfo } from "../../store/apis/user";
+import { getUsercollectedInfo, getUsercreatedInfo, getUserfavoritesInfo, getUserTradeInfo, getUserInfo } from "../../store/apis/user";
 import bg from "../../essets/images/login_background.png"
 
 const MypageWrapper = styled.div`
