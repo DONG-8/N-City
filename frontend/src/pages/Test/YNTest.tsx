@@ -628,6 +628,20 @@ const YNTest = () => {
     console.log(await NFTcreatorContract.methods.ownerOf(tokenId).call());
   }
 
+  const onClickSetApprovedForAll = async (e) => {
+    e.preventDefault();
+    await NFTcreatorContract.methods
+      .setApprovalForAll(SaleFactoryAddress, true)
+      .send({ from: account });
+  }
+
+  const onClickSetApprovedForAllERC20 = async (e) => {
+    e.preventDefault();
+    await SSFTokenContract.methods
+      .setApprovalForAll(SaleFactoryAddress, true)
+      .send({ from: account });
+  }
+
 
   const encodeMainFileToBasek64 = (fileBlob: any) => {
     const reader: any = new FileReader();
@@ -890,6 +904,12 @@ const YNTest = () => {
         </ButtonBox>
         <ButtonBox>
           <button onClick={onClickConfirmItem}>confirmItem</button>
+        </ButtonBox>
+        <ButtonBox>
+          <button onClick={onClickSetApprovedForAll}>setApprovedForAll to SaleFactory</button>
+        </ButtonBox>
+        <ButtonBox>
+          <button onClick={onClickSetApprovedForAllERC20}>setApprovedForAll to SaleFactory ERC20</button>
         </ButtonBox>
       </FormBox>
       <CategoryModal
