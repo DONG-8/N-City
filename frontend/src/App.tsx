@@ -46,9 +46,9 @@ function App() {
           <Route path="/mypage/:userId" element={<Mypage />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/store" element={<NFTStore />} />
-          <Route path="/store/detail" element={<DetailItem />} />
+          <Route path="/store/detail/:productId" element={<DetailItem />} />
           <Route path="/mint" element={<Mint />} />
-          <Route path="/profilesetting" element={<ProfileSetting />} />
+          <Route path="/profilesetting/:userId" element={<ProfileSetting />} />
           <Route path="/event" element={<EventPage />} />
           <Route path="/event/detail" element={<EventDetail />} />
           <Route path="/rank" element={<Rank />} />

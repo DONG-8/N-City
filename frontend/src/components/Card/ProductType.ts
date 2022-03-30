@@ -1,0 +1,56 @@
+
+export interface ProductType{
+  item :{
+    productId: Number,
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    },
+  },
+  artist:{
+    "authId": Number,
+    "followeeCnt": Number,
+    "followerCnt": Number,
+    "userAddress": String,
+    "userDescription": String,
+    "userEmail": String,
+    "userEmailConfirm": Boolean,
+    "userId": Number,
+    "userImgUrl": String,
+    "userNick": String,
+    "userRole": String
+  },
+  items :{
+    productId: Number,
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
+    productFavoriteUser:{
+    authId: Number,
+    userAddress: string,
+    userDescription: string,
+    userEmail: string,
+    userEmailConfirm: boolean,
+    userId: number,
+    userImgUrl: string,
+    userNick: string,
+    userRole: string,
+  }[],
+}
+}
