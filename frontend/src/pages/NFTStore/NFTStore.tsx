@@ -1,55 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import styled from 'styled-components'
-import ItemCard from '../../components/Card/ItemCard'
-import { items as itm } from './items'
 import { getProductAll, getSellProduct } from '../../store/apis/product'
 import { useQuery } from 'react-query'
 import ItemCard2 from '../../components/Card/ItemCard2'
 
-const Title = styled.div`
-  display:flex ;
-  justify-content:space-around;
-  h1{
-    font-size: 4rem;
-  }
-  p{
-    margin-top: 10vh;
-    font-weight: 1000 ;
-    font-size: 1.5rem;
-  }
-  margin-bottom: 0;
-`
-const ColorBar = styled.div`
-  margin: auto;
-    margin-top:0;
-    width: 100vw ;
-  
-  
-  img{
-    margin: auto;
-    width: 100vw ;
-    height: 20vh;
-    object-fit: cover;
-  }
-  .all{
-    object-position:10% 10%;
-  }
-  .art{
-    object-position:70% 70%;
-  }
-  .music{
-    object-position:70% 70%;
-  }
-  .photography{
-    object-position:40% 40%;
-  }
-  .sports{
-    object-position:90% 90%;
-  }
-  .game{
-    object-position:60% 60%;
-  }
-`
 
 const CategoryBar = styled.div`
   margin: auto;
@@ -155,7 +109,7 @@ const Right = styled.div`
   }
 `;
 
-export interface IState{
+interface Istate{
   item :{
     productId: Number,
     productTitle: string,
@@ -164,7 +118,18 @@ export interface IState{
     productFavorite: Number,
     productRegDt:Object,
     productCode: Number,
-  }[]
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    }[],
+  }
 }
 const FilterButton = styled.div`
 
@@ -173,66 +138,23 @@ const NFTStore = () => {
   const [filter,setFilter] = useState("all") 
   const [status,setStatus]  = useState('all')
     // 상품 정보 모두 가져오기
-  // const [items,setItems] = useState(itm)
   const { isLoading:ILA, data:allitems } = useQuery<any>(
     "prouductAll",
-    async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))
-      },
-    {
-      onSuccess: (res) => {
-      },
-      onError: (err: any) => {
-        console.log(err, "요청 실패");
-      },
-    }
-  );
+    async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))},
+    {onError: (err: any) => {console.log(err, "상품정보 가져오기 오류")},
+    });
   const { isLoading:ILS, data:saleitems } = useQuery<any>(
     "getSellProduct",
     async () => {return (await (getSellProduct()))
       },
     {
-      onSuccess: (res) => {
-      },
       onError: (err: any) => {
-        console.log(err, "요청 실패");
+        console.log(err, "판매중 정보 실패");
       },
     }
   );
   return (
     <>
-      {/* <ColorBar>
-        {filter === "all" && (
-          <img className="all" src="essets/images/오로라.jpg" alt="bg" />
-        )}
-        {filter === "art" && (
-          <img className="art" src="essets/images/art.jpg" alt="bg" />
-        )}
-        {filter === "music" && (
-          <img className="music" src="essets/images/music.jpg" alt="bg" />
-        )}
-        {filter === "photography" && (
-          <img className="photography" src="essets/images/photography2.jpg" alt="bg" />
-        )}
-        {filter === "sports" && (
-          <img className="sports" src="essets/images/sports.jpg" alt="bg" />
-        )}
-        {filter === "game" && (
-          <img className="game" src="essets/images/game.jpg" alt="bg" />
-        )}
-      </ColorBar> */}
-      {/* <Title>
-        <h1>Store</h1>
-        <div>
-          <p>
-            소지금 : 356,321
-            <img
-              alt="💎"
-              style={{ height: "2.2vh" }}
-              src="essets/images/ethereum.png"
-            />
-          </p>
-        </div>
-      </Title> */}
       <IntroBox>
         <Left>
           <div className='text'>
@@ -255,91 +177,40 @@ const NFTStore = () => {
       </FilterButton>
       <CategoryBar>
         <li>
-          <p
-            id={filter === "all" ? "category" : ""}
-            onClick={() => {
-              setFilter("all");
-            }}
-          >
+          <p id={filter === "all" ? "category" : ""} onClick={() => {setFilter("all")}}>
             All
           </p>
         </li>
         <li>
-          <p
-            id={filter === "art" ? "category" : ""}
-            onClick={() => {
-              setFilter("art");
-            }}
-          >
+          <p id={filter === "art" ? "category" : ""} onClick={() => {  setFilter("art")}}>
             Art
           </p>
         </li>
         <li>
-          <p
-            id={filter === "music" ? "category" : ""}
-            onClick={() => {
-              setFilter("music");
-            }}
-          >
-            Music
+          <p id={filter === "music" ? "category" : ""} onClick={() => {  setFilter("art")}}>
+            Art
           </p>
         </li>
         <li>
-          <p
-            id={filter === "photography" ? "category" : ""}
-            onClick={() => {
-              setFilter("photography");
-            }}
-          >
-            Photography
-          </p>
-        </li>
-        <li>
-          <p
-            id={filter === "sports" ? "category" : ""}
-            onClick={() => {
-              setFilter("sports");
-            }}
-          >
-            Sports
-          </p>
-        </li>
-        <li>
-          <p
-            id={filter === "game" ? "category" : ""}
-            onClick={() => {
-              setFilter("game");
-            }}
-          >
-            Game
+          <p id={filter === "photography" ? "category" : ""} onClick={() => {  setFilter("art")}}>
+            Art
           </p>
         </li>
       </CategoryBar>
-        {/* {isLoading ? <div>로딩중</div>: 
-            <>
-          {items ?
-            <ItemCards>
-            {(items.content).map((item,idx) => {
-              return(
-                <ItemCard key={idx} item={item} />
-                )
-              })}
-            </ItemCards> 
-            :<></>} </>} */}
-            <ItemCards>
-              {status==='all' && allitems &&
-             (allitems.content).map((item,idx) => {
-              return(
-                <ItemCard2 key={idx} item={item} />
-                )
-              })}
-              {status==='sale' && saleitems &&
-             (saleitems.content).map((item,idx) => {
-              return(
-                <ItemCard2 key={idx} item={item} />
-                )
-              })}
-            </ItemCards>
+        <ItemCards>
+          {status==='all' && allitems &&
+          (allitems.content).map((item,idx) => {
+          return(
+            <ItemCard2 key={idx} item={item} />
+            )
+          })}
+          {status==='sale' && saleitems &&
+          (saleitems.content).map((item,idx) => {
+          return(
+            <ItemCard2 key={idx} item={item} />
+            )
+          })}
+        </ItemCards>
       </>
   );
 }

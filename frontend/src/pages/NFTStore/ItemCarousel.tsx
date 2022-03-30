@@ -4,17 +4,29 @@ import styled from "styled-components";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ItemCard2 from "../../components/Card/ItemCard2";
-// interface Iprops{
-//   items :{
-//     productId: Number,
-//     productTitle: string,
-//     productPrice: Number,
-//     productThumbnailUrl: string,
-//     productFavorite: Number,
-//     productRegDt:Object, 
-//     productCode: Number,
-//   }[]
-// }
+
+interface Iprops{
+  items :{
+    productId: Number,
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    }[],
+  }[]
+}
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -73,46 +85,29 @@ const settings = {
 };
 
 const MainBannerWrapper = styled.div`
-  width: 85vw;
-  height: 600px;
+  padding-top: 5vh;
+  width: 90vw;
+  height: 450px;
   color: black;
   margin: 0 auto;
+  background-color: #F7F8FA ;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  border-radius: 30px;
+  margin-bottom: 10vh;
 `;
-interface Iprops{
-  items :{
-    productId: Number,
-    productTitle: string,
-    productPrice: Number,
-    productThumbnailUrl: string,
-    productFavorite: Number,
-    productRegDt:Object,
-    productCode: Number,
-    productFavoriteUser:{
-      authId: Number,
-      userAddress: string,
-      userDescription: string,
-      userEmail: string,
-      userEmailConfirm: boolean,
-      userId: number,
-      userImgUrl: string,
-      userNick: string,
-      userRole: string,
-    }[],
-  }[],
-}
 
-const NewTokkenList:React.FC<Iprops>= ({items}) => {
+const ItemCarousel:React.FC<Iprops>= ({items}) => {
+
   return (
     <MainBannerWrapper>
-      <div>
         <Slider {...settings}>
-          {items.map((item,idx) => {
+          { items.length >0 &&
+          items.map((item,idx) => {
             return <ItemCard2 key={idx} item={item} />;
-          })}
+          }) }
         </Slider>
-      </div>
     </MainBannerWrapper>
   );
 };
 
-export default NewTokkenList;
+export default ItemCarousel;
