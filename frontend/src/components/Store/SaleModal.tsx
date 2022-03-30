@@ -315,11 +315,11 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
         </Exit>
         <Session1>
           <div id={session1 && 'choiced'}  className="choiceBox">
-            <div className='choice1'>
-              <p onClick={()=>setSession1("Fix")}>즉시 판매</p>
+            <div onClick={()=>setSession1("Fix")} className='choice1'>
+              <p>즉시 판매</p>
             </div>
-            <div className='choice2'>
-              <p onClick={()=>setSession1("Auction")}>경매로 올리기</p>
+            <div onClick={()=>setSession1("Auction")} className='choice2'>
+              <p>경매로 올리기</p>
             </div>
           </div>
         </Session1>
