@@ -59,9 +59,11 @@ const ItemResults = styled.div`
 `
 
 const SearchPage = () => {
-  const [data,setData] = useState(useParams().data)
+  // const [data,setData] = useState(useParams().data)
   const [items,setItems] = useState<Object[]>([])
+  const [users, setUsers] = useState<any[]>()
   // const users = usrs
+  const {data} = useParams();
   const { isLoading:ILA, data:allitems } = useQuery<any>(
     "prouductAll",
     async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))
@@ -82,18 +84,62 @@ const SearchPage = () => {
       },
     }
   );
-  
 
-  const { isLoading:ILU, data:users } = useQuery<any>(
-    "getSearchUserNick",
-    async () => {return (await getSearchUserNick(data as string))
+  const reloadProduct = useMutation<any, Error>(
+    "prouductAll",
+    async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))
       },
-      {onSuccess:(res)=>{console.log(res)},
-      onError:(err)=>{console.log(err)}
-      }
+    {
+      onSuccess: (res) => {
+        let itms = res.content
+        let tmp : Object[] = []
+        itms.map(
+          (itm:ItemType['item'])=>{
+            if((itm.productTitle).includes(String(data)))
+             {tmp.push(itm)} })
+        console.log(tmp)
+        setItems(tmp as any[])
+      },
+      onError: (err: any) => {
+        console.log(err, "요청 실패");
+      },
+    }
   );
+  
+  
+  // const { isLoading:ILU, data:users } = useQuery<any>(
+  //   "getSearchUserNick",
+  //   async () => {return (await getSearchUserNick(data as string))
+  //     },
+  //     {onSuccess:(res)=>{console.log(res)},
+  //     onError:(err)=>{console.log(err)}
+  //     }
+  // );
+
+  const reloadUser = useMutation<any, Error>(
+    "getSearchUserNick",
+    async () => {
+      return await getSearchUserNick(data as string);
+    },
+    {
+      onSuccess: (res) => {
+        // console.log("요청성공",res);
+        setUsers(res);
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    }
+  );
+
   console.log('❤',users)
   console.log('❤',items)
+
+  useEffect(() => {
+    reloadProduct.mutate();
+    reloadUser.mutate();
+  }, [data])
+
   return (
     <>
       <SearchTitle>
@@ -104,7 +150,7 @@ const SearchPage = () => {
         <h1>검색 결과가 없습니다.</h1>
       </NoResult>
       }
-      {users !== undefined && users!=="" &&
+      {users &&
       <UserResults>
         <h1>USERS</h1> 
         <div className='items'>
