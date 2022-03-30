@@ -24,9 +24,8 @@ const fileApiClient = axios.create({
 // 인증요청 등록
 export const postAuthentiaction = async (formdata: any) => {
   const response = await fileApiClient.post<any>(
-    '/authentication', {
+    '/authentication', 
       formdata
-    },
   )
   console.log("인증요청 등록")
   return response.data
