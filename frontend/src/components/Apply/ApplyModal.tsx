@@ -244,8 +244,8 @@ const ModalBase = ({
       const formdata = new FormData();
       formdata.append("authName", name);
       formdata.append("authEmail", email);
-      formdata.append("authType", "3");
-      // formdata.append("name", extra);
+      formdata.append("authType", convertType());
+      formdata.append("authExtra", formType === "enterprise" ? "" : extra);
       formdata.append("authFile", files);
       // formdata 확인
       for (var key of formdata.keys()) {
@@ -302,6 +302,19 @@ const ModalBase = ({
       return;
     } 
     postAuth.mutate()
+  };
+
+  const convertType = () => {
+    switch (formType) {
+      case "influencer":
+        return "5"
+      case "artist":
+        return "4"
+      case "enterprise":
+        return "3"
+      default:
+        return "알수없는인증타입"
+    }
   };
 
   useEffect(() => {
