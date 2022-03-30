@@ -1,5 +1,7 @@
 package com.nft.ncity.domain.myroom.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.domain.myroom.db.entity.MyRoom;
 import com.nft.ncity.domain.myroom.db.repository.MyRoomRepositorySupport;
@@ -14,6 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -56,12 +59,16 @@ public class MyRoomController {
             @ApiResponse(code = 204, message = "배경 변경 성공"),
             @ApiResponse(code = 401, message = "로그인 해주세요")
     })
-    public ResponseEntity<? extends BaseResponseBody> modifyMyRoomBackground(@RequestBody @ApiParam(value = "방 변경 정보", required = true) MyRoomBackgroundPutReq myRoomBackgroundInfo, Principal principal) {
+    public ResponseEntity<? extends BaseResponseBody> modifyMyRoomBackground(@RequestBody @ApiParam(value = "방 변경 정보", required = true) MyRoomBackgroundPutReq myRoomBackgroundInfo,
+                                                                             Principal principal) throws IOException {
         log.info("modifyMyRoomBackground - Call");
 
         Long userId = Long.valueOf(principal.getName());
+        // JSON -> String
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = mapper.writeValueAsString(myRoomBackgroundInfo.getMyRoomBackground());
 
-        if (myRoomService.modifyMyRoom(1, userId, myRoomBackgroundInfo.getMyRoomBackground()) == true) {
+        if (myRoomService.modifyMyRoom(1, userId, jsonInString) == true) {
             return ResponseEntity.status(204).body(BaseResponseBody.of(204, "배경 변경 성공"));
         } else {
             return ResponseEntity.status(401).body(BaseResponseBody.of(401, "로그인 해주세요"));
@@ -75,7 +82,7 @@ public class MyRoomController {
             @ApiResponse(code = 401, message = "로그인 해주세요")
     })
     public ResponseEntity<? extends BaseResponseBody> modifyMyRoomCharacter(@RequestBody @ApiParam(value = "캐릭터 변경 정보", required = true) MyRoomCharacterPutReq myRoomCharacterInfo,
-                                                    Principal principal) {
+                                                                            Principal principal) {
         log.info("modifyMyRoomCharacter - Call");
 
         Long userId = Long.valueOf(principal.getName());

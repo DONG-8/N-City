@@ -22,8 +22,8 @@ public class MyRoom {
     @ApiModelProperty(value = "회원 id")
     private Long userId;
 
-    @ApiModelProperty(value = "배경 이미지 경로")
-    @Column(name = "myroom_background")
+    @ApiModelProperty(value = "맵 정보")
+    @Column(name = "myroom_background", columnDefinition = "JSON")
     private String myRoomBackground;
 
     @ApiModelProperty(value = "캐릭터 이미지 경로")

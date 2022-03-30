@@ -136,6 +136,4 @@ public class LogController {
         redirectView.setUrl("localhost:3030/");
         return redirectView;
     }
-
-
 }

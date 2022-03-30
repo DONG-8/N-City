@@ -17,12 +17,8 @@ import java.security.Principal;
 @RequestMapping("/api/favorites")
 public class FavoriteController {
 
-
-
-
     @Autowired
     FavoriteService favoriteService;
-
 
     // Create
     @PostMapping("/{productId}")
@@ -35,7 +31,6 @@ public class FavoriteController {
                                                               @ApiParam(value = "상품id") @PathVariable("productId") Long productId){
         log.info("favoriteRegister - 호출");
         Long userId = Long.valueOf(principal.getName());
-
         Favorite favorite = favoriteService.favoriteRegister(userId, productId);
 
         if(null != favorite){
@@ -49,7 +44,6 @@ public class FavoriteController {
     // 1. 좋아요 했는지 여부
     // 2. 좋아요한 수
     // 3. 내가 좋아요한 상품 리스트 -> User에 있네??
-
     @GetMapping("/{productId}")
     @ApiOperation(value = "내가 좋아요한 여부")
     @ApiResponses({
@@ -66,7 +60,6 @@ public class FavoriteController {
         }else{
             return false;
         }
-
     }
 
     @GetMapping("/{productId}/count")
@@ -79,8 +72,6 @@ public class FavoriteController {
         log.info("getFavoriteCount - 호출");
         return favoriteService.getFavoriteCount(productId);
     }
-
-
 
     // Delete
     @DeleteMapping("/{productId}")
@@ -100,7 +91,5 @@ public class FavoriteController {
         }else{
             return ResponseEntity.status(404).body(BaseResponseBody.of(404, "신청 실패"));
         }
-
     }
-
 }

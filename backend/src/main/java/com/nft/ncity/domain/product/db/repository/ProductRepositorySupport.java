@@ -1,9 +1,12 @@
 package com.nft.ncity.domain.product.db.repository;
 
+import com.nft.ncity.domain.deal.db.entity.QDeal;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.entity.QProduct;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
+import com.nft.ncity.domain.user.db.entity.QUser;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Repository
 public class ProductRepositorySupport {
@@ -22,6 +26,8 @@ public class ProductRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
 
     QProduct qProduct = QProduct.product;
+
+    QDeal qDeal = QDeal.deal;
 
     //CREATE
     @Transactional
@@ -88,9 +94,7 @@ public class ProductRepositorySupport {
         return new PageImpl<Product>(productQueryResults, pageable, productQueryResults.size());
 
     }
-
-
-
+    
     // 상품명으로 검색
     public Page<Product> findProductListByTitle(Pageable pageable, String productTitle) {
 
@@ -133,17 +137,34 @@ public class ProductRepositorySupport {
 
         if(productList.isEmpty()) return Page.empty();
 
-        return  new PageImpl<Product>(productList,pageable, productList.size());
-
+        return new PageImpl<Product>(productList,pageable, productList.size());
     }
 
-    public Product findProductByUserId(Long productId) {
+    public Page<Product> findMindtedProductByUserId(Long userId, Pageable pageable) {
+
+        // deal 테이블에서 type이 6 minted, deal_from, deal_to = userId
+        List<Product> products = jpaQueryFactory.select(qProduct)
+                .from(qProduct)
+                .where(qProduct.productId.in(
+                                JPAExpressions.select(qDeal.productId)
+                                        .from(qDeal)
+                                        .where(qDeal.dealType.eq(6).and(qDeal.dealTo.eq(userId)))
+                        ))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        if(products.isEmpty()) return Page.empty();
+
+        return new PageImpl<Product>(products, pageable, products.size());
+    }
+
+    public Product findProductByProductId(Long productId) {
 
         Product product = jpaQueryFactory.select(qProduct)
                 .from(qProduct)
                 .where(qProduct.productId.eq(productId))
                 .fetchOne();
-
         return product;
     }
 }

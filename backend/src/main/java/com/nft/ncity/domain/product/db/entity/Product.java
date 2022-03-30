@@ -60,7 +60,6 @@ public class Product {
     @Column(name = "product_file_url")
     private String productFileUrl;
 
-
     @Column(name = "product_thumbnail_url")
     private String productThumbnailUrl;
 

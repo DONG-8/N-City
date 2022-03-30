@@ -11,11 +11,11 @@ import java.security.Principal;
 
 public interface DealService {
     //CREATE
-    Long buyNowRegister(BuyNowRegisterPostReq buyNowRegisterPostReq, Principal principal);
-    Long auctionRegister(AuctionRegisterPostReq auctionRegisterPostReq, Principal principal);
-    Deal bidRegister(BuyNowRegisterPostReq buyNowRegisterPostReq,Principal principal);
-    Deal buyNow(Long productId,Principal principal);
-    Deal buyAuction(Long productId,Principal principal);
+    Long buyNowRegister(BuyNowRegisterPostReq buyNowRegisterPostReq, Long userId);
+    Long auctionRegister(AuctionRegisterPostReq auctionRegisterPostReq, Long userId);
+    Deal bidRegister(BuyNowRegisterPostReq buyNowRegisterPostReq,Long userId);
+    Deal buyNow(Long productId,Long userId);
+    Deal buyAuction(Long productId,Long userId);
 
     //READ
     Page<DealListGetRes> getDealListByProductId(Pageable pageable,Long productId);

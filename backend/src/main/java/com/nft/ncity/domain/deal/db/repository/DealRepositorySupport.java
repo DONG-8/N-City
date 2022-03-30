@@ -29,7 +29,6 @@ public class DealRepositorySupport {
 
     QProduct qProduct = QProduct.product;
 
-
     // 즉시구매등록 - 상품table update
     @Transactional
     public long modifyProductForBuyNowRegisterByProductId(BuyNowRegisterPostReq buyNowRegisterPostReq){
@@ -63,7 +62,6 @@ public class DealRepositorySupport {
         return excute;
     }
 
-
     // 거래내역
     @Transactional
     public Page<Deal> findDealListByProductId(Pageable pageable, Long productId){
@@ -80,11 +78,11 @@ public class DealRepositorySupport {
 
     //즉시구매
     @Transactional
-    public long modifyProductForBuyNowByProductId(Long productId, Principal principal){
+    public long modifyProductForBuyNowByProductId(Long productId, Long userId){
 
         // x,y좌표, product view 초기화 해야하면 여기 추가!
         long excute = jpaQueryFactory.update(qProduct)
-                .set(qProduct.userId,Long.valueOf(principal.getName()))
+                .set(qProduct.userId,userId)
                 .set(qProduct.productState,3)
                 .where(qProduct.productId.eq(productId))
                 .execute();
@@ -93,11 +91,11 @@ public class DealRepositorySupport {
 
     //경매 입찰
     @Transactional
-    public long modifyProductForBuyAuctionByProductId(Long productId, Principal principal){
+    public long modifyProductForBuyAuctionByProductId(Long productId, Long userId){
 
         // x,y좌표, product view 초기화 해야하면 여기 추가!
         long excute = jpaQueryFactory.update(qProduct)
-                .set(qProduct.userId,Long.valueOf(principal.getName()))
+                .set(qProduct.userId,userId)
                 .set(qProduct.productState,3)
                 .where(qProduct.productId.eq(productId))
                 .execute();
@@ -129,9 +127,8 @@ public class DealRepositorySupport {
     public Page<Deal> findDealListByUserId(Long userId, Pageable pageable) {
         List<Deal> deals = jpaQueryFactory.select(qDeal)
                 .from(qDeal)
-                .where(qDeal.dealType.ne(6)
-                        .and((qDeal.dealTo.eq(userId))
-                        .or(qDeal.dealFrom.eq(userId))))
+                .where(qDeal.dealTo.eq(userId).or(qDeal.dealFrom.eq(userId)))
+                .orderBy(qDeal.dealCreatedAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
