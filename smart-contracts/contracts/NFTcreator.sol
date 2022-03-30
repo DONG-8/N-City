@@ -15,7 +15,7 @@ contract NFTcreator is ERC721 {
 
     event createNFT (uint256 indexed _tokenId, address indexed _owner);
 
-    constructor() ERC721("N-city", "NCT") {}
+    constructor() ERC721("N-city-NFT", "MVT") {}
 
     function current() public view returns (uint256) {
         return _tokenIds;

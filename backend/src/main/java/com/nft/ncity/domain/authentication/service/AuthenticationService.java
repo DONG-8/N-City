@@ -14,6 +14,6 @@ public interface AuthenticationService {
 
    Page<Authentication> getAuthenticationListByType(int authType, Pageable pageable);
    Authentication getAuthenticationDetailByAuthId(Long authId);
-   Authentication AuthenticationRegister(AuthenticationRegisterPostReq authenticationRegisterPostReq, MultipartFile multipartFile, Principal principal) throws IOException;
+   Authentication AuthenticationRegister(AuthenticationRegisterPostReq authenticationRegisterPostReq, MultipartFile multipartFile, Long userId) throws IOException;
    Long modifyUserRole(AuthenticationConfirmReq authenticationConfirmReq);
 }

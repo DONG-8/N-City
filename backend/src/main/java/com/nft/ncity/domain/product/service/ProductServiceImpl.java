@@ -5,15 +5,18 @@ import com.nft.ncity.domain.authentication.service.AwsS3Service;
 import com.nft.ncity.domain.deal.db.entity.Deal;
 import com.nft.ncity.domain.deal.db.repository.DealRepository;
 import com.nft.ncity.domain.deal.db.repository.DealRepositorySupport;
-import com.nft.ncity.domain.deal.request.TokenRegisterPutReq;
+import com.nft.ncity.domain.favorite.db.entity.Favorite;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.repository.ProductRepository;
 import com.nft.ncity.domain.product.db.repository.ProductRepositorySupport;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
+import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.response.ProductDealListGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
+import com.nft.ncity.domain.user.response.UserMintProductRes;
+import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,12 +60,10 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     AwsS3Service awsS3Service;
 
-
-
     // CREATE
     @Override
     @Transactional
-    public Product productRegister(ProductRegisterPostReq productRegisterPostReq, MultipartFile productFile, MultipartFile thumbnailFile, Principal principal) throws IOException {
+    public Product productRegister(ProductRegisterPostReq productRegisterPostReq, MultipartFile productFile, MultipartFile thumbnailFile, Long userId) throws IOException {
 
         // 상품 파일 처리
 
@@ -106,7 +107,7 @@ public class ProductServiceImpl implements ProductService{
         file2.delete();
 
         Product product = Product.builder()
-                .userId(Long.valueOf(principal.getName()))
+                .userId(Long.valueOf(1L))
                 .productTitle(productRegisterPostReq.getProductTitle())
                 .productDesc(productRegisterPostReq.getProductDesc())
                 .productCode(productRegisterPostReq.getCode())
@@ -122,12 +123,11 @@ public class ProductServiceImpl implements ProductService{
                 .productId(savedProduct.getProductId())
                 .dealType(6)
                 .dealFrom((long)0)
-                .dealTo(Long.valueOf(principal.getName()))
+                .dealTo(Long.valueOf(1L))
                 .dealCreatedAt(LocalDateTime.now())
                 .build();
 
         dealRepository.save(deal);
-
         return savedProduct;
     }
 
@@ -141,7 +141,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     // READ
-
+    //상품 전체조회
     @Override
     public Page<ProductListGetRes> getProductList(Pageable pageable) {
         Page<Product> products = productRepositorySupport.findProductList(pageable);
@@ -155,16 +155,14 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductId(p.getProductId());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
-
+            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
             productListGetRes.add(productList);
         }
-
         Page<ProductListGetRes> res = new PageImpl<>(productListGetRes, pageable, total);
-
         return res;
-
     }
 
     @Override
@@ -180,8 +178,10 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductId(p.getProductId());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
+            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
 
             productListGetRes.add(productList);
         }
@@ -204,9 +204,12 @@ public class ProductServiceImpl implements ProductService{
             productDealList.setProductTitle(p.getProductTitle());
             productDealList.setProductPrice(p.getProductPrice());
             productDealList.setProductRegDt(p.getProductRegDt());
+            productDealList.setProductId(p.getProductId());
             productDealList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productDealList.setProductState(p.getProductState());
             productDealList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
+            productDealList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
+
 
             productDealListGetRes.add(productDealList);
         }
@@ -214,7 +217,6 @@ public class ProductServiceImpl implements ProductService{
         Page<ProductDealListGetRes> res = new PageImpl<>(productDealListGetRes, pageable, total);
 
         return res;
-
     }
 
     @Override
@@ -230,9 +232,12 @@ public class ProductServiceImpl implements ProductService{
             productDealList.setProductTitle(p.getProductTitle());
             productDealList.setProductPrice(p.getProductPrice());
             productDealList.setProductRegDt(p.getProductRegDt());
+            productDealList.setProductId(p.getProductId());
             productDealList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productDealList.setProductState(p.getProductState());
             productDealList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
+            productDealList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
+
 
             productDealListGetRes.add(productDealList);
         }
@@ -256,8 +261,10 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductId(p.getProductId());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
+            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
 
             productListGetRes.add(productList);
         }
@@ -295,5 +302,77 @@ public class ProductServiceImpl implements ProductService{
             productRepository.deleteById(productId);
             return true;
         }else return false;
+    }
+
+    @Override
+    public Page<UserProductWithIsFavoriteRes> getProductListByUserId(Long userId, Pageable pageable) {
+        Page<Product> productList = productRepositorySupport.findProductListByUserId(userId, pageable);
+        List<UserProductWithIsFavoriteRes> list = new ArrayList<>();
+
+        for(Product p : productList.getContent()) {
+            UserProductWithIsFavoriteRes userProductWithIsFavoriteRes = UserProductWithIsFavoriteRes.builder()
+
+                    .productId(p.getProductId())
+                    .userId(p.getUserId())
+                    .tokenId(p.getTokenId())
+                    .productTitle(p.getProductTitle())
+                    .productDesc(p.getProductDesc())
+                    .productCode(p.getProductCode())
+                    .productState(p.getProductState())
+                    .productPrice(p.getProductPrice())
+                    .productRegDt(p.getProductRegDt())
+                    .productFileUrl(p.getProductFileUrl())
+                    .productThumbnailUrl(p.getProductThumbnailUrl())
+                    .isFavorite(favoriteRepositorySupport.getIsFavoriteByUserIdAndProductId(userId,p.getProductId()))
+                    .productFavoriteCount(favoriteRepositorySupport.getFavoriteCount(p.getProductId()))
+                    .productAuctionEndTime(p.getProductAuctionEndTime())
+                    .build();
+
+            list.add(userProductWithIsFavoriteRes);
+        }
+        if(list.isEmpty()) return Page.empty();
+
+        return new PageImpl<UserProductWithIsFavoriteRes>(list,pageable,list.size());
+    }
+
+    @Override
+    public Page<UserMintProductRes> getMintedProductList(Long userId, Pageable pageable) {
+        Page<Product> productList = productRepositorySupport.findMindtedProductByUserId(userId, pageable);
+
+        List<UserMintProductRes> list = new ArrayList<>();
+
+        for(Product p : productList.getContent()) {
+            UserMintProductRes userMintProductRes = UserMintProductRes.builder()
+                    .userId(p.getUserId())
+                    .tokenId(p.getTokenId())
+                    .productPrice(p.getProductPrice())
+                    .productCode(p.getProductCode())
+                    .productAuctionEndTime(p.getProductAuctionEndTime())
+                    .productDesc(p.getProductDesc())
+                    .productFileUrl(p.getProductFileUrl())
+                    .productRegDt(p.getProductRegDt())
+                    .productState(p.getProductState())
+                    .productThumbnailUrl(p.getProductThumbnailUrl())
+                    .productTitle(p.getProductTitle())
+                    .productAuctionEndTime(p.getProductAuctionEndTime())
+                    .productFavoriteCount(favoriteRepositorySupport.getFavoriteCount(p.getProductId()))
+                    .isFavorite(favoriteRepositorySupport.getIsFavoriteByUserIdAndProductId(p.getUserId(),p.getProductId()))
+                    .build();
+            list.add(userMintProductRes);
+        }
+        if(list.isEmpty()) return Page.empty();
+
+        return new PageImpl<UserMintProductRes>(list, pageable, list.size());
+    }
+
+    @Override
+    public Page<Product> getFavoriteProduct(Page<Favorite> favorites) {
+        List<Product> productList = new ArrayList<>();
+        for(Favorite f : favorites.getContent()){
+            Product product = productRepositorySupport.findProductByProductId(f.getProductId());
+            productList.add(product);
+        }
+        Page<Product> res = new PageImpl<Product>(productList, favorites.getPageable(), productList.size());
+        return res;
     }
 }

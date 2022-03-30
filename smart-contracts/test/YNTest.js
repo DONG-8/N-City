@@ -52,9 +52,11 @@ contract("Sale Contract Testing", (accounts) => {
     // uint256 endTime,
     // address currencyAddress,
     // address nftAddress
-    await salesFactoryContract.createSale(itemId, 10, 20, 10, 20, ssafyTokenContract.address, nftContract.address,  { from: seller });
+    const tempSaleAddress1 = await salesFactoryContract.createSale(itemId, 10, 20, 10, 20, ssafyTokenContract.address, nftContract.address,  { from: seller });
+    const SaleAddress1 = SaleAddress1.logs[0].args._saleContract
     await salesFactoryContract.createSale(tokenId2, 10, 20, 10, 20, ssafyTokenContract.address, nftContract.address,  { from: seller });
     console.log(await salesFactoryContract.allSales());
+    
     // const temp = await salesFactoryContract.allSales();
     // console.log(temp)
     // TODO

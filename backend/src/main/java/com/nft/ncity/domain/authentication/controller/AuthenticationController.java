@@ -2,10 +2,12 @@ package com.nft.ncity.domain.authentication.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.domain.authentication.db.entity.Authentication;
+import com.nft.ncity.domain.authentication.request.AuthenticationConfirmReq;
 import com.nft.ncity.domain.authentication.request.AuthenticationRegisterPostReq;
 import com.nft.ncity.domain.authentication.response.AuthenticationListGetRes;
 import com.nft.ncity.domain.authentication.service.AuthenticationService;
-import com.nft.ncity.domain.authentication.request.AuthenticationConfirmReq;
+import com.nft.ncity.domain.user.db.entity.User;
+import com.nft.ncity.domain.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -31,6 +33,9 @@ public class AuthenticationController {
 
     @Autowired
     AuthenticationService authenticationService;
+
+    @Autowired
+    UserService userService;
 
     @GetMapping("/{authType}")
     @ApiOperation(value = "인증요청 내역 전체 조회", notes = "<strong>해당 타입의 인증요청 내역 목록</strong>을 넘겨준다.")
@@ -95,8 +100,9 @@ public class AuthenticationController {
         // 0. 인증 등록 정보를 AuthenticationRegisterPostReq에 담고, 파일 정보를 Param으로 MultipartFiles에 담아 온다.
         // 1. 인증 등록 정보를 Authentication 테이블에 저장하고, 해당 인증 ID와 함께 인증 파일들을 AuthFile 테이블에 저장한다.
         // 2. 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
+        Long userId = Long.valueOf(principal.getName());
         log.info("AuthenticationRegister - 호출");
-        Authentication authentication = authenticationService.AuthenticationRegister(authenticationRegisterPostReq,multipartFile, principal);
+        Authentication authentication = authenticationService.AuthenticationRegister(authenticationRegisterPostReq,multipartFile, userId);
 
         if(!authentication.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
@@ -123,5 +129,74 @@ public class AuthenticationController {
         }
 
         return ResponseEntity.status(201).body(BaseResponseBody.of(201,"인증 처리완료."));
+    }
+
+    /**
+     유저 전체 정보 조회
+     */
+    @GetMapping()
+    @ApiOperation(value = "전체 유저 정보 조회", notes = "<strong>전체 유저 정보</strong>를 넘겨준다.")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "성공", response = User.class),
+            @ApiResponse(code = 404, message = "유저 없음.")
+    })
+    public ResponseEntity<Page<User>>getUserList(@PageableDefault(page = 0, size = 10) Pageable pageable) {
+
+        // 0. 받아올 유저 ID를 받음
+        // 1. 해당 유저가 가진 작품 목록을 넘겨준다.
+
+        log.info("getUserList - 호출");
+        Page<User> users = userService.getUserList(pageable);
+
+        if(users == null) {
+            log.error("getUserList - User doesn't exist.");
+            return ResponseEntity.status(404).body(null);
+        }
+        return ResponseEntity.status(201).body(users);
+    }
+
+    /**
+     신규유저 정보 조회
+     */
+    @GetMapping("/user/new")
+    @ApiOperation(value = "신규유저 정보 조회", notes = "<strong>신규유저 정보</strong>를 넘겨준다.")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "성공", response = User.class),
+            @ApiResponse(code = 404, message = "유저 없음.")
+    })
+    public ResponseEntity<Page<User>>getNewUserList(@PageableDefault(page = 0, size = 10) Pageable pageable) {
+
+        // 0. 받아올 유저 ID를 받음
+        // 1. 해당 유저가 가진 작품 목록을 넘겨준다.
+
+        log.info("getNewUserList - 호출");
+        Page<User> users = userService.getNewUserList(pageable);
+
+        if(users == null) {
+            log.error("getNewUserList - User doesn't exist.");
+            return ResponseEntity.status(404).body(null);
+        }
+        return ResponseEntity.status(201).body(users);
+    }
+
+    /**
+     신규유저 토큰 지급
+     */
+    @PutMapping("/token/{userId}")
+    @ApiOperation(value = "신규 유저 토큰 지급", notes = "<strong>신규 유저 토큰 지급 정보</strong>를 넘겨준다.")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "성공", response = User.class),
+            @ApiResponse(code = 404, message = "유저 없음.")
+    })
+    public ResponseEntity<BaseResponseBody>ModifyUserByUserId(@PathVariable Long userId){
+
+        log.info("ModifyUserListByUserIdList - 호출");
+        Long execute = userService.modifyUserRole(userId);
+
+        if(execute < 1) {
+            log.error("ModifyUserListByUserIdList - New User doesn't exist.");
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404,"신규 유저 목록 없음."));
+        }
+        return ResponseEntity.status(201).body(BaseResponseBody.of(201,"신규 유저 토큰 지급 완료."));
     }
 }

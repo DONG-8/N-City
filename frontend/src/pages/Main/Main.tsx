@@ -11,6 +11,7 @@ import HotTokkenList from "./HotTokkenList";
 import NewTokkenList from "./NewTokkenList";
 import VideoGuide from "./VideoGuide";
 import Profile from "./Profile";
+import { items as itm } from "../NFTStore/items";
 
 const MainBackGround = styled.div`
   /* margin-top: 80px; */
@@ -775,7 +776,7 @@ export default function Main() {
       <HotTokkenWrraper>
         <HotTokken>
           <h1>New Tokken</h1>
-          <NewTokkenList />
+          <NewTokkenList items={itm}/>
         </HotTokken>
       </HotTokkenWrraper>
       <HotTokkenWrraper>

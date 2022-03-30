@@ -36,7 +36,6 @@ public class Deal {
     @ApiModelProperty(value = "받는 사람 id")
     Long dealTo;
 
-
 /*     거래 타입
      1 : sale
      2 : bid
@@ -52,13 +51,8 @@ public class Deal {
     @ApiModelProperty(value = "금액")
     double dealPrice;
 
-
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value="거래 요청시간")
     LocalDateTime dealCreatedAt;
-
-
-
-
 }

@@ -1,11 +1,18 @@
 package com.nft.ncity.domain.user.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
+import com.nft.ncity.domain.favorite.db.entity.Favorite;
+import com.nft.ncity.domain.favorite.service.FavoriteService;
+import com.nft.ncity.domain.product.db.entity.Product;
+import com.nft.ncity.domain.product.service.ProductService;
 import com.nft.ncity.domain.user.db.entity.EmailAuth;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.nft.ncity.domain.user.request.EmailAuthRegisterReq;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
+import com.nft.ncity.domain.user.response.UserDealInfoWithProductRes;
+import com.nft.ncity.domain.user.response.UserMintProductRes;
+import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
 import com.nft.ncity.domain.user.response.UserInfoRes;
 import com.nft.ncity.domain.user.service.UserService;
 import io.swagger.annotations.*;
@@ -34,8 +41,14 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ProductService productService;
+
+    @Autowired
+    FavoriteService favoriteService;
+
     @GetMapping("/{userId}")
-    @ApiOperation(value = "유저 정보 조회", notes = "<strong>해당 유저의 정보</strong>을 넘겨준다.")
+    @ApiOperation(value = "유저 정보 조회", notes = "<strong>UserId에 해당하는 유저의 정보</strong>을 넘겨준다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "해당 유저 없음.")
@@ -56,7 +69,6 @@ public class UserController {
     }
 
     /**
-        Product 생성 된 후에 가능.
         product 테이블의 회원id가 입력받은 userid와 동일한 컬럼 추출하기
      */
     @GetMapping("/{userId}/collected")
@@ -65,26 +77,25 @@ public class UserController {
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "해당 유저 없음.")
     })
-    public ResponseEntity<Page<User>>getProductListByUserId(@PathVariable("userId") Long userId,
+    public ResponseEntity<Page<UserProductWithIsFavoriteRes>>getProductListByUserId(@PathVariable("userId") Long userId,
                                                        @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
         // 0. 받아올 유저 ID를 받음
         // 1. 해당 유저가 가진 작품 목록을 넘겨준다.
 
         log.info("getProductListByUserId - 호출");
-        User user = userRepository.getById(userId);
-        //Product product = productRepository.getById();
+        Page<UserProductWithIsFavoriteRes> productList = productService.getProductListByUserId(userId, pageable);
 
-        if(user.equals(null)) {
-            log.error("getProductListByUserId - This userId doesn't exist.");
+        if(productList == null) {
+            log.error("getProductListByUserId - This userId has no Product.");
             return ResponseEntity.status(404).body(null);
         }
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(201).body(productList);
     }
 
     /**
-     Remix에서 값들을 받아와서 저장부터 해야함.? DB에도 저장 하나?
-     거래 테이블에서 보내는 사람id가 입력받은 userId이고 받는 사람 id는 NullAddress이면서 , 거래타입이 minted인 값들 받아오기
+     거래 테이블에서 받는 사람id가 입력받은 userId이고, 거래타입이 minted(6)인 거래 받아와서
+     해당 거래에 있는 productId로 뽑아서 넣어주기.
      */
     @GetMapping("/{userId}/created")
     @ApiOperation(value = "유저가 생성한 작품 조회", notes = "<strong>해당 유저가 생성한 작품 목록</strong>을 넘겨준다.")
@@ -92,75 +103,71 @@ public class UserController {
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "해당 유저 없음.")
     })
-    public ResponseEntity<Page<User>>getCreatedProductListByUserId(@PathVariable("userId") Long userId,
+    public ResponseEntity<Page<UserMintProductRes>>getCreatedProductListByUserId(@PathVariable("userId") Long userId,
                                                             @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
         // 0. 받아올 유저 ID를 받음
         // 1. 해당 유저가 생성한 작품 목록을 넘겨준다.
 
         log.info("getCreatedProductListByUserId - 호출");
-        User user = userRepository.getById(userId);
-        //Product product = productRepository.getById();
+        Page<UserMintProductRes> productList = productService.getMintedProductList(userId, pageable);
 
-        if(user.equals(null)) {
-            log.error("getCreatedProductListByUserId - This userId doesn't exist.");
+        if(productList.equals(null)) {
+            log.error("getCreatedProductListByUserId - There are no products created by this user.");
             return ResponseEntity.status(404).body(null);
         }
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(201).body(productList);
     }
 
     /**
-      상품좋아요(favorite) 테이블이 완료 되어야 진행 가능함.
      favorite 테이블의 user_id가 입력받은 userId와 동일한 값들 받아오기.
      */
     @GetMapping("/{userId}/favorites")
     @ApiOperation(value = "유저가 좋아요한 작품 조회", notes = "<strong>해당 유저가 좋아요한 작품 목록</strong>을 넘겨준다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공", response = User.class),
-            @ApiResponse(code = 404, message = "해당 유저 없음.")
+            @ApiResponse(code = 404, message = "좋아요 한 작품 없음.")
     })
-    public ResponseEntity<Page<User>> getFavoritesProductListByUserId(@PathVariable("userId") Long userId,
+    public ResponseEntity<Page<UserProductWithIsFavoriteRes>> getFavoritesProductListByUserId(@PathVariable("userId") Long userId,
                                                                       @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
         // 0. 받아올 유저 ID를 받음
-        // 1. 해당 유저가 생성한 작품 목록을 넘겨준다.
+        // 1. 해당 유저가 좋아요한 작품 목록을 넘겨준다.
 
         log.info("getFavoritesProductListByUserId - 호출");
-        User user = userRepository.getById(userId);
-        //Product product = productRepository.getById();
-
-        if(user.equals(null)) {
-            log.error("getFavoritesProductListByUserId - This userId doesn't exist.");
+        Page<Favorite> favorites = favoriteService.getFavoriteListByUserId(userId, pageable);
+        Page<Product> products = productService.getFavoriteProduct(favorites);
+        Page<UserProductWithIsFavoriteRes> userProductWithIsFavoriteRes = userService.getUserProductWithIsFavorite(products, userId);
+        if(userProductWithIsFavoriteRes.equals(null)) {
+            log.error("getFavoritesProductListByUserId - There are no products that this user likes.");
             return ResponseEntity.status(404).body(null);
         }
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(201).body(userProductWithIsFavoriteRes);
     }
 
     /**
-     거래내역(deal) 테이블이 완료 되어야 진행 가능함.
      deal 테이블에서 deal_from 또는 deal_to가 입력받은 userId인 값들 받아오기.
      */
     @GetMapping("/{userId}/activities")
     @ApiOperation(value = "해당 유저의 거래 내역 조회", notes = "<strong>해당 유저의 거래 내역</strong>을 넘겨준다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공", response = User.class),
-            @ApiResponse(code = 404, message = "해당 유저 없음.")
+            @ApiResponse(code = 404, message = "해당 유저 거래내역 없음.")
     })
-    public ResponseEntity<Page<User>> getActivityListByUserId(@PathVariable("userId") Long userId,
+    public ResponseEntity<Page<UserDealInfoWithProductRes>> getActivityListByUserId(@PathVariable("userId") Long userId,
                                                                       @PageableDefault(page = 0, size = 10) Pageable pageable) {
-
         // 0. 유저 ID를 받음.
         // 1. 해당 유저의 거래 내역 DB에서 받아와서 보내주기.
 
         log.info("getActivityListByUserId - 호출");
-        User user = userRepository.getById(userId);
-        //Product product = productRepository.getById();
 
-        if(user.equals(null)) {
+        Page<UserDealInfoWithProductRes> userDealInfoWithProductRes = userService.getUserDealInfoWithProduct(userId, pageable);
+
+        if(userDealInfoWithProductRes.equals(null)) {
             log.error("getActivityListByUserId - This userId doesn't exist.");
             return ResponseEntity.status(404).body(null);
         }
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(201).body(userDealInfoWithProductRes);
     }
 
     /**
@@ -203,7 +210,6 @@ public class UserController {
             log.error("modifyUserInfoByUserId - 이메일 인증을 해주세요.");
             return ResponseEntity.status(404).body(BaseResponseBody.of(404,"이메일 인증 필요."));
         }
-
 
         // 수정한게 없다.
         if(execute < 1) {

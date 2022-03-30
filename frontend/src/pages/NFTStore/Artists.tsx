@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import ArtistCard from '../../components/Card/ArtistCard'
 import styled from 'styled-components'
+import { artists as art } from './items'
+import NewTokkenList from '../Main/NewTokkenList'
+import { items as itm } from './items'
 
 const Title = styled.div`
   display:flex ;
@@ -48,10 +51,11 @@ const ColorBar = styled.div`
 
 const ArtistCards = styled.div`
   margin:auto ;
-  width: 90vw ;
+  width: 95vw ;
   display: flex ;
   flex-wrap: wrap ;
-  justify-content:center ;
+  justify-content: center;
+ 
 `
 
 const FilterBar = styled.div`
@@ -94,48 +98,111 @@ const FilterBar = styled.div`
     }
   }
 `
+const IntroBox = styled.div`
+  width: 88vw;
+  height: 50vh;
+  background-color: #F7F8FA ;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  margin: auto;
+  margin-top: 10vh;
+  border-radius: 30px;
+  display: flex;
+  margin-bottom:15vh;
+`
+const Left = styled.div`
+  flex: 1;
+  .black {
+    height: 100%;
+    width: 100%;
+    background-color: #272627;
+    border-radius: 30px 0 0 30px;
+    .text {
+      color: white;
+      font-size: 3rem;
+      text-align: center;
+      margin-left: 1vw;
+      margin-bottom: 10vh;
+    }
+  }
+  img {
+    margin-left: 11vw;
+    margin-top: 4vh;
+    height: 60%;
+    width: 50%;
+  }
+  
+`
+const Right = styled.div`
+  flex: 1;
+  .text{
+    margin-left: 5vw;
+    margin-top: 8vh;
+  
+  .h1{
+    font-size: 8vh;
+    margin-bottom: 5vh;
+    font-weight: 600;
+  }
+  .h3{
+    font-size: 3vh;
+  }
+  .h4{
+    font-size : 2vh
+  }
+  .blue{
+    background:linear-gradient(to top,transparent 10%,skyblue 70%, transparent 10%);
+  }
+  .purple{
+    background:linear-gradient(to top, white 20% ,#BDBDFF 70% , white 20%);
+  }
+}
+`;
+
 
 export interface IState{
-  artist :{
-    name:string,
-    profileImg:string,
-    verified:boolean,
-    sumnailImg:string,
-    descreption:string
-  }[],
+  user:{
+    "authId": Number,
+    "followeeCnt": Number,
+    "followerCnt": Number,
+    "userAddress": String,
+    "userDescription": String,
+    "userEmail": String,
+    "userEmailConfirm": Boolean,
+    "userId": Number,
+    "userImgUrl": String,
+    "userNick": String,
+    "userRole": String
+  }[]
 }
 
 
 
 const Artists = () => {
-  const [artists,setArtists] = useState<IState["artist"]>([
-    { name:"Happy Club ",
-      sumnailImg:"https://lh3.googleusercontent.com/YCprgCsKKotONKjXCkJbiSWitAY_X5CrIfCMARxlsQ1d7ZkVwqxIXbBDqgpuVD7zt3B2eJxJkS6PYwcGuQUqSURlB1R_gk9Xqwdze-o=w352",
-      profileImg:"https://lh3.googleusercontent.com/rPB_SZcWuxqlK5M6LpQdF_-4gm3ucQ4xuS7AMjgZJk1kseF2d20Q1GTsXPQs_aOyu8iyDpwKowjw1tw1XfyJbna5oeOSJz1n3LAEQZE=w352",
-      verified:false,
-      descreption:"Happy Club is the best Club all over the world. u know what? it is better to run out when i see u. cuase i'm too strong to keep ur house safe."},
-      { name:"Happy Club ",
-      sumnailImg:"https://lh3.googleusercontent.com/vALHImVEwEODQSOflhpMtBzFlcpFSLsx23Cl9RmeI_Kkjs55D3cqxZGpKevob-W8qXTEBw7NGbepY1MHSo8g-FpC1cgHteie-452=w352",
-      profileImg:"https://lh3.googleusercontent.com/cxi2xFzMFTwzV9ooqyi5KR5ax8i4sce_1PdeLSyHIms8kTUrAih_tPtGGcslqhvB8yibvCZIIQsFrfDLq_76Hpqs72zwoo1F_bLC2Q=w352",
-      verified:true,
-      descreption:"Happy Club is the best Club all over the world. u know what? it is better to run out when i see u. cuase i'm too strong to keep ur house safe."},
-      { name:"Happy Club ",
-      sumnailImg:"https://lh3.googleusercontent.com/np9zjHHBCwZbx0026anZjJJ_9HY_StZYfD0-l_zmjrpGKS3ioB-eQ38vElOjuekV_mR411iwaK69mWW5y-4lRXOAPZOlUJ4xW4_Ayw=w352",
-      profileImg:"https://lh3.googleusercontent.com/9HZDavtHY7rsjCgFlcBb3fz-nw8Zr4iHRSxjbpKSh8LNpZ2dHTHfdlRC1RRpAAkL4MnuKUCskykNx5zK0M87F1GLyCshn7G4fydlOA=w352",
-      verified:false,
-      descreption:"Happy Club is the best Club all over the world. u know what? it is better to run out when i see u. cuase i'm too strong to keep ur house safe."},
-      { name:"Happy Club ",
-      sumnailImg:"https://lh3.googleusercontent.com/lKO8Gswt-ZKxHMg6PK8caKuMhi2sW2Vp-f5ltxCi-N3hiODM3u0fbMQad-t5dockqy_Rfb5SAA0QItZgFuXsqAKGzCjWN22sqzeE=w352",
-      profileImg:"https://lh3.googleusercontent.com/pDBXxExd4AV6RUTV5o9SbSoDMZZ7RX9oiv4RTJ4BXm9lBa2hwvog0bPTy19itnb-10OHXmOAWwvKUcCQFaucEkrAmfmz5WJuYaCd=w352",
-      verified:true,
-      descreption:"Happy Club is the best Club all over the world. u know what? it is better to run out when i see u. cuase i'm too strong to keep ur house safe."},
-  ])
-  
+  const [users,setUsers] = useState<IState["user"]>(art)
   const [status,setStatus] = useState("all")
 
   return (
     <div>
-      <ColorBar>
+      <IntroBox>
+        <Left>
+        <div className='black'>
+          {/* <img alt='black' src='https://i.gifer.com/QGA.gif' /> */}
+          <img alt='black' src='https://i.gifer.com/BKfh.gif' />
+            <div className='text'><p>N-city Store</p></div>
+          </div>
+        </Left>
+        <Right>
+        <div className='text'>
+            <div className='h3'>NFT Marketplace</div>
+            <div className='h1'>Artists</div>
+            <div className='h4'>N-city는 다양한 <span className='blue'>NFT 작품</span>들을 판매하고 있습니다. </div>
+            <div className='h4'><span className='purple'>NCT 토큰</span>을 이용해 갤러리를 구경하고 거래할 수 있습니다. </div>
+            <div className='h4'>물건을 구입해 <span className='blue'>마이룸</span>을 꾸미세요. </div>
+          </div>
+          
+        </Right>
+      </IntroBox>
+      {/* <ColorBar>
         {status === "all" && (
           <img className="all" src="essets/images/오로라.jpg" alt="bg" />
         )}
@@ -155,7 +222,7 @@ const Artists = () => {
             alt="bg"
           />
         )}
-      </ColorBar>
+      </ColorBar> */}
       {/* <Title>
         <h1>Artists</h1>
         <div>
@@ -169,7 +236,7 @@ const Artists = () => {
           </p>
         </div>
       </Title> */}
-      <FilterBar>
+      {/* <FilterBar>
         <div
           id={status === "all" ? "select" : ""}
           onClick={() => {
@@ -210,11 +277,11 @@ const Artists = () => {
         >
           <p>기업</p>
         </div>
-      </FilterBar>
+      </FilterBar> */}
 
       <ArtistCards>
-        {artists.map((artist) => {
-          return <ArtistCard key={artist.profileImg} artist={artist} />;
+        {users.map((user,idx) => {
+          return <ArtistCard key={idx} user={user} />;
         })}
       </ArtistCards>
     </div>

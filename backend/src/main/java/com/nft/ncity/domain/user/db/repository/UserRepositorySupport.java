@@ -9,12 +9,16 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -55,7 +59,6 @@ public class UserRepositorySupport {
      * @param profileImg
      * @return
      */
-
     public Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo, MultipartFile profileImg) throws IOException {
 
         // 실제 파일 이름을 받아서 랜덤한 이름으로 변경해준다.
@@ -104,8 +107,47 @@ public class UserRepositorySupport {
         return execute;
     }
 
+    public Page<User> findUserList(Pageable pageable) {
+        List<User> userList = jpaQueryFactory.select(qUser)
+                .from(qUser)
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
 
+        if(userList == null) return Page.empty();
 
+        return new PageImpl<User>(userList,pageable,userList.size());
+    }
 
+    public Page<User> findNewUserList(Pageable pageable) {
+        List<User> userList = jpaQueryFactory.select(qUser)
+                .from(qUser)
+                .where(qUser.userRole.eq("ROLE_NEW"))
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
 
+        if(userList == null) return Page.empty();
+
+        return new PageImpl<User>(userList,pageable,userList.size());
+    }
+
+    public Long updateUserRole(Long userId) {
+
+        Long execute = jpaQueryFactory.update(qUser)
+                .where(qUser.userId.eq(userId))
+                .set(qUser.userRole,"ROLE_USER")
+                .execute();
+
+        return execute;
+    }
+
+    public User findUserByUserId(Long userId) {
+        User user = jpaQueryFactory.select(qUser)
+                .from(qUser)
+                .where(qUser.userId.eq(userId))
+                .fetchOne();
+
+        return user;
+    }
 }

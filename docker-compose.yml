@@ -25,3 +25,15 @@ services:
     volumes:
       - /home/ubuntu/docker-volume/ssl:/root
     container_name: "backend"
+
+  game:
+    image: game
+    build:
+      context: game/
+      dockerfile: Dockerfile
+    ports:
+      - "2567:2567"  
+        # [인증서 파일 저장 경로]:/root 
+    volumes:
+      - /home/ubuntu/docker-volume/ssl:/var/www/html
+    container_name: "game"

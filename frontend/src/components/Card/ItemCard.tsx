@@ -4,19 +4,19 @@ import styled from 'styled-components'
 import ether from './ethereum.png'
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { useMutation } from 'react-query';
+import { delProductLike, postProductLike } from '../../store/apis/favorite';
 
 const CardWrapper = styled.div`
   cursor: pointer;
-  height: 420px;
+  height: 420;
   width: 350px;
   background-color: #ffffff;
-  border-radius: 5px;
-  border:1px solid gray;
-  box-shadow:0px 3px 3px  ;
-  /* border: 0.5px solid gray; */
+  border-radius: 10px;
+  border:0.5px solid #E9E4E4;
   margin: 30px ;
   &:hover{
-    box-shadow:0px 5px 5px  ;    
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     .buy{
       visibility: visible ;
       transition: 1s ;
@@ -92,14 +92,20 @@ const Title = styled.div`
   font-weight: 1000;
   margin-top: 0.4rem;
 `;
-interface Iprops{
-  item :{
-    name:string,
-    title:string,
-    price:number,
-    liked:number,
-    url:string
-  }
+interface Iprops {
+  item: {
+    productId: number;
+    productTitle: string;
+    productPrice: number;
+    productThumbnailUrl: string;
+    productFavorite: number;
+    productRegDt: Object;
+    productCode: number;
+    productState: number;
+    productFavoriteCount: number;
+    favorite: boolean;
+    tokenId?: number;
+  };
 }
 
 const ItemCard:React.FC<Iprops>= ({item}) => {
@@ -108,50 +114,118 @@ const ItemCard:React.FC<Iprops>= ({item}) => {
     navigate('/store/detail')
     localStorage.setItem("item",JSON.stringify(item))
   }
-  const [liked,setLiked] = useState(false)
-  const [likes,setLikes] = useState(item.liked)
+  const [liked,setLiked] = useState(item.favorite)
+  const [likes,setLikes] = useState(Number(item.productFavoriteCount))
+
+  const addLike = useMutation<any, Error>(
+    "addLike",
+    async () => {
+      return await postProductLike(item.productId);
+    },
+    {
+      onSuccess: async (res) => {
+        console.log("좋아요 성공", res);
+      },
+      onError: (err: any) => {
+        console.log(err, "에러발생");
+      },
+    }
+  ); 
+
+  const cancelLike = useMutation<any, Error>(
+    "cancelLike",
+    async () => {
+      return await delProductLike(item.productId);
+    },
+    {
+      onSuccess: async (res) => {
+        console.log("좋아요 취소 성공", res);
+      },
+      onError: (err: any) => {
+        console.log(err, "에러발생");
+      },
+    }
+  ); 
+
+  const onClickAddLike = async () => {
+    addLike.mutate();
+  }
+
+  const onClickCancelLike = () => {
+    cancelLike.mutate()
+  }
 
   return (
     <>
-      <CardWrapper >
-        <Image onClick={()=>{goDetailPage()}}>
-          <img alt="pic" 
-          src={item.url}/>
+      <CardWrapper>
+        <Image
+          onClick={() => {
+            goDetailPage();
+          }}
+        >
+          <img alt="pic" src={item.productThumbnailUrl} />
         </Image>
-        <CardCenter onClick={()=>{goDetailPage()}}>
+        <CardCenter
+          onClick={() => {
+            goDetailPage();
+          }}
+        >
           <DesLeft>
-            <Artist>
+            {/* <Artist>
               {item.name}
-            </Artist>
-            <Title>
-              {item.title}
-            </Title>
+            </Artist> */}
+            <Title>{item.productTitle}</Title>
           </DesLeft>
-          <DesRight>
-            <p className='number'> <img alt="💎" style={{"height":"2.5vh"}} src={ether}/>{item.price}</p>
-          </DesRight>
+          {item.productState !== 3 && (
+            <DesRight>
+              <p className="number">
+                {" "}
+                <img alt="💎" style={{ height: "2.5vh" }} src={ether} />
+                {item.productPrice}
+              </p>
+            </DesRight>
+          )}
         </CardCenter>
         <CardBottom>
-          <div className='buy'>
-            <div>Buy Now</div>
-            {/* <div>Sell</div>
+          {/* <div className='buy'> */}
+          {/* <div>Buy Now</div> */}
+          {/* <div>Sell</div>
             <div>판매수정</div> */}
-            {/* 가격이 붙어 있고, 소유주가 아니면 buy now */}
-            {/* 가격이 붙어 있고, 소유주라면 판매수정  */}
-            {/* 가격이 붙어 있지 않고, 소유주라면 판매수정  */}
-          </div>
-          <div className='like'>
-            <div onClick={()=>{setLiked(!liked)}} className='icon'>
-              {liked?
-              <FavoriteIcon onClick={()=>{setLikes(likes-1)}}  color='error'/> :
-              <FavoriteBorderIcon onClick={()=>{setLikes(likes+1)}} color='error'/>}
-            </div> 
-              {likes}
+          {/* 가격이 붙어 있고, 소유주가 아니면 buy now */}
+          {/* 가격이 붙어 있고, 소유주라면 판매수정  */}
+          {/* 가격이 붙어 있지 않고, 소유주라면 판매수정  */}
+          {/* </div> */}
+          <div className="like">
+            <div
+              onClick={() => {
+                setLiked(!liked);
+              }}
+              className="icon"
+            >
+              {liked ? (
+                <FavoriteIcon
+                  onClick={() => {
+                    onClickCancelLike();
+                    setLikes(likes - 1);
+                  }}
+                  color="error"
+                />
+              ) : (
+                <FavoriteBorderIcon
+                  onClick={() => {
+                    onClickAddLike();
+                    setLikes(likes + 1);
+                  }}
+                  color="error"
+                />
+              )}
+            </div>
+            {likes}
           </div>
         </CardBottom>
       </CardWrapper>
     </>
-  )
+  );
 }
 
 export default ItemCard

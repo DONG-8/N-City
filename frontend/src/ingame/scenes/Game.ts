@@ -1,3 +1,4 @@
+import { ItemType } from './../items/Item';
 import { IPlayer } from './../../types/IOfficeState';
 import Phaser from 'phaser'
 import { createCharacterAnims } from '../anims/CharacterAnims'
@@ -6,6 +7,10 @@ import Chair from '../items/Chair'
 import Computer from '../items/Computer'
 import Whiteboard from '../items/Whiteboard'
 import VendingMachine from '../items/VendingMachine'
+import VendingMachine2 from '../items/VendingMachine2'
+import VendingMachine3 from '../items/VendingMachine3'
+import VendingMachine4 from '../items/VendingMachine4'
+import VendingMachine5 from '../items/VendingMachine5'
 import '../characters/MyPlayer'
 import '../characters/OtherPlayer'
 import MyPlayer from '../characters/MyPlayer'
@@ -13,7 +18,6 @@ import OtherPlayer from '../characters/OtherPlayer'
 import PlayerSelector from '../characters/PlayerSelector'
 import Network from '../services/Network'
 import { PlayerBehavior } from '../../types/PlayerBehavior'
-import { ItemType } from '../../types/Items'
 import store from '../stores'
 import { setFocused, setShowChat } from '../stores/ChatStore'
 import stores from "../stores"
@@ -52,8 +56,13 @@ export default class Game extends Phaser.Scene {
     this.input.keyboard.on('keydown-ESC', (event) => {
       store.dispatch(setShowChat(false))
     })
+    this.input.keyboard.on('keydown-CTRL', (event) => {
+      console.log('캐릭터 x 좌표 : ',this.myPlayer.x)
+      console.log('캐릭터 y 좌표 : ',this.myPlayer.y)
+    })
   }
 
+  
   disableKeys() { // 키보드 사용불가 
     this.input.keyboard.enabled = false
   }
@@ -130,29 +139,52 @@ export default class Game extends Phaser.Scene {
     // import vending machine objects from Tiled map to Phaser
     const vendingMachines = this.physics.add.staticGroup({ classType: VendingMachine })
     const vendingMachineLayer = this.map.getObjectLayer('VendingMachine')
+    console.log(vendingMachineLayer)
     vendingMachineLayer.objects.forEach((obj, i) => {
-      this.addObjectFromTiled(vendingMachines, obj, 'vendingmachines', 'vendingmachine')
+      this.addObjectFromTiled(vendingMachines, obj, 'vendingmachines', 'VM')
     })
 
-    // import other objects from Tiled map to Phaser
+    const vendingMachines2 = this.physics.add.staticGroup({ classType: VendingMachine2 })
+    const vendingMachine2Layer = this.map.getObjectLayer('VendingMachine2')
+    vendingMachine2Layer.objects.forEach((obj, i) => {
+      this.addObjectFromTiled(vendingMachines2, obj, 'vendingmachines2', 'VM')
+    })
+    const vendingMachines3 = this.physics.add.staticGroup({ classType: VendingMachine3 })
+    const vendingMachine3Layer = this.map.getObjectLayer('VendingMachine3')
+    vendingMachine3Layer.objects.forEach((obj, i) => {
+      this.addObjectFromTiled(vendingMachines3, obj, 'vendingmachines3', 'VM')
+    })
+    const vendingMachines4 = this.physics.add.staticGroup({ classType: VendingMachine4 })
+    const vendingMachine4Layer = this.map.getObjectLayer('VendingMachine4')
+    vendingMachine4Layer.objects.forEach((obj, i) => {
+      this.addObjectFromTiled(vendingMachines4, obj, 'vendingmachines4', 'VM')
+    })
+    const vendingMachines5 = this.physics.add.staticGroup({ classType: VendingMachine5 })
+    const vendingMachine5Layer = this.map.getObjectLayer('VendingMachine5')
+    vendingMachine5Layer.objects.forEach((obj, i) => {
+      this.addObjectFromTiled(vendingMachines5, obj, 'vendingmachines5', 'VM')
+    })
+    
     this.addGroupFromTiled('Wall', 'tiles_wall', 'FloorAndGround', false)
     this.addGroupFromTiled('Objects', 'office', 'Modern_Office_Black_Shadow', false)
     this.addGroupFromTiled('ObjectsOnCollide', 'office', 'Modern_Office_Black_Shadow', true)
     this.addGroupFromTiled('GenericObjects', 'generic', 'Generic', false)
     this.addGroupFromTiled('GenericObjectsOnCollide', 'generic', 'Generic', true)
     this.addGroupFromTiled('Basement', 'basement', 'Basement', true)
-
     this.otherPlayers = this.physics.add.group({ classType: OtherPlayer })
-
-    
+    this.cameras.main.zoom = 1.5
     this.cameras.main.startFollow(this.myPlayer, true) // 인칭
 
     this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], groundLayer) // 충돌나는 물건들 
-    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines) // 자판기 + 충돌
+    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines) //  충돌
+    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines2) //   충돌
+    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines3) //   충돌
+    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines4) //   충돌
+    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines5) //   충돌
 
     this.physics.add.overlap( // ⭐ 이거 없으면 상호작용 불가
       this.playerSelector,
-      [chairs, computers, whiteboards, vendingMachines],
+      [chairs, computers, whiteboards, vendingMachines,vendingMachines2,vendingMachines3,vendingMachines4,vendingMachines5],
       this.handleItemSelectorOverlap,
       undefined,
       this

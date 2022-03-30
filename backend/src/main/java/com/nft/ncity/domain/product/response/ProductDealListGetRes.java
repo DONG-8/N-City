@@ -1,5 +1,6 @@
 package com.nft.ncity.domain.product.response;
 
+import com.nft.ncity.domain.user.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -7,14 +8,15 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @ApiModel("ProductDealListGetRes")
 public class ProductDealListGetRes {
 
-
-
+    @ApiModelProperty(value = "상품ID")
+    Long productId;
 
     @ApiModelProperty(value = "상품명")
     String productTitle;
@@ -37,5 +39,9 @@ public class ProductDealListGetRes {
     @ApiModelProperty(value = "상품 거래상태")
     @Column(name = "product_state", columnDefinition = "TINYINT")
     int productState;
+
+
+    @ApiModelProperty(value = "좋아요 누른 사람")
+    List<User> productFavoriteUser;
 
 }

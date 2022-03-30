@@ -14,29 +14,31 @@ const Header = styled.div`
   h1{
     font-size: 5vh;
   }
-  hr{
-    border: 1px solid black;
-  }
+  
 `
 const Events = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
 const Event = styled.div`
-  border-radius: 5px;
+  background-color: #F7F8FA ;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  border-radius: 30px 30px 10px 10px ;
   margin: auto;
   margin-top: 10vh;
-  border:1px solid gray;
-  box-shadow: 1px 1px 3px;
   height: 46vh;
   width: 40%;
   cursor: pointer;
+  &:hover{
+    &{
+      transform:translateY(-5px) ;
+    }
+  }
   img{
-    border-radius: 5px 5px 0 0 ;
+    border-radius: 30px 30px 0 0 ;
     width: 100%;
     height: 37vh;
     object-fit:fill;
-    box-shadow: 0px 1px 0px ;
   }
   .title{
     font-size: 2.2vh;
@@ -48,10 +50,19 @@ const Event = styled.div`
     font-size: 1.5vh;
     font-weight: 1000;
     margin: 1vh;
+    color:blue;
   }
 
 `
-
+const CategoryBar= styled.div`
+  display: flex;
+  div{
+    font-size: 1.2rem;
+    font-weight: 1000;
+    margin-top: 2rem;
+    margin-left: 2rem;
+  }
+`
 
 const EventPage = () => {
   const events = [
@@ -69,14 +80,18 @@ const EventPage = () => {
     <div>
       <Wrapper>
         <Header>
-          <h1> 진행중인 이벤트 </h1><hr/> 
+          <h1> 이벤트 </h1><hr/> 
         </Header>
+        <CategoryBar>
+          <div className=''> 최신순 </div>
+          <div className=''> 진행중 </div>
+        </CategoryBar>
         <Events>
           {events.map(event=>{ return(
             <Event onClick={()=>{goDetailPage(event)}}>
               <img alt="포스터" src ={event.url}/>
-              <div className='title'>{event.title}</div> 
               <div className='date'>이벤트 기간: {event.date}</div> 
+              <div className='title'>{event.title}</div> 
             </Event>
           )})}
           

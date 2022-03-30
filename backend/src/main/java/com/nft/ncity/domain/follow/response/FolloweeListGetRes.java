@@ -15,6 +15,10 @@ import java.util.List;
 @ApiModel("EmailAuthConfirmReq")
 public class FolloweeListGetRes {
 
+    @ApiModelProperty(value = "회원 id")
+    // 회원 id
+    Long userId;
+
     @ApiModelProperty(value = "회원 지갑 주소", required = true)
     // 유저 지갑 주소
     String userAddress;
@@ -61,6 +65,7 @@ public class FolloweeListGetRes {
             User user = follow.getFollowFollower();
 
             FolloweeListGetRes flg = new FolloweeListGetRes();
+            flg.setUserId(user.getUserId());
             // 지갑 주소
             flg.setUserAddress(user.getUserAddress());
             flg.setUserRole(user.getUserRole());

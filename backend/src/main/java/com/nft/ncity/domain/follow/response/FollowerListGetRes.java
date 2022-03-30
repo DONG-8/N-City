@@ -2,14 +2,10 @@ package com.nft.ncity.domain.follow.response;
 
 import com.nft.ncity.domain.follow.db.entity.Follow;
 import com.nft.ncity.domain.user.db.entity.User;
-import com.nft.ncity.domain.user.db.repository.UserRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +14,10 @@ import java.util.List;
 @Setter
 @ApiModel("EmailAuthConfirmReq")
 public class FollowerListGetRes {
+
+    @ApiModelProperty(value = "회원 id")
+    // 회원 id
+    Long userId;
 
     @ApiModelProperty(value = "회원 지갑 주소", required = true)
     // 유저 지갑 주소
@@ -65,6 +65,7 @@ public class FollowerListGetRes {
             User user = follow.getFollowFollowee();
 
             FollowerListGetRes flg = new FollowerListGetRes();
+            flg.setUserId(user.getUserId());
             // 지갑 주소
             flg.setUserAddress(user.getUserAddress());
             flg.setUserRole(user.getUserRole());

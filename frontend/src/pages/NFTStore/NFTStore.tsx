@@ -1,7 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import ItemCard from '../../components/Card/ItemCard'
 import { items as itm } from './items'
+import { getProductAll, getSellProduct } from '../../store/apis/product'
+import { useQuery } from 'react-query'
+import ItemCard2 from '../../components/Card/ItemCard2'
+
 const Title = styled.div`
   display:flex ;
   justify-content:space-around;
@@ -56,7 +60,7 @@ const CategoryBar = styled.div`
     margin: auto;
   }
   p{
-    font-size:3vh;
+    font-size:2vh;
     font-weight:1000;
     cursor: pointer;
     transition: 0.3s;
@@ -67,7 +71,7 @@ const CategoryBar = styled.div`
     content: "";
     height: 5px;
     width: 0px;
-    background-color: #F43B00;
+    background-color: #272793;
     border-radius: 10px;
     transition: 0.3s;
     position: absolute;
@@ -75,37 +79,128 @@ const CategoryBar = styled.div`
   }
   p:hover::before{
     width: 100%;
-    background-color: #F43B00;
+    background-color: #272793;
   }
   #category::before{
     width: 100%;
-    background-color: #F43B00;
+    background-color: #272793;
   }
 `
 const ItemCards = styled.div`
-  margin:auto ;
-  width: 90% ;
+  margin: auto;
+  width: 90vw ;
   display: flex ;
   flex-wrap: wrap ;
-  justify-content:center ;
+  &:last-child {
+    margin-right: auto;
+  }
 `
+const IntroBox = styled.div`
+  width: 85vw;
+  height: 50vh;
+  background-color: #F7F8FA ;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  border-radius: 30px;
+  margin: auto;
+  margin-top: 10vh;
+  display: flex;
+  margin-bottom:10vh;
+
+`
+const Left = styled.div`
+  flex: 1;
+  .text{
+    margin-left: 5vw;
+    margin-top: 8vh;
+  
+  .h1{
+    font-size: 8vh;
+    margin-bottom: 5vh;
+    font-weight: 600;
+  }
+  .h3{
+    font-size: 3vh;
+  }
+  .h4{
+    font-size : 2vh
+  }
+  .blue{
+    background:linear-gradient(to top,transparent 10%,skyblue 70%, transparent 10%);
+  }
+  .purple{
+    background:linear-gradient(to top, white 20% ,#BDBDFF 70% , white 20%);
+  }
+}
+`
+const Right = styled.div`
+  flex: 1;
+  .black {
+    height: 100%;
+    width: 100%;
+    background-color: #030338;
+    border-radius: 0 30px 30px 0;
+    .text {
+      color: white;
+      font-size: 3rem;
+      text-align: center;
+      margin-left: 1vw;
+      margin-bottom: 10vh;
+    }
+  }
+  img {
+    margin-left: 9vw;
+    margin-top: 4vh;
+    height: 60%;
+    width: 60%;
+  }
+`;
 
 export interface IState{
   item :{
-    id:number,
-    name:string,
-    title:string,
-    price:number,
-    liked:number,
-    url:string
+    productId: Number,
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
   }[]
 }
+const FilterButton = styled.div`
+
+`
 const NFTStore = () => {
-  const [items,setItems] = useState(itm)
-  const [filter,setFilter] = useState("all")
+  const [filter,setFilter] = useState("all") 
+  const [status,setStatus]  = useState('all')
+    // 상품 정보 모두 가져오기
+  // const [items,setItems] = useState(itm)
+  const { isLoading:ILA, data:allitems } = useQuery<any>(
+    "prouductAll",
+    async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))
+      },
+    {
+      onSuccess: (res) => {
+      },
+      onError: (err: any) => {
+        console.log(err, "요청 실패");
+      },
+    }
+  );
+  const { isLoading:ILS, data:saleitems } = useQuery<any>(
+    "getSellProduct",
+    async () => {return (await (getSellProduct()))
+      },
+    {
+      onSuccess: (res) => {
+      },
+      onError: (err: any) => {
+        console.log(err, "요청 실패");
+      },
+    }
+  );
   return (
     <>
-      <ColorBar>
+      {/* <ColorBar>
         {filter === "all" && (
           <img className="all" src="essets/images/오로라.jpg" alt="bg" />
         )}
@@ -124,8 +219,8 @@ const NFTStore = () => {
         {filter === "game" && (
           <img className="game" src="essets/images/game.jpg" alt="bg" />
         )}
-      </ColorBar>
-      <Title>
+      </ColorBar> */}
+      {/* <Title>
         <h1>Store</h1>
         <div>
           <p>
@@ -137,7 +232,27 @@ const NFTStore = () => {
             />
           </p>
         </div>
-      </Title>
+      </Title> */}
+      <IntroBox>
+        <Left>
+          <div className='text'>
+            <div className='h3'>NFT Marketplace</div>
+            <div className='h1'>N-city Store</div>
+            <div className='h4'>N-city는 다양한 <span className='blue'>NFT 작품</span>들을 판매하고 있습니다. </div>
+            <div className='h4'><span className='purple'>NCT 토큰</span>을 이용해 갤러리를 구경하고 거래할 수 있습니다. </div>
+            <div className='h4'>물건을 구입해 <span className='blue'>마이룸</span>을 꾸미세요. </div>
+          </div>
+        </Left>
+        <Right>
+          <div className='black'>
+          <img alt='black' src='https://i.gifer.com/7VA.gif' />            <div className='text'><p>N-city Store</p></div>
+          </div>
+        </Right>
+      </IntroBox>
+      <FilterButton>
+        <button onClick={()=>{setStatus('all')}}>모든 상품</button>
+        <button onClick={()=>{setStatus('sale')}}>판매중</button>
+      </FilterButton>
       <CategoryBar>
         <li>
           <p
@@ -200,12 +315,32 @@ const NFTStore = () => {
           </p>
         </li>
       </CategoryBar>
-      <ItemCards>
-        {items.map((item) => {
-          return <ItemCard key={item.id} item={item} />;
-        })}
-      </ItemCards>
-    </>
+        {/* {isLoading ? <div>로딩중</div>: 
+            <>
+          {items ?
+            <ItemCards>
+            {(items.content).map((item,idx) => {
+              return(
+                <ItemCard key={idx} item={item} />
+                )
+              })}
+            </ItemCards> 
+            :<></>} </>} */}
+            <ItemCards>
+              {status==='all' && allitems &&
+             (allitems.content).map((item,idx) => {
+              return(
+                <ItemCard2 key={idx} item={item} />
+                )
+              })}
+              {status==='sale' && saleitems &&
+             (saleitems.content).map((item,idx) => {
+              return(
+                <ItemCard2 key={idx} item={item} />
+                )
+              })}
+            </ItemCards>
+      </>
   );
 }
 

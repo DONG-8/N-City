@@ -13,10 +13,11 @@ import phaserGame from "../PhaserGame";
 import Bootstrap from "../scenes/Bootstrap";
 
 export interface IRoomData {
-  name: string;
-  description: string;
-  password: string | null;
-  autoDispose: boolean;
+  roomId : string
+  name: string
+  description: string
+  password: string | null
+  autoDispose: boolean
 }
 
 const CreateRoomFormWrapper = styled.form`
@@ -27,10 +28,10 @@ const CreateRoomFormWrapper = styled.form`
 `;
 
 export const CreateRoomForm = () => {
-  const [values, setValues] = useState<IRoomData>({
-    // 방이름 방설명 패스워드
-    name: "",
-    description: "",
+  const [values, setValues] = useState<IRoomData>({ // 방이름 방설명 패스워드
+    roomId: '',
+    name: '',
+    description: '',
     password: null,
     autoDispose: true, // 알아서 가지다 ⭐?
   });
