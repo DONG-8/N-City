@@ -62,7 +62,7 @@ const settings = {
 
 const MainBannerWrapper = styled.div`
   width: 70vw;
-  height: 600px;
+  height: 570px;
   color: black;
   margin: auto;
 `;
@@ -70,7 +70,7 @@ const MainBannerWrapper = styled.div`
 
 
 interface Iprops{
-  artists:{
+  users:{
     "authId": Number,
     "followeeCnt": Number,
     "followerCnt": Number,
@@ -85,14 +85,14 @@ interface Iprops{
   }[]
 }
 
-const ArtCarousel:React.FC<Iprops> = ({artists}) => {
+const UserCarousel:React.FC<Iprops> = ({users}) => {
 
   return (
     <MainBannerWrapper>
       <div>
         <Slider {...settings}>
-          {artists.map((artist,idx) => {
-            return <ArtistCard  key={idx} artist={artist} />;
+          {users.map((user,idx) => {
+            return <ArtistCard  key={idx} user={user} />;
           })}
         </Slider>
       </div>
@@ -100,4 +100,4 @@ const ArtCarousel:React.FC<Iprops> = ({artists}) => {
   );
 };
 
-export default ArtCarousel;
+export default UserCarousel;

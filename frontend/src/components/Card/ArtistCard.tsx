@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 interface Iprops{
-  artist:{
+  user:{
     "authId": Number,
     "followeeCnt": Number,
     "followerCnt": Number,
@@ -65,32 +65,39 @@ const CardBottom = styled.div`
     }
 `
 
-const ArtistCard:React.FC<Iprops> = ({artist}) => {
+const ArtistCard:React.FC<Iprops> = ({user}) => {
   const navigate = useNavigate()
   const goMyPage = ()=>{
     navigate('/mypage')
-    localStorage.setItem("item",JSON.stringify(artist))
+    localStorage.setItem("item",JSON.stringify(user))
   }
   return (<>
     <Cards onClick={()=>{goMyPage()}}>
         <SumnailImg>
-          <img alt="pic" 
-          src={artist.userImgUrl as any}/>
+          {user.userImgUrl ?
+          <img alt="pic" src={user.userImgUrl as any}/>:
+          <img alt="pic" src="https://cdn.pixabay.com/photo/2020/09/09/02/12/smearing-5556288_960_720.jpg"/>
+          }
         </SumnailImg>
         <ProfileImg>
-          <img alt="pic"
-          src={artist.userImgUrl as any} />
+          {user.userImgUrl ?
+          <img alt="pic" src={user.userImgUrl as any} />:
+          <img alt="pic" src="https://search.pstatic.net/sunny/?src=http%3A%2F%2Ftx01-az3199.ktics.co.kr%2F13301240351_t_article.png&type=sc960_832"/>
+        }
         </ProfileImg>
         <CardBottom>
           <div className='name'>
-            {artist.userNick}
-            {artist.userEmailConfirm &&
+            {user.userNick}
+            {user.userEmailConfirm &&
             <img alt="verified" style={{"height":'1.5rem'}} src= "/essets/images/verified.png" />}
           </div>
           
 
           <div className='description'>
-            {artist.userDescription}
+            {user.userDescription ? 
+            <p>{user.userDescription}</p>:
+            <p>{user.userNick}의 페이지 입니다</p>
+            }
           </div>
         </CardBottom>
         
