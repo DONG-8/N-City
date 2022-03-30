@@ -114,48 +114,53 @@ const ApproveBtnBox = styled.div`
 `
 
 export interface IApply {
-  id: string;
-  name: string;
-  email: string;
-  file?: any; // 나중에 수정하기
+  // id: string;
+  // name: string;
+  // email: string;
+  // file?: any; // 나중에 수정하기
+  authId: number;
+  authName: string;
+  authEmail: string;
+  authRegAt: Array<number>;
+  authType: number;
 }
 
 const Admin = () => {
   const [influencer, setInfluencer] = useState<IApply[]>([
-    { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동ds", name: "동탁fsd", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동ㄴㅇㄹ탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "ㄴ동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동ㄴㅇ", name: "동ㅇㄴ탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동ds", name: "동탁fsd", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동ㄴㅇㄹ탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "ㄴ동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동ㄴㅇ", name: "동ㅇㄴ탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
   ]);
-  const [designer, setDesigner] = useState<IApply[]>([
-    { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동ds", name: "동탁fsd", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동fa탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동탁ss", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동s탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "ㄴ동", name: "동sds탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동ㄴㅇ", name: "동ㅇㄴ탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동ㄴㅇㄹ탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동s", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+  const [artist, setArtist] = useState<IApply[]>([
+    // { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동ds", name: "동탁fsd", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동fa탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동탁ss", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동s탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "ㄴ동", name: "동sds탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동ㄴㅇ", name: "동ㅇㄴ탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동ㄴㅇㄹ탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동s", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
   ]);
   const [enterprise, setEnterprise] = useState<IApply[]>([
-    { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "sdsd동ds", name: "동탁fsd", email: "sdfas@gmail.com", file: "File" },
-    { id: "동sd", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동sdf", name: "동ddd탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "ㅇㄹ탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "ㄴ동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동ㄴㅇ", name: "동ㅇㄴ탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
-    { id: "동", name: "동sdsd탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "sdsd동ds", name: "동탁fsd", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동sd", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동sdf", name: "동ddd탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "ㅇㄹ탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "ㄴ동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동ㄴㅇ", name: "동ㅇㄴ탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동탁", email: "sdfas@gmail.com", file: "File" },
+    // { id: "동", name: "동sdsd탁", email: "sdfas@gmail.com", file: "File" },
   ]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [status, setStatus] = useState("influencer");
@@ -163,31 +168,66 @@ const Admin = () => {
   const [selectedItem, setSelectedItem] = useState<IApply>();
   // 이름, 이메일, 파일
 
-  const getDesiner = useMutation<any,Error>(
+  const getArtist = useMutation<any, Error>(
     "getDesiner",
-    async () => {return (await (getAllAuthentication(0)))},
-    {onSuccess:(res)=>{setDesigner(res) }}
+    async () => {
+      return await getAllAuthentication(4);
+    },
+    {
+      onSuccess: (res) => {
+        console.log("디자이너 불러오기 성공!",res);
+        setArtist(res.content);
+      },
+      onError: (err: any) => {
+        console.log("❌디자이너 불러오기 실패!",err);
+      },
+    }
   );
-  const getInfluencer= useMutation<any,Error>(
+  const getInfluencer = useMutation<any, Error>(
     "getInfluencer",
-    async () => {return (await (getAllAuthentication(1)))},
-    {onSuccess:(res)=>{setInfluencer(res) }}
+    async () => {
+      return await getAllAuthentication(5);
+    },
+    {
+      onSuccess: (res) => {
+        console.log("인플루언서 불러오기 성공!",res);
+        setInfluencer(res.content);
+      },
+      onError: (err: any) => {
+        console.log("❌인플루언서 불러오기 실패!",err);
+      },
+    }
   );
-  const getEnterpise = useMutation<any,Error>(
+  const getEnterpise = useMutation<any, Error>(
     "getEnterpise",
-    async () => {return (await (getAllAuthentication(2)))},
-    {onSuccess:(res)=>{setEnterprise(res) }}
+    async () => {
+      return await getAllAuthentication(3);
+    },
+    {
+      onSuccess: (res) => {
+        console.log("기업 불러오기 성공!",res);
+        setEnterprise(res.content);
+      },
+      onError: (err: any) => {
+        console.log("❌기업 불러오기 실패!",err);
+      },
+    }
   );
-  const patchApprove = useMutation<any,Error>(
+  const patchApprove = useMutation<any, Error>(
     "patchApprove",
-    async () => {return (await (patchAutentication(2,0)))},
-    {onSuccess:(res)=>{setEnterprise(res) }}
+    async () => {
+      return await patchAutentication(2, 0);
+    },
+    {
+      onSuccess: (res) => {
+        setEnterprise(res);
+      },
+    }
   );
   useEffect(()=>{
-    getDesiner.mutate()
+    getArtist.mutate()
     getInfluencer.mutate()
     getEnterpise.mutate()
-    console.log('❌❌❌❌❌❌')
   },[])
 
   const onClickApprove = (apply: IApply, idx: number) => {
@@ -214,7 +254,7 @@ const Admin = () => {
         setInfluencer(temp);
         break;
       case "designer":
-        setDesigner(temp);
+        setArtist(temp);
         break;
       case "enterprise":
         setEnterprise(temp);
@@ -229,7 +269,7 @@ const Admin = () => {
       case "influencer":
         return influencer;
       case "designer":
-        return designer;
+        return artist;
       case "enterprise":
         return enterprise;
       default:
@@ -247,7 +287,7 @@ const Admin = () => {
 
   useEffect(() => {
     console.log(influencer)
-  }, [influencer, designer, enterprise])
+  }, [influencer, artist, enterprise])
   return (
     <Wrapper>
       <Title>
@@ -286,9 +326,9 @@ const Admin = () => {
         {chooseList().map((apply, idx) => {
           return (
             <ListItem key={idx}>
-              <div className="id">아이디: {apply.id}</div>
+              {/* <div className="id">아이디: {apply.id}</div>
               <div className="name">이름: {apply.name}</div>
-              <div className="email">이메일: {apply.email}</div>
+              <div className="email">이메일: {apply.email}</div> */}
               <div className="file button">
                 <a href="파일소스" download="파일이름">
                   <button className="button">첨부파일</button>
