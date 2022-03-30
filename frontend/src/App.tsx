@@ -43,7 +43,7 @@ function App() {
           <Route path="/signup" element={<Login />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/admin" element={<Admin />} />
-          <Route path="/mypage" element={<Mypage />} />
+          <Route path="/mypage/:userId" element={<Mypage />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/store" element={<NFTStore />} />
           <Route path="/store/detail" element={<DetailItem />} />
