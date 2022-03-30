@@ -1,9 +1,12 @@
 package com.nft.ncity.domain.user.service;
 
+import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.user.db.entity.EmailAuth;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
+import com.nft.ncity.domain.user.response.UserDealInfoWithProductRes;
 import com.nft.ncity.domain.user.response.UserInfoRes;
+import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,4 +29,6 @@ public interface UserService {
 	Page<User> getUserList(Pageable pageable);
 	Page<User> getNewUserList(Pageable pageable);
 	Long modifyUserRole(Long userId);
+    Page<UserDealInfoWithProductRes> getUserDealInfoWithProduct(Long userId, Pageable pageable);
+	Page<UserProductWithIsFavoriteRes> getUserProductWithIsFavorite(Page<Product> products, Long userId);
 }

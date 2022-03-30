@@ -56,8 +56,13 @@ export default class Game extends Phaser.Scene {
     this.input.keyboard.on('keydown-ESC', (event) => {
       store.dispatch(setShowChat(false))
     })
+    this.input.keyboard.on('keydown-CTRL', (event) => {
+      console.log('캐릭터 x 좌표 : ',this.myPlayer.x)
+      console.log('캐릭터 y 좌표 : ',this.myPlayer.y)
+    })
   }
 
+  
   disableKeys() { // 키보드 사용불가 
     this.input.keyboard.enabled = false
   }

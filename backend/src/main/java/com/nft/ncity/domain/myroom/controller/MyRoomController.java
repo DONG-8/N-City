@@ -17,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.*;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -63,11 +63,11 @@ public class MyRoomController {
             @ApiResponse(code = 204, message = "배경 변경 성공"),
             @ApiResponse(code = 401, message = "로그인 해주세요")
     })
-    public ResponseEntity<? extends BaseResponseBody> modifyMyRoomBackground(@RequestBody @ApiParam(value = "방 변경 정보", required = true) MyRoomBackgroundPutReq myRoomBackgroundInfo) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> modifyMyRoomBackground(@RequestBody @ApiParam(value = "방 변경 정보", required = true) MyRoomBackgroundPutReq myRoomBackgroundInfo,
+                                                                             Principal principal) throws IOException {
         log.info("modifyMyRoomBackground - Call");
 
-        Long userId = Long.valueOf(1);
-
+        Long userId = Long.valueOf(principal.getName());
         // JSON -> String
         ObjectMapper mapper = new ObjectMapper();
         String jsonInString = mapper.writeValueAsString(myRoomBackgroundInfo.getMyRoomBackground());
@@ -86,7 +86,7 @@ public class MyRoomController {
             @ApiResponse(code = 401, message = "로그인 해주세요")
     })
     public ResponseEntity<? extends BaseResponseBody> modifyMyRoomCharacter(@RequestBody @ApiParam(value = "캐릭터 변경 정보", required = true) MyRoomCharacterPutReq myRoomCharacterInfo,
-                                                    Principal principal) {
+                                                                            Principal principal) {
         log.info("modifyMyRoomCharacter - Call");
 
         Long userId = Long.valueOf(principal.getName());

@@ -32,7 +32,6 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-
     // CREATE
     @Transactional
     @ApiOperation(value = "상품 등록")
@@ -51,9 +50,9 @@ public class ProductController {
         // productId 받아와서 생성 deal Table에도 생성
         // 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
 
-
         log.info("productRegister - 호출");
-        Product product = productService.productRegister(productRegisterPostReq,productFile,thumbnailFile,principal);
+        Long userId = Long.valueOf(principal.getName());
+        Product product = productService.productRegister(productRegisterPostReq,productFile,thumbnailFile,userId);
         if(!product.equals(null)) {
             return ResponseEntity.status(201).body(FileUrlResponseBody.of(201, "등록 성공" , product.getProductFileUrl(),product.getProductId()));
         }
@@ -81,7 +80,6 @@ public class ProductController {
         }
 
     }
-
 
     // READ
     @ApiOperation(value = "상품전체조회")
@@ -140,7 +138,6 @@ public class ProductController {
         return ResponseEntity.status(200).body(deals);
     }
 
-
     @GetMapping("/deal/{productCode}")
     @ApiOperation(value = "카테고리별 판매중인 상품조회")
     @ApiResponses({
@@ -160,8 +157,6 @@ public class ProductController {
         return ResponseEntity.status(200).body(products);
     }
 
-
-
     @GetMapping("/search/{productTitle}")
     @ApiOperation(value = "상품 이름으로 검색")
     @ApiResponses({
@@ -169,20 +164,16 @@ public class ProductController {
             @ApiResponse(code = 404, message = "상품 없음.")
     })
     public ResponseEntity<Page<ProductListGetRes>> getProductListByTitle(@PageableDefault(page = 0, size = 10) Pageable pageable,
-                                                                        @ApiParam(value = "상품명") @PathVariable("productTitle") String productTitle){
-
+                                                                        @ApiParam(value = "상품명") @PathVariable("productTitle") String productTitle) {
 
         log.info("productTitle - 호출");
-        Page<ProductListGetRes> products = productService.getProductListByTitle(pageable,productTitle);
+        Page<ProductListGetRes> products = productService.getProductListByTitle(pageable, productTitle);
 
-        if(products.isEmpty()){
+        if (products.isEmpty()) {
             log.error("getProductListByTitle - Products doesn't exit on this Title");
             return ResponseEntity.status(404).body(null);
         }
-
         return ResponseEntity.status(200).body(products);
-
-
     }
 
     @ApiOperation(value = "상품 상세 조회")
@@ -191,10 +182,6 @@ public class ProductController {
         log.info("productDetail - 호출");
         return productService.productDetail(productId);
     }
-
-
-
-
 
     // UPDATE
     // 제목, 설명, 카테고리, 상품id 무조건 던져줘야함! 안주면 0으로 초기화... 된다..
@@ -210,9 +197,6 @@ public class ProductController {
         }
     }
 
-    // 
-
-
     // DELETE
     @ApiOperation(value="상품 삭제")
     @DeleteMapping("/{productId}")
@@ -224,12 +208,5 @@ public class ProductController {
             log.error("qnaQuestionRemove - This questionId doesn't exist.");
             return ResponseEntity.status(404).body(BaseResponseBody.of(404, "This productId doesn't exist."));
         }
-
     }
-
-
-
-
-
-
 }

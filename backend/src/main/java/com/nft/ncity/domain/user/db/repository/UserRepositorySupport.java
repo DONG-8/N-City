@@ -59,7 +59,6 @@ public class UserRepositorySupport {
      * @param profileImg
      * @return
      */
-
     public Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo, MultipartFile profileImg) throws IOException {
 
         // 실제 파일 이름을 받아서 랜덤한 이름으로 변경해준다.
@@ -141,5 +140,14 @@ public class UserRepositorySupport {
                 .execute();
 
         return execute;
+    }
+
+    public User findUserByUserId(Long userId) {
+        User user = jpaQueryFactory.select(qUser)
+                .from(qUser)
+                .where(qUser.userId.eq(userId))
+                .fetchOne();
+
+        return user;
     }
 }

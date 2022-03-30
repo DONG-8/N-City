@@ -57,8 +57,6 @@ public class FavoriteRepositorySupport {
 
     }
 
-
-
     public boolean getFavoriteUserUse(Long userId, Long productId){
         Integer fetchOne = jpaQueryFactory.selectOne()
                         .from(qFavorite)
@@ -109,5 +107,17 @@ public class FavoriteRepositorySupport {
         if(favorites.isEmpty()) return Page.empty();
 
         return new PageImpl<Favorite>(favorites, pageable, favorites.size());
+    }
+
+    public boolean getIsFavoriteByUserIdAndProductId(Long userId, Long productId) {
+
+        Long isFavorite = jpaQueryFactory.select(qFavorite.count())
+                .from(qFavorite)
+                .where(qFavorite.userId.eq(userId).and(qFavorite.productId.eq(productId)))
+                .fetchOne();
+
+        // 존재하면 좋아요 중이다. 즉 true 값 반환
+        if (isFavorite > 0) return true;
+        return  false;
     }
 }
