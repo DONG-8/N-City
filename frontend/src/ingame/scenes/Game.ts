@@ -1,7 +1,6 @@
 import { IPlayer } from './../../types/IOfficeState';
 import Phaser from 'phaser'
 import { createCharacterAnims } from '../anims/CharacterAnims'
-
 import Item from '../items/Item'
 import Chair from '../items/Chair'
 import Computer from '../items/Computer'
@@ -17,10 +16,16 @@ import { PlayerBehavior } from '../../types/PlayerBehavior'
 import { ItemType } from '../../types/Items'
 import store from '../stores'
 import { setFocused, setShowChat } from '../stores/ChatStore'
+import stores from "../stores"
+import Generic from '../items/Generic'
 
+enum GameMode {
+  GAME,
+  EDIT
+}
 
 export default class Game extends Phaser.Scene {
-  network!: Network
+  network!: Network // null이 될수가 없는 변수에 대해서 지정
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private keyE!: Phaser.Input.Keyboard.Key
   private keyR!: Phaser.Input.Keyboard.Key
@@ -31,7 +36,7 @@ export default class Game extends Phaser.Scene {
   private otherPlayerMap = new Map<string, OtherPlayer>()
   computerMap = new Map<string, Computer>()
   private whiteboardMap = new Map<string, Whiteboard>()
-
+  private Setting = stores.getState().edit.EditMode
   constructor() {
     super('game')
   }
@@ -48,6 +53,10 @@ export default class Game extends Phaser.Scene {
     this.input.keyboard.on('keydown-ESC', (event) => {
       store.dispatch(setShowChat(false))
     })
+    this.input.keyboard.on('keydown-CTRL', (event) => {
+      console.log('캐릭터 x 좌표 : ',this.myPlayer.x)
+      console.log('캐릭터 y 좌표 : ',this.myPlayer.y)
+    })
   }
 
   disableKeys() { // 키보드 사용불가 
@@ -58,11 +67,17 @@ export default class Game extends Phaser.Scene {
     this.input.keyboard.enabled = true
   }
 
-  create(data: { network: Network }) {
+  create(data: { network: Network, GameMode : GameMode }) {
     if (!data.network) {
       throw new Error('server instance missing')
     } else {
       this.network = data.network
+    }
+    
+    if (data.GameMode === GameMode.EDIT) {
+      this.cameras.main.zoom = 1
+    } else {
+      this.cameras.main.zoom = 1.6
     }
 
     createCharacterAnims(this.anims)
@@ -86,7 +101,7 @@ export default class Game extends Phaser.Scene {
       // custom properties[0] is the object direction specified in Tiled
       item.itemDirection = chairObj.properties[0].value
     })
-
+    
     // import computers objects from Tiled map to Phaser
     const computers = this.physics.add.staticGroup({ classType: Computer })
     const computerLayer = this.map.getObjectLayer('Computer')
@@ -99,8 +114,12 @@ export default class Game extends Phaser.Scene {
     })
 
     // import whiteboards objects from Tiled map to Phaser
+    // whiteboard 에서 가지는 물리법칙 적용
     const whiteboards = this.physics.add.staticGroup({ classType: Whiteboard })
+    // 화이트보드 레이어를 map.json 에서 가져옴
     const whiteboardLayer = this.map.getObjectLayer('Whiteboard')
+    // 이 화이트 보드 레이어의 모든 정보를 순회하면서, wihteboard 물리 법칙과,
+    // whiteboard.ts 에서 상속받은 함수들을 적용시켜줌
     whiteboardLayer.objects.forEach((obj, i) => {
       const item = this.addObjectFromTiled(
         whiteboards,
@@ -108,8 +127,10 @@ export default class Game extends Phaser.Scene {
         'whiteboards',
         'whiteboard'
       ) as Whiteboard
+      console.log(item,'아이템 뽑아왔어요')
       const id = `${i}`
       item.id = id
+      console.log(this.whiteboardMap, '화이트보트맵', id)
       this.whiteboardMap.set(id, item)
     })
 
@@ -119,6 +140,22 @@ export default class Game extends Phaser.Scene {
     vendingMachineLayer.objects.forEach((obj, i) => {
       this.addObjectFromTiled(vendingMachines, obj, 'vendingmachines', 'vendingmachine')
     })
+
+    
+    const test = this.physics.add.staticGroup({
+      classType: Generic,
+    });
+    // const testLayer = this.map.getObjectLayer('Test');
+    // testLayer.objects.forEach((obj, i) => {
+    //   const item = this.addObjectFromTiled(
+    //     test,
+    //     obj,
+    //     'test',
+    //     'Generic'
+    //   ) as Generic;
+
+    // });
+    this.addGroupFromTiled('Test', 'generic2', 'Generic', false)
 
     // import other objects from Tiled map to Phaser
     this.addGroupFromTiled('Wall', 'tiles_wall', 'FloorAndGround', false)
@@ -130,7 +167,7 @@ export default class Game extends Phaser.Scene {
 
     this.otherPlayers = this.physics.add.group({ classType: OtherPlayer })
 
-    this.cameras.main.zoom = 1.5
+    
     this.cameras.main.startFollow(this.myPlayer, true) // 인칭
 
     this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], groundLayer) // 충돌나는 물건들 
@@ -277,5 +314,16 @@ export default class Game extends Phaser.Scene {
       this.playerSelector.update(this.myPlayer, this.cursors)
       this.myPlayer.update(this.playerSelector, this.cursors, this.keyE, this.keyR, this.network)
     }
-  }
+
+    var worldPoint = this.input.activePointer.positionToCamera(
+      this.cameras.main
+    )
+    var pointTilex = this.map.worldToTileX(this.game.input.mousePointer.worldX)
+    var pointTileY = this.map.worldToTileY(this.game.input.mousePointer.worldY);
+    let marker = this.add.graphics(); 
+    marker.x = this.map.tileToWorldX(pointTilex);
+    marker.y = this.map.tileToWorldY(pointTileY);
+
+ 
+}
 }

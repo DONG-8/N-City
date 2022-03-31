@@ -2,11 +2,18 @@ import Phaser from 'phaser'
 import Network from '../services/Network'
 import store from '../stores'
 import { setRoomJoined } from '../stores/RoomStore'
-const ROOMNUM = localStorage.getItem('roomNum')
+
+
 enum BackgroundMode {
   DAY,
   NIGHT,
 }
+
+enum GameMode {
+  GAME,
+  EDIT
+}
+
 export default class Bootstrap extends Phaser.Scene {
   network!: Network
 
@@ -28,10 +35,8 @@ export default class Bootstrap extends Phaser.Scene {
     )
     this.load.image('backdrop_night', 'essets/background/backdrop_night.png')
     this.load.image('sun_moon', 'essets/background/sun_moon.png')
-    console.log('룸넘버이즈',ROOMNUM)
-    console.log('오류없이 넘어왔다1')
-    this.load.tilemapTiledJSON('tilemap', `essets/map/map.json`) // 배경 다 들고오기 
-    console.log('오류없이 넘어왔다2')
+    
+    this.load.tilemapTiledJSON('tilemap', 'essets/map/map.json') // 배경 다 들고오기 
     this.load.spritesheet('tiles_wall', 'essets/map/FloorAndGround.png', { // items 사이즈 지정 
       frameWidth: 32,
       frameHeight: 32,
@@ -64,6 +69,10 @@ export default class Bootstrap extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     })
+    this.load.spritesheet('generic2', 'essets/items/Generic.png', {
+      frameWidth: 96,
+      frameHeight: 128,
+    })
     this.load.spritesheet('adam', 'essets/character/adam.png', {
       frameWidth: 32,
       frameHeight: 48,
@@ -94,8 +103,8 @@ export default class Bootstrap extends Phaser.Scene {
     this.scene.launch('background', { backgroundMode })
   }
 
-  launchGame() { // 
-    // this.network.webRTC?.checkPreviousPermission()
+  launchGame(gameMode : GameMode) { 
+    this.network.webRTC?.checkPreviousPermission()
     this.scene.launch('game', {
       network: this.network,
     })
@@ -106,5 +115,20 @@ export default class Bootstrap extends Phaser.Scene {
   changeBackgroundMode(backgroundMode: BackgroundMode) {
     this.scene.stop('background')
     this.launchBackground(backgroundMode)
+  }
+
+  changeGameMode(gameMode: GameMode) {
+    if (gameMode === GameMode.EDIT) {
+      this.scene.stop('game')
+      this.scene.launch('Editmap')
+      console.log('게임모드 변경에딧맵으로오ㅗ오오오')
+    }
+    else {
+      this.scene.stop('Editmap')
+      this.network.webRTC?.checkPreviousPermission()
+      this.scene.launch('game', {network: this.network})
+      console.log('게임모드 변경')
+      store.dispatch(setRoomJoined(false))
+    }
   }
 }
