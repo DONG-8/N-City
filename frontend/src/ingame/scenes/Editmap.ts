@@ -36,23 +36,10 @@ class Editmap extends Phaser.Scene {
 
   preload() { // 시작전 세팅 
 
-    this.load.image('edit', "essets/map/16x16s.png")
-    // this.load.image('chairs','https://assets.repress.co.kr/photos/7247aa20193923b2d047bc29df8e4cdc/original.jpg')
-    this.load.atlas( // atlas 는 여러개의 스프라이트를 한장의 큰 텍스쳐에 모아놓은 것 
-      'cloud_day',
-      'essets/background/cloud_day.png',
-      'essets/background/cloud_day.json'
-    ) //배경 가져오기
-    this.load.image('backdrop_day', 'essets/background/backdrop_day.png') //
-    this.load.atlas(
-      'cloud_night',
-      'essets/background/cloud_night.png',
-      'essets/background/cloud_night.json'
-    )
-    this.load.image('backdrop_night', 'essets/background/backdrop_night.png')
-    this.load.image('sun_moon', 'essets/background/sun_moon.png')
+    this.load.image('backdrop_day', 'essets/background/backdrop_day.png')
     
     this.load.tilemapTiledJSON('tilemap1', 'essets/map/editmap.json') // 배경 다 들고오기 
+
     this.load.spritesheet('tiles_wall', 'essets/map/FloorAndGround.png', { // items 사이즈 지정 
       frameWidth: 32,
       frameHeight: 32,
@@ -92,24 +79,32 @@ class Editmap extends Phaser.Scene {
   }
 
   create(data: { network: Network }) { // 백그라운드 시작
-    this.input.on('gameobjectdown', this.onClicked.bind(this));
-    // this.scene.launch('')
-    // const teste = this.make.tilemap(
-    //   {key : '1616'}
-    // )
-    // console.log(teste,'맵이욤')
-    // const tests =teste.addTilesetImage('xx',"1616")
-    // const layer = teste.createLayer(1,tests)
-    // this.add.image(400,500,'edit')
     
     this.map = this.make.tilemap({ key: "tilemap" }); // 맵만들기 ⭐⭐⭐
     const FloorAndGround = this.map.addTilesetImage(
       "FloorAndGround",
       "tiles_wall"
     );
+    
     const groundLayer = this.map.createLayer("Ground", FloorAndGround);
     groundLayer.setCollisionByProperty({ collides: true });
+
     
+    this.input.on('gameobjectdown', function(mousePointer, gameObjects) {
+      gameObjects.destroy();
+    })
+
+//     this.input.on('pointerover', function (mousePointer, gameObject) {
+
+//       gameObject.setTint(0xff0000);
+
+//   });
+
+//   this.input.on('gameobjectout', function (pointer, gameObject) {
+
+//     gameObject.clearTint();
+
+// });
 
     const chairs = this.physics.add.staticGroup({ classType: Chair });
     const chairLayer = this.map.getObjectLayer("Chair");
@@ -119,7 +114,7 @@ class Editmap extends Phaser.Scene {
         chairObj,
         "chairs",
         "chair"
-      ) as Chair;
+      ).setInteractive() as Chair;
       // custom properties[0] is the object direction specified in Tiled
       item.itemDirection = chairObj.properties[0].value;
     });
@@ -133,7 +128,7 @@ class Editmap extends Phaser.Scene {
         obj,
         "computers",
         "computer"
-      ) as Computer;
+      ).setInteractive() as Computer;
       item.setDepth(item.y + item.height * 0.27);
       const id = `${i}`;
       item.id = id;
@@ -149,7 +144,7 @@ class Editmap extends Phaser.Scene {
         obj,
         "whiteboards",
         "whiteboard"
-      ) as Whiteboard;
+      ).setInteractive() as Whiteboard;
       const id = `${i}`;
       item.id = id;
       this.whiteboardMap.set(id, item);
@@ -166,7 +161,7 @@ class Editmap extends Phaser.Scene {
         obj,
         "vendingmachines",
         "vendingmachine"
-      );
+      ).setInteractive();
     });
 
     // const test = this.physics.add.staticGroup({
@@ -207,27 +202,6 @@ class Editmap extends Phaser.Scene {
     this.addGroupFromTiled("Basement", "basement", "Basement", true);
   }
 
-  private handleItemSelectorOverlap(playerSelector, selectionItem) {
-    const currentItem = playerSelector.selectedItem as Item; // 가까이 가면 ?
-    if (currentItem) {
-      // 상호작용 물품이 있을 떄
-      // 상호작용 물품이 그대로이면 ?
-      if (
-        currentItem === selectionItem ||
-        currentItem.depth >= selectionItem.depth
-      ) {
-        return;
-      }
-      //상호작용 취소하기
-      // if (this.myPlayer.playerBehavior !== PlayerBehavior.SITTING)
-      //   currentItem.clearDialogBox();
-    }
-
-    // 새로운 상호작용 템 등록
-    playerSelector.selectedItem = selectionItem;
-    selectionItem.onOverlapDialog();
-  }
-
   private addObjectFromTiled(
     //⭐ '타일' 관련.. idk
     group: Phaser.Physics.Arcade.StaticGroup,
@@ -244,7 +218,7 @@ class Editmap extends Phaser.Scene {
         key,
         object.gid! - this.map.getTileset(tilesetName).firstgid
       )
-      .setDepth(actualY);
+      .setDepth(actualY).setInteractive();
     return obj;
   }
 
@@ -267,30 +241,16 @@ class Editmap extends Phaser.Scene {
           key,
           object.gid! - this.map.getTileset(tilesetName).firstgid
         )
-        .setDepth(actualY);
+        .setDepth(actualY).setInteractive();
     });
-    
-  }
-
-  onClicked(pointer, objectClicked) {
-    console.log('hi')
-    objectClicked.destroy();
   }
 
   selectItem(itemCategory : ItemCategory, gid : number) {
     console.log(itemCategory)
     this.selectedItemC = itemCategory
     this.itemGid = gid
-    // if(itemCategory === ItemCategory.GROUND) {
-    //   console.log('whiteboard')
-    //   this.test = ItemCategory.GROUND
-      
-    // } else if (itemCategory === ItemCategory.CHAIR) {
-    //   console.log('chair')
-    //   this.test = ItemCategory.CHAIR
-    // }
-
   }
+
   private test234 = ['']
   update(t: number, dt: number) {  // 매 프레임 update
 
@@ -312,7 +272,10 @@ class Editmap extends Phaser.Scene {
       if (this.selectedItemC === ItemCategory.GROUND) {
         // this.map.putTileAt(selectedTile, this.game.input.mousePointer.worldX, this.game.input.mousePointer.worldY);
         // this.map.removeTileAtWorldXY(this.game.input.mousePointer.worldX, this.game.input.mousePointer.worldY)
-
+        // const whiteboardLayer = this.map.getObjectLayer("Whiteboard");
+        const tileInfo = this.map.getTileAt(pointTilex, pointTileY)
+        console.log(tileInfo.index) // 타일 (타일 모양) 
+        console.log(tileInfo.y*40 + tileInfo.x - 1) // 타일 위치 (인덱스)
       }
       else if(this.selectedItemC === ItemCategory.WHITEBOARD) {
 

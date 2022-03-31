@@ -104,25 +104,26 @@ const EditBar = () => {
   }
 
   return (
-    <Sidebar>
-      <h1>맵 수정</h1>
-      <XButton>X</XButton>
+    <></>
+    // <Sidebar>
+    //   <h1>맵 수정</h1>
+    //   <XButton>X</XButton>
 
-      <CategoriWrapper>
-        <CategoriBar>
-          <div onClick={()=>{setStatus(ItemCategory.GROUND)}} className="ground">ground</div>
-          <div onClick={()=>{setStatus(ItemCategory.CHAIR)}} className="Chair">Chair</div>
-          <div onClick={()=>{setStatus(ItemCategory.WHITEBOARD)}} className="Whiteboard">Whiteboard</div>
-          <div>Basement</div>
-          <div>computer</div>
-          <div>GenericObjects</div>
-          <div>ObjectsOnCollide</div>
-          <div>Object</div>
-          <div>Wall</div>
-        </CategoriBar>
-      </CategoriWrapper>
-      {returnItemList()}
-    </Sidebar>
+    //   <CategoriWrapper>
+    //     <CategoriBar>
+    //       <div onClick={()=>{setStatus(ItemCategory.GROUND)}} className="ground">ground</div>
+    //       <div onClick={()=>{setStatus(ItemCategory.CHAIR)}} className="Chair">Chair</div>
+    //       <div onClick={()=>{setStatus(ItemCategory.WHITEBOARD)}} className="Whiteboard">Whiteboard</div>
+    //       <div>Basement</div>
+    //       <div>computer</div>
+    //       <div>GenericObjects</div>
+    //       <div>ObjectsOnCollide</div>
+    //       <div>Object</div>
+    //       <div>Wall</div>
+    //     </CategoriBar>
+    //   </CategoriWrapper>
+    //   {returnItemList()}
+    // </Sidebar>
   );
 };
 
