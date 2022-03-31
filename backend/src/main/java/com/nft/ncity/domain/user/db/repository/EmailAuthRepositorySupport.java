@@ -56,5 +56,4 @@ public class EmailAuthRepositorySupport {
 
         return emailAuth;
     }
-
 }

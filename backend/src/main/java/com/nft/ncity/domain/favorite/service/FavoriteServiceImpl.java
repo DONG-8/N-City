@@ -2,13 +2,10 @@ package com.nft.ncity.domain.favorite.service;
 
 import com.nft.ncity.domain.favorite.db.entity.Favorite;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
-import com.nft.ncity.domain.user.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service("favoriteService")
 public class FavoriteServiceImpl implements FavoriteService {
@@ -31,7 +28,6 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public Long getFavoriteCount(Long productId) {
-
         return favoriteRepositorySupport.getFavoriteCount(productId);
     }
 
@@ -47,6 +43,4 @@ public class FavoriteServiceImpl implements FavoriteService {
         Page<Favorite> favorites = favoriteRepositorySupport.getFavoriteListByUserId(userId, pageable);
         return favorites;
     }
-
-
 }

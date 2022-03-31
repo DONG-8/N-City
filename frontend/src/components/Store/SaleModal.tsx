@@ -1,9 +1,9 @@
-import { Modal, Input, Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import CloseIcon from "@mui/icons-material/Close";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Modal,Input,Button } from '@mui/material';
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components';
+import CloseIcon from '@mui/icons-material/Close';
 import { useMutation } from "react-query";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { postRegisterAuction, postRegisterPurchase } from "../../store/apis/deal";
 import {
   NFTcreatorAddress,
@@ -13,6 +13,170 @@ import {
   SSFTokenAddress,
   SSFTokenContract,
 } from "../../web3Config";
+interface Iprops{
+  open:boolean,
+  setOpen:React.Dispatch<React.SetStateAction<boolean>>
+}
+const Wrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  width: 50%;
+  height: 60%;
+  border-radius: 5px;
+  .title {
+    color: #35357a;
+    text-align: center;
+    font-size:2.5vh;
+    width: 80%;
+    border-bottom: 2px solid #35357a;
+    margin: auto;
+  }
+`;
+  const Session1 = styled.div`
+    .choiceBox {
+      width: 35vw;
+      height: 20vh;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      margin-top: 10vh;
+      .choice1 {
+        flex: 5;
+        cursor: pointer;
+        font-size: 2rem;
+        text-align: center;
+        background-color: #35357a;
+        font-weight: 1000;
+        color: white;
+        border-radius: 10px 0 0 10px;
+        &:hover {
+          background-color: #4343e2;
+          transition: 0.3s;
+          color: white;
+        }
+      }
+      
+      .choice2 {
+        flex: 5;
+        border-radius: 0 10px 10px 0;
+
+        cursor: pointer;
+        font-size: 2rem;
+        color: white;
+
+        text-align: center;
+        background-color: #35357a;
+        font-weight: 1000;
+        &:hover {
+          background-color: #4343e2;
+          color: white;
+          transition: 0.3s;
+        }
+      }
+    }
+    .endChoice{
+      align-items: center;
+      background-color: #35357a;
+      color: white;
+      border-radius: 5px;
+
+        font-size: 1.5rem;
+        width: 35vw;
+        height: 7vh;
+        margin: auto;  
+        text-align: center;
+        p{
+          text-align: center;
+          padding-top: 2vh;
+        }
+      }
+    #choiced{
+      display: none;
+      transition: all 0.3s;
+    }
+    #endChoice{
+      display: none;
+      transition: all 0.3s;  
+    }
+  `;
+const Session2 = styled.div`
+  .box{
+    margin: auto;
+    margin-top:5vh;
+    background-color: #F7F8FA ;
+    box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+    border-radius: 10px;
+    width: 35vw;
+    height: 30vh;
+    .inputs{
+      display:flex
+    }
+    .title{
+      align-items: center;
+      background-color: #35357a;
+      color: white;
+      border-radius: 10px 10px 0 0;
+      width: 100%;
+        font-size: 1.5rem;
+        height: 7vh;
+        margin: auto;  
+        text-align: center;
+        p{
+          text-align: center;
+          padding-top: 2vh;
+        }
+    }
+  }
+  .tmp{
+    height: 1vh;
+  }
+  .intro{
+    margin-left:3vw;
+    font-size: 2vh;
+  }
+  .price{
+    margin-left:3vw;
+    font-size:2.2vh;
+    margin-top: 5vh;
+    input{
+      font-size:2vh;
+      width: 5vw;
+      text-align:right;
+    }
+    img{
+      margin-left:0.5vw;
+      position: absolute;
+      height: 2rem;   
+    }
+  }
+  .back{
+    width:3vw;
+    font-weight: 1000;
+    font-size:2rem;
+  }
+  .sell{
+    margin-left: 1vw;
+    width:61vh;
+    font-size:1.5rem;
+    background-color:#4343e2 ;
+  }
+  .buttons{
+    height: 7vh;
+    display: flex;
+    margin-top: 2vh;
+    margin-left: 8vw;
+  }
+  
+`
+const Exit = styled.div`
+  position: absolute;
+  right:5px;
+  top:5px;
+  cursor: pointer;
+`
 interface Iprops {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,130 +194,17 @@ interface Iprops {
     tokenId?: number;
   };
 }
-const Wrapper = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  width: 50%;
-  height: 60%;
-  border-radius: 5px;
-  .title {
-    text-align: center;
-    font-size: 2.5vh;
-    width: 80%;
-    border-bottom: 1px solid red;
-    margin: auto;
-  }
-`;
-const Session1 = styled.div`
-  .choiceBox {
-    width: 35vw;
-    height: 20vh;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    .choice1 {
-      flex: 5;
-      cursor: pointer;
-      font-size: 2rem;
-      text-align: center;
-      background-color: #ffefef;
-      font-weight: 1000;
-      &:hover {
-        background-color: #fecdbb;
-        transition: 0.1s;
-      }
-    }
-    .choice2 {
-      /* border: 1px solid gray; */
-      flex: 5;
-      cursor: pointer;
-      font-size: 2rem;
-      text-align: center;
-      background-color: #ffefef;
-      font-weight: 1000;
-      &:hover {
-        background-color: #fecdbb;
-        transition: 0.1s;
-      }
-    }
-  }
-  .endChoice {
-    align-items: center;
-    background-color: #fecdbb;
-    font-weight: 1000;
-    font-size: 1.5rem;
-    width: 35vw;
-    height: 7vh;
-    margin: auto;
-    text-align: center;
-    p {
-      padding-top: 0.5rem;
-    }
-  }
-  #choiced {
-    display: none;
-    transition: all 0.3s;
-  }
-  #endChoice {
-    display: none;
-    transition: all 0.3s;
-  }
-`;
-const Session2 = styled.div`
-  margin: auto;
-  margin-top: 10vh;
-  text-align: center;
-
-  .price {
-    font-size: 2rem;
-    font-weight: 1000;
-    input {
-      font-size: 2rem;
-      width: 10rem;
-      text-align: right;
-    }
-    img {
-      position: absolute;
-      height: 3rem;
-    }
-  }
-  .back {
-    width: 3vw;
-    height: 7vh;
-    margin-top: 12vh;
-    font-weight: 1000;
-    font-size: 2rem;
-    margin-right: 5rem;
-  }
-  .sell {
-    width: 50%;
-    height: 7vh;
-    margin-top: 12vh;
-    font-size: 2rem;
-    /* font-weight: 1000; */
-    /* background-color:#FEAD9D ; */
-    &:hover {
-      /* background-color:#FB8973 ; */
-    }
-  }
-`;
-const Exit = styled.div`
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  cursor: pointer;
-`;
-const SaleModal: React.FC<Iprops> = ({ open, setOpen, item }) => {
+const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [session1, setSession1] = useState("");
-  const [value, setValue] = useState(0);
+  const [session1,setSession1] = useState("")
+  const [value,setValue]  = useState(0)
   const [period, setPeriod] = useState(0);
   const { ethereum } = window;
 
+  useEffect(()=>{
+    setSession1("")
+  },[open])
   const resistSell = useMutation<any, Error>(
     "resistSell",
     async () => {
@@ -168,7 +219,6 @@ const SaleModal: React.FC<Iprops> = ({ open, setOpen, item }) => {
       },
     }
   );
-
   const resistAuction = useMutation<any, Error>(
     "resistAuction",
     async () => {
@@ -183,7 +233,6 @@ const SaleModal: React.FC<Iprops> = ({ open, setOpen, item }) => {
       },
     }
   );
-
   const onClickSell = async () => {
     const accounts = await ethereum.request({ method: "eth_accounts" });
     if (!accounts[0]) {
@@ -216,7 +265,6 @@ const SaleModal: React.FC<Iprops> = ({ open, setOpen, item }) => {
       console.log(error);
     }
   };
-
   const onClickAuction = async () => {
     const accounts = await ethereum.request({ method: "eth_accounts" });
     if (!accounts[0]) {
@@ -251,11 +299,6 @@ const SaleModal: React.FC<Iprops> = ({ open, setOpen, item }) => {
       handleClose();
     }
   };
-
-  useEffect(() => {
-    setSession1("");
-  }, [open]);
-
   return (
     <Modal
       open={open}
@@ -268,99 +311,67 @@ const SaleModal: React.FC<Iprops> = ({ open, setOpen, item }) => {
           <h1>판매등록</h1>
         </div>
         <Exit>
-          <CloseIcon
-            onClick={() => {
-              handleClose();
-            }}
-          />
+          <CloseIcon onClick={()=>{handleClose()}}/>
         </Exit>
         <Session1>
-          <div id={session1 && "choiced"} className="choiceBox">
-            <div onClick={() => setSession1("Fix")} className="choice1">
+          <div id={session1 && 'choiced'}  className="choiceBox">
+            <div onClick={()=>setSession1("Fix")} className='choice1'>
               <p>즉시 판매</p>
             </div>
-            <div onClick={() => setSession1("Auction")} className="choice2">
+            <div onClick={()=>setSession1("Auction")} className='choice2'>
               <p>경매로 올리기</p>
             </div>
           </div>
-          <div id={session1 ? undefined : "endChoice"} className="endChoice">
-            {session1 === "Fix" && <p>즉시 판매</p>}
-            {session1 === "Auction" && <p>경매로 올리기</p>}
-          </div>
         </Session1>
-        {session1 === "Fix" && (
-          <Session2>
-            <div className="price">
-              희망 가격 :{" "}
-              <Input
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setValue(Number(e.target.value));
-                  console.log(value);
-                }}
-              />{" "}
-              NCT
+        {session1 ==="Fix" &&
+        <Session2>
+          <div className='box'>
+            <div className='title'>
+              <p> 즉시 판매</p>
             </div>
-            <Button
-              onClick={() => setSession1("")}
-              className="back"
-              variant="contained"
-              color="inherit"
-            >
-              <ArrowBackIcon />
-            </Button>
-            <Button
-              className="sell"
-              variant="contained"
-              color="primary"
-              onClick={onClickSell}
-            >
-              판매 개시
-            </Button>
-          </Session2>
-        )}
-        {session1 === "Auction" && (
-          <Session2>
-            <div className="price">
-              시작가격 :{" "}
-              <Input
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setValue(Number(e.target.value));
-                  console.log(value);
-                }}
-              />{" "}
-              NCT
+              <div className='tmp'></div>
+              <p className='intro'> NFT 작품들을 즉시 판매할 수 있습니다</p>
+              <p className='intro'> 희망 가격을 적어 판매를 시작하세요 </p>
+            <div className='price'>
+                희망 가격 : <Input onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
+                setValue(Number(e.target.value))
+                console.log(value)
+              }}/> <img alt="ether" src='essets/images/ethereum.png'/>
             </div>
-            <div className="price">
-              경매기간 :{" "}
-              <Input
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setPeriod(Number(e.target.value));
-                  console.log(period);
-                }}
-              />
-              일
+          </div>
+          <div className='buttons'>
+            <Button onClick={()=>setSession1("")} className='back' variant="contained" color='inherit'><ArrowBackIcon/></Button>
+            <Button className='sell' onClick={onClickSell} variant="contained" >판매 시작</Button>
+          </div>
+        </Session2>
+        }
+        {session1 ==="Auction" &&
+        <Session2>
+          <div className='box'>
+            <div className='title'>
+              <p> 경매등록</p>
             </div>
-            <Button
-              onClick={() => setSession1("")}
-              className="back"
-              variant="contained"
-              color="inherit"
-            >
-              <ArrowBackIcon />
-            </Button>
-            <Button
-              className="sell"
-              variant="contained"
-              color="primary"
-              onClick={onClickAuction}
-            >
-              경매 올리기
-            </Button>
-          </Session2>
-        )}
+            <div className='tmp'/>
+            <p className='intro'> NFT 작품들을 경매에 등록할 수 있습니다</p>
+            <p className='intro'> 희망 가격을 적어 판매를 시작하세요 </p>
+            <div className='inputs'>
+            <div className='price'>
+              시작가격 : <Input/> <img alt="ether" src='essets/images/ethereum.png'/>
+            </div>
+            <div className="price">경매기간 :{" "}<Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setPeriod(Number(e.target.value)); console.log(period);}}/>일
+            </div>
+            </div>
+          </div>
+            <div className='buttons'>
+              <Button onClick={()=>setSession1("")} className='back' variant="contained" color='inherit'><ArrowBackIcon/></Button>
+              <Button className='sell' onClick={onClickAuction} variant="contained" color='primary' >경매 시작</Button>
+            </div>
+        </Session2>
+        }
       </Wrapper>
     </Modal>
   );
-};
+}
 
-export default SaleModal;
+export default SaleModal

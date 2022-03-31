@@ -74,12 +74,11 @@ public class UserServiceImpl implements UserService {
     /**
      * 프로필 이미지 변경 포함
      * @param userInfo
-     * @param profileImg
      * @return Long (수정 성공한 행 개수)
      */
     @Override
-    public Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo, MultipartFile profileImg) throws IOException {
-        Long execute = userRepositorySupport.userUpdateWithProfileImg(userInfo, profileImg);
+    public Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo) throws IOException {
+        Long execute = userRepositorySupport.userUpdateWithProfileImg(userInfo);
 
         return execute;
     }
@@ -113,7 +112,6 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findByUserEmail(emailAuthEmail).get();
         user.emailVerifiedSuccess();
-
     }
 
     @Override
@@ -237,7 +235,6 @@ public class UserServiceImpl implements UserService {
 
         return new PageImpl<UserProductWithIsFavoriteRes>(list,products.getPageable(),list.size());
     }
-
 }
 
 

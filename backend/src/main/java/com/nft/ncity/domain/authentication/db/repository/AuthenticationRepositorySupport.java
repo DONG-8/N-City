@@ -54,7 +54,7 @@ public class AuthenticationRepositorySupport {
         String authRole = "ROLE_USER";
         Long execute = 0L;
         // 수락 이면
-        if(authenticationConfirmReq.isConfirm()) {
+        if(authenticationConfirmReq.getIsConfirm() == 1) {
             int authType = authenticationConfirmReq.getAuthType();
 
             if(authType == 3) authRole = "ROLE_ENTERPRISE";

@@ -294,21 +294,28 @@ const MainH = styled.div`
 
 export interface IState {
   items :{
-    productId:Number,
+    productId: Number,
     productTitle: string,
     productPrice: Number,
     productThumbnailUrl: string,
-    productRegDt:Object,
     productFavorite: Number,
+    productRegDt:Object,
     productCode: Number,
+    productFavoriteUser:{}[],
   }[],
-  artist: {
-    name: string;
-    profileImg: string;
-    verified: boolean;
-    sumnailImg: string;
-    descreption: string;
-  }[];
+  users:{
+    "authId": Number,
+    "followeeCnt": Number,
+    "followerCnt": Number,
+    "userAddress": String,
+    "userDescription": String,
+    "userEmail": String,
+    "userEmailConfirm": Boolean,
+    "userId": Number,
+    "userImgUrl": String,
+    "userNick": String,
+    "userRole": String
+  }[],
 }
 
 export default function Main2() {
@@ -609,7 +616,7 @@ export default function Main2() {
     }
   };
 
-  const [items, setItems] = useState<IState["items"]>(itm);
+  // const [items, setItems] = useState<IState["items"]>(itm);
 
   return (
     <MainH>
@@ -706,10 +713,10 @@ export default function Main2() {
       <GuideWrapper>
         <Guide></Guide>
       </GuideWrapper>
-      <ZigZag items={items}>
+      {/* <ZigZag items={items}>
       </ZigZag>
       <ZigZag items={items}>
-      </ZigZag>
+      </ZigZag> */}
     </MainH>
   );
 }

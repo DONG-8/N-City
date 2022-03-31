@@ -155,13 +155,16 @@ public class DealServiceImpl implements DealService{
         for(Deal d : deals.getContent()){
             DealListGetRes dealList = new DealListGetRes();
 
-            if(d.getDealFrom() != null){
+            dealList.setDealFrom(0L);
+            dealList.setDealFromNickName("NullAddress");
+            dealList.setDealTo(0L);
+            dealList.setDealToNickName("NullAddress");
+            if(d.getDealFrom() != null && d.getDealFrom() != 0){
                 User userFrom = userRepository.getById(d.getDealFrom());
                 dealList.setDealFrom(userFrom.getUserId());
                 dealList.setDealFromNickName(userFrom.getUserNick());
             }
-            if( d.getDealTo() != null){
-
+            if( d.getDealTo() != null && d.getDealTo() != 0){
                 User userTo = userRepository.getById(d.getDealTo());
                 dealList.setDealTo(userTo.getUserId());
                 dealList.setDealToNickName(userTo.getUserNick());
@@ -211,11 +214,8 @@ public class DealServiceImpl implements DealService{
             Deal savedDeal = dealRepository.save(deal);
 
             // product update
-
             dealRepositorySupport.modifyProductForBuyNowByProductId(productId, 1L);
-
             return savedDeal;
-
         }
         return null;
     }
@@ -241,19 +241,9 @@ public class DealServiceImpl implements DealService{
             Deal savedDeal = dealRepository.save(deal);
 
             // product update
-
             dealRepositorySupport.modifyProductForBuyAuctionByProductId(productId, 1L);
-
             return savedDeal;
-
         }
         return null;
     }
-
-
-    //UPDATE
-
-    //DELETE
-
-
 }

@@ -21,18 +21,15 @@ public class Follow {
     // 회원 id
     Long followId;
 
-
     @ManyToOne
     @JoinColumn(name = "follow_follower")
     @ApiModelProperty(value = "팔로우 요청하는 사람 id")
     User followFollower;
 
-
     @ManyToOne
     @JoinColumn(name = "follow_followee")
     @ApiModelProperty(value = "팔로우 요청받는 사람 id")
     User followFollowee;
-
 
 //    @Id
 //    @ManyToOne
@@ -41,7 +38,4 @@ public class Follow {
 //            @JoinColumn(name = "userId")
 //    })
 //    private Follow follow;
-
-
-
 }

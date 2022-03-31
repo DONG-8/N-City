@@ -9,7 +9,13 @@ const apiClient = axios.create({
     "Content-type": "application/json",
   },
 });
-
+const fileApiClient = axios.create({
+  // baseURL: "https://j6e106.p.ssafy.io/api",
+  baseURL: "http://localhost:8080/api",
+  headers: {
+  'Content-Type': 'multipart/form-data'
+  },
+});
 
 // 유저 정보 조회
 export const getUserInfo = async (userId : number ) => {
@@ -52,15 +58,14 @@ export const getUserfavoritesInfo = async (userId : number ) => {
 }
 
 // 닉네임 중복 체크
-export const getUserduplicateInfo = async (userId : number ) => {
+export const getUserduplicateInfo = async (userNick : string ) => {
   const response = await apiClient.get<any>(
-    `/users/${userId}/duplicate`
+    `/users/${userNick}/duplicate`
   )
   return response.data
 }
 
 // 해당 유저의 회원정보 변경
-
 
 //{
 //   "userDescription": "string",
@@ -69,8 +74,9 @@ export const getUserduplicateInfo = async (userId : number ) => {
 //   "userImgUrl": "string",
 //   "userNick": "string"
 // } -- 이와같은 key value의 formdata를 생성시켜준다.
+
 export const patchUserInfoChange = async(formdata : any) => {
-  const response = await apiClient.patch<any>(
+  const response = await fileApiClient.patch<any>(
     `users/change-info`
   )
   return response.data

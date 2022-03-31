@@ -11,9 +11,9 @@ import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.nft.ncity.domain.user.request.EmailAuthRegisterReq;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
 import com.nft.ncity.domain.user.response.UserDealInfoWithProductRes;
+import com.nft.ncity.domain.user.response.UserInfoRes;
 import com.nft.ncity.domain.user.response.UserMintProductRes;
 import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
-import com.nft.ncity.domain.user.response.UserInfoRes;
 import com.nft.ncity.domain.user.service.UserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -184,24 +184,14 @@ public class UserController {
             @ApiResponse(code = 404, message = "해당 유저 없음."),
             @ApiResponse(code = 404, message = "해당 유저 없음.")
     })
-    public ResponseEntity<BaseResponseBody> modifyUserInfoByUserId(@RequestPart(value = "body") UserModifyUpdateReq userInfo,
-                                                                   @RequestPart(value = "profileFile", required = false) MultipartFile profileImg) throws IOException {
+    public ResponseEntity<BaseResponseBody> modifyUserInfoByUserId(@RequestPart(value = "body") UserModifyUpdateReq userInfo) throws IOException {
 
         // 0. 유저 ID를 받음.
         // 1. 해당 유저의 거래 내역 DB에서 받아와서 보내주기.
 
         log.info("modifyUserInfoByUserId - 호출");
 
-        Long execute;
-        // 프로필 이미지 변경 할 경우
-        if(null != profileImg) {
-            execute = userService.userUpdateWithProfileImg(userInfo,profileImg);
-        }
-
-        // 변경 안할 경우
-        else {
-            execute = userService.userUpdateNoProfileImg(userInfo);
-        }
+        Long execute = userService.userUpdateWithProfileImg(userInfo);
 
         // 이메일 인증 확인
         User user = userRepository.getById(userInfo.getUserId());
@@ -298,16 +288,16 @@ public class UserController {
     @ApiOperation(value = "유저 닉네임으로 검색", notes = "<strong>유저 닉네임으로 검색</strong>")
     @ApiResponses({
             @ApiResponse(code = 200, message = "검색 완료", response = User.class),
-            @ApiResponse(code = 204, message = "검색 결과 없음"),
+//            @ApiResponse(code = 204, message = "검색 결과 없음"),
     })
     public ResponseEntity<List<User>> searchUser(@PathVariable @ApiParam(value = "검색할 유저 닉네임", required = true) String userNick) {
         log.info("searchUser - 호출");
 
         List<User> users = userService.searchUser(userNick);
 
-        if (users.size() == 0) {
-            return ResponseEntity.status(204).body(null);
-        }
+//        if (users.size() == 0) {
+//            return ResponseEntity.status(200).body(users);
+//        }
         return ResponseEntity.status(200).body(users);
     }
 }

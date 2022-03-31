@@ -3,15 +3,18 @@ import styled from 'styled-components'
 import { artists as users } from './items';
 import { Button } from '@mui/material';
 import { useMutation, useQuery } from 'react-query';
-import {  getProductDetail, getSellProduct } from '../../store/apis/product';
+import {  getProductAll, getProductDetail, getSellProduct } from '../../store/apis/product';
 import { getUsercollectedInfo, getUserInfo } from '../../store/apis/user';
 import { postProductLike } from '../../store/apis/Main';
-import { delProductLike } from '../../store/apis/favorite';
+import { delProductLike, getProductLike } from '../../store/apis/favorite';
 import { useParams } from 'react-router-dom';
 import Slider from 'react-slick';
 import ItemCard2 from '../../components/Card/ItemCard2';
-
-
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import DealModal from './DealModal';
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -111,13 +114,11 @@ const UserBox = styled.div`
   .mid{
     margin-left: 3vw;
     display: flex;
+    font-size: 1.8vh;
     .mid-l{
       flex:1;
-    }
-    .mid-r{
-      flex:1;
       button{
-        font-size: 3rem;
+        font-size: 1.5vh;
       }
     }
   }
@@ -128,29 +129,9 @@ const UserBox = styled.div`
   }
   .name{
     color:#272793;
-    font-size: 2rem;
+    font-size: 4vh;
     font-weight: 800;
-  }
-  overflow-x: hidden;
-    overflow-y: scroll;
-      &::-webkit-scrollbar { //스크롤바 🎨
-        visibility: hidden;
-        width: 7px;
-      }
-      &:hover {
-        &::-webkit-scrollbar {
-          visibility: visible;
-          width: 7px;
-        }
-        &::-webkit-scrollbar-thumb {
-          background-color: #272793;
-          border-radius: 10px;
-          background-clip: padding-box;
-          border: 1px solid transparent;
-        }
-      }
-    
-    
+  } 
 `
 const UserDescription = styled.div`
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
@@ -202,22 +183,7 @@ const TopR = styled.div`
     display: flex;
     overflow-x: hidden;
     overflow-y: scroll;
-      &::-webkit-scrollbar { //스크롤바 🎨
-        visibility: hidden;
-        width: 7px;
-      }
-      &:hover {
-        &::-webkit-scrollbar {
-          visibility: visible;
-          width: 7px;
-        }
-        &::-webkit-scrollbar-thumb {
-          background-color: #272793;
-          border-radius: 10px;
-          background-clip: padding-box;
-          border: 1px solid transparent;
-        }
-      }
+     
   }
   .top-left{
     width: 30vw;
@@ -240,28 +206,8 @@ const TopR = styled.div`
     border-radius: 30px;
     border:1px solid #E0DEDE ;
   }
-  .bot{
-    display: flex;
-    height: 20vh;
-    .left{
-      flex: 1;
-      border-top: 0.5px solid #E0DEDE;
-      button{
-        border-radius:15px;
-        background-color: #F7F8FA ;
-        color: black;
-      }
-      }
-    }
-  .right{
-    flex: 1;
-    border-top: 0.5px solid #E0DEDE;
-    border-left: 0.5px solid #E0DEDE;
-    button{
-      border-radius:15px;
-      background-color: #272793;
-    }
-  }
+  
+  
 `
 
 const Mid = styled.div`
@@ -271,10 +217,104 @@ const Mid = styled.div`
     margin-bottom: 3vw;
   }
 `
-  
+const Description = styled.div`
+h3{
+  margin-left: 2vw;
+}
+  .box{
+    width: 26vw;
+    height: 15vh;
+    background-color: white;
+    margin-left: 2vw;
+    border-radius: 10px;
+    border: 0.5px solid #e7e4e4;
+    &::-webkit-scrollbar { //스크롤바 🎨
+        visibility: hidden;
+        width: 7px;
+      }
+      &:hover {
+        &::-webkit-scrollbar {
+          visibility: visible;
+          width: 7px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: #272793;
+          border-radius: 10px;
+          background-clip: padding-box;
+          border: 1px solid transparent;
+        }
+      }
+      p{
+        margin-left: 1vw;
+        padding-top: 1vh;
+      }
+  }
+`
+const Bottom = styled.div`
+  display: flex;
+  height: 20vh;
+  .right {
+    flex: 1;
+    border-top: 0.5px solid #e0dede;
+    .content{
+        margin: 2vh;
+      }
+    button {
+      margin-left: 10vw;
+      border-radius: 15px;
+      /* background-color: #272793; */
+      background-color: #e0dede;
+      color:#333;
+    }
+  }
+`;
+const ModalWrapper = styled.div`
+  position: absolute;
+  bottom: 10vh;
+  right: 5vw;
+  width: 80vw;
+  height: 80vh;
+  color: #eee;
+  background: white;
+  box-shadow: 0px 0px 5px #0000006f;
+  border-radius: 5px;
+  padding: 15px 35px 15px 15px;
 
-interface ItemType{
-  itm :{
+  .close {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+  }
+
+  .tip {
+    margin-left: 12px;
+  }
+`;
+const StoreWapper = styled.div`
+  .nftstore {
+    margin-left: 1vw;
+    margin-top: 2vh;
+    width: 80vw;
+    height: 78vh;
+    overflow: auto;
+    color: black;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
+      width: 10px;
+      height: 12px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: teal;
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: #fbe9e1;
+    }
+  }
+`;
+interface Istate{
+  item :{
     productId: Number,
     productTitle: string,
     productPrice: Number,
@@ -282,16 +322,18 @@ interface ItemType{
     productFavorite: Number,
     productRegDt:Object,
     productCode: Number,
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    }[],
   },
-  itms:{
-    productId: Number,
-    productTitle: string,
-    productPrice: Number,
-    productThumbnailUrl: string,
-    productFavorite: Number,
-    productRegDt:Object,
-    productCode: Number,
-  }[],
   itemdetail:{
     productId: Number,
     userId: Number,
@@ -320,58 +362,65 @@ interface ItemType{
     "userImgUrl": String,
     "userNick": String,
     "userRole": String
-  },
-  transactions:{
-      event:string,
-      price?:Number,
-     from?:string,
-     to?:string, 
-     date:string
-  }[]
+  }
 }
 const DetailItem = () => {
-  const [transactions,setTransactions] = useState<ItemType['transactions']>([
-    {event:'transfer', from:"59912",to:"24923", date:`20220309`},
-    {event:'sale',price:1.04, from:"59912",to:"24923", date:`20220305` },
-    {event:'list',price:1.01, date:`20220306` },
-    {event:'minted', date:`20220301` }
-  ])
-  const [rawitem,setRawItem] = useState<ItemType['itm']>(JSON.parse(localStorage.getItem("item")||""))
-  const [likes,setLikes] = useState(Number(rawitem.productFavorite))
-  const [change,setChange] = useState(false)
+  const [localitem,setLocalitem] = useState<Istate['item']>(JSON.parse(localStorage.getItem("item")||""))
+  const [likes,setLikes] = useState(Number(localitem.productFavorite))
+  const [liked,setLiked] = useState(false) // 내가 좋아요 했나
   const [user,setUser] = useState(users[0])
-  const [items,setItems ] = useState<ItemType['itms']>([{
-    productId: 0,
-    productTitle: 'string',
-    productPrice: 0,
-    productThumbnailUrl: 'string',
-    productFavorite: 0,
-    productRegDt:[],
-    productCode: 0,
-  }])
-  const [id,setId] = useState(useParams().productId)
-  const [item,setItem] = useState<ItemType['itemdetail']>(
-    {
+  const [items,setItems ] = useState<Istate['item'][]>([{
       productId: 1,
-      userId: 1,
       productTitle: 'string',
-      productDesc: 'string',
-      productCode: 1,
-      productXCoordinate: 1,
-      productYCoordinate: 1,
-      productView: false,
-      productState: 1,
       productPrice: 1,
-      productRegDt: 'string',
-      productFileUrl: 'string',
       productThumbnailUrl: 'string',
-      favoriteCount: 1
+      productFavorite: 1,
+      productRegDt:1,
+      productCode: 1,
+      productFavoriteUser:[
+      {authId: 1,
+      userAddress: 'string',
+      userDescription: 'string',
+      userEmail: 'string',
+      userEmailConfirm: true,
+      userId: 0,
+      userImgUrl: 'string',
+      userNick: 'string',
+      userRole: 'string'}]
+    }
+    ])
+
+  // 모달창
+  const [open, setOpen] = useState(false);
+
+  // 1: bid , 2:sell , 3:normal
+  const [status,setStatus] = useState('bid') 
+  const [MyAddress,setMyAddress] = useState(localStorage.getItem('userId'))
+  const [productId,setProductId] = useState(useParams().productId)
+  const [item,setItem] = useState(
+    {
+      "productId": 6,
+      "userId": 1,
+      "tokenId": 17,
+      "productTitle": "디자이너",
+      "productDesc": "디자이너너너",
+      "productCode": 4,
+      "productXCoordinate": 0,
+      "productYCoordinate": 0,
+      "productView": false,
+      "productState": 2,
+      "productPrice": 10,
+      "productRegDt": "2022-03-29 11:30:36",
+      "productFileUrl": "https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/210cd695-d5ab-4a48-b885-3cd9eb3c97b4.jpg",
+      "productThumbnailUrl": "https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/612e52c3-6678-458e-9347-f58a4d5acc81.jpg",
+      "productAuctionEndTime": null,
+      "favoriteCount": 0
     }
   )
-
+  
   const { isLoading:ILA, data:newItem } = useQuery<any>( // 추가 // 추천 데이터 
-  "getSellProduct",
-  async () => {return (await (getSellProduct()))
+  "getProductAll",
+  async () => {return (await (getProductAll({page: 1, size: 5 })))
   },
   { onError: (err: any) => {console.log(err, "판매중 데이터")}}
   );
@@ -382,10 +431,20 @@ const DetailItem = () => {
     {onError:(err)=>{console.log(err)}}
   )
 
+  const getLiked = useMutation<any,Error>(
+    'getProductLike',
+    async()=>{return(
+      await (getProductLike(Number(productId)))
+    )},
+    {onSuccess:(res)=>{
+      setLiked(res)
+    }}
+  )
+
   const getProduct = useMutation<any, Error>(
     "productDetail",
     async () => { return(
-      await (getProductDetail(Number(id)))
+      await (getProductDetail(Number(productId)))
     )},{
       onSuccess: (res) => {setItem(res)},
       onError: (err: any) => {console.log(err, "❌디테일 페이지 실패!")}});
@@ -425,16 +484,24 @@ const DetailItem = () => {
     setLikes(likes-1)
     cancelLikeIt.mutate()
   }
+  const getStatus = ()=>{
+    if(item.productState ===1){setStatus('bid')}
+    if(item.productState ===2){setStatus('sell')}
+    if(item.productState ===3){setStatus('normal')}
+  }
+  useEffect(()=>{
+    getStatus()
+  },[item])
   useEffect(()=>{
     getProduct.mutate()
     getUser.mutate()
-    console.log(item)
-  },[id])
+    getLiked.mutate()
+    window.scrollTo(0, 0);
+  },[productId])
 
   if (newItem && collection){
     if (items.length <5){
       setItems(items.concat(collection.content))
-      setItems(items.concat(newItem.content))
       setItems(items.concat(newItem.content))
     }
   }
@@ -459,15 +526,12 @@ const DetailItem = () => {
               src="/essets/images/verified.png"/>}</div>
               <div className='email'> email:{user.userEmail}</div>
               <div>userId:{user.userId}</div>
-              <div>userRole:{user.userRole}</div>
-              <div>followeeCnt:{user.followeeCnt}</div>
-              <div>followerCnt:{user.followerCnt}</div>
-              </div>
-              <div className='mid-r'>
-                <button onClick={()=>{Like()}}>♡</button>
-                <button onClick={()=>{cancelLike()}}>❤</button>
-              </div>
-              
+              <div>직업:{user.userRole}</div>
+              <div>팔로워수:{user.followerCnt}</div>
+              <div>팔로잉수:{user.followeeCnt}</div>
+              <Button>팔로우하기</Button>
+              <Button>팔로우끊기</Button>
+              </div>        
             </div>
           </UserBox>
           <UserDescription>
@@ -485,13 +549,23 @@ const DetailItem = () => {
             <div className='top-left'>
               <div className='title'>{item.productTitle}</div>
               <div className='content'>
-                <div>productCode : {item.productCode}</div>
-                <div>좋아요 : {item.favoriteCount}</div>
+                <div>카테고리 : {item.productCode}</div>
+                <div>좋아요 수: {item.favoriteCount}</div>
                 <div>등록일자:{item.productRegDt}</div>
-                <div>productView:{item.productView}</div>
-                <div>productState:{item.productState}</div>
-                <div>작품설명:{item.productDesc}</div>
+                <div>상품상태/판매중?:{item.productState}</div>
+                <div>상품상태/판매중?:{status}</div>
+                <div onClick={()=>{setLiked(!liked)}} className='icon'>
+                  {liked?
+                  <FavoriteIcon onClick={()=>{cancelLike()}} color='error'/> :
+                  <FavoriteBorderIcon onClick={()=>{Like()}} color='error'/>}
+                </div> 
               </div>
+                <Description>
+                  <h3>작품설명</h3>
+                  <div className='box'>
+                    <p>{item.productDesc}</p>
+                  </div>
+                </Description>
             </div>
             
             {item.productFileUrl ? 
@@ -499,18 +573,26 @@ const DetailItem = () => {
             <img className='img' alt='작품' src={item.productThumbnailUrl as any}/>
             }
           </div>
-          <div className='bot'>
-            <div className='left'>
-              <div>직전 거래가 : </div>
-              <div>최고 거래가 : </div>
-              <Button variant="contained">제안하기</Button>
-            </div>
+          <Bottom>
             <div className='right'>
-              <div>판매가 : {item.productPrice} </div>
-              <div>판매 종료 : </div>
-              <Button variant="contained" >구매하기</Button>
+              {status ==='bid' &&
+              <>
+                <div className='content'>판매 종료 시간 : {item.productAuctionEndTime} </div>
+                <div className='content'>현재가 : {item.productPrice} </div>
+                <Button variant="contained" onClick={()=>{setOpen(true)}}>제안하기</Button>
+              </>}
+              {status==='sell' &&
+              <>
+                <div className='content'>즉시구매가 : {item.productPrice} </div>
+                <Button variant="contained" onClick={()=>{setOpen(true)}} >구매하기</Button>
+              </>}
+              {status==='normal' && 
+              <>
+                <div className='content'>판매 등록이 없습니다</div>
+              </>
+              }
             </div>
-          </div>
+          </Bottom>
           </div>
         </TopR>
         }
@@ -518,18 +600,35 @@ const DetailItem = () => {
       <Mid>
         {items.length >0 &&
         <>
-        <h1>이 작가의 다른 작품 & 판매중인 작품</h1>
+        <h1>이 작가의 다른 작품 & 새로나온 작품</h1>
         <MainBannerWrapper onClick={()=>{}}>
             <Slider {...settings}>
               { items.length >0 &&
               items.map((item,idx) => {
-                return <div onClick={()=>{setId(item.productId as any )}}><ItemCard2 key={idx} item={item}/> </div> ;
+                return <div key={idx} onClick={()=>{setProductId(item.productId as any )}}>
+                  <ItemCard2 key={idx} item={item}/> </div> ;
               }) }
             </Slider>
         </MainBannerWrapper>
         </>
       }
       </Mid>
+      {open && (
+          <ModalWrapper>
+            <IconButton
+              className="close"
+              onClick={() => setOpen(false)}
+              size="small"
+            >
+              <CloseIcon />
+            </IconButton>
+            <StoreWapper className="StoreWapper">
+              <div className="nftstore">
+                <DealModal item={item} status={status} open={open} setOpen={setOpen}/>
+              </div>
+            </StoreWapper>
+          </ModalWrapper>
+        )}
     </Wrapper>
   );
 }

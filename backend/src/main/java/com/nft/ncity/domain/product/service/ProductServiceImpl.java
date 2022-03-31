@@ -156,9 +156,11 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
             productList.setProductId(p.getProductId());
+            productList.setProductCode(p.getProductCode());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
-            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
+            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
+
             productListGetRes.add(productList);
         }
         Page<ProductListGetRes> res = new PageImpl<>(productListGetRes, pageable, total);
@@ -179,9 +181,10 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
             productList.setProductId(p.getProductId());
+            productList.setProductCode(p.getProductCode());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
-            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
+            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
 
             productListGetRes.add(productList);
         }
@@ -205,11 +208,11 @@ public class ProductServiceImpl implements ProductService{
             productDealList.setProductPrice(p.getProductPrice());
             productDealList.setProductRegDt(p.getProductRegDt());
             productDealList.setProductId(p.getProductId());
+            productDealList.setProductCode(p.getProductCode());
             productDealList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productDealList.setProductState(p.getProductState());
             productDealList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
-            productDealList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
-
+            productDealList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
 
             productDealListGetRes.add(productDealList);
         }
@@ -233,11 +236,11 @@ public class ProductServiceImpl implements ProductService{
             productDealList.setProductPrice(p.getProductPrice());
             productDealList.setProductRegDt(p.getProductRegDt());
             productDealList.setProductId(p.getProductId());
+            productDealList.setProductCode(p.getProductCode());
             productDealList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productDealList.setProductState(p.getProductState());
             productDealList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
-            productDealList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
-
+            productDealList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
 
             productDealListGetRes.add(productDealList);
         }
@@ -249,7 +252,7 @@ public class ProductServiceImpl implements ProductService{
 
     // 상품명으로 검색
     @Override
-    public Page<ProductListGetRes> getProductListByTitle(Pageable pageable, String productTitle) {
+    public Page<ProductListGetRes> getProductListByTitle(Pageable pageable, String productTitle)  {
         Page<Product> products = productRepositorySupport.findProductListByTitle(pageable, productTitle);
         List<ProductListGetRes> productListGetRes = new ArrayList<>();
 
@@ -262,9 +265,10 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
             productList.setProductId(p.getProductId());
+            productList.setProductCode(p.getProductCode());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
-            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
+            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
 
             productListGetRes.add(productList);
         }
@@ -281,7 +285,6 @@ public class ProductServiceImpl implements ProductService{
         product.setFavoriteCount(favoriteRepositorySupport.getFavoriteCount(productId));
         return product;
     }
-
 
 
     // UPDATE

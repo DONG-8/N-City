@@ -22,10 +22,6 @@ public interface FavoriteService {
 
     Page<Favorite> getFavoriteListByUserId(Long userId, Pageable pageable);
 
-
     //user쪽에서 구현됨
 //    List<Product> getFavoriteList(Long userId);
-
-
-
 }

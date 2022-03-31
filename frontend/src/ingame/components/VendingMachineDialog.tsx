@@ -5,10 +5,9 @@ import CloseIcon from '@mui/icons-material/Close'
 import { useAppDispatch,useAppSelector } from '../hooks'
 import { closeVendingMachineDialogOpen } from '../stores/VendingMachineStore'
 import { Button } from '@mui/material'
-import GameItemCard from '../../components/GamePage/GameItemCard'
+import GameItemCard from './NFTstore/GameDetailItem'
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import GameDetailItem from '../../components/GamePage/GameDetailItem'
-import { items as itm } from '../../pages/NFTStore/items'
+import GameDetailItem from './NFTstore/GameDetailItem'
 import { TOKENS } from '../scenes/Bootstrap'
 
 const Wrapper = styled.div`
@@ -172,6 +171,28 @@ const StoreWapper = styled.div`
     height: 5vh;
   }
 `
+interface Istate{
+  items :{
+    productId: Number,
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    }[]
+  }[]
+}
 
 const VendingMachineDialog = () => {
   const [nftnumber,setNftnumber] = useState(useAppSelector((state)=>state.vendingMachine.nftnumber))
@@ -179,7 +200,7 @@ const VendingMachineDialog = () => {
   const dispatch = useAppDispatch()
   const [mode,setMode]  = useState('display')
   const [filter,setFilter] = useState("all")
-  const [items,setItems] = useState(itm)
+  const [items,setItems] = useState<Istate['items']>([])
   return (
     <ModalWrapper>
         {mode ==='display' &&
@@ -228,19 +249,6 @@ const VendingMachineDialog = () => {
                     <img className="game" src="essets/images/game.jpg" alt="bg" />
                   )}
               </ColorBar> 
-              <Title>
-                  <h1>Store</h1>
-                  <div>
-                    <p>
-                      소지금 : 356,321
-                      <img
-                        alt="💎"
-                        style={{ height: "2.2vh" }}
-                        src="essets/images/ethereum.png"
-                      />
-                    </p>
-                  </div>
-              </Title>
               <CategoryBar>
                   <li>
                     <p id={filter === "all" ? "category" : ""}
@@ -274,9 +282,9 @@ const VendingMachineDialog = () => {
                   </li>
                 </CategoryBar>
               <ItemCards>
-                {items.map((item,idx) => {
+                {/* {items.map((item,idx) => {
                   return <GameItemCard setMode={setMode} key={idx} item={item} />;
-                })}
+                })} */}
               </ItemCards>
             </div>
           }

@@ -51,6 +51,11 @@ public class Authentication {
     @Column(name = "auth_url")
     private String authUrl;
 
+    // 인플루언서는 SNS 주소 or 디자이너는 포트폴리오
+    @ApiModelProperty(value="이메일")
+    @Column(name = "auth_extra")
+    String authExtra;
+
     public void authUrlRegister(String authUrl) {
         this.authUrl = authUrl;
     }

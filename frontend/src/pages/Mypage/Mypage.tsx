@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { IState } from "../NFTStore/NFTStore";
 import ItemCard from "../../components/Card/ItemCard";
 import { Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,10 +12,9 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import Tooltip from "@mui/material/Tooltip";
 import { items as itm } from "../NFTStore/items";
 import { QueryClient, useMutation, useQuery } from "react-query";
-import { getUserInfo } from "../../store/apis/Main";
 import FollowModal from "../../components/Mypage/FollowModal";
 import { deleteFollow, getFollowee, getFollower, postFollow } from "../../store/apis/follow";
-import { getUsercollectedInfo, getUsercreatedInfo, getUserfavoritesInfo, getUserTradeInfo } from "../../store/apis/user";
+import { getUsercollectedInfo, getUsercreatedInfo, getUserfavoritesInfo, getUserTradeInfo, getUserInfo } from "../../store/apis/user";
 import bg from "../../essets/images/login_background.png"
 
 const MypageWrapper = styled.div`
@@ -207,7 +205,6 @@ const Event = styled.div`
     font-weight: 500;
   }
 `
-
 interface IUserInfo {
   userId: number;
   authId: number;
@@ -231,12 +228,31 @@ interface IUsers {
   userRole: string,
   userId: number,
 }
+interface Iitem{
+  productId: Number,
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    }[]
+}
 
 export default function Mypage() {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState<IUserInfo>();
   const [status, setStatus] = useState("myNFT");
-  const [items, setItems] = useState<IState["item"]>(itm);
   const [followers, setFollowers] = useState<IUsers[]>([]);
   const [followees, setFollowees] = useState<IUsers[]>([]);
   const [isFollower, setIsFollower] = useState(false);
