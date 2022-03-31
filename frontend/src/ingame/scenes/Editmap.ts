@@ -13,6 +13,7 @@ import Generic from '../items/Generic'
 
 enum ItemCategory {
   GROUND,
+  WALL,
   CHAIR,
   WHITEBOARD
 }
@@ -46,6 +47,7 @@ class Editmap extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     })
+
     this.load.spritesheet('chairs', 'essets/items/chair.png', {
       frameWidth: 32,
       frameHeight: 64,
@@ -276,53 +278,28 @@ class Editmap extends Phaser.Scene {
     this.marker.y = this.map.tileToWorldY(pointTileY); 
 
     if (this.input.manager.activePointer.isDown) {
-
-      if (this.selectedItemC === ItemCategory.GROUND) {
-        // this.map.putTileAt(selectedTile, this.game.input.mousePointer.worldX, this.game.input.mousePointer.worldY);
-        // this.map.removeTileAtWorldXY(this.game.input.mousePointer.worldX, this.game.input.mousePointer.worldY)
-        // const whiteboardLayer = this.map.getObjectLayer("Whiteboard");
-        // const tileInfo = this.map.getTileAt(pointTileX, pointTileY)
-        // console.log(tileInfo.index) // 타일 (타일 모양) 
-        // console.log(tileInfo.y*40 + tileInfo.x - 1) // 타일 위치 (인덱스)
-        // this.physics.add.staticSprite(this.marker.x+15, this.marker.y-16, 'tiles_wall', this.itemGid).setDepth(0)
-        this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
-        console.log(this.itemGid)
-        //         const tileInfo = this.map.getTileAt(pointTileX, pointTileY)
-        // console.log(tileInfo.index) // 타일 (타일 모양) 
-        // console.log(tileInfo.y*40 + tileInfo.x - 1) // 타일 위치 (인덱스)
+      switch (this.selectedItemC) {
+        case ItemCategory.GROUND:
+          // this.map.removeTileAtWorldXY(this.game.input.mousePointer.worldX, this.game.input.mousePointer.worldY)
+          // const tileInfo = this.map.getTileAt(pointTileX, pointTileY)
+          // console.log(tileInfo.index) // 타일 (타일 모양) 
+          // console.log(tileInfo.y*40 + tileInfo.x - 1) // 타일 위치 (인덱스)
+          this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
+          break
+        case ItemCategory.WALL:
+          this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
+          this.map.putTileAtWorldXY(this.itemGid+64, this.marker.x, this.marker.y+63)
+          break
+        case ItemCategory.WHITEBOARD: 
+          this.physics.add.staticSprite(this.marker.x+16, this.marker.y, 'whiteboards', this.itemGid-4685).setDepth(this.marker.y)
+          break
+        case ItemCategory.CHAIR: 
+         this.add.image(this.marker.x+16, this.marker.y, 'chairs', this.itemGid-2561).setDepth(this.marker.y).setDepth(this.marker.y)
+            break
+        default:
+          return 'asdf'
       }
-      else if(this.selectedItemC === ItemCategory.WHITEBOARD) {
-        this.physics.add.staticSprite(this.marker.x+16, this.marker.y, 'whiteboards', this.itemGid-4685).setDepth(this.marker.y)
-        // this.add.image(this.marker.x+16, this.marker.y, 'whiteboards', this.itemGid-4685)
-      } else if (this.selectedItemC === ItemCategory.CHAIR) {
-        console.log('chair')
-        // const chairs = this.physics.add.staticGroup({ classType: Chair })
-        // // const chairLayer = this.map.getObjectLayer('Chair')
-        // // chairLayer.objects.forEach((chairObj) => {
-        //   this.addObjectFromTiled(chairs, 
-        //     {"gid":this.itemGid,
-        //       "height":64,
-        //       "id":335,
-        //       "name":"",
-        //       "properties":[
-        //             {
-        //             "name":"direction",
-        //             "type":"string",
-        //             "value":"down"
-        //             }],
-        //       "rotation":0,
-        //       "type":"",
-        //       "visible":true,
-        //       "width":32,
-        //       "x": this.marker.x,
-        //       "y": this.marker.y,
-        //     }, 'chairs', 'chair') as Chair
-        //   }
-       this.add.image(this.marker.x+16, this.marker.y, 'chairs', this.itemGid-2561).setDepth(this.marker.y).setDepth(this.marker.y)
-      }
-
-
-      }
+    }
   }
 }
 

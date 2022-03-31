@@ -56,6 +56,7 @@ const ItemList = styled.div`
 `
 enum ItemCategory {
   GROUND,
+  WALL,
   CHAIR,
   WHITEBOARD
 }
@@ -65,6 +66,8 @@ const EditBar = () => {
   const [chairIndex, setChairIndex] = useState<number>(0) // 의자 회전
   const [chairGidList, setChairGidList] = useState([1, 2, 3, 4]) // 의자 회전
   const tileset = [198, 458, 586, 706, 842, 1858]
+  const wallset = [34, 56, 301, 418, 466, 594]
+
   const choiceCatogory = (gid : number) => {
     const editmap = phaserGame.scene.keys.Editmap as Editmap
     editmap.selectItem(status, gid)
@@ -79,6 +82,8 @@ const EditBar = () => {
     }
     if(folderName === 'grounds') {
       temp = tileset
+    } else if (folderName === 'walls') {
+      temp = wallset
     }
     return (
       <ItemList>
@@ -98,6 +103,9 @@ const EditBar = () => {
       case ItemCategory.GROUND:
         return makeImgTags('grounds', 0, 0)
         break
+      case ItemCategory.WALL:
+        return makeImgTags('walls', 0, 0)
+        break
       case ItemCategory.WHITEBOARD: 
         return makeImgTags('whiteboards', 4685, 4687)
         break
@@ -116,9 +124,11 @@ const EditBar = () => {
 
       <CategoriWrapper>
         <CategoriBar>
-          <div onClick={()=>{setStatus(ItemCategory.GROUND)}} className="ground">ground</div>
+          <div onClick={()=>{setStatus(ItemCategory.GROUND)}} className="Ground">ground</div>
+          <div onClick={()=>{setStatus(ItemCategory.WALL)}} className="Wall">Wall</div>
           <div onClick={()=>{setStatus(ItemCategory.CHAIR)}} className="Chair">Chair</div>
           <div onClick={()=>{setStatus(ItemCategory.WHITEBOARD)}} className="Whiteboard">Whiteboard</div>
+
           <div>Basement</div>
           <div>computer</div>
           <div>GenericObjects</div>
