@@ -24,20 +24,21 @@ const fileApiClient = axios.create({
 // 인증요청 등록
 export const postAuthentiaction = async (formdata: any) => {
   const response = await fileApiClient.post<any>(
-    '/authentication', {
-      formdata
-    },
+    '/authentication', 
+    formdata
   )
   console.log("인증요청 등록")
   return response.data
 }
 
 // 인증요청 수락 및 거절
-export const patchAutentication = async (authId : number, authType : number) => {
+export const patchAutentication = async (authId : number, authType : number, isConfirm: number) => {
   const response = await apiClient.patch<any>(
-    `/authentication/${authId}/detail`,
+    `/authentication/confirm`,
     {
-      authId,authType
+      "authId": authId,
+      "authType": authType,
+      "isConfirm": isConfirm
     }
     )
   return response.data
@@ -48,7 +49,7 @@ export const patchAutentication = async (authId : number, authType : number) => 
 export const getAllAuthentication = async (authType : number, page?:number,size?:number) => {
   const response = await apiClient.get<API.TypeAutGetAll>(
     // 이거 에러나면 params 지워주고 데이터만 다 받아오는걸로 변경
-    `/authentication/${authType}?page=${page}&size=${size}`,
+    `/authentication/${authType}?page=1&size=1000`,
   )
   return response.data
 }
@@ -57,6 +58,18 @@ export const getAllAuthentication = async (authType : number, page?:number,size?
 export const getDetailAuthentication = async (authId : number) => {
   const response = await apiClient.get<API.TypeAutGetDetail>(
     `/authentication/${authId}`
+  )
+  return response.data
+}
+
+// 파일 다운로드
+export const getAuthFileDownload = async (file : string) => {
+  const body = {
+    "authUrl": file
+  }
+  const response = await apiClient.get<any>(
+    `/authentication/download/file`,
+    {data : body}
   )
   return response.data
 }
