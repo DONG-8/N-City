@@ -22,6 +22,7 @@ import Main2 from "./pages/Main/Main2";
 import YNTest from "./pages/Test/YNTest";
 import SearchPage from "./pages/NFTStore/SearchPage";
 import MapChoice from "./pages/Room/MapChoice";
+import Character from "./pages/Mypage/Character";
 
 
 function App() {
@@ -48,7 +49,7 @@ function App() {
           <Route path="/store" element={<NFTStore />} />
           <Route path="/store/detail/:productId" element={<DetailItem />} />
           <Route path="/mint" element={<Mint />} />
-          <Route path="/profilesetting/:userId" element={<ProfileSetting />} />
+          <Route path="/profilesetting" element={<ProfileSetting />} />
           <Route path="/event" element={<EventPage />} />
           <Route path="/event/detail" element={<EventDetail />} />
           <Route path="/rank" element={<Rank />} />
@@ -64,6 +65,7 @@ function App() {
           />
           <Route path="/test" element={<Test />} />
           <Route path="/mapchoice" element={<MapChoice />} />
+          <Route path="/character" element={<Character />} />
         </Routes>
         <Footer />
       </BrowserRouter>
