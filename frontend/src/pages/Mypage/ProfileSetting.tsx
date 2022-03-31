@@ -3,9 +3,19 @@ import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components'
-import { getUserduplicateInfo, getUserInfo, patchUserInfoChange } from '../../store/apis/user';
+import { getUserduplicateInfo, getUserInfo, patchUserInfoChange, postConfirmEmail } from '../../store/apis/user';
 import SelectImage from './SelectImage';
 
+const AddressWrapper = styled.div`
+  width: 83%;
+  height: 78vh;
+  background-color: #F7F8FA ;
+  border-radius: 10px;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  margin: auto;
+  margin-top: 3vh;
+  margin-bottom:10vh;
+`
 
 const SettingWrapper = styled.div`
   width: 83%;
@@ -108,10 +118,16 @@ const Up = styled.div`
     display: flex;
 
 `
+const AfterAddress = styled.div`
+  
+`
+const BeforeAddress = styled.div`
+  
+`
 const ProfileSetting = () => {
   
   const navigate = useNavigate()
-  const {userId}= useParams()
+  const userId = Number(localStorage.getItem('userId'))
   const [nameInput,setNameInput]  = useState('')
   const [Email,setEmail] = useState('')
   const [EmailInput,setEmailInput] = useState('')
@@ -119,22 +135,24 @@ const ProfileSetting = () => {
   const [nameCheck,setNameCheck] = useState(false)
   const [Description,setDescription]  = useState('')
   const [userURL,setuserURL] = useState('') 
+  const [AddressCheck,setAddressCheck] = useState(false)
+  const [afterAddress,setAfterAddress] = useState(false)
   //모달창
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
 
   const { isLoading:iLU, data:user } = useQuery<any>(
     "getUserInfo",
-    async () => {return (await (getUserInfo(Number(userId))))
+    async () => {return (await (getUserInfo(userId)))
       },
     {
       onSuccess: (res) => {
         setEmail(res.userEmail === null ? "" : res.userEmail)
-        setEmailInput(res.userEmail === null ? "" : res.userEmail)
         setuserName(res.userNick === null ? "" : res.userNick)
         setNameInput(res.userNick === null ? "" : res.userNick)
         setDescription(res.Description === null ? "" : res.Description)
         setuserURL(res.userImgUrl === null ? "" : res.userImgUrl)
+        setAddressCheck(res.userEmailConfirm)
       },
       onError: (err: any) => {
         console.log(err, "유저불러오기 실패");
@@ -176,6 +194,19 @@ const ProfileSetting = () => {
       onError: (err: any) => {console.log('중복이름 에러')},
     }
   );
+  const postEmail = useMutation<any, Error>(
+    "postConfirmEmail",
+    async () => {
+      return await postConfirmEmail(EmailInput);
+    },
+    {
+      onSuccess: (res) => { 
+        console.log(res)
+        setAfterAddress(true) 
+      },
+      onError: (err: any) => {console.log('이메일 에러')},
+    }
+  );
   const saveChange = useMutation<any, Error>(
     "patchUserInfoChange",
     async () => {
@@ -198,9 +229,13 @@ const ProfileSetting = () => {
       onError: (err: any) => {console.log('프로필 저장 에러')},
     }
   );
+  const sendemail = ()=>{
+    postEmail.mutate()
+    setAfterAddress(true) // postEmail에서 바꿔줄값⭐
+  }
   return (
     <>
-      {user !== undefined &&
+      {user !== undefined && AddressCheck &&
       <SettingWrapper>
         <Up>
         <Left>
@@ -231,7 +266,7 @@ const ProfileSetting = () => {
           </div>
             
             
-          <p className="title">이메일</p> 
+          {/* <p className="title">이메일</p> 
           <Input value={EmailInput} onChange={(e: React.ChangeEvent)=>{
             setEmailInput((e.target as HTMLInputElement).value)
           }} 
@@ -240,7 +275,7 @@ const ProfileSetting = () => {
           {user.userEmailConfirm ? 
           <p>확인</p> :
           <p>미확인</p>
-        }
+        } */}
         </Left>
         <Right>
           <p className="title">자기소개</p>
@@ -262,9 +297,41 @@ const ProfileSetting = () => {
         color="success" 
         onClick={()=>{ saveChange.mutate();}}>저장하기</Button>
       </BTN>
-      </SettingWrapper>
-    } 
       <SelectImage setuserURL={setuserURL} userId={Number(userId)} open={open} setOpen={setOpen}/>
+      </SettingWrapper>
+      } 
+      {user !== undefined && !AddressCheck && 
+      <AddressWrapper>
+        <h1>이메일 검증</h1>
+        <h3>N-city를 즐겁게 이용하기 위해서는 본인인증을 위한 이메일 인증이 필요합니다.</h3>
+          
+        {afterAddress ? 
+          <AfterAddress>
+            <h1>이메일 전송을 완료했습니다 </h1>
+            <h1> N-city를 즐기면서 기다려주세요 </h1>
+            <h3> 30분 정도 소요될 수 있습니다. </h3>
+            <Button onClick={()=>{navigate('/')}} variant="contained">메인으로 돌아가기</Button>
+          </AfterAddress>:
+          <BeforeAddress>
+            <h3 className="title">이메일</h3> 
+            <Input value={EmailInput} 
+              autoFocus
+              placeholder='n-city@google.com'
+              onChange={(e: React.ChangeEvent)=>{
+              setEmailInput((e.target as HTMLInputElement).value)
+            }} 
+            className="input" />
+            {EmailInput !=='' && EmailInput.includes('@')&&EmailInput.includes('.com')?
+              <div>
+                <Button onClick={()=>{sendemail()}} variant="contained">이메일 요청 보내기 </Button>
+              </div>:
+              <div>올바르지 않은 이메일 속성입니다.</div>
+            }
+            
+          </BeforeAddress>
+        }
+      </AddressWrapper>
+      }
     </>
   );
 }
