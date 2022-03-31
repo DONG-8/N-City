@@ -2,6 +2,7 @@ import React, { ReactNode, SetStateAction, useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import styled, { css, keyframes } from "styled-components";
 import { patchAutentication } from "../../store/apis/authentication";
+import { SSFTokenContract } from "../../web3Config";
 
 export type ModalBaseProps = {
   /** 모달에 들어갈 컴포넌트 */
@@ -10,10 +11,9 @@ export type ModalBaseProps = {
   visible: boolean;
   /** 닫기 버튼 혹은 백그라운드 클릭 시 실행할 함수 */
   onClose: () => void;
-  control: string;
-  removeList: (apply: any) => void;
-  selectedItem: any;
+  getBalance: () => void;
   setIsOpenProp: React.Dispatch<SetStateAction<boolean>>;
+  account: string
 };
 
 //// style
@@ -61,6 +61,7 @@ const ModalSection = styled.div<{ visible: boolean }>`
   position: absolute;
   display: flex;
   flex-direction: column;
+  align-items: center;
   top: 50%;
   left: 50%;
   border: 2px solid black;
@@ -145,46 +146,46 @@ const CloseButton = styled.div`
   cursor: pointer;
 `
 
+const Input = styled.input`
+  
+    left: 120px;
+    margin-top: 10px;
+    border: 1px solid lightgray;
+    background-color: lightgray;
+    height: 20px;
+    width: 400px;
+    border-radius: 10px;
+    padding: 10px;
+    outline: none;
+    font-size: 15px;
+    :focus {
+      outline: none;
+    }
+    ::-webkit-outer-spin-button,
+    ::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+  
+`
 
 //// component
-const ConfirmModal = ({
+const MintERC20Modal = ({
   visible,
   onClose,
-  control,
-  removeList,
-  selectedItem,
   setIsOpenProp,
+  account,
+  getBalance
 }: ModalBaseProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [amount, setAmount] = useState(0)
+  const { ethereum } = window;
 
-  const patchApprove = useMutation<any, Error>(
-    "patchApprove",
-    async () => {
-      return await patchAutentication(selectedItem.authId, selectedItem.authType,  control === "승인" ? 1 : 0 );
-    },
-    {
-      onSuccess: (res) => {
-        console.log("인증 수락/거절 성공!",res);
-      },
-      onError: (err: any) => {
-        console.log("❌인증 수락/거절 실패!",err);
-      },
-    }
-  );
-
-  const handleApprove = async () => {
-    patchApprove.mutate()
-    removeList(selectedItem);
-    setIsOpenProp(false);
-  };
-
-  const setBtnClass = () => {
-    if (control === "승인") {
-      return "approve";
-    } else if (control === "거절") {
-      return "reject";
-    }
-  };
+  const onClickMint = async () => {
+    const response = await SSFTokenContract.methods.mint(amount).send({from: account})
+    console.log(response)
+    setIsOpenProp(false)
+    getBalance();
+  }
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -210,21 +211,14 @@ const ConfirmModal = ({
       <Background visible={visible} onClick={onClose} />
       <ModalSection visible={visible}>
         <CloseButton onClick={onClose} />
-        <Title>확인</Title>
+        <Title>NCT 민팅</Title>
         <Divider />
-        {control === "승인" && (
-          <ExplaneText>
-            정말로&nbsp; <span>{selectedItem.authName}</span>님을 승인하시겠습니까?
-          </ExplaneText>
-        )}
-        {control === "거절" && (
-          <ExplaneText>
-            정말로&nbsp; <span>{selectedItem.authName}</span>님의 승인신청을 거절하시겠습니까?
-          </ExplaneText>
-        )}
+        <div>민팅할 NCT 수</div>
+        <Input min={0} type="number" onChange={(e) => setAmount(Number(e.target.value))}></Input>
+
         <ButtonBox>
-          <Button onClick={handleApprove} className={setBtnClass()}>
-            {control}
+          <Button onClick={onClickMint}>
+            Mint
           </Button>
           <Button onClick={onClose}>취소</Button>
         </ButtonBox>
@@ -233,4 +227,4 @@ const ConfirmModal = ({
   );
 };
 
-export default ConfirmModal;
+export default MintERC20Modal;
