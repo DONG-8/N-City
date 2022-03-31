@@ -51,7 +51,6 @@ public class Product {
     @Column(name = "product_price")
     private double productPrice;
 
-
     @Column(name = "product_reg_dt")
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)

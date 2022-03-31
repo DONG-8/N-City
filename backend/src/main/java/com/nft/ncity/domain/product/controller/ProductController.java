@@ -51,7 +51,7 @@ public class ProductController {
         // 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
 
         log.info("productRegister - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Product product = productService.productRegister(productRegisterPostReq,productFile,thumbnailFile,userId);
         if(!product.equals(null)) {
             return ResponseEntity.status(201).body(FileUrlResponseBody.of(201, "등록 성공" , product.getProductFileUrl(),product.getProductId()));
@@ -61,6 +61,7 @@ public class ProductController {
             return ResponseEntity.status(404).body(fileUrlResponseBody);
         }
     }
+
     @Transactional
     @ApiOperation(value = "상품 등록 - token Update")
     @ApiResponses({
@@ -93,8 +94,7 @@ public class ProductController {
         Page<ProductListGetRes> products = productService.getProductList(pageable);
 
         if(products.isEmpty()) {
-            log.error("getProductList - Products doesn't exist.");
-            return ResponseEntity.status(404).body(null);
+            return ResponseEntity.status(200).body(products);
         }
 
         return ResponseEntity.status(200).body(products);
@@ -138,6 +138,7 @@ public class ProductController {
         return ResponseEntity.status(200).body(deals);
     }
 
+
     @GetMapping("/deal/{productCode}")
     @ApiOperation(value = "카테고리별 판매중인 상품조회")
     @ApiResponses({
@@ -157,22 +158,20 @@ public class ProductController {
         return ResponseEntity.status(200).body(products);
     }
 
+
+
     @GetMapping("/search/{productTitle}")
     @ApiOperation(value = "상품 이름으로 검색")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = ProductListGetRes.class),
-            @ApiResponse(code = 404, message = "상품 없음.")
+//            @ApiResponse(code = 204, message = "검색 결과 없음", response = ProductListGetRes.class),
     })
     public ResponseEntity<Page<ProductListGetRes>> getProductListByTitle(@PageableDefault(page = 0, size = 10) Pageable pageable,
-                                                                        @ApiParam(value = "상품명") @PathVariable("productTitle") String productTitle) {
+                                                                        @ApiParam(value = "상품명") @PathVariable("productTitle") String productTitle){
 
         log.info("productTitle - 호출");
-        Page<ProductListGetRes> products = productService.getProductListByTitle(pageable, productTitle);
+        Page<ProductListGetRes> products = productService.getProductListByTitle(pageable,productTitle);
 
-        if (products.isEmpty()) {
-            log.error("getProductListByTitle - Products doesn't exit on this Title");
-            return ResponseEntity.status(404).body(null);
-        }
         return ResponseEntity.status(200).body(products);
     }
 

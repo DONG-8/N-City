@@ -24,7 +24,7 @@ public class AuthFile {
     @Builder.Default
     private Long fileId = null;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "auth_id")
     @ApiModelProperty(value="인증 ID")
     private Authentication authId;

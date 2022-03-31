@@ -34,6 +34,7 @@ public class User {
 
     /* 회원 코드
             - ROLE_ADMIN : 사이트 관리자
+            - ROLE_NEW : 신규 유저
             - ROLE_USER : 일반 회원
             - ROLE_ENTERPRISE : 기업
             - ROLE_ARTIST : 아티스트
@@ -81,4 +82,6 @@ public class User {
     public void authIdRegister(Long authId) {
         this.authId = authId;
     }
+
+    public void authIdDelete(Long authId) {this.authId = null; }
 }

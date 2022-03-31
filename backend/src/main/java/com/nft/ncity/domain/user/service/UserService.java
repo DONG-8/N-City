@@ -20,7 +20,7 @@ import java.util.List;
 public interface UserService {
 
 	User getUserByEmail(String userEmail);
-	Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo, MultipartFile profileImg) throws IOException;
+	Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo) throws IOException;
 	Long userUpdateNoProfileImg(UserModifyUpdateReq userInfo);
 	EmailAuth EmailAuthRegister(String emailAuthEmail);
 	void confirmEmail(String emailAuthEmail,String authToken);

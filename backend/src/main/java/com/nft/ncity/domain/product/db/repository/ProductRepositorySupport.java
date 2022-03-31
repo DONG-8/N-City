@@ -5,7 +5,6 @@ import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.entity.QProduct;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
-import com.nft.ncity.domain.user.db.entity.QUser;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 @Repository
 public class ProductRepositorySupport {
@@ -39,7 +37,6 @@ public class ProductRepositorySupport {
         return execute;
     }
 
-
     //READ
     public  Page<Product> findProductList(Pageable pageable) {
         List<Product> productQueryResults = jpaQueryFactory.select(qProduct)
@@ -51,7 +48,6 @@ public class ProductRepositorySupport {
         if(productQueryResults.isEmpty()) return Page.empty();
 
         return new PageImpl<Product>(productQueryResults, pageable, productQueryResults.size());
-
     }
 
     public Page<Product> findProductListByCode(Pageable pageable, int productCode) {
@@ -65,7 +61,6 @@ public class ProductRepositorySupport {
         if(productQueryResults.isEmpty()) return Page.empty();
 
         return new PageImpl<Product>(productQueryResults, pageable, productQueryResults.size());
-
     }
 
     public  Page<Product> findProductDealList(Pageable pageable) {
@@ -79,8 +74,8 @@ public class ProductRepositorySupport {
         if(productQueryResults.isEmpty()) return Page.empty();
 
         return new PageImpl<Product>(productQueryResults, pageable, productQueryResults.size());
-
     }
+
     public Page<Product> findProductDealListByCode(Pageable pageable, int productCode) {
         List<Product> productQueryResults = jpaQueryFactory.select(qProduct)
                 .from(qProduct)
@@ -92,7 +87,6 @@ public class ProductRepositorySupport {
         if(productQueryResults.isEmpty()) return Page.empty();
 
         return new PageImpl<Product>(productQueryResults, pageable, productQueryResults.size());
-
     }
     
     // 상품명으로 검색
@@ -100,7 +94,6 @@ public class ProductRepositorySupport {
 
         // 대소문자 구문안하려고 무조건 대문자로 변경해서 검색
         String upperProductTitle = productTitle.toUpperCase(Locale.ROOT);
-
         List<Product> productQueryResults = jpaQueryFactory.select(qProduct)
                 .from(qProduct)
                 .where(qProduct.productTitle.upper().like("%"+upperProductTitle+"%"))
@@ -108,10 +101,11 @@ public class ProductRepositorySupport {
                 .offset(pageable.getOffset())
                 .fetch();
 
-        if(productQueryResults.isEmpty()) return Page.empty();
+        if(productQueryResults.isEmpty()){
+            return Page.empty();
+        }
 
         return new PageImpl<Product>(productQueryResults, pageable, productQueryResults.size());
-
     }
 
     @Transactional
@@ -124,7 +118,6 @@ public class ProductRepositorySupport {
                 .execute();
         return execute;
     }
-
 
     public Page<Product> findProductListByUserId(Long userId, Pageable pageable) {
 
@@ -148,8 +141,7 @@ public class ProductRepositorySupport {
                 .where(qProduct.productId.in(
                                 JPAExpressions.select(qDeal.productId)
                                         .from(qDeal)
-                                        .where(qDeal.dealType.eq(6).and(qDeal.dealTo.eq(userId)))
-                        ))
+                                        .where(qDeal.dealType.eq(6).and(qDeal.dealTo.eq(userId)))))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

@@ -4,17 +4,21 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.nft.ncity.domain.authentication.db.entity.AuthFile;
 import com.nft.ncity.domain.authentication.db.entity.Authentication;
 import com.nft.ncity.domain.authentication.db.repository.AuthFileRepository;
+import com.nft.ncity.domain.authentication.db.repository.AuthFileRepositorySupport;
 import com.nft.ncity.domain.authentication.db.repository.AuthenticationRepository;
 import com.nft.ncity.domain.authentication.db.repository.AuthenticationRepositorySupport;
-import com.nft.ncity.domain.authentication.request.AuthenticationRegisterPostReq;
 import com.nft.ncity.domain.authentication.request.AuthenticationConfirmReq;
+import com.nft.ncity.domain.authentication.request.AuthenticationRegisterPostReq;
+import com.nft.ncity.domain.authentication.response.AuthenticationListGetRes;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
+import com.nft.ncity.domain.user.db.repository.UserRepositorySupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,8 +26,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
-import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -51,6 +56,12 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    AuthFileRepositorySupport authFileRepositorySupport;
+
+    @Autowired
+    UserRepositorySupport userRepositorySupport;
+
     @Override
     public Page<Authentication> getAuthenticationListByType(int authType, Pageable pageable) {
 
@@ -75,11 +86,16 @@ public class AuthenticationServiceImpl implements AuthenticationService{
         // 1. 인증 등록 정보를 Authentication 테이블에 저장하고, 해당 인증 ID와 함께 인증 파일들을 AuthFile 테이블에 저장한다.
         // 2. 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
 
+        String authExtra = "";
+        if(authenticationRegisterPostReq.getAuthExtra().length() == 0) authExtra = "기업이라서 없음";
+        else authExtra = authenticationRegisterPostReq.getAuthExtra();
+
         Authentication authentication = Authentication.builder()
                 .authName(authenticationRegisterPostReq.getAuthName())
                 .authEmail(authenticationRegisterPostReq.getAuthEmail())
                 .authType(authenticationRegisterPostReq.getAuthType())
                 .authRegAt(LocalDateTime.now())
+                .authExtra(authExtra)
                 .build();
 
         // 인증 등록정보 저장
@@ -133,9 +149,39 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     }
 
     @Override
+    @Transactional
     public Long modifyUserRole(AuthenticationConfirmReq authenticationConfirmReq) {
         Long execute = authenticationRepositorySupport.updateUserRoleByAuth(authenticationConfirmReq);
+        authFileRepositorySupport.deleteAuthFileByAuthId(authenticationConfirmReq.getAuthId());
+        authenticationRepository.deleteById(authenticationConfirmReq.getAuthId());
+        User user = userRepository.findUserByAuthId(authenticationConfirmReq.getAuthId()).get();
+        user.authIdDelete(authenticationConfirmReq.getAuthId());
 
         return execute;
+    }
+
+    @Override
+    public Page<AuthenticationListGetRes> getAuthenticationList(Page<Authentication> authentications) {
+        List<AuthenticationListGetRes> list = new ArrayList<>();
+
+        for(Authentication a : authentications) {
+
+            String userNick = "";
+            User user = userRepository.findUserByAuthId(a.getAuthId()).orElse(null);
+            if(user.equals(null)) userNick = "닉네임 없음.";
+            else {
+                userNick = user.getUserNick();
+            }
+            AuthenticationListGetRes authenticationListGetRes = AuthenticationListGetRes.builder()
+                    .authentication(a)
+                    .userNick(userNick)
+                    .build();
+
+            list.add(authenticationListGetRes);
+        }
+
+        if(list.isEmpty()) return Page.empty();
+
+        return new PageImpl<AuthenticationListGetRes>(list, authentications.getPageable(), list.size());
     }
 }

@@ -56,38 +56,18 @@ public class UserRepositorySupport {
     /**
      * 프로필 이미지도 변경
      * @param userInfo
-     * @param profileImg
      * @return
      */
-    public Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo, MultipartFile profileImg) throws IOException {
-
-        // 실제 파일 이름을 받아서 랜덤한 이름으로 변경해준다.
-        String fileName = awsS3Service.createFileName(profileImg.getOriginalFilename());
-
-        // 파일 객체 생성
-        // System.getProperty => 시스템 환경에 관한 정보를 얻을 수 있다. (user.dir = 현재 작업 디렉토리를 의미함)
-        File file = new File(System.getProperty("user.dir") + fileName);
-
-        // 파일 변환
-        profileImg.transferTo(file);
-
-        // S3 파일 업로드
-        awsS3Service.uploadOnS3(fileName, file);
-        // 주소 할당
-        String fileUrl = amazonS3Client.getUrl(bucket, fileName).toString();
-
-        // 파일 삭제
-        file.delete();
+    public Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo) throws IOException {
 
         long execute = jpaQueryFactory.update(qUser)
                 .set(qUser.userEmail, userInfo.getUserEmail())
                 .set(qUser.userNick, userInfo.getUserNick())
                 .set(qUser.userDescription, userInfo.getUserDescription())
-                .set(qUser.userImgUrl, fileUrl)
+                .set(qUser.userImgUrl, userInfo.getUserImgUrl())
                 .where(qUser.userId.eq(userInfo.getUserId()))
                 .execute();
         return execute;
-
     }
 
     /**
