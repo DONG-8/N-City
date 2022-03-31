@@ -64,7 +64,7 @@ const EditBar = () => {
   const [status,setStatus] = useState(ItemCategory.GROUND)
   const [chairIndex, setChairIndex] = useState<number>(0) // 의자 회전
   const [chairGidList, setChairGidList] = useState([1, 2, 3, 4]) // 의자 회전
-
+  const tileset = [198, 458, 586, 706, 842, 1858]
   const choiceCatogory = (gid : number) => {
     const editmap = phaserGame.scene.keys.Editmap as Editmap
     editmap.selectItem(status, gid)
@@ -73,9 +73,12 @@ const EditBar = () => {
   }
 
   const makeImgTags = (folderName:string, startnum:number, endnum:number) => {
-    const temp:number[] = []
+    let temp:number[] = []
     for (let i = startnum; i< endnum + 1; i ++){
       temp.push(i)
+    }
+    if(folderName === 'grounds') {
+      temp = tileset
     }
     return (
       <ItemList>
@@ -92,6 +95,9 @@ const EditBar = () => {
 
   const returnItemList = () => {
     switch (status) {
+      case ItemCategory.GROUND:
+        return makeImgTags('grounds', 0, 0)
+        break
       case ItemCategory.WHITEBOARD: 
         return makeImgTags('whiteboards', 4685, 4687)
         break
@@ -104,26 +110,25 @@ const EditBar = () => {
   }
 
   return (
-    <></>
-    // <Sidebar>
-    //   <h1>맵 수정</h1>
-    //   <XButton>X</XButton>
+    <Sidebar>
+      <h1>맵 수정</h1>
+      <XButton>X</XButton>
 
-    //   <CategoriWrapper>
-    //     <CategoriBar>
-    //       <div onClick={()=>{setStatus(ItemCategory.GROUND)}} className="ground">ground</div>
-    //       <div onClick={()=>{setStatus(ItemCategory.CHAIR)}} className="Chair">Chair</div>
-    //       <div onClick={()=>{setStatus(ItemCategory.WHITEBOARD)}} className="Whiteboard">Whiteboard</div>
-    //       <div>Basement</div>
-    //       <div>computer</div>
-    //       <div>GenericObjects</div>
-    //       <div>ObjectsOnCollide</div>
-    //       <div>Object</div>
-    //       <div>Wall</div>
-    //     </CategoriBar>
-    //   </CategoriWrapper>
-    //   {returnItemList()}
-    // </Sidebar>
+      <CategoriWrapper>
+        <CategoriBar>
+          <div onClick={()=>{setStatus(ItemCategory.GROUND)}} className="ground">ground</div>
+          <div onClick={()=>{setStatus(ItemCategory.CHAIR)}} className="Chair">Chair</div>
+          <div onClick={()=>{setStatus(ItemCategory.WHITEBOARD)}} className="Whiteboard">Whiteboard</div>
+          <div>Basement</div>
+          <div>computer</div>
+          <div>GenericObjects</div>
+          <div>ObjectsOnCollide</div>
+          <div>Object</div>
+          <div>Wall</div>
+        </CategoriBar>
+      </CategoriWrapper>
+      {returnItemList()}
+    </Sidebar>
   );
 };
 
