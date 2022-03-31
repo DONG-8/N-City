@@ -134,16 +134,16 @@ interface Iprops{
 const GameItemCard:React.FC<Iprops>= ({item,setMode}) => {
   const [liked,setLiked] = useState(false) // 내가 좋아요 했나
   const [MyAddress,setMyAddress] = useState(localStorage.getItem('userId'))
-  // const [category,setCategory] = useState('normal') 
-  const [category,setCategory] = useState('character') 
+  const [category,setCategory] = useState('normal') 
+  // const [category,setCategory] = useState('character') 
   //⭐ normal로 바꾸기
   useEffect(()=>{
     var tmp = false
-    item.productFavoriteUser.map((user)=>{
+    item.productFavoriteUser.map((user)=>{ 
       if (user.userId === Number(MyAddress) ){tmp = true}
     })
     setLiked(tmp)
-    if (item.productCode ===10){setCategory('character')}
+    if (item.productCode ===7){setCategory('character')}
   },[])
 
   const navigate = useNavigate()

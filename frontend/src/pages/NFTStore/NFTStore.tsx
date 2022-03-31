@@ -160,6 +160,7 @@ const NFTStore = () => {
       },
     }
   );
+  // console.log(allitems)
   useEffect(()=>{
     // 좋아요를 하고 status를 바꿔도 그대로인 오류...❌
     getAll.mutate()
@@ -194,18 +195,23 @@ const NFTStore = () => {
           </p>
         </li>
         <li>
-          <p id={filter === "art" ? "category" : ""} onClick={() => {  setFilter("art")}}>
-            Art
+          <p id={filter === "art" ? "category" : ""} onClick={() => {  setFilter("Art")}}>
+            예술
           </p>
         </li>
         <li>
-          <p id={filter === "music" ? "category" : ""} onClick={() => {  setFilter("art")}}>
-            Art
+          <p id={filter === "music" ? "category" : ""} onClick={() => {  setFilter("music")}}>
+          음악
           </p>
         </li>
         <li>
-          <p id={filter === "photography" ? "category" : ""} onClick={() => {  setFilter("art")}}>
-            Art
+          <p id={filter === "photography" ? "category" : ""} onClick={() => {  setFilter("photography")}}>
+          사진
+          </p>
+        </li>
+        <li>
+          <p id={filter === "character" ? "category" : ""} onClick={() => {  setFilter("character")}}>
+          캐릭터
           </p>
         </li>
       </CategoryBar>
