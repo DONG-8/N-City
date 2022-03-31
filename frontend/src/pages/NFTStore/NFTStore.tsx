@@ -1,7 +1,7 @@
-import React, {  useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { getProductAll, getSellProduct } from '../../store/apis/product'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import ItemCard2 from '../../components/Card/ItemCard2'
 
 
@@ -132,27 +132,39 @@ interface Istate{
   }
 }
 const FilterButton = styled.div`
-
 `
 const NFTStore = () => {
   const [filter,setFilter] = useState("all") 
   const [status,setStatus]  = useState('all')
+  const [allitems,setAllitems] = useState([])
+  const [saleitems,setSaleitems] = useState([])
     // 상품 정보 모두 가져오기
-  const { isLoading:ILA, data:allitems } = useQuery<any>(
+  const getAll = useMutation<any,Error>(
     "prouductAll",
     async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))},
-    {onError: (err: any) => {console.log(err, "상품정보 가져오기 오류")},
+    { onSuccess:(res)=>{
+      setAllitems(res.content)
+    },
+      onError: (err: any) => {console.log(err, "상품정보 가져오기 오류")},
     });
-  const { isLoading:ILS, data:saleitems } = useQuery<any>(
+  const getSale = useMutation<any,Error>(
     "getSellProduct",
     async () => {return (await (getSellProduct()))
       },
-    {
+    { 
+      onSuccess:(res)=>{
+        setSaleitems(res.content)
+      },
       onError: (err: any) => {
         console.log(err, "판매중 정보 실패");
       },
     }
   );
+  useEffect(()=>{
+    // 좋아요를 하고 status를 바꿔도 그대로인 오류...❌
+    getAll.mutate()
+    getSale.mutate()
+  },[status])
   return (
     <>
       <IntroBox>
@@ -199,13 +211,13 @@ const NFTStore = () => {
       </CategoryBar>
         <ItemCards>
           {status==='all' && allitems &&
-          (allitems.content).map((item,idx) => {
+          (allitems).map((item,idx) => {
           return(
             <ItemCard2 key={idx} item={item} />
             )
           })}
           {status==='sale' && saleitems &&
-          (saleitems.content).map((item,idx) => {
+          (saleitems).map((item,idx) => {
           return(
             <ItemCard2 key={idx} item={item} />
             )
