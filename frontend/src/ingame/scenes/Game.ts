@@ -125,10 +125,10 @@ export default class Game extends Phaser.Scene {
         'whiteboards',
         'whiteboard'
       ) as Whiteboard
-      console.log(item,'아이템 뽑아왔어요')
+      // console.log(item,'아이템 뽑아왔어요')
       const id = `${i}`
       item.id = id
-      console.log(this.whiteboardMap, '화이트보트맵', id)
+      // console.log(this.whiteboardMap, '화이트보트맵', id)
       this.whiteboardMap.set(id, item)
     })
 

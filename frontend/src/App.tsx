@@ -23,7 +23,6 @@ import YNTest from "./pages/Test/YNTest";
 import SearchPage from "./pages/NFTStore/SearchPage";
 import MapChoice from "./pages/Room/MapChoice";
 
-
 function App() {
   useEffect(() => {
     if (window.location.pathname === "/ingame") {
@@ -36,35 +35,31 @@ function App() {
     <>
       <GlobalStyle />
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Login />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/mypage/:userId" element={<Mypage />} />
-          <Route path="/apply" element={<Apply />} />
-          <Route path="/store" element={<NFTStore />} />
-          <Route path="/store/detail/:productId" element={<DetailItem />} />
-          <Route path="/mint" element={<Mint />} />
-          <Route path="/profilesetting" element={<ProfileSetting />} />
-          <Route path="/event" element={<EventPage />} />
-          <Route path="/event/detail" element={<EventDetail />} />
-          <Route path="/rank" element={<Rank />} />
-          <Route path="/artists" element={<Artists />} />
-          <Route path="/YNTest" element={<YNTest />} />
-          <Route path="/search/:data" element={<SearchPage />}/>
-          <Route path="/ingame"
-            element={
-              <Provider store={gamestore}>
-                <GameApp />
-              </Provider>
-            }
-          />
-          <Route path="/test" element={<Test />} />
-          <Route path="/mapchoice" element={<MapChoice />} />
-        </Routes>
+        <Provider store={gamestore}>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Login />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/mypage/:userId" element={<Mypage />} />
+            <Route path="/apply" element={<Apply />} />
+            <Route path="/store" element={<NFTStore />} />
+            <Route path="/store/detail/:productId" element={<DetailItem />} />
+            <Route path="/mint" element={<Mint />} />
+            <Route path="/profilesetting" element={<ProfileSetting />} />
+            <Route path="/event" element={<EventPage />} />
+            <Route path="/event/detail" element={<EventDetail />} />
+            <Route path="/rank" element={<Rank />} />
+            <Route path="/artists" element={<Artists />} />
+            <Route path="/YNTest" element={<YNTest />} />
+            <Route path="/search/:data" element={<SearchPage />} />
+            <Route path="/ingame" element={<GameApp />} />
+            <Route path="/test" element={<Test />} />
+            <Route path="/mapchoice" element={<MapChoice />} />
+          </Routes>
+        </Provider>
         <Footer />
       </BrowserRouter>
     </>
