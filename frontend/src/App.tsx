@@ -8,8 +8,8 @@ import Apply from "./pages/Apply/Apply";
 import GlobalStyle from "./styles/global";
 import DetailItem from "./pages/NFTStore/DetailItem";
 import ProfileSetting from "./pages/Mypage/ProfileSetting";
-import EventPage from "./pages/FAQ/EventPage";
-import EventDetail from "./pages/FAQ/EventDetail";
+import EventPage from "./pages/Community/EventPage";
+import EventDetail from "./pages/Community/EventDetail";
 import Rank from "./pages/Rank/Rank";
 import Test from "./pages/Rank/Test";
 import Mint from "./pages/Mint/Mint";
@@ -51,7 +51,7 @@ function App() {
           <Route path="/mint" element={<Mint />} />
           <Route path="/profilesetting" element={<ProfileSetting />} />
           <Route path="/event" element={<EventPage />} />
-          <Route path="/event/detail" element={<EventDetail />} />
+          <Route path="/event/:eventId" element={<EventDetail />} />
           <Route path="/rank" element={<Rank />} />
           <Route path="/artists" element={<Artists />} />
           <Route path="/YNTest" element={<YNTest />} />
