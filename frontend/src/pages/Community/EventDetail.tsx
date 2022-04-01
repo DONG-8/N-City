@@ -13,6 +13,21 @@ interface IState{
     content:string
   }
 }
+const Header = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #35357a;
+  border-radius: 0 0 10px 10px;
+  color: white;
+  width: 100%;
+  height: 180px;
+`
+const Title = styled.h1`
+  margin: 80px 0;
+  font-size: 45px;
+`
 const Wrapper = styled.div`
   width: 90%;
   height: 80vh;
@@ -85,7 +100,10 @@ const EventDetail = () => {
       }
     })
   },[eventId])
-  return (
+  return (<>
+      <Header>
+          <Title>이벤트</Title>
+        </Header>
     <Wrapper>
       <img alt="이벤트" src={event.url}/>
       <Description>
@@ -102,6 +120,7 @@ const EventDetail = () => {
         </span>
       </Description>
     </Wrapper>
+    </>
   )
 }
 

@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #7171af;
+  background-color: #6225E6    ;
   width: 40%;
   height: 50vh;
   border-radius: 5px;

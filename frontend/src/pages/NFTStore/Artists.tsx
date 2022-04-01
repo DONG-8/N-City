@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 import ArtistCard from '../../components/Card/ArtistCard'
 import styled from 'styled-components'
 import { artists as art } from './items'
-import NewTokkenList from '../Main/NewTokkenList'
-import { items as itm } from './items'
 
 const Title = styled.div`
   display:flex ;
@@ -125,10 +123,10 @@ const Left = styled.div`
     }
   }
   img {
-    margin-left: 11vw;
+    margin-left: 12vw;
     margin-top: 4vh;
     height: 60%;
-    width: 50%;
+    width: 45%;
   }
   
 `
