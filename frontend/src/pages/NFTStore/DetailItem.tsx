@@ -324,6 +324,8 @@ interface Istate{
 const DetailItem = () => {
   const [localitem,setLocalitem] = useState<Istate['item']>(JSON.parse(localStorage.getItem("item")||""))
   const [likes,setLikes] = useState(Number(0))
+  const [followers, setFollowers] = useState(0)
+  const [followees, setFollowees] = useState(0)
   const [liked,setLiked] = useState(false) // 내가 좋아요 했나
   const [user,setUser] = useState<Istate["user"]>({
     "authId": 0,
@@ -378,7 +380,7 @@ const DetailItem = () => {
       "productXCoordinate": 0,
       "productYCoordinate": 0,
       "productView": false,
-      "productState": 0,
+      "productState": 2,
       "productPrice": 0,
       "productRegDt": "",
       "productFileUrl": "",
@@ -439,6 +441,8 @@ const DetailItem = () => {
       onSuccess: (res) => {
         console.log("유저정보 받아오기 성공", res)
         setUser(res);
+        setFollowees(res.followeeCnt)
+        setFollowers(res.followerCnt)
       },
     }
   );
@@ -479,6 +483,7 @@ const DetailItem = () => {
     {
       onSuccess: (res) => {
         console.log("팔로우 성공", res)
+        setFollowBtnState(false)
       },
       onError: (err) => console.log("팔로우 실패", err),
     }
@@ -492,6 +497,7 @@ const DetailItem = () => {
     {
       onSuccess: (res) => {
         console.log("언팔로우 성공", res)
+        setFollowBtnState(true)
       },
       onError: (err) => console.log("언팔로우 실패", err),
     }
@@ -531,11 +537,13 @@ const DetailItem = () => {
   }
 
   const onClickFollow = () => {
-
+    setFollowers(followers + 1)
+    follow.mutate()
   }
 
   const onClickUnFollow = () => {
-
+    setFollowees(followers - 1)
+    unFollow.mutate()
   }
 
   const getStatus = ()=>{
@@ -544,26 +552,24 @@ const DetailItem = () => {
     if(item.productState ===3){setStatus('normal')}
   }
 
-  useEffect(()=>{
-    getStatus()
-    getUser.mutate()
-  },[item])
-
-  useEffect(()=>{
-    getProduct.mutate()
-    getLiked.mutate()
-    window.scrollTo(0, 0);
-  },[productId,])
+  useEffect(() => {
+    getStatus();
+    getUser.mutate();
+  }, [item]);
 
   useEffect(() => {
-    getLiked.mutate()
-  }, [likes])
+    getProduct.mutate();
+    getLiked.mutate();
+    window.scrollTo(0, 0);
+  }, [productId]);
 
-  useEffect(()=>{
-    getUserFollower.mutate()
-  },[
-    user
-  ])
+  useEffect(() => {
+    getLiked.mutate();
+  }, [likes]);
+
+  useEffect(() => {
+    getUserFollower.mutate();
+  }, [user]);
 
   if (newItem && collection){
     if (items.length <5){
@@ -608,8 +614,8 @@ const DetailItem = () => {
                     <div className="email"> email:{user.userEmail}</div>
                     <div>userId:{user.userId}</div>
                     <div>직업:{user.userRole}</div>
-                    <div>팔로워수:{user.followerCnt}</div>
-                    <div>팔로잉수:{user.followeeCnt}</div>
+                    <div>팔로워수:{followers}</div>
+                    <div>팔로잉수:{followees}</div>
                     {Number(localStorage.getItem("userId")) ===
                     user.userId ? null : followBtnState ? (
                       <Button onClick={onClickUnFollow}>팔로우끊기</Button>
