@@ -13,6 +13,7 @@ import {
   SSFTokenAddress,
   SSFTokenContract,
 } from "../../web3Config";
+import etherimg from './ethereum.png'
 interface Iprops{
   open:boolean,
   setOpen:React.Dispatch<React.SetStateAction<boolean>>
@@ -53,7 +54,7 @@ const Wrapper = styled.div`
         color: white;
         border-radius: 10px 0 0 10px;
         &:hover {
-          background-color: #4343e2;
+          background-color: #3f3f8d;
           transition: 0.3s;
           color: white;
         }
@@ -71,7 +72,7 @@ const Wrapper = styled.div`
         background-color: #35357a;
         font-weight: 1000;
         &:hover {
-          background-color: #4343e2;
+          background-color: #3f3f8d;
           color: white;
           transition: 0.3s;
         }
@@ -161,7 +162,7 @@ const Session2 = styled.div`
     margin-left: 1vw;
     width:61vh;
     font-size:1.5rem;
-    background-color:#4343e2 ;
+    background-color:#3f3f8d  ;
   }
   .buttons{
     height: 7vh;
@@ -336,7 +337,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
                 희망 가격 : <Input onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
                 setValue(Number(e.target.value))
                 console.log(value)
-              }}/> <img alt="ether" src='essets/images/ethereum.png'/>
+              }}/> <img alt="ether" src={etherimg}/>
             </div>
           </div>
           <div className='buttons'>
@@ -356,7 +357,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
             <p className='intro'> 희망 가격을 적어 판매를 시작하세요 </p>
             <div className='inputs'>
             <div className='price'>
-              시작가격 : <Input/> <img alt="ether" src='essets/images/ethereum.png'/>
+              시작가격 : <Input/> <img alt="ether" src={etherimg}/>
             </div>
             <div className="price">경매기간 :{" "}<Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setPeriod(Number(e.target.value)); console.log(period);}}/>일

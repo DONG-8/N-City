@@ -15,6 +15,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import DealModal from './DealModal';
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import BidBox from './BidBox';
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -30,7 +31,6 @@ const RCricle = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 30px;
-  /* background-color: red; */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' %3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z'/%3E%3C/svg%3E");
   position: absolute;
   top: 200px;
@@ -43,7 +43,6 @@ const LCricle = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 30px;
-  /* background-color: red; */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z'/%3E%3C/svg%3E");
   position: absolute;
   top: 200px;
@@ -152,24 +151,6 @@ const UserDescription = styled.div`
     font-size: 1.1rem;
     margin-left: 2vw;
     margin-top: 2vh;
-    overflow-x: hidden;
-    overflow-y: scroll;
-      &::-webkit-scrollbar { //스크롤바 🎨
-        visibility: hidden;
-        width: 7px;
-      }
-      &:hover {
-        &::-webkit-scrollbar {
-          visibility: visible;
-          width: 7px;
-        }
-        &::-webkit-scrollbar-thumb {
-          background-color: #272793;
-          border-radius: 10px;
-          background-clip: padding-box;
-          border: 1px solid transparent;
-        }
-      }
   }
 `
 const TopR = styled.div`
@@ -181,9 +162,8 @@ const TopR = styled.div`
   .top{
     height: 50vh;
     display: flex;
-    overflow-x: hidden;
-    overflow-y: scroll;
-     
+    overflow-y: hidden;
+
   }
   .top-left{
     width: 30vw;
@@ -216,40 +196,26 @@ const Mid = styled.div`
     margin-left: 7vw;
     margin-bottom: 3vw;
   }
+
 `
 const Description = styled.div`
-h3{
-  margin-left: 2vw;
-}
-  .box{
+  h3 {
+    margin-left: 2vw;
+  }
+  .box {
     width: 26vw;
     height: 15vh;
     background-color: white;
     margin-left: 2vw;
     border-radius: 10px;
     border: 0.5px solid #e7e4e4;
-    &::-webkit-scrollbar { //스크롤바 🎨
-        visibility: hidden;
-        width: 7px;
-      }
-      &:hover {
-        &::-webkit-scrollbar {
-          visibility: visible;
-          width: 7px;
-        }
-        &::-webkit-scrollbar-thumb {
-          background-color: #272793;
-          border-radius: 10px;
-          background-clip: padding-box;
-          border: 1px solid transparent;
-        }
-      }
-      p{
-        margin-left: 1vw;
-        padding-top: 1vh;
-      }
+
+    p {
+      margin-left: 1vw;
+      padding-top: 1vh;
+    }
   }
-`
+`;
 const Bottom = styled.div`
   display: flex;
   height: 20vh;
@@ -298,19 +264,6 @@ const StoreWapper = styled.div`
     height: 78vh;
     overflow: auto;
     color: black;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    &::-webkit-scrollbar {
-      width: 10px;
-      height: 12px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: teal;
-      border-radius: 10px;
-    }
-    &::-webkit-scrollbar-track {
-      background-color: #fbe9e1;
-    }
   }
 `;
 interface Istate{
@@ -575,12 +528,10 @@ const DetailItem = () => {
           </div>
           <Bottom>
             <div className='right'>
+              {console.log(item)}
               {status ==='bid' &&
-              <>
-                <div className='content'>판매 종료 시간 : {item.productAuctionEndTime} </div>
-                <div className='content'>현재가 : {item.productPrice} </div>
-                <Button variant="contained" onClick={()=>{setOpen(true)}}>제안하기</Button>
-              </>}
+              <BidBox setOpen={setOpen} item={item} />
+              }
               {status==='sell' &&
               <>
                 <div className='content'>즉시구매가 : {item.productPrice} </div>
