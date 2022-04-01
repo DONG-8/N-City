@@ -1,10 +1,12 @@
 import { Button } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { events } from './events'
 
 interface IState{
   event:{
+    id:number,
     title:string,
     url:string,
     date:string,
@@ -67,10 +69,22 @@ const Description = styled.div`
 `
 const EventDetail = () => {
   const navigate = useNavigate()
-  const [event,setEvent] = useState<IState["event"]>({title:"",url:"",date:"",content:""})
+  const [eventId,setEventId] = useState(Number(useParams().eventId))
+  const [event,setEvent] = useState<IState['event']>({
+    id:0,
+    title:'string',
+    url:'string',
+    date:'string',
+    content:'string'
+  })
+
   useEffect(()=>{
-    setEvent(JSON.parse(localStorage.getItem("event")||""))
-  },[])
+    events.map((event)=>{
+      if(event.id===Number(eventId) ){
+        setEvent(event)
+      }
+    })
+  },[eventId])
   return (
     <Wrapper>
       <img alt="이벤트" src={event.url}/>
@@ -80,8 +94,11 @@ const EventDetail = () => {
         {/* <div className='content'> 설명: {event.content}</div> */}
         <div className='content'>  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
         <span className='btnbox'>
-          <Button variant="contained" color='info' onClick={()=>{navigate(-1)}} >뒤로</Button>
-          <Button variant="contained" color='primary' onClick={()=>{navigate(-1)}} >다음</Button>
+          <Button variant="contained" color='info' onClick={()=>{navigate(`/event`)}} >뒤로</Button>
+          <Button variant="contained" color='primary' onClick={()=>{
+            navigate(`/event/${eventId+1}`);
+            setEventId(eventId+1)
+            }} >다음</Button>
         </span>
       </Description>
     </Wrapper>
