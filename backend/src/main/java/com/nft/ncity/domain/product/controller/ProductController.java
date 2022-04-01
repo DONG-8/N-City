@@ -87,15 +87,10 @@ public class ProductController {
     @GetMapping("all")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = ProductListGetRes.class),
-            @ApiResponse(code = 404, message = "상품 없음.")
     })
     public ResponseEntity<Page<ProductListGetRes>> getProductList(@PageableDefault(page = 0, size = 10) Pageable pageable){
         log.info("getProductList - 호출");
         Page<ProductListGetRes> products = productService.getProductList(pageable);
-
-        if(products.isEmpty()) {
-            return ResponseEntity.status(200).body(products);
-        }
 
         return ResponseEntity.status(200).body(products);
     }
@@ -105,17 +100,12 @@ public class ProductController {
     @ApiOperation(value = "카테고리별 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = ProductListGetRes.class),
-            @ApiResponse(code = 404, message = "상품 없음.")
     })
     public ResponseEntity<Page<ProductListGetRes>> getProductListByCode(    @PageableDefault(page = 0, size = 10) Pageable pageable,
                                                                             @ApiParam(value = "카테고리")@PathVariable("productCode") int productCode){
         log.info("getProductListByCode - 호출");
         Page<ProductListGetRes> products = productService.getProductListByCode(pageable,productCode);
 
-        if(products.isEmpty()) {
-            log.error("getProductListByCode - Products doesn't exist on this category");
-            return ResponseEntity.status(404).body(null);
-        }
 
         return ResponseEntity.status(200).body(products);
     }
@@ -124,16 +114,11 @@ public class ProductController {
     @GetMapping("/deal")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = ProductDealListGetRes.class),
-            @ApiResponse(code = 404, message = "상품 없음.")
     })
     public ResponseEntity<Page<ProductDealListGetRes>> getProductDealList(@PageableDefault(page = 0, size = 10) Pageable pageable){
         log.info("getProductList - 호출");
         Page<ProductDealListGetRes> deals = productService.getProductDealList(pageable);
 
-        if(deals.isEmpty()) {
-            log.error("getProductDealList - Deals doesn't exist.");
-            return ResponseEntity.status(404).body(null);
-        }
 
         return ResponseEntity.status(200).body(deals);
     }
@@ -150,11 +135,6 @@ public class ProductController {
         log.info("getProductListByCode - 호출");
         Page<ProductDealListGetRes> products = productService.getProductDealListByCode(pageable,productCode);
 
-        if(products.isEmpty()) {
-            log.error("getProductDealListByCode - Products deal doesn't exist on this category");
-            return ResponseEntity.status(404).body(null);
-        }
-
         return ResponseEntity.status(200).body(products);
     }
 
@@ -164,15 +144,17 @@ public class ProductController {
     @ApiOperation(value = "상품 이름으로 검색")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = ProductListGetRes.class),
-//            @ApiResponse(code = 204, message = "검색 결과 없음", response = ProductListGetRes.class),
+
     })
     public ResponseEntity<Page<ProductListGetRes>> getProductListByTitle(@PageableDefault(page = 0, size = 10) Pageable pageable,
-                                                                        @ApiParam(value = "상품명") @PathVariable("productTitle") String productTitle){
+                                                                         @ApiParam(value = "상품명") @PathVariable("productTitle") String productTitle){
 
         log.info("productTitle - 호출");
         Page<ProductListGetRes> products = productService.getProductListByTitle(pageable,productTitle);
 
         return ResponseEntity.status(200).body(products);
+
+
     }
 
     @ApiOperation(value = "상품 상세 조회")
