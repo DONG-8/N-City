@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MetaMaskOnboarding from "@metamask/onboarding";
+import { useMutation } from 'react-query';
+import { postLogin } from "../../store/apis/log";
 
 //// style
 const Wrapper = styled.div`
@@ -120,14 +122,30 @@ const Login = () => {
     try {
       await ethereum.request({ method: "eth_requestAccounts" });
       const accounts = await ethereum.request({ method: "eth_accounts" });
-      accounts[0]
-        ? setAccount(accounts[0])
-        : setAccount("계정을 불러올 수 없습니다.");
+      await setAccount(accounts[0])
+      // login
+      login.mutate()
     } catch (error) {
       console.error(error);
       alert("메타마스크에 연결중 오류가 발생하였습니다.");
     }
   };
+
+  const login = useMutation<any, Error>(
+    "postPurchase",
+    async () => {
+      return postLogin(account)
+    },
+    {
+      onSuccess: (res) => {
+        console.log("로그인요청 성공", res);
+        localStorage.setItem("userId", res.userId)
+      },
+      onError: (err: any) => {
+        console.log("로그인요청 실패", err);
+      },
+    }
+  );
 
   return (
     <Wrapper>
