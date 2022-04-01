@@ -1,20 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { Button } from '@mui/material';
-import { useMutation, useQuery } from 'react-query';
-import {  getProductAll, getProductDetail, getSellProduct } from '../../store/apis/product';
-import { getUsercollectedInfo, getUserInfo } from '../../store/apis/user';
-import { delProductLike, getProductLike, postProductLike } from '../../store/apis/favorite';
-import { useParams } from 'react-router-dom';
-import Slider from 'react-slick';
-import ItemCard2 from '../../components/Card/ItemCard2';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import DealModal from './DealModal';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { Button } from "@mui/material";
+import { useMutation, useQuery } from "react-query";
+import {
+  getProductAll,
+  getProductDetail,
+  getSellProduct,
+} from "../../store/apis/product";
+import { getUsercollectedInfo, getUserInfo } from "../../store/apis/user";
+import {
+  delProductLike,
+  getProductLike,
+  postProductLike,
+} from "../../store/apis/favorite";
+import { useParams } from "react-router-dom";
+import Slider from "react-slick";
+import ItemCard2 from "../../components/Card/ItemCard2";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import DealModal from "./DealModal";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import BidBox from './BidBox';
-import { deleteFollow, getFollowee, postFollow } from '../../store/apis/follow';
+import BidBox from "./BidBox";
+import { deleteFollow, getFollowee, postFollow } from "../../store/apis/follow";
+import { postCancelPurchase } from "../../store/apis/deal";
+import { createSaleContract, SaleFactoryContract } from "../../web3Config";
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -76,16 +86,16 @@ const MainBannerWrapper = styled.div`
   height: 450px;
   color: black;
   margin: 0 auto;
-  background-color: #F7F8FA ;
-  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  background-color: #f7f8fa;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee,
+    inset 1px 1px 0 rgb(233 235 242 / 10%);
   border-radius: 30px;
   margin-bottom: 10vh;
 `;
 
-
-
 const Wrapper = styled.div`
-`
+  font-family: 'Noto Sans KR', sans-serif;
+`;
 
 const Top = styled.div`
   width: 90vw;
@@ -94,109 +104,107 @@ const Top = styled.div`
   margin-top: 10vh;
   display: flex;
   margin-bottom: 10vh;
-`
+`;
 const TopL = styled.div`
   flex: 4;
-  
-`
+`;
 const UserBox = styled.div`
-  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee,
+    inset 1px 1px 0 rgb(233 235 242 / 10%);
 
   height: 55%;
-  background-color: #F7F8FA ;
+  background-color: #f7f8fa;
   border-radius: 30px;
-  .top{
+  .top {
     display: flex;
     align-items: center;
   }
-  .mid{
+  .mid {
     margin-left: 3vw;
     display: flex;
     font-size: 1.8vh;
-    .mid-l{
-      flex:1;
-      button{
+    .mid-l {
+      flex: 1;
+      button {
         font-size: 1.5vh;
       }
     }
   }
-  .profile{
+  .profile {
     border-radius: 100%;
     height: 12vh;
     margin: 5vh;
   }
-  .name{
-    color:#272793;
+  .name {
+    color: #272793;
     font-size: 4vh;
     font-weight: 800;
-  } 
-`
+  }
+`;
 const UserDescription = styled.div`
-  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee,
+    inset 1px 1px 0 rgb(233 235 242 / 10%);
 
   height: 26vh;
   margin-top: 5vh;
-  background-color: #F7F8FA ;
+  background-color: #f7f8fa;
   border-radius: 30px;
-  .title{
+  .title {
     padding-top: 2vh;
     margin-left: 2vw;
     font-size: 2rem;
     font-weight: 1000;
   }
-  .content{
+  .content {
     width: 90%;
     height: 15vh;
     font-size: 1.1rem;
     margin-left: 2vw;
     margin-top: 2vh;
   }
-`
+`;
 const TopR = styled.div`
-  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee,
+    inset 1px 1px 0 rgb(233 235 242 / 10%);
   flex: 6;
-  background-color: #F7F8FA ;
+  background-color: #f7f8fa;
   margin-left: 3vw;
   border-radius: 30px;
-  .top{
+  .top {
     height: 50vh;
     display: flex;
     overflow-y: hidden;
-
   }
-  .top-left{
+  .top-left {
     width: 30vw;
-    .title{
+    .title {
       font-size: 2.5rem;
       font-weight: 1000;
       margin-top: 3vh;
       margin-left: 2vw;
     }
-    .content{
+    .content {
       margin-top: 3vh;
       margin-left: 2vw;
     }
   }
-  .img{
+  .img {
     height: 45vh;
     width: 45vh;
     margin-top: 2vh;
     margin-right: 1vw;
     border-radius: 30px;
-    border:1px solid #E0DEDE ;
+    border: 1px solid #e0dede;
   }
-  
-  
-`
+`;
 
 const Mid = styled.div`
-  h1{
+  h1 {
     margin-top: 7vw;
     margin-left: 7vw;
     margin-bottom: 3vw;
   }
-
-`
+`;
 const Description = styled.div`
   h3 {
     margin-left: 2vw;
@@ -221,15 +229,15 @@ const Bottom = styled.div`
   .right {
     flex: 1;
     border-top: 0.5px solid #e0dede;
-    .content{
-        margin: 2vh;
-      }
+    .content {
+      margin: 2vh;
+    }
     button {
       margin-left: 10vw;
       border-radius: 15px;
       /* background-color: #272793; */
       background-color: #e0dede;
-      color:#333;
+      color: #333;
     }
   }
 `;
@@ -268,151 +276,174 @@ const StoreWapper = styled.div`
 
 const FavoriteBox = styled.div`
   display: flex;
-`
-
-interface Istate{
-  item :{
-    productId: Number,
-    productTitle: string,
-    productPrice: Number,
-    productThumbnailUrl: string,
-    productFavorite: Number,
-    productRegDt:Object,
-    productCode: Number,
-    productFavoriteUser:{
-      authId: Number,
-      userAddress: string,
-      userDescription: string,
-      userEmail: string,
-      userEmailConfirm: boolean,
-      userId: number,
-      userImgUrl: string,
-      userNick: string,
-      userRole: string,
-    }[],
-  },
-  itemdetail:{
-    productId: Number,
-    userId: Number,
-    productTitle: string,
-    productDesc: string,
-    productCode: Number,
-    productXCoordinate: Number,
-    productYCoordinate: Number,
-    productView: Boolean,
-    productState: Number,
-    productPrice: Number,
-    productRegDt: string,
-    productFileUrl: string,
-    productThumbnailUrl: string,
-    favoriteCount: Number
-  }, // 작가, 작가 정보, 거래 관련.. 
-  user:{
-    "authId": Number,
-    "followeeCnt": Number,
-    "followerCnt": Number,
-    "userAddress": String,
-    "userDescription": String,
-    "userEmail": String,
-    "userEmailConfirm": Boolean,
-    "userId": Number,
-    "userImgUrl": String,
-    "userNick": String,
-    "userRole": String
+  svg {
+    cursor: pointer;
   }
+`;
+
+interface Istate {
+  item: {
+    productId: Number;
+    productTitle: string;
+    productPrice: Number;
+    productThumbnailUrl: string;
+    productFavorite: Number;
+    productRegDt: Object;
+    productCode: Number;
+    productFavoriteUser: {
+      authId: Number;
+      userAddress: string;
+      userDescription: string;
+      userEmail: string;
+      userEmailConfirm: boolean;
+      userId: number;
+      userImgUrl: string;
+      userNick: string;
+      userRole: string;
+    }[];
+  };
+  itemdetail: {
+    productId: Number;
+    userId: Number;
+    productTitle: string;
+    productDesc: string;
+    productCode: Number;
+    productXCoordinate: Number;
+    productYCoordinate: Number;
+    productView: Boolean;
+    productState: Number;
+    productPrice: Number;
+    productRegDt: string;
+    productFileUrl: string;
+    productThumbnailUrl: string;
+    favoriteCount: Number;
+  }; // 작가, 작가 정보, 거래 관련..
+  user: {
+    authId: Number;
+    followeeCnt: Number;
+    followerCnt: Number;
+    userAddress: String;
+    userDescription: String;
+    userEmail: String;
+    userEmailConfirm: Boolean;
+    userId: Number;
+    userImgUrl: String;
+    userNick: String;
+    userRole: String;
+  };
 }
 const DetailItem = () => {
-  const [localitem,setLocalitem] = useState<Istate['item']>(JSON.parse(localStorage.getItem("item")||""))
-  const [likes,setLikes] = useState(Number(0))
-  const [followers, setFollowers] = useState(0)
-  const [followees, setFollowees] = useState(0)
-  const [liked,setLiked] = useState(false) // 내가 좋아요 했나
-  const [user,setUser] = useState<Istate["user"]>({
-    "authId": 0,
-    "followeeCnt": 0,
-    "followerCnt": 0,
-    "userAddress": "",
-    "userDescription": "",
-    "userEmail": "",
-    "userEmailConfirm": false,
-    "userId": 0,
-    "userImgUrl": "",
-    "userNick": "",
-    "userRole": ""
-  })
-  const [items,setItems ] = useState<Istate['item'][]>([{
+  const [localitem, setLocalitem] = useState<Istate["item"]>(
+    JSON.parse(localStorage.getItem("item") || "")
+  );
+  const [likes, setLikes] = useState(Number(0));
+  const [followers, setFollowers] = useState(0);
+  const [followees, setFollowees] = useState(0);
+  const [liked, setLiked] = useState(false); // 내가 좋아요 했나
+  const [user, setUser] = useState<Istate["user"]>({
+    authId: 0,
+    followeeCnt: 0,
+    followerCnt: 0,
+    userAddress: "",
+    userDescription: "",
+    userEmail: "",
+    userEmailConfirm: false,
+    userId: 0,
+    userImgUrl: "",
+    userNick: "",
+    userRole: "",
+  });
+  const [items, setItems] = useState<Istate["item"][]>([
+    {
       productId: 1,
-      productTitle: 'string',
+      productTitle: "string",
       productPrice: 1,
-      productThumbnailUrl: 'string',
+      productThumbnailUrl: "string",
       productFavorite: 1,
-      productRegDt:1,
+      productRegDt: 1,
       productCode: 1,
-      productFavoriteUser:[
-      {authId: 1,
-      userAddress: 'string',
-      userDescription: 'string',
-      userEmail: 'string',
-      userEmailConfirm: true,
-      userId: 0,
-      userImgUrl: 'string',
-      userNick: 'string',
-      userRole: 'string'}]
-    }
-    ])
+      productFavoriteUser: [
+        {
+          authId: 1,
+          userAddress: "string",
+          userDescription: "string",
+          userEmail: "string",
+          userEmailConfirm: true,
+          userId: 0,
+          userImgUrl: "string",
+          userNick: "string",
+          userRole: "string",
+        },
+      ],
+    },
+  ]);
   const [followBtnState, setFollowBtnState] = useState<boolean | null>(null);
 
   // 모달창
   const [open, setOpen] = useState(false);
 
   // 1: bid , 2:sell , 3:normal
-  const [status,setStatus] = useState('bid') 
-  const [MyAddress,setMyAddress] = useState(localStorage.getItem('userId'))
-  const [productId,setProductId] = useState(useParams().productId)
-  const [item,setItem] = useState(
-    {
-      "productId": 0,
-      "userId": 0,
-      "tokenId": 0,
-      "productTitle": "",
-      "productDesc": "",
-      "productCode": 0,
-      "productXCoordinate": 0,
-      "productYCoordinate": 0,
-      "productView": false,
-      "productState": 2,
-      "productPrice": 0,
-      "productRegDt": "",
-      "productFileUrl": "",
-      "productThumbnailUrl": "",
-      "productAuctionEndTime": null,
-      "favoriteCount": 0
-    }
-  )
-  
-  const { isLoading:ILA, data:newItem } = useQuery<any>( // 추가 // 추천 데이터 
-  "getProductAll",
-  async () => {return (await (getProductAll({page: 1, size: 5 })))
-  },
-  { onError: (err: any) => {console.log(err, "판매중 데이터")}}
-  );
-  
-  const {isLoading:ILC,data:collection} = useQuery<any>( // 이 유저가 가진 그림
-    "getUserCollection",
-    async()=>{return (await(getUsercollectedInfo(user.userId as number)))},
-    {onError:(err)=>{console.log(err)}}
-  )
+  const [status, setStatus] = useState("bid");
+  const [MyAddress, setMyAddress] = useState(localStorage.getItem("userId"));
+  const [productId, setProductId] = useState(useParams().productId);
+  const [item, setItem] = useState({
+    productId: 0,
+    userId: 0,
+    tokenId: 0,
+    productTitle: "",
+    productDesc: "",
+    productCode: 0,
+    productXCoordinate: 0,
+    productYCoordinate: 0,
+    productView: false,
+    productState: 2,
+    productPrice: 0,
+    productRegDt: "",
+    productFileUrl: "",
+    productThumbnailUrl: "",
+    productAuctionEndTime: null,
+    favoriteCount: 0,
+  });
+  const [isImg, setIsImg] = useState(true)
+  const { ethereum } = window
 
-  const getLiked = useMutation<any,Error>(
-    'getProductLike',
-    async()=>{return(
-      await (getProductLike(Number(productId)))
-    )},
-    {onSuccess:(res)=>{
-      console.log("좋아요여부 받아오기 성공", res)
-      setLiked(res)
-    }}
-  )
+
+  const { isLoading: ILA, data: newItem } = useQuery<any>( // 추가 // 추천 데이터
+    "getProductAll",
+    async () => {
+      return await getProductAll({ page: 1, size: 5 });
+    },
+    {
+      onError: (err: any) => {
+        console.log(err, "판매중 데이터");
+      },
+    }
+  );
+
+  const { isLoading: ILC, data: collection } = useQuery<any>( // 이 유저가 가진 그림
+    "getUserCollection",
+    async () => {
+      return await getUsercollectedInfo(user.userId as number);
+    },
+    {
+      onError: (err) => {
+        console.log(err);
+      },
+    }
+  );
+
+  const getLiked = useMutation<any, Error>(
+    "getProductLike",
+    async () => {
+      return await getProductLike(Number(productId));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("좋아요여부 받아오기 성공", res);
+        setLiked(res);
+      },
+    }
+  );
 
   const getProduct = useMutation<any, Error>(
     "productDetail",
@@ -423,14 +454,13 @@ const DetailItem = () => {
       onSuccess: (res) => {
         console.log("상품상세받아오기성공", res);
         setItem(res);
-        setLikes(res.favoriteCount)
+        setLikes(res.favoriteCount);
       },
       onError: (err: any) => {
         console.log(err, "❌디테일 페이지 실패!");
       },
     }
   );
-
 
   const getUser = useMutation<any, Error>(
     "getuserdetail",
@@ -439,10 +469,10 @@ const DetailItem = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("유저정보 받아오기 성공", res)
+        console.log("유저정보 받아오기 성공", res);
         setUser(res);
-        setFollowees(res.followeeCnt)
-        setFollowers(res.followerCnt)
+        setFollowees(res.followeeCnt);
+        setFollowers(res.followerCnt);
       },
     }
   );
@@ -468,8 +498,8 @@ const DetailItem = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("좋아요 취소 성공", res)
-        setLiked(false)
+        console.log("좋아요 취소 성공", res);
+        setLiked(false);
       },
       onError: (err) => console.log("좋아요 취소 실패", err),
     }
@@ -482,8 +512,8 @@ const DetailItem = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("팔로우 성공", res)
-        setFollowBtnState(false)
+        console.log("팔로우 성공", res);
+        setFollowBtnState(false);
       },
       onError: (err) => console.log("팔로우 실패", err),
     }
@@ -496,8 +526,8 @@ const DetailItem = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("언팔로우 성공", res)
-        setFollowBtnState(true)
+        console.log("언팔로우 성공", res);
+        setFollowBtnState(true);
       },
       onError: (err) => console.log("언팔로우 실패", err),
     }
@@ -526,35 +556,93 @@ const DetailItem = () => {
     }
   );
 
-  const Like =()=>{
-    setLikes(likes+1)
-    LikeIt.mutate()
-  }
+  const cancelSale = useMutation<any, Error>(
+    "postCancelPurchase",
+    async () => {
+      return await postCancelPurchase(item.productId);
+    },
+    {
+      onSuccess: async (res) => {
+        console.log("구매등록 취소 성공", res);
+      },
+      onError: (err: any) => {
+        console.log("구매등록 취소 실패", err);
+      },
+    }
+  );
 
-  const cancelLike  =()=>{
-    setLikes(likes-1)
-    cancelLikeIt.mutate()
-  }
+  const onclickCancelSale = async () => {
+    try {
+      const accounts = await ethereum.request({ method: "eth_accounts" })
+      if (!accounts) {
+        alert("지갑을 연결해주세요")
+        return
+      }
+
+      // sale컨트랙트 주소 받아서 생성
+      const saleContractAddress = await SaleFactoryContract.methods
+      .getSaleContractAddress(item.tokenId)
+      .call();
+
+      const saleContract = await createSaleContract(saleContractAddress)
+
+      // 판매 취소
+      await saleContract.methods.cancelSales().send({ from: accounts[0] });
+      cancelSale.mutate()
+    } catch (error) {
+      console.log("판매취소실패", error);
+    }
+  };
+
+  const Like = () => {
+    setLikes(likes + 1);
+    LikeIt.mutate();
+  };
+
+  const cancelLike = () => {
+    setLikes(likes - 1);
+    cancelLikeIt.mutate();
+  };
 
   const onClickFollow = () => {
-    setFollowers(followers + 1)
-    follow.mutate()
-  }
+    setFollowers(followers + 1);
+    follow.mutate();
+  };
 
   const onClickUnFollow = () => {
-    setFollowees(followers - 1)
-    unFollow.mutate()
-  }
+    setFollowees(followers - 1);
+    unFollow.mutate();
+  };
 
-  const getStatus = ()=>{
-    if(item.productState ===1){setStatus('bid')}
-    if(item.productState ===2){setStatus('sell')}
-    if(item.productState ===3){setStatus('normal')}
+  const getStatus = () => {
+    if (item.productState === 1) {
+      setStatus("bid");
+    }
+    if (item.productState === 2) {
+      setStatus("sell");
+    }
+    if (item.productState === 3) {
+      setStatus("normal");
+    }
+  };
+
+  const isImage = () => {
+    const URL = item.productFileUrl.split(".")
+    const temp = URL[URL.length - 1]
+    // console.log(temp)
+    const imgArr = ["jpg", "jpeg", "png", "gif", "bmp", "tif", "tiff"]
+    // console.log(imgArr.includes(temp))
+    if (imgArr.includes(temp)) {
+      setIsImg(true)
+    } else {
+      setIsImg(false)
+    }
   }
 
   useEffect(() => {
     getStatus();
     getUser.mutate();
+    isImage()
   }, [item]);
 
   useEffect(() => {
@@ -571,10 +659,10 @@ const DetailItem = () => {
     getUserFollower.mutate();
   }, [user]);
 
-  if (newItem && collection){
-    if (items.length <5){
-      setItems(items.concat(collection.content))
-      setItems(items.concat(newItem.content))
+  if (newItem && collection) {
+    if (items.length < 5) {
+      setItems(items.concat(collection.content));
+      setItems(items.concat(newItem.content));
     }
   }
   return (
@@ -618,9 +706,9 @@ const DetailItem = () => {
                     <div>팔로잉수:{followees}</div>
                     {Number(localStorage.getItem("userId")) ===
                     user.userId ? null : followBtnState ? (
-                      <Button onClick={onClickUnFollow}>팔로우끊기</Button>
+                      <Button onClick={onClickFollow}>Follow</Button>
                     ) : (
-                      <Button onClick={onClickFollow}>팔로우하기</Button>
+                      <Button onClick={onClickUnFollow}>Unfollow</Button>
                     )}
                   </div>
                 </div>
@@ -644,15 +732,10 @@ const DetailItem = () => {
                   <div className="title">{item.productTitle}</div>
                   <div className="content">
                     <div>카테고리 : {item.productCode}</div>
-                    <div>등록일자:{item.productRegDt}</div>
+                    <div>등록일자 : {item.productRegDt}</div>
                     <div>상품상태/판매중?:{item.productState}</div>
                     <div>상품상태/판매중?:{status}</div>
-                    <FavoriteBox
-                      onClick={() => {
-                        setLiked(!liked);
-                      }}
-                      className="icon"
-                    >
+                    <FavoriteBox className="icon">
                       {liked ? (
                         <FavoriteIcon
                           onClick={() => {
@@ -678,19 +761,14 @@ const DetailItem = () => {
                     </div>
                   </Description>
                 </div>
-
-                {item.productFileUrl ? (
+                {isImg ? (
                   <img
                     className="img"
                     alt="작품"
-                    src={item.productFileUrl as any}
+                    src={item.productThumbnailUrl}
                   />
                 ) : (
-                  <img
-                    className="img"
-                    alt="작품"
-                    src={item.productThumbnailUrl as any}
-                  />
+                  <video src={item.productFileUrl} controls></video>
                 )}
               </div>
               <Bottom>
@@ -708,6 +786,12 @@ const DetailItem = () => {
                         }}
                       >
                         구매하기
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={() => onclickCancelSale()}
+                      >
+                        판매취소
                       </Button>
                     </>
                   )}
@@ -769,5 +853,5 @@ const DetailItem = () => {
       )}
     </Wrapper>
   );
-}
-export default DetailItem
+};
+export default DetailItem;

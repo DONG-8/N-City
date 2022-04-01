@@ -11,6 +11,7 @@ export interface ModalBaseProps {
   setCategory: React.Dispatch<React.SetStateAction<string>>;
   setCategoryCode: React.Dispatch<React.SetStateAction<string>>;
   openStateHandler: React.Dispatch<React.SetStateAction<boolean>>;
+  userRole: string;
 }
 
 export interface Icategory {
@@ -181,6 +182,7 @@ const CategoryModal = ({
   setCategory,
   setCategoryCode,
   openStateHandler,
+  userRole
 }: ModalBaseProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<
@@ -192,7 +194,7 @@ const CategoryModal = ({
     { name: "예술", selected: false, code:"4" },
     { name: "수집품", selected: false, code:"5" },
     { name: "스포츠", selected: false, code:"6" },
-    { name: "트레이딩 카드", selected: false, code:"7" },
+    { name: "캐릭터", selected: false, code:"7" },
     { name: "유틸리티", selected: false, code:"8" },
   ]);
 
@@ -218,16 +220,6 @@ const CategoryModal = ({
   // submit
   const onClickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
-    let categoryCode = null;
-    // const temp: any = selectedCategories
-    //   .filter((category) => {
-    //     if (category.selected) {
-    //       return category.name;
-    //     }
-    //   })
-    //   .map((category) => category.name);
-    // setCategory(temp[0]);
-    // console.log(temp[0]);
 
     selectedCategories.filter((category) => {
       if (category.selected) {
@@ -267,6 +259,7 @@ const CategoryModal = ({
         <ExplaneText>원하는 카테고리를 추가하세요.</ExplaneText>
         <SelectCategory>
           {selectedCategories.map((category) => (
+            userRole !== "ROLE_ADMIN" && category.code === "7" ? null :
             <button
               key={category.name}
               className={category.selected ? "active" : ""}
