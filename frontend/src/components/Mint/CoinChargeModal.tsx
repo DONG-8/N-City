@@ -12,7 +12,6 @@ const Wrapper = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  
   background-color: #35357a;
   width: 40%;
   height: 50vh;
@@ -21,11 +20,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   color: white;
-  .title{
-    font-size: 2.5vh;
-    height: 4vh;
-    text-align: center;
-  }
+  
 `;
 const Exit = styled.div`
   position: absolute;
@@ -34,12 +29,17 @@ const Exit = styled.div`
   cursor: pointer;
 `
 const Title = styled.div`
-  flex: 2.5;
-
+  flex: 2;
+  .title{
+    font-size: 4vh;
+    height: 4vh;
+    text-align: center;
+    margin-top: 2vh;
+  }
 `
 
 const Contents= styled.div`
-  flex:7.5;
+  flex:8;
   color: black;
   background-color: white;
   text-align: center;
@@ -83,7 +83,7 @@ const CoinChargeModal:React.FC<Iprops> = ({open,setOpen}) => {
         </Exit>
         <Title>
           <div className="title">
-            <h1>NCT 코인 충전소</h1>
+            NCT 코인 충전소
           </div>
         </Title>
         <Contents>

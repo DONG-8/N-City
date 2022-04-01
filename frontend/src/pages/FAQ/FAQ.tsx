@@ -16,12 +16,15 @@ const Header = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #F8D9CE;
+  background-color: #35357a;
+  border-radius: 0 0 20px 20px;
+  color: white;
   width: 100%;
-  height: 200px;
+  height: 180px;
 `
 
 const Main = styled.div`
+  min-height: 50vh;
   margin-top: 60px;
   display: flex;
   flex-direction: column;
