@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios, { AxiosRequestConfig } from "axios";
 import CategoryModal, { Icategory } from "../../components/Mint/CategoryModal";
 import { NFTcreatorContract } from "../../web3Config";
+import { getUserInfo } from "../../store/apis/user";
 
 // 동준추가
 import { postProduct, putTokenID } from "../../store/apis/product";
@@ -274,6 +275,7 @@ const Mint = () => {
   const [category, setCategory] = useState<any>(null);
   const [categoryCode, setCategoryCode] = useState<any>(null);
   const [isVideo, setIsVideo] = useState<boolean>(false);
+  const [userRole, setUserRole] = useState<string>("")
   const { ethereum } = window;
 
   // category modal
@@ -287,11 +289,6 @@ const Mint = () => {
     setIsOpen(false);
   };
 
-
-
-  // code: 0,
-  //           productDesc: "이잉",
-  //           productTitle: "오엥",
   const submitFile = useMutation<any, Error>(
     "submitFile",
     async () => {
@@ -483,9 +480,6 @@ const Mint = () => {
     }
   };
 
-  console.log(file);
-  console.log(thumbnail);
-
   const previewThumbnailImage = () => {
     if (thumbnail) {
       return (
@@ -502,6 +496,33 @@ const Mint = () => {
       );
     }
   };
+
+  const getMyInfo = useMutation<any, Error>(
+    "getUserInfo",
+    async () => {
+      if (localStorage.getItem("userId")) {
+        return await getUserInfo(Number(localStorage.getItem("userId")));
+      } else {
+        alert("내 정보를 받아올 수 없습니다.");
+        return;
+      }
+    },
+    {
+      onSuccess: async (res) => {
+        console.log("내정보를 받아왔습니다.");
+        console.log(res);
+        setUserRole(res.userRole)
+      },
+      onError: (err: any) => {
+        console.log(err, "에러발생");
+      },
+    }
+  );
+
+  useEffect(() => {
+    getMyInfo.mutate()
+  },[])
+
 
   useEffect(() => {
     if (file?.type.slice(0, 5) === "video") {
@@ -606,6 +627,7 @@ const Mint = () => {
         openStateHandler={setIsOpen}
         setCategory={setCategory}
         setCategoryCode={setCategoryCode}
+        userRole={userRole}
       ></CategoryModal>
     </Wrapper>
   );

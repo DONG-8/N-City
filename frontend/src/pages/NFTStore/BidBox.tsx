@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Button } from '@mui/material';
 import 'moment/locale/ko';
 import { useMutation } from 'react-query';
-import { getPastHistory } from '../../store/apis/deal';
-import { createSaleContract } from '../../web3Config';
+import { getPastHistory, postAuctionConfirm } from '../../store/apis/deal';
+import { createSaleContract, SaleFactoryContract } from '../../web3Config';
 
 interface IState {
   history: {
@@ -70,16 +70,33 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
       },
     }
   );
+
+  const confirmProduct = useMutation<any, Error>(
+    "confirmProduct",
+    async () => {
+      return await postAuctionConfirm(Number(item.productId));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("confirm 성공", res);
+      },
+      onError: (err) => console.log("confirm 실패", err)
+    }
+  );
   
   const onClickConfirm = async () => {
     try {
       const accounts = await ethereum.request({ method: "eth_accounts" })
-      const saleContract = await createSaleContract(item.tokenId)
+
+      //salecontract address
+      const saleContractAddress = await SaleFactoryContract.methods.getSaleContractAddress(item.tokenId).call()
+      const saleContract = await createSaleContract(saleContractAddress)
       const response = await saleContract.methods.confirmItem().send({ from: accounts[0] });
       const temp = (response.events.SaleEnded.returnValues.winner);
       const temp2 = (response.events.SaleEnded.returnValues.amount);
       console.log("경매끝 최종 구매자", temp)
       console.log("경매끝 최종 구매 가격", temp2)
+      confirmProduct.mutate()
     } catch (error) {
       console.log("confirm 실패", error)
     }

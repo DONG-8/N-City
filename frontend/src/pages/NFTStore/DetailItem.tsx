@@ -93,7 +93,9 @@ const MainBannerWrapper = styled.div`
   margin-bottom: 10vh;
 `;
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  font-family: 'Noto Sans KR', sans-serif;
+`;
 
 const Top = styled.div`
   width: 90vw;
@@ -274,6 +276,9 @@ const StoreWapper = styled.div`
 
 const FavoriteBox = styled.div`
   display: flex;
+  svg {
+    cursor: pointer;
+  }
 `;
 
 interface Istate {
@@ -399,6 +404,7 @@ const DetailItem = () => {
     productAuctionEndTime: null,
     favoriteCount: 0,
   });
+  const [isImg, setIsImg] = useState(true)
   const { ethereum } = window
 
 
@@ -620,9 +626,23 @@ const DetailItem = () => {
     }
   };
 
+  const isImage = () => {
+    const URL = item.productFileUrl.split(".")
+    const temp = URL[URL.length - 1]
+    // console.log(temp)
+    const imgArr = ["jpg", "jpeg", "png", "gif", "bmp", "tif", "tiff"]
+    // console.log(imgArr.includes(temp))
+    if (imgArr.includes(temp)) {
+      setIsImg(true)
+    } else {
+      setIsImg(false)
+    }
+  }
+
   useEffect(() => {
     getStatus();
     getUser.mutate();
+    isImage()
   }, [item]);
 
   useEffect(() => {
@@ -715,12 +735,7 @@ const DetailItem = () => {
                     <div>등록일자 : {item.productRegDt}</div>
                     <div>상품상태/판매중?:{item.productState}</div>
                     <div>상품상태/판매중?:{status}</div>
-                    <FavoriteBox
-                      onClick={() => {
-                        setLiked(!liked);
-                      }}
-                      className="icon"
-                    >
+                    <FavoriteBox className="icon">
                       {liked ? (
                         <FavoriteIcon
                           onClick={() => {
@@ -746,19 +761,14 @@ const DetailItem = () => {
                     </div>
                   </Description>
                 </div>
-
-                {item.productFileUrl ? (
+                {isImg ? (
                   <img
                     className="img"
                     alt="작품"
-                    src={item.productFileUrl as any}
+                    src={item.productThumbnailUrl}
                   />
                 ) : (
-                  <img
-                    className="img"
-                    alt="작품"
-                    src={item.productThumbnailUrl as any}
-                  />
+                  <video src={item.productFileUrl} controls></video>
                 )}
               </div>
               <Bottom>
