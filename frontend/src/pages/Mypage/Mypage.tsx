@@ -195,7 +195,7 @@ const ListCategory = styled.div`
   align-items: center;
 `
 
-const Event = styled.div`
+export const Event = styled.div`
   padding: 0;
   display: flex;
   align-items: center;
