@@ -18,7 +18,7 @@ export const postLogin = async (userAddress : string)=> {
   const response = await apiClient.post<any>(
     '/users/login',
     {
-      userAddress
+      "userAddress" : userAddress
     }
   ) 
   console.log('로그인진행중')
