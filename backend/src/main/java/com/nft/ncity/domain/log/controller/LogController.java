@@ -50,7 +50,7 @@ public class LogController {
         Integer addressLength = userAddress.length();
         // 올바른 지갑 주소인지 확인
         if(!addressLength.equals(42)) {
-            return ResponseEntity.status(401).body(LoginPostRes.of(401, "Incorrect Wallet", null, null));
+            return ResponseEntity.status(401).body(LoginPostRes.of(401, "Incorrect Wallet", null, null,null));
         } else {
             User user = logService.getUserDetailByAddress(userAddress);
             // 토큰
@@ -66,7 +66,7 @@ public class LogController {
 
             response.addCookie(accessToken);
             response.addCookie(refreshToken);
-            return ResponseEntity.status(201).body(LoginPostRes.of(201, "Success", accessJwt, user.getUserId()));
+            return ResponseEntity.status(201).body(LoginPostRes.of(201, "Success", accessJwt, user.getUserId(),user.getUserNick()));
         }
     }
 
