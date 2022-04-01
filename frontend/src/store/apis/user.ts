@@ -28,7 +28,7 @@ export const getUserInfo = async (userId : number ) => {
 // 해당 유저의 거래내역 조회
 export const getUserTradeInfo = async (userId : number ) => {
   const response = await apiClient.get<any>(
-    `/users/${userId}/activities`
+    `/users/${userId}/activities?size=30`
   )
   return response.data
 }

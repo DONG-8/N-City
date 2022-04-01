@@ -11,6 +11,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import ReplayIcon from '@mui/icons-material/Replay';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -221,6 +222,8 @@ const DealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
         return <Event><ShoppingCartIcon /><div>Create Sale</div></Event>
       case 3: // 경매참여
         return <Event><LocalOfferIcon /><div>Bid</div></Event>
+      case 4: // 판매취소
+        return <Event><ReplayIcon /><div>Cancel sale</div></Event>
       case 5: // 소유권 전달
         return <Event><CompareArrowsIcon /><div>Transfer</div></Event>
       case 6: // 민팅

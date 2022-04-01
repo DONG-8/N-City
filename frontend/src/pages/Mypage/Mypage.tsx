@@ -9,6 +9,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import ReplayIcon from '@mui/icons-material/Replay';
 import Tooltip from "@mui/material/Tooltip";
 import { items as itm } from "../NFTStore/items";
 import { QueryClient, useMutation, useQuery } from "react-query";
@@ -459,6 +460,8 @@ export default function Mypage() {
         return <Event><ShoppingCartIcon /><div>Create Sale</div></Event>
       case 3: // 경매참여
         return <Event><LocalOfferIcon /><div>Bid</div></Event>
+      case 4: // 판매취소
+        return <Event><ReplayIcon /><div>Cancel sale</div></Event>
       case 5: // 소유권 전달
         return <Event><CompareArrowsIcon /><div>Transfer</div></Event>
       case 6: // 민팅
@@ -599,6 +602,7 @@ export default function Mypage() {
         <List>
         <ListCategory>
           <div>Event</div>
+          <div>product</div>
           <div>Price</div>
           <div>From</div>
           <div>To</div>
@@ -608,6 +612,7 @@ export default function Mypage() {
           return (
             <ListItem key={idx}>
               <div>{dealTypeConvert(history.dealType)}</div>
+              <div>{history.productTitle}</div>
               <div>{history.dealPrice}</div>
               <div>{history.dealFromUserNick}</div>
               <div>{history.dealToUserNick}</div>
