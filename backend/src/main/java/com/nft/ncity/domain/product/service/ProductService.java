@@ -7,6 +7,7 @@ import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
 import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.response.ProductDealListGetRes;
+import com.nft.ncity.domain.product.response.ProductDetailGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
 import com.nft.ncity.domain.user.response.UserMintProductRes;
 import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
@@ -33,7 +34,7 @@ public interface ProductService {
     Page<ProductDealListGetRes> getProductDealListByCode(Pageable pageable, int productCode); // 카테고리별 거래상품 전체조회
     Page<ProductListGetRes> getProductListByTitle(Pageable pageable, String productTitle); // 상품명 검색조회
 
-    Product productDetail(Long productId); // 상품 상세 조회
+    ProductDetailGetRes productDetail(Long productId); // 상품 상세 조회
 
     // update
     long productModify(ProductModifyPutReq productModify);

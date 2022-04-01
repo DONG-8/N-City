@@ -14,7 +14,10 @@ import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
 import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.response.ProductDealListGetRes;
+import com.nft.ncity.domain.product.response.ProductDetailGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
+import com.nft.ncity.domain.user.db.entity.User;
+import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.nft.ncity.domain.user.response.UserMintProductRes;
 import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +57,10 @@ public class ProductServiceImpl implements ProductService{
 
     @Autowired
     DealRepository dealRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
 
     @Autowired
     DealRepositorySupport dealRepositorySupport;
@@ -280,10 +287,30 @@ public class ProductServiceImpl implements ProductService{
 
 
     @Override
-    public Product productDetail(Long productId) {
-        Product product = productRepository.findById(productId).get();
-        product.setFavoriteCount(favoriteRepositorySupport.getFavoriteCount(productId));
-        return product;
+    public ProductDetailGetRes productDetail(Long productId) {
+        Product p = productRepository.findById(productId).get();
+
+        ProductDetailGetRes productDetailGetRes = new ProductDetailGetRes();
+
+        productDetailGetRes.setProductId(productId);
+        productDetailGetRes.setUserId(p.getUserId());
+        productDetailGetRes.setUserNick(productRepositorySupport.getUserNickByUserId(p.getUserId()));
+        productDetailGetRes.setTokenId(p.getTokenId());
+        productDetailGetRes.setProductTitle(p.getProductTitle());
+        productDetailGetRes.setProductDesc(p.getProductDesc());
+        productDetailGetRes.setProductCode(p.getProductCode());
+        productDetailGetRes.setProductXCoordinate(p.getProductXCoordinate());
+        productDetailGetRes.setProductYCoordinate(p.getProductYCoordinate());
+        productDetailGetRes.setProductView(p.isProductView());
+        productDetailGetRes.setProductState(p.getProductState());
+        productDetailGetRes.setProductPrice(p.getProductPrice());
+        productDetailGetRes.setProductRegDt(p.getProductRegDt());
+        productDetailGetRes.setProductFileUrl(p.getProductFileUrl());
+        productDetailGetRes.setProductThumbnailUrl(p.getProductThumbnailUrl());
+        productDetailGetRes.setProductAuctionEndTime(p.getProductAuctionEndTime());
+        productDetailGetRes.setMintUserId(productRepositorySupport.getMintUserIdByProductId(productId));
+        productDetailGetRes.setFavoriteCount(favoriteRepositorySupport.getFavoriteCount(productId));
+        return productDetailGetRes;
     }
 
 

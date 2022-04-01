@@ -5,6 +5,7 @@ import com.nft.ncity.domain.deal.db.entity.Deal;
 import com.nft.ncity.domain.deal.service.DealService;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepository;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
+import com.nft.ncity.domain.follow.db.repository.FollowRepository;
 import com.nft.ncity.domain.follow.db.repository.FollowRepositorySupport;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.repository.ProductRepositorySupport;
@@ -14,6 +15,7 @@ import com.nft.ncity.domain.user.db.repository.EmailAuthRepositorySupport;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.nft.ncity.domain.user.db.repository.UserRepositorySupport;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
+import com.nft.ncity.domain.user.response.UserAllRes;
 import com.nft.ncity.domain.user.response.UserDealInfoWithProductRes;
 import com.nft.ncity.domain.user.response.UserInfoRes;
 import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
@@ -234,6 +236,26 @@ public class UserServiceImpl implements UserService {
         if(list.isEmpty()) return Page.empty();
 
         return new PageImpl<UserProductWithIsFavoriteRes>(list,products.getPageable(),list.size());
+    }
+
+    @Override
+    public List<UserAllRes> getUserAll(){
+
+        List<User> userList = userRepository.findAll();
+
+        List<UserAllRes> listRes = new ArrayList<>();
+
+        for(User u :userList ){
+
+            UserAllRes userRes = UserAllRes.builder()
+                    .user(u)
+                    .followee(followRepositorySupport.FolloweeList(u.getUserId()))
+                    .follower(followRepositorySupport.FollowerList(u.getUserId()))
+                    .build();
+
+            listRes.add(userRes);
+        }
+        return listRes;
     }
 }
 

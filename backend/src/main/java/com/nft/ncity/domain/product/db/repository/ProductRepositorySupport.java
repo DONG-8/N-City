@@ -5,6 +5,7 @@ import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.entity.QProduct;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
+import com.nft.ncity.domain.user.db.entity.QUser;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class ProductRepositorySupport {
 
     QDeal qDeal = QDeal.deal;
 
+    QUser qUser = QUser.user;
     //CREATE
     @Transactional
     public long updateTokenByProductId(TokenRegisterPutReq tokenRegisterPutReq){
@@ -151,6 +153,8 @@ public class ProductRepositorySupport {
         return new PageImpl<Product>(products, pageable, products.size());
     }
 
+
+    // 밑으로는 상세페이지 표시용
     public Product findProductByProductId(Long productId) {
 
         Product product = jpaQueryFactory.select(qProduct)
@@ -158,5 +162,23 @@ public class ProductRepositorySupport {
                 .where(qProduct.productId.eq(productId))
                 .fetchOne();
         return product;
+    }
+
+
+    public String getUserNickByUserId(Long userId){
+        String userNick = jpaQueryFactory.select(qUser.userNick)
+                .from(qUser)
+                .where(qUser.userId.eq(userId))
+                .fetchOne();
+        return userNick;
+    }
+
+    public Long getMintUserIdByProductId(Long productId){
+        Long mintUserId = jpaQueryFactory.select(qDeal.dealTo)
+                .from(qDeal)
+                .where(qDeal.productId.eq(productId))
+                .limit(1)
+                .fetchOne();
+        return mintUserId;
     }
 }
