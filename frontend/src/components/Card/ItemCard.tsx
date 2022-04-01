@@ -110,9 +110,9 @@ interface Iprops {
 
 const ItemCard:React.FC<Iprops>= ({item}) => {
   const navigate = useNavigate()
-  const goDetailPage = ()=>{
-    navigate('/store/detail')
-    localStorage.setItem("item",JSON.stringify(item))
+  const goDetailPage = (productId)=>{
+    // localStorage.setItem("item",JSON.stringify(item))
+    navigate(`/store/detail/${productId}`)
   }
   const [liked,setLiked] = useState(item.favorite)
   const [likes,setLikes] = useState(Number(item.productFavoriteCount))
@@ -155,20 +155,24 @@ const ItemCard:React.FC<Iprops>= ({item}) => {
     cancelLike.mutate()
   }
 
+  const onClickCard = (productId) => {
+    navigate(`/store/detail/${productId}`)
+  }
+
   return (
     <>
       <CardWrapper>
         <Image
           onClick={() => {
-            goDetailPage();
+            goDetailPage(item.productId);
           }}
         >
-          <img alt="pic" src={item.productThumbnailUrl} />
+          <img onClick={() => onClickCard(item.productId)} alt="pic" src={item.productThumbnailUrl} />
         </Image>
         <CardCenter
-          onClick={() => {
-            goDetailPage();
-          }}
+          // onClick={() => {
+          //   goDetailPage(item.productId);
+          // }}
         >
           <DesLeft>
             {/* <Artist>
