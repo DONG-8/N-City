@@ -77,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/deals", "/api/deals/purchase/**",
                         "/api/myroom/**").hasAnyRole("NEW", "USER", "ENTERPRISE", "ARTIST", "INFLUENCER", "ADMIN") // 로그인한 유저만 접근 가능 경로
                 .antMatchers("/api/authentication/**").hasRole("ADMIN") // 관리자만 접근 가능 경로
-                .antMatchers("/v3/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/swagger-ui/**").permitAll()
+                .antMatchers("/v3/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/swagger-ui/**","/api/users/login").permitAll()
     	        	    .anyRequest().permitAll()
                 .and().cors();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
