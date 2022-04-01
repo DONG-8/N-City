@@ -4,14 +4,14 @@ import * as API from "./types"
 const apiClient = axios.create({
   // baseURL: "https://j6e106.p.ssafy.io/api",
   // baseURL: "http://localhost:8080/api",
-  baseURL: "http://localhost:8080/api",
+  baseURL: "https://j6e106.p.ssafy.io/api",
   headers: {
     "Content-type": "application/json",
   },
 });
 const fileApiClient = axios.create({
   // baseURL: "https://j6e106.p.ssafy.io/api",
-  baseURL: "http://localhost:8080/api",
+  baseURL: "https://j6e106.p.ssafy.io/api",
   headers: {
   'Content-Type': 'multipart/form-data'
   },

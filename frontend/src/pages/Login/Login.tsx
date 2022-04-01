@@ -81,7 +81,7 @@ const Login = () => {
   const { ethereum } = window;
   const currentUrl = new URL(window.location.href);
   const forwarderOrigin =
-    currentUrl.hostname === "localhost" ? "http://localhost:3000" : undefined;
+    currentUrl.hostname === "localhost" ? "https://j6e106.p.ssafy.io" : undefined;
 
   const onboarding = new MetaMaskOnboarding({ forwarderOrigin });
 
