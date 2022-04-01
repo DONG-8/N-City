@@ -3,6 +3,7 @@ package com.nft.ncity.domain.user.controller;
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.domain.favorite.db.entity.Favorite;
 import com.nft.ncity.domain.favorite.service.FavoriteService;
+import com.nft.ncity.domain.follow.db.repository.FollowRepositorySupport;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.service.ProductService;
 import com.nft.ncity.domain.user.db.entity.EmailAuth;
@@ -10,10 +11,7 @@ import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.nft.ncity.domain.user.request.EmailAuthRegisterReq;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
-import com.nft.ncity.domain.user.response.UserDealInfoWithProductRes;
-import com.nft.ncity.domain.user.response.UserInfoRes;
-import com.nft.ncity.domain.user.response.UserMintProductRes;
-import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
+import com.nft.ncity.domain.user.response.*;
 import com.nft.ncity.domain.user.service.UserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +44,8 @@ public class UserController {
 
     @Autowired
     FavoriteService favoriteService;
+
+
 
     @GetMapping("/{userId}")
     @ApiOperation(value = "유저 정보 조회", notes = "<strong>UserId에 해당하는 유저의 정보</strong>을 넘겨준다.")
@@ -300,4 +300,28 @@ public class UserController {
 //        }
         return ResponseEntity.status(200).body(users);
     }
+
+
+
+    /**
+     * 전체유저
+     */
+    @GetMapping("/all")
+    @ApiOperation(value = "유저 전체조회", notes = "<strong>유저 전체 조회</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "검색 완료", response = User.class),
+    })
+    public ResponseEntity<List<UserAllRes>> getUserAll() {
+
+        log.info("allUserList - 호출");
+        List<UserAllRes> users = userService.getUserAll();
+
+        return ResponseEntity.status(200).body(users);
+    }
+
+
+
+
+
+
 }
