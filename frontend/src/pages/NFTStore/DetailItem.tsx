@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { artists as users } from './items';
 import { Button } from '@mui/material';
 import { useMutation, useQuery } from 'react-query';
 import {  getProductAll, getProductDetail, getSellProduct } from '../../store/apis/product';
 import { getUsercollectedInfo, getUserInfo } from '../../store/apis/user';
-import { postProductLike } from '../../store/apis/Main';
-import { delProductLike, getProductLike } from '../../store/apis/favorite';
+import { delProductLike, getProductLike, postProductLike } from '../../store/apis/favorite';
 import { useParams } from 'react-router-dom';
 import Slider from 'react-slick';
 import ItemCard2 from '../../components/Card/ItemCard2';
@@ -16,6 +14,7 @@ import DealModal from './DealModal';
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import BidBox from './BidBox';
+import { deleteFollow, getFollowee, postFollow } from '../../store/apis/follow';
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -266,6 +265,11 @@ const StoreWapper = styled.div`
     color: black;
   }
 `;
+
+const FavoriteBox = styled.div`
+  display: flex;
+`
+
 interface Istate{
   item :{
     productId: Number,
@@ -319,9 +323,21 @@ interface Istate{
 }
 const DetailItem = () => {
   const [localitem,setLocalitem] = useState<Istate['item']>(JSON.parse(localStorage.getItem("item")||""))
-  const [likes,setLikes] = useState(Number(localitem.productFavorite))
+  const [likes,setLikes] = useState(Number(0))
   const [liked,setLiked] = useState(false) // 내가 좋아요 했나
-  const [user,setUser] = useState(users[0])
+  const [user,setUser] = useState<Istate["user"]>({
+    "authId": 0,
+    "followeeCnt": 0,
+    "followerCnt": 0,
+    "userAddress": "",
+    "userDescription": "",
+    "userEmail": "",
+    "userEmailConfirm": false,
+    "userId": 0,
+    "userImgUrl": "",
+    "userNick": "",
+    "userRole": ""
+  })
   const [items,setItems ] = useState<Istate['item'][]>([{
       productId: 1,
       productTitle: 'string',
@@ -342,6 +358,7 @@ const DetailItem = () => {
       userRole: 'string'}]
     }
     ])
+  const [followBtnState, setFollowBtnState] = useState<boolean | null>(null);
 
   // 모달창
   const [open, setOpen] = useState(false);
@@ -352,20 +369,20 @@ const DetailItem = () => {
   const [productId,setProductId] = useState(useParams().productId)
   const [item,setItem] = useState(
     {
-      "productId": 6,
-      "userId": 1,
-      "tokenId": 17,
-      "productTitle": "디자이너",
-      "productDesc": "디자이너너너",
-      "productCode": 4,
+      "productId": 0,
+      "userId": 0,
+      "tokenId": 0,
+      "productTitle": "",
+      "productDesc": "",
+      "productCode": 0,
       "productXCoordinate": 0,
       "productYCoordinate": 0,
       "productView": false,
-      "productState": 2,
-      "productPrice": 10,
-      "productRegDt": "2022-03-29 11:30:36",
-      "productFileUrl": "https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/210cd695-d5ab-4a48-b885-3cd9eb3c97b4.jpg",
-      "productThumbnailUrl": "https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/612e52c3-6678-458e-9347-f58a4d5acc81.jpg",
+      "productState": 0,
+      "productPrice": 0,
+      "productRegDt": "",
+      "productFileUrl": "",
+      "productThumbnailUrl": "",
       "productAuctionEndTime": null,
       "favoriteCount": 0
     }
@@ -390,67 +407,163 @@ const DetailItem = () => {
       await (getProductLike(Number(productId)))
     )},
     {onSuccess:(res)=>{
+      console.log("좋아요여부 받아오기 성공", res)
       setLiked(res)
     }}
   )
 
   const getProduct = useMutation<any, Error>(
     "productDetail",
-    async () => { return(
-      await (getProductDetail(Number(productId)))
-    )},{
-      onSuccess: (res) => {setItem(res)},
-      onError: (err: any) => {console.log(err, "❌디테일 페이지 실패!")}});
+    async () => {
+      return await getProductDetail(Number(productId));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("상품상세받아오기성공", res);
+        setItem(res);
+        setLikes(res.favoriteCount)
+      },
+      onError: (err: any) => {
+        console.log(err, "❌디테일 페이지 실패!");
+      },
+    }
+  );
 
-  const getUser = useMutation<any,Error>(
+
+  const getUser = useMutation<any, Error>(
     "getuserdetail",
-    async()=>{return(
-      await (getUserInfo(Number(item.userId)))
-    )},
-    {onSuccess:(res)=>{setUser(res)}
-  }
-  )
+    async () => {
+      return await getUserInfo(Number(item.userId));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("유저정보 받아오기 성공", res)
+        setUser(res);
+      },
+    }
+  );
 
-  const LikeIt = useMutation<any,Error>(
-    'postProductLike',
-    async()=>{ return (
-      await ( postProductLike(Number(item.productId)))
-      )
+  const LikeIt = useMutation<any, Error>(
+    "postProductLike",
+    async () => {
+      return await postProductLike(Number(productId));
     },
-    {onSuccess: (res)=>console.log(res),
-      onError:(err)=>console.log(err)}
-  )
-  const cancelLikeIt = useMutation<any,Error>(
-    'delProductLike',
-    async()=>{ return (
-      await ( delProductLike(Number(item.productId)))
-      )
+    {
+      onSuccess: (res) => {
+        console.log("좋아요 성공", res);
+        setLiked(true);
+      },
+      onError: (err) => console.log("좋아요 실패", err),
+    }
+  );
+
+  const cancelLikeIt = useMutation<any, Error>(
+    "delProductLike",
+    async () => {
+      return await delProductLike(Number(productId));
     },
-    {onSuccess: (res)=>console.log(res),
-    onError:(err)=>console.log(err)}
-  )
+    {
+      onSuccess: (res) => {
+        console.log("좋아요 취소 성공", res)
+        setLiked(false)
+      },
+      onError: (err) => console.log("좋아요 취소 실패", err),
+    }
+  );
+
+  const follow = useMutation<any, Error>(
+    "follow",
+    async () => {
+      return await postFollow(Number(user.userId));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("팔로우 성공", res)
+      },
+      onError: (err) => console.log("팔로우 실패", err),
+    }
+  );
+
+  const unFollow = useMutation<any, Error>(
+    "follow",
+    async () => {
+      return await deleteFollow(Number(user.userId));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("언팔로우 성공", res)
+      },
+      onError: (err) => console.log("언팔로우 실패", err),
+    }
+  );
+
+  const getUserFollower = useMutation<any, Error>(
+    "getFollower",
+    async () => {
+      return await getFollowee(Number(user.userId));
+    },
+    {
+      onSuccess: async (res) => {
+        // await setFollowers(res)
+        console.log("팔로워들", res);
+        const userIds = res.map((user) => user.userId);
+        console.log(userIds);
+        if (userIds.includes(Number(localStorage.getItem("userId")))) {
+          setFollowBtnState(false);
+        } else {
+          setFollowBtnState(true);
+        }
+      },
+      onError: (err: any) => {
+        console.log("에러발생", err);
+      },
+    }
+  );
+
   const Like =()=>{
     setLikes(likes+1)
     LikeIt.mutate()
   }
+
   const cancelLike  =()=>{
     setLikes(likes-1)
     cancelLikeIt.mutate()
   }
+
+  const onClickFollow = () => {
+
+  }
+
+  const onClickUnFollow = () => {
+
+  }
+
   const getStatus = ()=>{
     if(item.productState ===1){setStatus('bid')}
     if(item.productState ===2){setStatus('sell')}
     if(item.productState ===3){setStatus('normal')}
   }
+
   useEffect(()=>{
     getStatus()
+    getUser.mutate()
   },[item])
+
   useEffect(()=>{
     getProduct.mutate()
-    getUser.mutate()
     getLiked.mutate()
     window.scrollTo(0, 0);
-  },[productId])
+  },[productId,])
+
+  useEffect(() => {
+    getLiked.mutate()
+  }, [likes])
+
+  useEffect(()=>{
+    getUserFollower.mutate()
+  },[
+    user
+  ])
 
   if (newItem && collection){
     if (items.length <5){
@@ -462,124 +575,192 @@ const DetailItem = () => {
     <Wrapper>
       <Top>
         <TopL>
-          {user!== undefined &&<>
-          <UserBox>
-            <div className='top'>
-              {user.userImgUrl ? 
-              <img className='profile' src={user.userImgUrl as any} alt='profile'/>
-              :
-              <img className='profile' src='https://www.taggers.io/common/img/default_profile.png' alt='profile'/>} 
-              <p className='name'>{user.userNick}</p>
-            </div>
-            <div className='mid'>
-              <div className='mid-l'>
-              <div className='verified'>
-                {user.userEmailConfirm && 
-              <img alt="verified" style={{ height: "1.5rem" }}
-              src="/essets/images/verified.png"/>}</div>
-              <div className='email'> email:{user.userEmail}</div>
-              <div>userId:{user.userId}</div>
-              <div>직업:{user.userRole}</div>
-              <div>팔로워수:{user.followerCnt}</div>
-              <div>팔로잉수:{user.followeeCnt}</div>
-              <Button>팔로우하기</Button>
-              <Button>팔로우끊기</Button>
-              </div>        
-            </div>
-          </UserBox>
-          <UserDescription>
-            <div className='title'>Description</div>
-            {user.userDescription ?
-            <div className='content'>{user.userDescription}</div>:
-            <div className='content'>아직 소개 글이 없어요~ 😀</div>}
-          </UserDescription>
-          </>}
-        </TopL>
-          {item !== undefined &&
-        <TopR>
-          <div className='ITEM'>
-          <div className='top'>
-            <div className='top-left'>
-              <div className='title'>{item.productTitle}</div>
-              <div className='content'>
-                <div>카테고리 : {item.productCode}</div>
-                <div>좋아요 수: {item.favoriteCount}</div>
-                <div>등록일자:{item.productRegDt}</div>
-                <div>상품상태/판매중?:{item.productState}</div>
-                <div>상품상태/판매중?:{status}</div>
-                <div onClick={()=>{setLiked(!liked)}} className='icon'>
-                  {liked?
-                  <FavoriteIcon onClick={()=>{cancelLike()}} color='error'/> :
-                  <FavoriteBorderIcon onClick={()=>{Like()}} color='error'/>}
-                </div> 
-              </div>
-                <Description>
-                  <h3>작품설명</h3>
-                  <div className='box'>
-                    <p>{item.productDesc}</p>
+          {user !== undefined && (
+            <>
+              <UserBox>
+                <div className="top">
+                  {user.userImgUrl ? (
+                    <img
+                      className="profile"
+                      src={user.userImgUrl as any}
+                      alt="profile"
+                    />
+                  ) : (
+                    <img
+                      className="profile"
+                      src="https://www.taggers.io/common/img/default_profile.png"
+                      alt="profile"
+                    />
+                  )}
+                  <p className="name">{user.userNick}</p>
+                </div>
+                <div className="mid">
+                  <div className="mid-l">
+                    <div className="verified">
+                      {user.userEmailConfirm && (
+                        <img
+                          alt="verified"
+                          style={{ height: "1.5rem" }}
+                          src="/essets/images/verified.png"
+                        />
+                      )}
+                    </div>
+                    <div className="email"> email:{user.userEmail}</div>
+                    <div>userId:{user.userId}</div>
+                    <div>직업:{user.userRole}</div>
+                    <div>팔로워수:{user.followerCnt}</div>
+                    <div>팔로잉수:{user.followeeCnt}</div>
+                    {Number(localStorage.getItem("userId")) ===
+                    user.userId ? null : followBtnState ? (
+                      <Button onClick={onClickUnFollow}>팔로우끊기</Button>
+                    ) : (
+                      <Button onClick={onClickFollow}>팔로우하기</Button>
+                    )}
                   </div>
-                </Description>
+                </div>
+              </UserBox>
+              <UserDescription>
+                <div className="title">Description</div>
+                {user.userDescription ? (
+                  <div className="content">{user.userDescription}</div>
+                ) : (
+                  <div className="content">아직 소개 글이 없어요~ 😀</div>
+                )}
+              </UserDescription>
+            </>
+          )}
+        </TopL>
+        {item !== undefined && (
+          <TopR>
+            <div className="ITEM">
+              <div className="top">
+                <div className="top-left">
+                  <div className="title">{item.productTitle}</div>
+                  <div className="content">
+                    <div>카테고리 : {item.productCode}</div>
+                    <div>등록일자:{item.productRegDt}</div>
+                    <div>상품상태/판매중?:{item.productState}</div>
+                    <div>상품상태/판매중?:{status}</div>
+                    <FavoriteBox
+                      onClick={() => {
+                        setLiked(!liked);
+                      }}
+                      className="icon"
+                    >
+                      {liked ? (
+                        <FavoriteIcon
+                          onClick={() => {
+                            cancelLike();
+                          }}
+                          color="error"
+                        />
+                      ) : (
+                        <FavoriteBorderIcon
+                          onClick={() => {
+                            Like();
+                          }}
+                          color="error"
+                        />
+                      )}
+                      {likes}
+                    </FavoriteBox>
+                  </div>
+                  <Description>
+                    <h3>작품설명</h3>
+                    <div className="box">
+                      <p>{item.productDesc}</p>
+                    </div>
+                  </Description>
+                </div>
+
+                {item.productFileUrl ? (
+                  <img
+                    className="img"
+                    alt="작품"
+                    src={item.productFileUrl as any}
+                  />
+                ) : (
+                  <img
+                    className="img"
+                    alt="작품"
+                    src={item.productThumbnailUrl as any}
+                  />
+                )}
+              </div>
+              <Bottom>
+                <div className="right">
+                  {status === "bid" && <BidBox setOpen={setOpen} item={item} />}
+                  {status === "sell" && (
+                    <>
+                      <div className="content">
+                        즉시구매가 : {item.productPrice}{" "}
+                      </div>
+                      <Button
+                        variant="contained"
+                        onClick={() => {
+                          setOpen(true);
+                        }}
+                      >
+                        구매하기
+                      </Button>
+                    </>
+                  )}
+                  {status === "normal" && (
+                    <>
+                      <div className="content">판매 등록이 없습니다</div>
+                    </>
+                  )}
+                </div>
+              </Bottom>
             </div>
-            
-            {item.productFileUrl ? 
-            <img className='img' alt='작품' src={item.productFileUrl as any}/>:
-            <img className='img' alt='작품' src={item.productThumbnailUrl as any}/>
-            }
-          </div>
-          <Bottom>
-            <div className='right'>
-              {console.log(item)}
-              {status ==='bid' &&
-              <BidBox setOpen={setOpen} item={item} />
-              }
-              {status==='sell' &&
-              <>
-                <div className='content'>즉시구매가 : {item.productPrice} </div>
-                <Button variant="contained" onClick={()=>{setOpen(true)}} >구매하기</Button>
-              </>}
-              {status==='normal' && 
-              <>
-                <div className='content'>판매 등록이 없습니다</div>
-              </>
-              }
-            </div>
-          </Bottom>
-          </div>
-        </TopR>
-        }
+          </TopR>
+        )}
       </Top>
       <Mid>
-        {items.length >0 &&
-        <>
-        <h1>이 작가의 다른 작품 & 새로나온 작품</h1>
-        <MainBannerWrapper onClick={()=>{}}>
-            <Slider {...settings}>
-              { items.length >0 &&
-              items.map((item,idx) => {
-                return <div key={idx} onClick={()=>{setProductId(item.productId as any )}}>
-                  <ItemCard2 key={idx} item={item}/> </div> ;
-              }) }
-            </Slider>
-        </MainBannerWrapper>
-        </>
-      }
+        {items.length > 0 && (
+          <>
+            <h1>이 작가의 다른 작품 & 새로나온 작품</h1>
+            <MainBannerWrapper onClick={() => {}}>
+              <Slider {...settings}>
+                {items.length > 0 &&
+                  items.map((item, idx) => {
+                    return (
+                      <div
+                        key={idx}
+                        onClick={() => {
+                          setProductId(item.productId as any);
+                        }}
+                      >
+                        <ItemCard2 key={idx} item={item} />{" "}
+                      </div>
+                    );
+                  })}
+              </Slider>
+            </MainBannerWrapper>
+          </>
+        )}
       </Mid>
       {open && (
-          <ModalWrapper>
-            <IconButton
-              className="close"
-              onClick={() => setOpen(false)}
-              size="small"
-            >
-              <CloseIcon />
-            </IconButton>
-            <StoreWapper className="StoreWapper">
-              <div className="nftstore">
-                <DealModal item={item} status={status} open={open} setOpen={setOpen}/>
-              </div>
-            </StoreWapper>
-          </ModalWrapper>
-        )}
+        <ModalWrapper>
+          <IconButton
+            className="close"
+            onClick={() => setOpen(false)}
+            size="small"
+          >
+            <CloseIcon />
+          </IconButton>
+          <StoreWapper className="StoreWapper">
+            <div className="nftstore">
+              <DealModal
+                item={item}
+                status={status}
+                open={open}
+                setOpen={setOpen}
+              />
+            </div>
+          </StoreWapper>
+        </ModalWrapper>
+      )}
     </Wrapper>
   );
 }
