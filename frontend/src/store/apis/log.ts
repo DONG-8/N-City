@@ -16,7 +16,7 @@ const apiClient = axios.create({
 // 로그인 요청
 export const postLogin = async (userAddress : string)=> {
   const response = await apiClient.post<any>(
-    '/login',
+    '/users/login',
     {
       "userAddress" : userAddress
     }
