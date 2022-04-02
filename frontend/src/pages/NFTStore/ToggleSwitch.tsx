@@ -18,7 +18,7 @@ const Wrapper = styled.div`
      -moz-appearance: none;
           appearance: none;
   background: #6225E6  ;
-  border-radius: 2px;
+  border-radius: 20px;
   position: relative;
   outline: 0;
   -webkit-transition: all .2s;
@@ -34,7 +34,7 @@ const Wrapper = styled.div`
   height: 3.5vh;
   background: #dfeaec;
   z-index: 2;
-  border-radius: 2px;
+  border-radius: 100%;
   -webkit-transition: all .35s;
   transition: all .35s;
 }

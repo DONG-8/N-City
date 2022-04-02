@@ -271,7 +271,7 @@ export default function Navbar() {
               <p>NFTs</p>
             </Link>
             <Link className="inner" to="artists">
-              <p>Artists</p>
+              <p>Citizen</p>
             </Link>
             <Link className="inner" to="mint">
               <p>Create</p>
