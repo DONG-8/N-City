@@ -22,11 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @Api(value = "로그인, 로그아웃 API")
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 public class LogController {
 
-    @Autowired
-    LogService logService;
 
     @Autowired
     RedisUtil redisUtil;
