@@ -82,7 +82,7 @@ const Login = () => {
 
   const { ethereum } = window;
   const currentUrl = new URL(window.location.href);
-  const forwarderOrigin ="https://j6e106.p.ssafy.io";
+  const forwarderOrigin ="http://localhost:3000/";
   const navigate = useNavigate();
   const onboarding = new MetaMaskOnboarding({ forwarderOrigin });
 
