@@ -71,7 +71,7 @@ public class DealServiceImpl implements DealService{
                    .productId(buyNowRegisterPostReq.getProductId())
                    .dealType(2)
                    .dealPrice(buyNowRegisterPostReq.getDealPrice())
-                   .dealFrom(Long.valueOf(userId))
+                   .dealFrom(Long.valueOf(1L))
                    .tokenId(product.getTokenId())
                    .dealCreatedAt(LocalDateTime.now())
                            .build();
@@ -103,7 +103,7 @@ public class DealServiceImpl implements DealService{
                     .productId(auctionRegisterPostReq.getProductId())
                     .dealType(1)
                     .dealPrice(auctionRegisterPostReq.getDealPrice())
-                    .dealFrom(Long.valueOf(userId))
+                    .dealFrom(Long.valueOf(1L))
                     .tokenId(product.getTokenId())
                     .dealCreatedAt(LocalDateTime.now())
                     .build();
@@ -126,7 +126,7 @@ public class DealServiceImpl implements DealService{
 
         Deal deal = Deal.builder()
                 .productId(buyNowRegisterPostReq.getProductId())
-                .dealFrom(Long.valueOf(userId))
+                .dealFrom(Long.valueOf(1L))
                 .dealType(3)
                 .tokenId(product.getTokenId())
                 .dealPrice(buyNowRegisterPostReq.getDealPrice())
@@ -152,7 +152,7 @@ public class DealServiceImpl implements DealService{
             //Deal transfer 생성
             Deal deal = Deal.builder()
                     .dealFrom(product.getUserId())
-                    .dealTo(Long.valueOf(userId))
+                    .dealTo(Long.valueOf(1L))
                     .dealType(5)
                     .dealPrice(product.getProductPrice())
                     .dealCreatedAt(LocalDateTime.now())
@@ -205,7 +205,7 @@ public class DealServiceImpl implements DealService{
             //Deal transfer 생성
             Deal deal = Deal.builder()
                     .dealFrom(product.getUserId())
-                    .dealTo(Long.valueOf(userId))
+                    .dealTo(Long.valueOf(1L))
                     .dealType(5)
                     .dealPrice(product.getProductPrice())
                     .dealCreatedAt(LocalDateTime.now())

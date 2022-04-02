@@ -79,7 +79,7 @@ public class UserController {
         Integer addressLength = userAddress.length();
         // 올바른 지갑 주소인지 확인
         if(!addressLength.equals(42)) {
-            return ResponseEntity.status(401).body(LoginPostRes.of(401, "Incorrect Wallet", null, null));
+            return ResponseEntity.status(401).body(LoginPostRes.of(401, "Incorrect Wallet", null, null,null));
         } else {
             User user = logService.getUserDetailByAddress(userAddress);
             // 토큰
@@ -95,7 +95,7 @@ public class UserController {
 
             response.addCookie(accessToken);
             response.addCookie(refreshToken);
-            return ResponseEntity.status(201).body(LoginPostRes.of(201, "Success", accessJwt, user.getUserId()));
+            return ResponseEntity.status(201).body(LoginPostRes.of(201, "Success", accessJwt, user.getUserId(),user.getUserNick()));
         }
     }
 
@@ -153,7 +153,6 @@ public class UserController {
         }
     }
 
-
     @GetMapping("/{userId}")
     @ApiOperation(value = "유저 정보 조회", notes = "<strong>UserId에 해당하는 유저의 정보</strong>을 넘겨준다.")
     @ApiResponses({
@@ -186,7 +185,6 @@ public class UserController {
     })
     public ResponseEntity<Page<UserProductWithIsFavoriteRes>>getProductListByUserId(@PathVariable("userId") Long userId,
                                                        @PageableDefault(page = 0, size = 10) Pageable pageable) {
-
         // 0. 받아올 유저 ID를 받음
         // 1. 해당 유저가 가진 작품 목록을 넘겨준다.
 
@@ -212,7 +210,6 @@ public class UserController {
     })
     public ResponseEntity<Page<UserMintProductRes>>getCreatedProductListByUserId(@PathVariable("userId") Long userId,
                                                             @PageableDefault(page = 0, size = 10) Pageable pageable) {
-
         // 0. 받아올 유저 ID를 받음
         // 1. 해당 유저가 생성한 작품 목록을 넘겨준다.
 
@@ -237,7 +234,6 @@ public class UserController {
     })
     public ResponseEntity<Page<UserProductWithIsFavoriteRes>> getFavoritesProductListByUserId(@PathVariable("userId") Long userId,
                                                                       @PageableDefault(page = 0, size = 10) Pageable pageable) {
-
         // 0. 받아올 유저 ID를 받음
         // 1. 해당 유저가 좋아요한 작품 목록을 넘겨준다.
 
@@ -380,7 +376,6 @@ public class UserController {
     })
     public ResponseEntity<BaseResponseBody> EmailAuthConfirm(@RequestParam(name = "email") String emailAuthEmail,
                                                              @RequestParam(name = "authToken") String authToken) {
-
         // 이메일 인증 처리.
         log.info("EmailAuthConfirm - 호출");
         userService.confirmEmail(emailAuthEmail, authToken);
@@ -408,8 +403,6 @@ public class UserController {
         return ResponseEntity.status(200).body(users);
     }
 
-
-
     /**
      * 전체유저
      */
@@ -425,10 +418,4 @@ public class UserController {
 
         return ResponseEntity.status(200).body(users);
     }
-
-
-
-
-
-
 }

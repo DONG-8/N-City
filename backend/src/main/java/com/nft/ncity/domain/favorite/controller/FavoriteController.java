@@ -30,7 +30,7 @@ public class FavoriteController {
     public ResponseEntity<BaseResponseBody> favoriteRegister (Principal principal,
                                                               @ApiParam(value = "상품id") @PathVariable("productId") Long productId){
         log.info("favoriteRegister - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
 
         Favorite favorite = favoriteService.favoriteRegister(userId, productId);
 
@@ -54,7 +54,7 @@ public class FavoriteController {
     public boolean getFavoriteUserUse ( Principal principal,
                                  @ApiParam(value = "상품id") @PathVariable("productId") Long productId){
         log.info("favoriteGet - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
 
         if( favoriteService.getFavoriteUserUse(userId, productId)){
             return true;
@@ -87,7 +87,7 @@ public class FavoriteController {
     public ResponseEntity<BaseResponseBody> favoriteRemove(@ApiParam(value ="상품id") @PathVariable("productId") Long productId,
                                                            Principal principal){
         log.info("favoriteRemove - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Favorite favorite = favoriteService.favoriteRemove(userId,productId);
 
         if(null != favorite){
