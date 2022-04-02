@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -107,6 +108,27 @@ public class DealController {
             return ResponseEntity.status(404).body(BaseResponseBody.of(404, "등록 실패"));
         }
     }
+
+    // 즉시 구매 취소
+    @PostMapping("/buy/cancel/{productId}")
+    @ApiOperation(value = "즉시구매 등록 취소")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "취소 성공"),
+            @ApiResponse(code = 404, message = "취소 실패")
+    })
+    public ResponseEntity<BaseResponseBody> buyNowCancel(@ApiParam(value = "상품id") @PathVariable("productId") Long proudctId, Principal principal){
+        log.info("buyNowCancel - 호출");
+        Long userId = Long.valueOf(principal.getName());
+        Deal deal = dealService.buyNowCancel(proudctId,userId);
+        if(!deal.equals(null)){
+            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
+        }
+        else {
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "등록 실패"));
+        }
+    }
+
+
 
     // 경매 입찰
     @PostMapping("/buy/auction/{productId}")

@@ -16,10 +16,7 @@ import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.nft.ncity.domain.user.request.EmailAuthRegisterReq;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
-import com.nft.ncity.domain.user.response.UserDealInfoWithProductRes;
-import com.nft.ncity.domain.user.response.UserInfoRes;
-import com.nft.ncity.domain.user.response.UserMintProductRes;
-import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
+import com.nft.ncity.domain.user.response.*;
 import com.nft.ncity.domain.user.service.UserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -410,4 +407,28 @@ public class UserController {
 //        }
         return ResponseEntity.status(200).body(users);
     }
+
+
+
+    /**
+     * 전체유저
+     */
+    @GetMapping("/all")
+    @ApiOperation(value = "유저 전체조회", notes = "<strong>유저 전체 조회</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "검색 완료", response = User.class),
+    })
+    public ResponseEntity<List<UserAllRes>> getUserAll() {
+
+        log.info("allUserList - 호출");
+        List<UserAllRes> users = userService.getUserAll();
+
+        return ResponseEntity.status(200).body(users);
+    }
+
+
+
+
+
+
 }

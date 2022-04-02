@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PersonIcon from "@material-ui/icons/Person";
 import SearchBar from "./SearchBar";
 import CoinChargeModal from "../Mint/CoinChargeModal";
+import logo from './logo.png'
+import { useMutation } from "react-query";
+import { getLogout } from "../../store/apis/log";
+import GameStartButton from "./GameStartButton";
 
 const NavbarWrrap = styled.div`
   /* display: block; */
@@ -39,8 +43,9 @@ const NavbarBox = styled.div`
   }
 
   img {
-    height: 70px;
-    margin: 0 10px;
+    margin-top: 5px;
+    height: 40px;
+    margin-left: 10px;
   }
   .pageName {
     font-size: 40px;
@@ -66,29 +71,32 @@ const NavbarBox = styled.div`
       min-width: 200px;
       height: 80px;
       background: linear-gradient(-45deg, #ffaa98, #fef0d3, #fddfd2, #ff9788);
+      background: linear-gradient(-45deg, #f3f3ff, #63638b , #7373f8 , #9d9dc5 );
+      color: white;
       background-size: 400% 400%;
       font-size: 35px;
       cursor: pointer;
     }
 
-    .profile {
+    .community{
       width: 120px;
       height: 80px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      .hide {
+      .hide2 {
         display: none;
-        width: 200px;
+        width: 8vw;
         height: auto;
         background-color: white;
         color: black;
         box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px;
         position: absolute;
         top: 60px;
-        right: 205px;
+        right: 750px;
         margin-right: 1px;
+        border-radius: 0 0 5px 5px;
         div {
           margin-top: 10px;
           margin-bottom: 10px;
@@ -96,6 +104,51 @@ const NavbarBox = styled.div`
       }
     }
 
+    .profile {
+      font-weight: 1000;
+      width: 160px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      .name{
+        margin-left: 10px;
+        color:#6225E6; //🎨메인색🎨
+        font-weight: 1000;
+      }
+      .hide {
+        display: none;
+        width: 10vw;
+        height: auto;
+        background-color: white;
+        color: black;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px;
+        position: absolute;
+        top: 60px;
+        right: 250px;
+        margin-right: 1px;
+        border-radius: 0 0 5px 5px;
+        div {
+          margin-top: 10px;
+          margin-bottom: 10px;
+        }
+      }  
+    }
+    .community:hover{
+      .hide2 {
+        display: block;
+        @keyframes fadein {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        animation: fadein 1s;
+      }
+    }
     .profile:hover {
       .hide {
         display: block;
@@ -107,7 +160,6 @@ const NavbarBox = styled.div`
             opacity: 1;
           }
         }
-
         animation: fadein 1s;
       }
     }
@@ -127,21 +179,64 @@ const SearchBarContainer = styled.div`
   height: 80px;
   display: flex;
   justify-content: center;
-`;
+  `;
 
 export default function Navbar() {
-  const [isLogin, setIsLogin] = useState<Boolean>(false);
+  const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
   const [openCoin, setOpenCoin] = useState(false);
+  const [nickName,setNickName] = useState('')
+  const [userId,setUserId] = useState('')
   
-  // const goToGame = () => {
-  //   if (isLogin === true) {
-  //     navigate("/ingame");
-  //   } else {
-  //     navigate("/ingame");
-  //   }
-  // };
+  useEffect(()=>{
+    setUserId(localStorage.getItem('userId')||'')
+    if (userId===''){setIsLogin(false)}// userId가 있다면 로그인 되어있음
+    else{
+      setIsLogin(true)
+      setNickName(localStorage.getItem('userNickname')||'')
+    }
+  },[isLogin])
+  
+  const login = ()=>{ // 위에 세줄 지우기 ⭐
+    localStorage.setItem('userId','1')
+    localStorage.setItem('userNickname','아이유')
+    setIsLogin(true) 
+    navigate("/login");
+  }
+
+  const logout = ()=>{
+    setIsLogin(false)
+    localStorage.removeItem('userId')
+    localStorage.removeItem('userNickname')
+    get_logout.mutate()
+    navigate("/");
+
+  }
+
+  const get_logout = useMutation<any,Error>(
+    'getProductLike',
+    async()=>{return(
+      await (getLogout())
+    )},
+    {onSuccess:(res)=>{
+      setIsLogin(false)
+      localStorage.removeItem('userId')
+      localStorage.removeItem('userNickname')
+    },onError:(err)=>{console.log('로그아웃실패')}
+    }
+  )
+
+  const goToGame = () => {
+    if (isLogin === true) {
+      navigate("/ingame");
+    } else {
+      navigate("/ingame");
+    }
+  };
+
+  
   if (window.location.pathname === '/ingame') return null;
+
   return (
     <>
       <NavbarWrrap>
@@ -149,77 +244,76 @@ export default function Navbar() {
           <div className="container">
             <div>
               <Link to="/">
-                <img src="essets/images/sakura.png" alt="사진없노" />
+                <img src={logo} alt="로고" />
               </Link>
             </div>
             <div className="pageName">
-              <Link to="/">N-City</Link>
+              <Link to="/">Nct</Link>
             </div>
           </div>
           <SearchBarContainer>
-            <SearchBar></SearchBar>
+            <SearchBar/>
           </SearchBarContainer>
           <div className="secondContainer">
-            <Link className="inner" to="faq">
-              <p>FAQ</p>
-            </Link>
-
+            <div className="community">
+              <p className="inner">News</p>
+              <div className="hide2">
+                <Link className="inner" to="faq">
+                  <p>FAQ</p>
+                </Link>
+                <Link className="inner" to="event">
+                  <p>Event</p>
+                </Link>
+              </div>
+            </div>
+            
             <Link className="inner" to="store">
-              <p>store</p>
+              <p>NFTs</p>
+            </Link>
+            <Link className="inner" to="artists">
+              <p>Artists</p>
             </Link>
             <Link className="inner" to="mint">
               <p>Create</p>
             </Link>
-            {isLogin ? (
+            {isLogin ? ( // 로그인 되었으면 
               <div className="profile">
-                <PersonIcon></PersonIcon>
-                <p>000님</p>
+                <PersonIcon/>
+                <p className="name">{nickName}님</p>
+                
                 <div className="hide">
                   <div>
-                    <p>코인 충전</p>
+                      <p onClick = {()=>{setOpenCoin(true)}}>코인 충전</p>
+                      <CoinChargeModal open={openCoin} setOpen={setOpenCoin} /> 
                   </div>
                   <div>
-                    <Link to="mypage">
-                      <p>마이페이지</p>
+                      <Link to={"mypage/" + localStorage.getItem("userId")}>
+                        <p>마이페이지</p>
+                      </Link>
+                  </div>
+                  <div>
+                    <Link className="inner" to="character">
+                      <p>캐릭터</p>
                     </Link>
                   </div>
                   <div>
-                    <p>로그 아웃</p>
+                    <p onClick={()=>{logout()}}>로그 아웃</p>
                   </div>
                 </div>
               </div>
             ) : (
               <>
-                {/* <Link className="inner" to="login">
-                  <p>로그인</p>
-                </Link> */}
                 <div className="profile">
-                  <PersonIcon></PersonIcon>
-                  <p>000님</p>
+                  <p className="inner" onClick={()=>{login()}} >로그인</p>
                   <div className="hide">
-                    <div >
-                      <p onClick = {()=>{setOpenCoin(true)}}>코인 충전</p>
-                      <CoinChargeModal open={openCoin} setOpen={setOpenCoin} /> 
-                      {/* ⭐ */}
-                    </div>
-                    <div>
-                      <Link to={"mypage/" + localStorage.getItem("userId")}>
-                        <p>마이페이지</p>
-                      </Link>
-                    </div>
-                    <div>
-                      <p>로그 아웃</p>
-                    </div>
                   </div>
                 </div>
-                {/* <Link className="inner" to="signup">
-                  <p>회원가입</p>
-                </Link> */}
               </>
             )}
-            <div className="game" >
+            <GameStartButton />
+            {/* <div className="game" >
               <a href="/ingame" >Game Start</a>
-            </div>
+            </div> */}
           </div>
         </NavbarBox>
       </NavbarWrrap>

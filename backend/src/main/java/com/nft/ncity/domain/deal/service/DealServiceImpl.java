@@ -71,7 +71,7 @@ public class DealServiceImpl implements DealService{
                    .productId(buyNowRegisterPostReq.getProductId())
                    .dealType(2)
                    .dealPrice(buyNowRegisterPostReq.getDealPrice())
-                   .dealFrom(Long.valueOf(1L))
+                   .dealFrom(Long.valueOf(userId))
                    .tokenId(product.getTokenId())
                    .dealCreatedAt(LocalDateTime.now())
                            .build();
@@ -103,7 +103,7 @@ public class DealServiceImpl implements DealService{
                     .productId(auctionRegisterPostReq.getProductId())
                     .dealType(1)
                     .dealPrice(auctionRegisterPostReq.getDealPrice())
-                    .dealFrom(Long.valueOf(1L))
+                    .dealFrom(Long.valueOf(userId))
                     .tokenId(product.getTokenId())
                     .dealCreatedAt(LocalDateTime.now())
                     .build();
@@ -126,7 +126,7 @@ public class DealServiceImpl implements DealService{
 
         Deal deal = Deal.builder()
                 .productId(buyNowRegisterPostReq.getProductId())
-                .dealFrom(Long.valueOf(1L))
+                .dealFrom(Long.valueOf(userId))
                 .dealType(3)
                 .tokenId(product.getTokenId())
                 .dealPrice(buyNowRegisterPostReq.getDealPrice())
@@ -137,6 +137,86 @@ public class DealServiceImpl implements DealService{
         dealRepositorySupport.modifyProductPriceByProductId(buyNowRegisterPostReq);
 
         return savedDeal;
+        }
+        return null;
+    }
+
+    //즉시구매
+    @Override
+    @Transactional
+    public Deal buyNow(Long productId,Long userId){
+
+        Product product = productRepository.getById(productId);
+
+        if(product.getProductState() == 2){
+            //Deal transfer 생성
+            Deal deal = Deal.builder()
+                    .dealFrom(product.getUserId())
+                    .dealTo(Long.valueOf(userId))
+                    .dealType(5)
+                    .dealPrice(product.getProductPrice())
+                    .dealCreatedAt(LocalDateTime.now())
+                    .tokenId(product.getTokenId())
+                    .productId(productId)
+                    .build();
+            Deal savedDeal = dealRepository.save(deal);
+
+            // product update
+            dealRepositorySupport.modifyProductForBuyNowByProductId(productId, userId);
+            return savedDeal;
+        }
+        return null;
+    }
+
+    // 즉시 구매 취소
+    @Override
+    @Transactional
+    public Deal buyNowCancel(Long productId, Long userId) {
+        Product product = productRepository.getById(productId);
+
+        if(product.getProductState() == 2) {
+            //Deal cancel 생성
+            Deal deal = Deal.builder()
+                    .dealFrom(product.getUserId())
+                    .dealTo(product.getUserId())
+                    .dealType(4)
+                    .dealPrice(0.0)
+                    .dealCreatedAt(LocalDateTime.now())
+                    .tokenId(product.getTokenId())
+                    .productId(productId)
+                    .build();
+            Deal savedDeal = dealRepository.save(deal);
+
+            // product update
+            dealRepositorySupport.modifyProductForBuyNowCancelByProductId(productId, userId);
+            return savedDeal;
+        }
+        return null;
+    }
+
+    // 경매 입찰
+    @Override
+    @Transactional
+    public Deal buyAuction(Long productId,Long userId){
+
+        Product product = productRepository.getById(productId);
+
+        if(product.getProductState() == 1){
+            //Deal transfer 생성
+            Deal deal = Deal.builder()
+                    .dealFrom(product.getUserId())
+                    .dealTo(Long.valueOf(userId))
+                    .dealType(5)
+                    .dealPrice(product.getProductPrice())
+                    .dealCreatedAt(LocalDateTime.now())
+                    .tokenId(product.getTokenId())
+                    .productId(productId)
+                    .build();
+            Deal savedDeal = dealRepository.save(deal);
+
+            // product update
+            dealRepositorySupport.modifyProductForBuyAuctionByProductId(productId, userId);
+            return savedDeal;
         }
         return null;
     }
@@ -191,59 +271,5 @@ public class DealServiceImpl implements DealService{
     public Page<Deal> getDealListByUserId(Long userId, Pageable pageable) {
         Page<Deal> dealList = dealRepositorySupport.findDealListByUserId(userId,pageable);
         return dealList;
-    }
-
-    //즉시구매
-    @Override
-    @Transactional
-    public Deal buyNow(Long productId,Long userId){
-
-        Product product = productRepository.getById(productId);
-
-        if(product.getProductState() == 2){
-            //Deal transfer 생성
-            Deal deal = Deal.builder()
-                    .dealFrom(product.getUserId())
-                    .dealTo(Long.valueOf(1L))
-                    .dealType(5)
-                    .dealPrice(product.getProductPrice())
-                    .dealCreatedAt(LocalDateTime.now())
-                    .tokenId(product.getTokenId())
-                    .productId(productId)
-                    .build();
-            Deal savedDeal = dealRepository.save(deal);
-
-            // product update
-            dealRepositorySupport.modifyProductForBuyNowByProductId(productId, 1L);
-            return savedDeal;
-        }
-        return null;
-    }
-
-    // 경매 입찰
-    @Override
-    @Transactional
-    public Deal buyAuction(Long productId,Long userId){
-
-        Product product = productRepository.getById(productId);
-
-        if(product.getProductState() == 1){
-            //Deal transfer 생성
-            Deal deal = Deal.builder()
-                    .dealFrom(product.getUserId())
-                    .dealTo(Long.valueOf(1L))
-                    .dealType(5)
-                    .dealPrice(product.getProductPrice())
-                    .dealCreatedAt(LocalDateTime.now())
-                    .tokenId(product.getTokenId())
-                    .productId(productId)
-                    .build();
-            Deal savedDeal = dealRepository.save(deal);
-
-            // product update
-            dealRepositorySupport.modifyProductForBuyAuctionByProductId(productId, 1L);
-            return savedDeal;
-        }
-        return null;
     }
 }

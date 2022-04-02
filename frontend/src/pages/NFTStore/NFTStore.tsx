@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { getProductAll, getSellProduct } from '../../store/apis/product'
 import { useMutation, useQuery } from 'react-query'
 import ItemCard2 from '../../components/Card/ItemCard2'
+import ToggleSwitch from './ToggleSwitch'
+import ToggleSwitch2 from './ToggleSwitch2'
 
 
 const CategoryBar = styled.div`
@@ -25,7 +27,7 @@ const CategoryBar = styled.div`
     content: "";
     height: 5px;
     width: 0px;
-    background-color: #272793;
+    background-color: #6225E6  ;
     border-radius: 10px;
     transition: 0.3s;
     position: absolute;
@@ -33,11 +35,11 @@ const CategoryBar = styled.div`
   }
   p:hover::before{
     width: 100%;
-    background-color: #272793;
+    background-color: #6225E6  ;
   }
   #category::before{
     width: 100%;
-    background-color: #272793;
+    background-color: #6225E6;
   }
 `
 const ItemCards = styled.div`
@@ -58,7 +60,7 @@ const IntroBox = styled.div`
   margin: auto;
   margin-top: 10vh;
   display: flex;
-  margin-bottom:10vh;
+  margin-bottom:5vh;
 
 `
 const Left = styled.div`
@@ -107,8 +109,22 @@ const Right = styled.div`
     height: 60%;
     width: 60%;
   }
-`;
+  `;
 
+const FilterButton = styled.div`
+display: flex;
+justify-content: end;
+margin-right:10vw;
+.toggle{
+  margin-left: 3vw;
+}
+.name{
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+`
 interface Istate{
   item :{
     productId: Number,
@@ -131,19 +147,21 @@ interface Istate{
     }[],
   }
 }
-const FilterButton = styled.div`
-`
 const NFTStore = () => {
-  const [filter,setFilter] = useState("all") 
-  const [status,setStatus]  = useState('all')
+  const [filter,setFilter] = useState(0) 
+  const [status,setStatus]  = useState(false)
+  const [order,setOrder]  = useState(false)
   const [allitems,setAllitems] = useState([])
   const [saleitems,setSaleitems] = useState([])
+  const [showItems,setShowItems] = useState<Istate['item'][]>([])
+  const [showSales,setShowSales] = useState<Istate['item'][]>([])
     // 상품 정보 모두 가져오기
   const getAll = useMutation<any,Error>(
     "prouductAll",
     async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))},
     { onSuccess:(res)=>{
       setAllitems(res.content)
+      setShowItems(res.content)
     },
       onError: (err: any) => {console.log(err, "상품정보 가져오기 오류")},
     });
@@ -154,18 +172,51 @@ const NFTStore = () => {
     { 
       onSuccess:(res)=>{
         setSaleitems(res.content)
+        setShowSales(res.content)
       },
       onError: (err: any) => {
         console.log(err, "판매중 정보 실패");
       },
     }
   );
-  // console.log(allitems)
+
+  const getFilter = (num)=>{
+    if (num===0){
+      setShowItems(allitems)
+      setShowSales(saleitems)
+    }
+    else{
+      let items: Istate["item"][] = [];
+      allitems.map((item: Istate["item"]) => {
+        if (item.productCode === num) {
+          items.push(item);
+        }
+      });
+      setShowItems(items);
+
+      let sales: Istate["item"][] = [];
+      saleitems.map((item: Istate["item"]) => {
+        if (item.productCode === num) {
+          sales.push(item);
+        }
+      });
+      setShowSales(sales);
+    }
+  }
+
   useEffect(()=>{
     // 좋아요를 하고 status를 바꿔도 그대로인 오류...❌
     getAll.mutate()
     getSale.mutate()
   },[status])
+
+  useEffect(()=>{
+    console.log('필터 함수!!!!!!!!')
+    getFilter(filter)
+  },[filter])
+
+
+
   return (
     <>
       <IntroBox>
@@ -184,46 +235,84 @@ const NFTStore = () => {
           </div>
         </Right>
       </IntroBox>
-      <FilterButton>
-        <button onClick={()=>{setStatus('all')}}>모든 상품</button>
-        <button onClick={()=>{setStatus('sale')}}>판매중</button>
-      </FilterButton>
+        <FilterButton>
+          <div className='toggle'>
+            {status?<div className='name'>판매하는</div >:<div className='name'>모든물품</div>}
+            <ToggleSwitch2 status={status} setStatus={setStatus}/>
+          </div>
+          <div className='toggle'>
+            {order?<div className='name'>오래된</div>:<div className='name'>최신순 </div>}
+            <ToggleSwitch order={order} setOrder={setOrder}/>
+          </div>
+        </FilterButton>
       <CategoryBar>
         <li>
-          <p id={filter === "all" ? "category" : ""} onClick={() => {setFilter("all")}}>
+          <p id={filter === 0 ? "category" : ""} onClick={() => {setFilter(0)}}>
             All
           </p>
         </li>
         <li>
-          <p id={filter === "art" ? "category" : ""} onClick={() => {  setFilter("Art")}}>
-            예술
+          <p id={filter === 1 ? "category" : ""} onClick={() => {  setFilter(1)}}>
+          Music
           </p>
         </li>
         <li>
-          <p id={filter === "music" ? "category" : ""} onClick={() => {  setFilter("music")}}>
-          음악
+          <p id={filter === 2 ? "category" : ""} onClick={() => {  setFilter(2)}}>
+          Picture
           </p>
         </li>
         <li>
-          <p id={filter === "photography" ? "category" : ""} onClick={() => {  setFilter("photography")}}>
-          사진
+          <p id={filter === 3 ? "category" : ""} onClick={() => {  setFilter(3)}}>
+          Video
           </p>
         </li>
         <li>
-          <p id={filter === "character" ? "category" : ""} onClick={() => {  setFilter("character")}}>
-          캐릭터
+          <p id={filter === 4 ? "category" : ""} onClick={() => {  setFilter(4)}}>
+          Art
+          </p>
+        </li>
+        <li>
+          <p id={filter === 5 ? "category" : ""} onClick={() => {  setFilter(5)}}>
+          Celebrity
+          </p>
+        </li>
+        <li>
+          <p id={filter === 6 ? "category" : ""} onClick={() => {  setFilter(6)}}>
+          Sports
+          </p>
+        </li>
+        <li>
+          <p id={filter ===7 ? "category" : ""} onClick={() => {  setFilter(7)}}>
+          Character
+          </p>
+        </li>
+        <li>
+          <p id={filter === 8 ? "category" : ""} onClick={() => {  setFilter(8)}}>
+          Animation
           </p>
         </li>
       </CategoryBar>
         <ItemCards>
-          {status==='all' && allitems &&
-          (allitems).map((item,idx) => {
+          {!status && showItems && !order&&
+          ([...showItems].reverse()).map((item,idx) => {
           return(
             <ItemCard2 key={idx} item={item} />
             )
           })}
-          {status==='sale' && saleitems &&
-          (saleitems).map((item,idx) => {
+          {!status && showItems && order&&
+          showItems.map((item,idx) => {
+          return(
+            <ItemCard2 key={idx} item={item} />
+            )
+          })}
+          {status && showSales && !order&&
+          ([...showSales].reverse()).map((item,idx) => {
+          return(
+            <ItemCard2 key={idx} item={item} />
+            )
+          })}
+          {status && showSales && order&&
+          showSales.map((item,idx) => {
           return(
             <ItemCard2 key={idx} item={item} />
             )

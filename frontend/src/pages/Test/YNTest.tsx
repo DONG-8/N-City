@@ -867,6 +867,9 @@ const YNTest = () => {
         <CategoryBox>
           <p>카테고리</p>
         </CategoryBox>
+        <div>
+          <video src={"https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/da79a0c6-bd02-42d3-bd17-25ac3540783d.m4a"} controls></video>
+        </div>
         {category ? (
           <Categories>
             <p onClick={handleModalOpen}># {category}</p>
@@ -924,13 +927,7 @@ const YNTest = () => {
           <button onClick={onClickSetApprovedForAllERC20}>setApprovedForAll to SaleFactory ERC20</button>
         </ButtonBox>
       </FormBox>
-      <CategoryModal
-        visible={isOpen}
-        onClose={handleModalClose}
-        openStateHandler={setIsOpen}
-        setCategory={setCategory}
-        setCategoryCode={setCategoryCode}
-      ></CategoryModal>
+
     </Wrapper>
   );
 };

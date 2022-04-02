@@ -7,6 +7,7 @@ import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
 import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.response.ProductDealListGetRes;
+import com.nft.ncity.domain.product.response.ProductDetailGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
 import com.nft.ncity.domain.product.service.ProductService;
 import io.swagger.annotations.*;
@@ -159,7 +160,7 @@ public class ProductController {
 
     @ApiOperation(value = "상품 상세 조회")
     @GetMapping("/detail/{productId}")
-    public Product productDetail(@ApiParam(value = "상품 ID") @PathVariable("productId") Long productId){
+    public ProductDetailGetRes productDetail(@ApiParam(value = "상품 ID") @PathVariable("productId") Long productId){
         log.info("productDetail - 호출");
         return productService.productDetail(productId);
     }

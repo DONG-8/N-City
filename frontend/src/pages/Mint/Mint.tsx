@@ -3,10 +3,13 @@ import styled from "styled-components";
 import axios, { AxiosRequestConfig } from "axios";
 import CategoryModal, { Icategory } from "../../components/Mint/CategoryModal";
 import { NFTcreatorContract } from "../../web3Config";
+import { getUserInfo } from "../../store/apis/user";
 
 // 동준추가
 import { postProduct, putTokenID } from "../../store/apis/product";
 import { Mutation, useMutation, useQuery } from "react-query";
+import IsLoading from "../NFTStore/IsLoading";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
@@ -274,8 +277,9 @@ const Mint = () => {
   const [category, setCategory] = useState<any>(null);
   const [categoryCode, setCategoryCode] = useState<any>(null);
   const [isVideo, setIsVideo] = useState<boolean>(false);
+  const [userRole, setUserRole] = useState<string>("")
   const { ethereum } = window;
-
+  const navigate = useNavigate()
   // category modal
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -287,11 +291,6 @@ const Mint = () => {
     setIsOpen(false);
   };
 
-
-
-  // code: 0,
-  //           productDesc: "이잉",
-  //           productTitle: "오엥",
   const submitFile = useMutation<any, Error>(
     "submitFile",
     async () => {
@@ -337,18 +336,21 @@ const Mint = () => {
           .send({
             from: accounts[0],
           });
-        await setIsLoading(false);
-        console.log(accounts[0]); 
-        console.log(response.events.createNFT.returnValues._tokenId); // tokenId
-        await setTokenId(response.events.createNFT.returnValues._tokenId);
-
-        putToken.mutate();
+          console.log(accounts[0]); 
+          console.log(response.events.createNFT.returnValues._tokenId); // tokenId
+          await setTokenId(response.events.createNFT.returnValues._tokenId);
+          
+          putToken.mutate();
+          await setIsLoading(false);
+          navigate(`/mypage/${localStorage.getItem("userId")}`)
+          // window.location.reload()
+           
       },
       onError: (err: any) => {
         console.log(err, "에러발생!");
       },
     }
-  );
+  ); 
   // 민팅을 통해 받은 정보를 넣어준다.
   const putToken = useMutation<any, Error>(
     "putTokenId",
@@ -483,9 +485,6 @@ const Mint = () => {
     }
   };
 
-  console.log(file);
-  console.log(thumbnail);
-
   const previewThumbnailImage = () => {
     if (thumbnail) {
       return (
@@ -502,6 +501,33 @@ const Mint = () => {
       );
     }
   };
+
+  const getMyInfo = useMutation<any, Error>(
+    "getUserInfo",
+    async () => {
+      if (localStorage.getItem("userId")) {
+        return await getUserInfo(Number(localStorage.getItem("userId")));
+      } else {
+        alert("내 정보를 받아올 수 없습니다.");
+        return;
+      }
+    },
+    {
+      onSuccess: async (res) => {
+        console.log("내정보를 받아왔습니다.");
+        console.log(res);
+        setUserRole(res.userRole)
+      },
+      onError: (err: any) => {
+        console.log(err, "에러발생");
+      },
+    }
+  );
+
+  useEffect(() => {
+    getMyInfo.mutate()
+  },[])
+
 
   useEffect(() => {
     if (file?.type.slice(0, 5) === "video") {
@@ -596,9 +622,18 @@ const Mint = () => {
             <HashtagPlus />
           </HashtagBox>
         )}
-        <ButtonBox>
-          <button onClick={onClickSubmit}>작품등록</button>
-        </ButtonBox>
+        
+        {isLoading ?
+        <>
+          <IsLoading/>
+          <h1>작품 등록중입니다 </h1>
+          <h1>잠시만 기다려주세요</h1>
+          <h1>민팅이 성공하면 마이페이지로 이동합니다</h1>
+        </>:
+          <ButtonBox>
+            <button onClick={onClickSubmit}>작품등록</button>
+          </ButtonBox>
+        }  
       </FormBox>
       <CategoryModal
         visible={isOpen}
@@ -606,6 +641,7 @@ const Mint = () => {
         openStateHandler={setIsOpen}
         setCategory={setCategory}
         setCategoryCode={setCategoryCode}
+        userRole={userRole}
       ></CategoryModal>
     </Wrapper>
   );

@@ -17,7 +17,7 @@ const Header = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #35357a;
-  border-radius: 0 0 20px 20px;
+  border-radius: 0 0 10px 10px;
   color: white;
   width: 100%;
   height: 180px;

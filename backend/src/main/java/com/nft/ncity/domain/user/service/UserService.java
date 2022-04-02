@@ -4,6 +4,7 @@ import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.user.db.entity.EmailAuth;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
+import com.nft.ncity.domain.user.response.UserAllRes;
 import com.nft.ncity.domain.user.response.UserDealInfoWithProductRes;
 import com.nft.ncity.domain.user.response.UserInfoRes;
 import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
@@ -31,4 +32,5 @@ public interface UserService {
 	Long modifyUserRole(Long userId);
     Page<UserDealInfoWithProductRes> getUserDealInfoWithProduct(Long userId, Pageable pageable);
 	Page<UserProductWithIsFavoriteRes> getUserProductWithIsFavorite(Page<Product> products, Long userId);
+	List<UserAllRes> getUserAll();
 }

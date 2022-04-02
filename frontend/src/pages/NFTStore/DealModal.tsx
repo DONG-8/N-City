@@ -5,6 +5,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useMutation, useQuery } from 'react-query';
 import { getPastHistory, postAuctionBid, postPurchase } from '../../store/apis/deal';
 import { createSaleContract, NFTcreatorContract, SaleFactoryContract, SSFTokenContract } from '../../web3Config';
+import { Event } from '../Mypage/Mypage';
+import SellIcon from "@mui/icons-material/Sell";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import ReplayIcon from '@mui/icons-material/Replay';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -44,6 +51,43 @@ const Content = styled.div`
     background-color: #f8ced5;
   }
 `
+const List = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+`;
+
+const ListItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid grey;
+  margin-bottom: 3px;
+  width: 80%;
+  padding: 10px;
+  .id {
+    width: 12%;
+    margin-left: 20px;
+  }
+  .name {
+    width: 12%;
+  }
+  .email {
+    width: 30%;
+  }
+`;
+
+const ListCategory = styled.div`
+  border: 1px solid teal;
+  width: 80%;
+  height: 40px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`
+
 interface Iprops{
   open:boolean,
   setOpen:React.Dispatch<React.SetStateAction<boolean>>,
@@ -67,24 +111,33 @@ interface Iprops{
 }
 
 interface Istate {
-  item :{
-    "productId": number;
-      "userId": number;
-      "tokenId": number;
-      "productTitle": string;
-      "productDesc": string;
-      "productCode": number;
-      "productXCoordinate": number;
-      "productYCoordinate": number;
-      "productView": boolean;
-      "productState": number;
-      "productPrice": number;
-      "productRegDt": string;
-      "productFileUrl": string;
-      "productThumbnailUrl": string;
-      "productAuctionEndTime": string;
-      "favoriteCount": number;
-  }
+  item: {
+    productId: number;
+    userId: number;
+    tokenId: number;
+    productTitle: string;
+    productDesc: string;
+    productCode: number;
+    productXCoordinate: number;
+    productYCoordinate: number;
+    productView: boolean;
+    productState: number;
+    productPrice: number;
+    productRegDt: string;
+    productFileUrl: string;
+    productThumbnailUrl: string;
+    productAuctionEndTime: string;
+    favoriteCount: number;
+  };
+  history: {
+    dealCreatedAt: number[];
+    dealFrom: number;
+    dealFromNickName: string;
+    dealPrice: number;
+    dealTo: number;
+    dealToNickName: string;
+    dealType: number;
+  };
 }
 
 const DealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
@@ -95,16 +148,19 @@ const DealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
   const [check,setCheck] = useState('')
   const [price,setPrice] = useState(Number(item.productPrice))
   const [afterBuy,setAfterBuy] = useState(false)
+  const [history, setHistory] = useState<Istate["history"][]>([])
   const {ethereum} = window
 
-  const { isLoading: ILA, data: historys } = useQuery<any>( // 추가 // 추천 데이터
+  const getHistory = useMutation<any>( // 추가 // 추천 데이터
     "getPastHistory",
     async () => {
-      return await getPastHistory(productId);
+      return await getPastHistory(localitem.productId);
     },
     {
       onSuccess: (res) => {
         console.log("히스토리받아오기 성공", res)
+        const temp = res.content.reverse()
+        setHistory(temp)
       },
       onError: (err: any) => {
         console.log(err, "히스토리 오류");
@@ -115,6 +171,7 @@ const DealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPriceValue(e.target.value);
   }; // 인풋창 수정
+
 
 
   const postgetBid = useMutation<any, Error>(
@@ -155,6 +212,43 @@ const DealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
     if(Number(priceValue)-price>=1){setCheck('true')} 
     else if (priceValue===''){setCheck('null')}
     else {setCheck('false')}
+  }
+
+  const dealTypeConvert = (dealType) => {
+    switch (dealType) {
+      case 1: // 경매등록
+        return <Event><ShoppingCartIcon /><div>Create auction</div></Event>
+      case 2: // 판매등록
+        return <Event><ShoppingCartIcon /><div>Create Sale</div></Event>
+      case 3: // 경매참여
+        return <Event><LocalOfferIcon /><div>Bid</div></Event>
+      case 4: // 판매취소
+        return <Event><ReplayIcon /><div>Cancel sale</div></Event>
+      case 5: // 소유권 전달
+        return <Event><CompareArrowsIcon /><div>Transfer</div></Event>
+      case 6: // 민팅
+        return <Event><ChildFriendlyIcon /><div>Minted</div></Event>
+      default:
+        return "알수없는 dealType"
+    }
+  };
+
+  function leadingZeros(n, digits) {
+    var zero = '';
+    n = n.toString();
+  
+    if (n.length < digits) {
+      for (var i = 0; i < digits - n.length; i++)
+        zero += '0';
+    }
+    return zero + n;
+  }
+
+  const convertDate = (dateArray) => {
+    const year = String(dateArray[0]);
+    const month = String(dateArray[1]);
+    const day = String(dateArray[2]);
+    return year + "-" + leadingZeros(month, 2) + "-" + leadingZeros(day, 2)
   }
 
   useEffect(()=>{
@@ -211,7 +305,7 @@ const DealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
       console.log(response)
       const saleContract = await createSaleContract(response)
       
-      // // sale컨트랙트로 erc20토큰 전송권한 허용
+      // sale컨트랙트로 erc20토큰 전송권한 허용
       await SSFTokenContract.methods
       .approve(response, price)
       .send({ from: accounts[0] });
@@ -228,6 +322,10 @@ const DealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
       return
     }
   }
+
+  useEffect(() => {
+    getHistory.mutate()
+  }, [])
   return (
     <Modal
       open={open}
@@ -267,6 +365,26 @@ const DealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
                 </Button>
               </div>
             )}
+            <List>
+                  <ListCategory>
+                    <div>Event</div>
+                    <div>Price</div>
+                    <div>From</div>
+                    <div>To</div>
+                    <div>Date</div>
+                  </ListCategory>
+                  {history?.map((history, idx) => {
+                    return (
+                      <ListItem key={idx}>
+                        <div>{dealTypeConvert(history.dealType)}</div>
+                        <div>{history.dealPrice}</div>
+                        <div>{history.dealFromNickName}</div>
+                        <div>{history.dealToNickName}</div>
+                        <div>{convertDate(history.dealCreatedAt)}</div>
+                      </ListItem>
+                    );
+                  })}
+                </List>
             {afterBuy && (
               <h3>
                 {item.productTitle}작품을 {priceValue}NCT에 입찰 성공했습니다

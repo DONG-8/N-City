@@ -1,24 +1,33 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { events } from './events'
 
 const Wrapper = styled.div`
-  width: 80%;
   margin: auto;
-  margin-top: 5vh;
   margin-bottom: 10vh;
   
 `
 const Header = styled.div`
-  text-align: center;
-  h1{
-    font-size: 5vh;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #35357a;
+  border-radius: 0 0 10px 10px;
+  color: white;
+  width: 100%;
+  height: 180px;
+`
+const Title = styled.h1`
+  margin: 80px 0;
+  font-size: 45px;
 `
 const Events = styled.div`
   display: flex;
   flex-wrap: wrap;
+  width: 80%;
+  margin: auto;
 `
 const Event = styled.div`
   background-color: #F7F8FA ;
@@ -63,24 +72,26 @@ const CategoryBar= styled.div`
     margin-left: 2rem;
   }
 `
+interface Istate{
+  event:{
+    id:number,
+    title:string,
+    url:string,
+    date:string,
+    content:string
+  }
+}
 
 const EventPage = () => {
-  const events = [
-    {title:"서울브랜드파트너스가 선물을 드려요",url:"https://www.fetv.co.kr/data/photos/20210938/art_16324402689008_18ca02.jpg",date:"2021.12.22 06:00 ~ 03.16 06:00",content:""},
-    {title:"복지로는 ???이다",url:"https://asia.playstation.com/content/dam/pscom/kr/latest-news/FY19/12/20191220-holiday-luckydraw-16x9-2.jpg",date:"2021.12.22 06:00 ~ 03.16 06:00",content:""},
-    {title:"서울브랜드파트너스가 선물을 드려요",url:"https://www.culture.go.kr/assets/images/content/borad_event_img7.jpg",date:"2021.12.22 06:00 ~ 03.16 06:00",content:""},
-    {title:"복지로는 ???이다",url:"https://s3.ap-northeast-2.amazonaws.com/coinone-talk-share/20211101/notice_thread_1635760564981.8904.png",date:"2021.12.22 06:00 ~ 03.16 06:00",content:""},
-  ]
   const navigate = useNavigate()
-  const goDetailPage = (contents:object)=>{
-    navigate('/event/detail')
-    localStorage.setItem("event",JSON.stringify(contents))
+  const goDetailPage = (event:Istate['event'])=>{
+    navigate(`/event/${event.id}`)
   }
   return (
     <div>
       <Wrapper>
         <Header>
-          <h1> 이벤트 </h1><hr/> 
+          <Title>이벤트</Title>
         </Header>
         <CategoryBar>
           <div className=''> 최신순 </div>
@@ -88,7 +99,7 @@ const EventPage = () => {
         </CategoryBar>
         <Events>
           {events.map(event=>{ return(
-            <Event onClick={()=>{goDetailPage(event)}}>
+            <Event key={event.id} onClick={()=>{goDetailPage(event)}}>
               <img alt="포스터" src ={event.url}/>
               <div className='date'>이벤트 기간: {event.date}</div> 
               <div className='title'>{event.title}</div> 
