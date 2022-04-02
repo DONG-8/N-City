@@ -114,7 +114,7 @@ public class ProductServiceImpl implements ProductService{
         file2.delete();
 
         Product product = Product.builder()
-                .userId(Long.valueOf(1L))
+                .userId(Long.valueOf(userId))
                 .productTitle(productRegisterPostReq.getProductTitle())
                 .productDesc(productRegisterPostReq.getProductDesc())
                 .productCode(productRegisterPostReq.getCode())
@@ -130,7 +130,7 @@ public class ProductServiceImpl implements ProductService{
                 .productId(savedProduct.getProductId())
                 .dealType(6)
                 .dealFrom((long)0)
-                .dealTo(Long.valueOf(1L))
+                .dealTo(Long.valueOf(userId))
                 .dealCreatedAt(LocalDateTime.now())
                 .build();
 
