@@ -104,11 +104,7 @@ const VisitModal = () => {
       </ColorBar>
       <Body>
         {guestbookdata.content.map((obj, i) => {
-          return (
-            <Visitbook key={i} book={obj}>
-              {obj.guestbookContents}
-            </Visitbook>
-          );
+          return <Visitbook key={i} book={obj}></Visitbook>;
         })}
       </Body>
       <InputLine></InputLine>
