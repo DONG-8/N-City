@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { getProductAll, getSellProduct } from '../../store/apis/product'
 import { useMutation, useQuery } from 'react-query'
 import ItemCard2 from '../../components/Card/ItemCard2'
+import ToggleSwitch from './ToggleSwitch'
+import ToggleSwitch2 from './ToggleSwitch2'
 
 
 const CategoryBar = styled.div`
@@ -58,7 +60,7 @@ const IntroBox = styled.div`
   margin: auto;
   margin-top: 10vh;
   display: flex;
-  margin-bottom:10vh;
+  margin-bottom:5vh;
 
 `
 const Left = styled.div`
@@ -107,8 +109,22 @@ const Right = styled.div`
     height: 60%;
     width: 60%;
   }
-`;
+  `;
 
+const FilterButton = styled.div`
+display: flex;
+justify-content: end;
+margin-right:10vw;
+.toggle{
+  margin-left: 3vw;
+}
+.name{
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+`
 interface Istate{
   item :{
     productId: Number,
@@ -131,11 +147,10 @@ interface Istate{
     }[],
   }
 }
-const FilterButton = styled.div`
-`
 const NFTStore = () => {
   const [filter,setFilter] = useState(0) 
-  const [status,setStatus]  = useState('all')
+  const [status,setStatus]  = useState(false)
+  const [order,setOrder]  = useState(false)
   const [allitems,setAllitems] = useState([])
   const [saleitems,setSaleitems] = useState([])
   const [showItems,setShowItems] = useState<Istate['item'][]>([])
@@ -220,10 +235,16 @@ const NFTStore = () => {
           </div>
         </Right>
       </IntroBox>
-      <FilterButton>
-        <button onClick={()=>{setStatus('all')}}>모든 상품</button>
-        <button onClick={()=>{setStatus('sale')}}>판매중</button>
-      </FilterButton>
+        <FilterButton>
+          <div className='toggle'>
+            {status?<div className='name'>판매하는</div >:<div className='name'>모든물품</div>}
+            <ToggleSwitch2 status={status} setStatus={setStatus}/>
+          </div>
+          <div className='toggle'>
+            {order?<div className='name'>오래된</div>:<div className='name'>최신순 </div>}
+            <ToggleSwitch order={order} setOrder={setOrder}/>
+          </div>
+        </FilterButton>
       <CategoryBar>
         <li>
           <p id={filter === 0 ? "category" : ""} onClick={() => {setFilter(0)}}>
@@ -252,7 +273,7 @@ const NFTStore = () => {
         </li>
         <li>
           <p id={filter === 5 ? "category" : ""} onClick={() => {  setFilter(5)}}>
-          Collect
+          Celebrity
           </p>
         </li>
         <li>
@@ -267,19 +288,31 @@ const NFTStore = () => {
         </li>
         <li>
           <p id={filter === 8 ? "category" : ""} onClick={() => {  setFilter(8)}}>
-          Utility
+          Animation
           </p>
         </li>
       </CategoryBar>
         <ItemCards>
-          {status==='all' && showItems &&
-          (showItems).map((item,idx) => {
+          {!status && showItems && !order&&
+          ([...showItems].reverse()).map((item,idx) => {
           return(
             <ItemCard2 key={idx} item={item} />
             )
           })}
-          {status==='sale' && showSales &&
-          (showSales).map((item,idx) => {
+          {!status && showItems && order&&
+          showItems.map((item,idx) => {
+          return(
+            <ItemCard2 key={idx} item={item} />
+            )
+          })}
+          {status && showSales && !order&&
+          ([...showSales].reverse()).map((item,idx) => {
+          return(
+            <ItemCard2 key={idx} item={item} />
+            )
+          })}
+          {status && showSales && order&&
+          showSales.map((item,idx) => {
           return(
             <ItemCard2 key={idx} item={item} />
             )

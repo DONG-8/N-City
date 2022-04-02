@@ -191,11 +191,11 @@ const CategoryModal = ({
     { name: "음악", selected: false, code:"1" },
     { name: "사진", selected: false, code:"2" },
     { name: "동영상", selected: false, code:"3" },
-    { name: "예술", selected: false, code:"4" },
-    { name: "수집품", selected: false, code:"5" },
+    { name: "그림", selected: false, code:"4" },
+    { name: "연예인", selected: false, code:"5" },
     { name: "스포츠", selected: false, code:"6" },
     { name: "캐릭터", selected: false, code:"7" },
-    { name: "유틸리티", selected: false, code:"8" },
+    { name: "애니메이션", selected: false, code:"8" },
   ]);
 
   const onClickSelect = (category: { name: string; selected: boolean }) => {
