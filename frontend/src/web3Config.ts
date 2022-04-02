@@ -1427,8 +1427,8 @@ const SSFTokenAbi: AbiItem[] = [
 ];
 
 
-export const NFTcreatorAddress = "0x197398B5f67dAf06e7e5Afdb64a7B9172B62579d";
-export const SaleFactoryAddress = "0xDC2B61DF74a8156715aF1daeAf4fC78E314813EB";
+export const NFTcreatorAddress = "0x6a2BBCa33ad091b4D95A290D18613D8466F3252d";
+export const SaleFactoryAddress = "0x3954dC8834246Ad9edd00C7179dF2c613BF79c87";
 export const SSFTokenAddress = "0x97da7900b691D525197c607dF1bd97138C814e16";
 
 export const web3 = new Web3(window.ethereum);

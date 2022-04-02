@@ -278,11 +278,11 @@
 			]
 		},
 		"contracts/SaleFactory.sol": {
-			"keccak256": "0xe381619c94fe2f8472abe5a5ac0f2bb44840b0351812fed925f74c7549cf5090",
+			"keccak256": "0x032a259f5d421ccacdafad951a24896fac0c4a719f93392c8c517b390a0c72e4",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://cff839d5a6bc381bf274d358ed8d75b8d88df03e9e20621bb20e54b3c4d556d0",
-				"dweb:/ipfs/QmSCrvWerE6FnYqovj3Maz9xr42apiUw9jvomirAnbSevo"
+				"bzz-raw://1c86a9d269c58f87982fca2c3d447b4bf595ffc6fb253ed49f3b1670b722131f",
+				"dweb:/ipfs/Qmd9zqo75h3RZvb8g96Q9ffM4egrJefMzCCxTz5xwDvMAN"
 			]
 		},
 		"contracts/access/Ownable.sol": {

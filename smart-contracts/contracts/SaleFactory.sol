@@ -54,7 +54,7 @@ contract SaleFactory is Ownable {
         address seller = msg.sender;
         Sale instance = new Sale(admin, seller, itemId, minPrice, purchasePrice, startTime, endTime, currencyAddress, nftAddress);
         // 생성한 인스턴스에게 tokenid에 해당하는 토큰의 소유권 넘겨주기
-        NFTcreatorContract.transferFrom(seller, address(instance), itemId);
+        // NFTcreatorContract.transferFrom(seller, address(instance), itemId);
         // return instance;
         // emit NewSale(_saleContract, _owner, _workId);
         sales.push(address(instance));
