@@ -7,6 +7,7 @@ import CoinChargeModal from "../Mint/CoinChargeModal";
 import logo from './logo.png'
 import { useMutation } from "react-query";
 import { getLogout } from "../../store/apis/log";
+import GameStartButton from "./GameStartButton";
 
 const NavbarWrrap = styled.div`
   /* display: block; */
@@ -93,7 +94,7 @@ const NavbarBox = styled.div`
         box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px;
         position: absolute;
         top: 60px;
-        right: 700px;
+        right: 750px;
         margin-right: 1px;
         border-radius: 0 0 5px 5px;
         div {
@@ -113,7 +114,7 @@ const NavbarBox = styled.div`
       cursor: pointer;
       .name{
         margin-left: 10px;
-        color:#35357a ;
+        color:#6225E6; //🎨메인색🎨
         font-weight: 1000;
       }
       .hide {
@@ -125,7 +126,7 @@ const NavbarBox = styled.div`
         box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px;
         position: absolute;
         top: 60px;
-        right: 200px;
+        right: 250px;
         margin-right: 1px;
         border-radius: 0 0 5px 5px;
         div {
@@ -247,11 +248,11 @@ export default function Navbar() {
               </Link>
             </div>
             <div className="pageName">
-              <Link to="/">N-City</Link>
+              <Link to="/">Nct</Link>
             </div>
           </div>
           <SearchBarContainer>
-            <SearchBar></SearchBar>
+            <SearchBar/>
           </SearchBarContainer>
           <div className="secondContainer">
             <div className="community">
@@ -267,7 +268,7 @@ export default function Navbar() {
             </div>
             
             <Link className="inner" to="store">
-              <p>store</p>
+              <p>NFTs</p>
             </Link>
             <Link className="inner" to="artists">
               <p>Artists</p>
@@ -309,9 +310,10 @@ export default function Navbar() {
                 </div>
               </>
             )}
-            <div className="game" >
+            <GameStartButton />
+            {/* <div className="game" >
               <a href="/ingame" >Game Start</a>
-            </div>
+            </div> */}
           </div>
         </NavbarBox>
       </NavbarWrrap>
