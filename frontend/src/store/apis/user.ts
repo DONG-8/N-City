@@ -17,7 +17,12 @@ const fileApiClient = axios.create({
   'Content-Type': 'multipart/form-data'
   },
 });
-
+export const getUserAll= async () => {
+  const response = await apiClient.get<any>(
+    `/users/all`
+  )
+  return response.data
+}
 // 유저 정보 조회
 export const getUserInfo = async (userId : number ) => {
   const response = await apiClient.get<any>(
