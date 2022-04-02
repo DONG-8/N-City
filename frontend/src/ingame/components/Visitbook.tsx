@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 interface IguestInfo {
@@ -12,7 +12,11 @@ interface IguestInfo {
 }
 
 const Visitbook: React.FC<IguestInfo> = ({ book }) => {
-  console.log(book.guestbookContents);
+  const [deletebtn, setDeletebtn] = useState(false);
+  const [modifybtn, setModifybtn] = useState(false);
+  // const
+  // book.guestbookOwnerId
+
   return (
     <>
       {book.guestbookContents}
