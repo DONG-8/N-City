@@ -214,6 +214,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
     {
       onSuccess: async (res) => {
         console.log("구매등록성공", res);
+        window.location.reload();
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
@@ -228,6 +229,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
     {
       onSuccess: async (res) => {
         console.log("경매등록성공", res);
+        window.location.reload();
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
@@ -260,7 +262,6 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
       console.log(response);
       console.log(item.productId, value)
       await resistSell.mutate();
-      window.location.reload();
     } catch (error) {
       handleClose();
       console.log(error);
@@ -294,7 +295,6 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
         .send({ from: accounts[0] });
       console.log(response);
       await resistAuction.mutate();
-      window.location.reload();
     } catch (error) {
       console.log(error);
       handleClose();
@@ -357,7 +357,10 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
             <p className='intro'> 희망 가격을 적어 판매를 시작하세요 </p>
             <div className='inputs'>
             <div className='price'>
-              시작가격 : <Input/> <img alt="ether" src={etherimg}/>
+              시작가격 : <Input onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
+                setValue(Number(e.target.value))
+                console.log(value)
+              }}/> <img alt="ether" src={etherimg}/>
             </div>
             <div className="price">경매기간 :{" "}<Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setPeriod(Number(e.target.value)); console.log(period);}}/>일

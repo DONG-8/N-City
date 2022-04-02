@@ -140,6 +140,7 @@ const Login = () => {
       onSuccess: (res) => {
         console.log("로그인요청 성공", res);
         localStorage.setItem("userId", res.userId)
+        localStorage.setItem("userNickname", res.userNick)
       },
       onError: (err: any) => {
         console.log("로그인요청 실패", err);

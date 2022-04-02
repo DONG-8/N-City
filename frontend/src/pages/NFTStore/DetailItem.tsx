@@ -330,6 +330,7 @@ interface Istate {
     userImgUrl: String;
     userNick: String;
     userRole: String;
+    mintUserId : String;
   };
 }
 const DetailItem = () => {
@@ -352,6 +353,7 @@ const DetailItem = () => {
     userImgUrl: "",
     userNick: "",
     userRole: "",
+    mintUserId: ""
   });
   const [items, setItems] = useState<Istate["item"][]>([
     {
@@ -388,6 +390,7 @@ const DetailItem = () => {
   const [productId, setProductId] = useState(useParams().productId);
   const [item, setItem] = useState({
     productId: 0,
+    mintUserId: "",
     userId: 0,
     tokenId: 0,
     productTitle: "",
@@ -403,6 +406,7 @@ const DetailItem = () => {
     productThumbnailUrl: "",
     productAuctionEndTime: null,
     favoriteCount: 0,
+    userNick: ""
   });
   const [isImg, setIsImg] = useState(true)
   const { ethereum } = window
@@ -423,7 +427,7 @@ const DetailItem = () => {
   const { isLoading: ILC, data: collection } = useQuery<any>( // 이 유저가 가진 그림
     "getUserCollection",
     async () => {
-      return await getUsercollectedInfo(user.userId as number);
+      return await getUsercollectedInfo(Number(user.mintUserId));
     },
     {
       onError: (err) => {
@@ -465,7 +469,7 @@ const DetailItem = () => {
   const getUser = useMutation<any, Error>(
     "getuserdetail",
     async () => {
-      return await getUserInfo(Number(item.userId));
+      return await getUserInfo(Number(item.mintUserId));
     },
     {
       onSuccess: (res) => {
@@ -508,7 +512,7 @@ const DetailItem = () => {
   const follow = useMutation<any, Error>(
     "follow",
     async () => {
-      return await postFollow(Number(user.userId));
+      return await postFollow(Number(user.mintUserId));
     },
     {
       onSuccess: (res) => {
@@ -522,7 +526,7 @@ const DetailItem = () => {
   const unFollow = useMutation<any, Error>(
     "follow",
     async () => {
-      return await deleteFollow(Number(user.userId));
+      return await deleteFollow(Number(user.mintUserId));
     },
     {
       onSuccess: (res) => {
@@ -536,7 +540,7 @@ const DetailItem = () => {
   const getUserFollower = useMutation<any, Error>(
     "getFollower",
     async () => {
-      return await getFollowee(Number(user.userId));
+      return await getFollowee(Number(user.mintUserId));
     },
     {
       onSuccess: async (res) => {
@@ -630,7 +634,7 @@ const DetailItem = () => {
     const URL = item.productFileUrl.split(".")
     const temp = URL[URL.length - 1]
     // console.log(temp)
-    const imgArr = ["jpg", "jpeg", "png", "gif", "bmp", "tif", "tiff"]
+    const imgArr = ["jpg","JPG", "jpeg", "JPEG", "png", "PNG", "gif", "GIF", "bmp", "BMP", "tif", "TIF", "tiff", "TIFF"]
     // console.log(imgArr.includes(temp))
     if (imgArr.includes(temp)) {
       setIsImg(true)
@@ -700,12 +704,12 @@ const DetailItem = () => {
                       )}
                     </div>
                     <div className="email"> email:{user.userEmail}</div>
-                    <div>userId:{user.userId}</div>
+                    <div>userId:{item.mintUserId}</div>
                     <div>직업:{user.userRole}</div>
                     <div>팔로워수:{followers}</div>
                     <div>팔로잉수:{followees}</div>
                     {Number(localStorage.getItem("userId")) ===
-                    user.userId ? null : followBtnState ? (
+                    Number(item.mintUserId) ? null : followBtnState ? (
                       <Button onClick={onClickFollow}>Follow</Button>
                     ) : (
                       <Button onClick={onClickUnFollow}>Unfollow</Button>
@@ -733,6 +737,7 @@ const DetailItem = () => {
                   <div className="content">
                     <div>카테고리 : {item.productCode}</div>
                     <div>등록일자 : {item.productRegDt}</div>
+                    <div>NFT 소유자 : {item.userNick}</div>
                     <div>상품상태/판매중?:{item.productState}</div>
                     <div>상품상태/판매중?:{status}</div>
                     <FavoriteBox className="icon">
@@ -779,20 +784,24 @@ const DetailItem = () => {
                       <div className="content">
                         즉시구매가 : {item.productPrice}{" "}
                       </div>
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          setOpen(true);
-                        }}
-                      >
-                        구매하기
-                      </Button>
-                      <Button
-                        variant="contained"
-                        onClick={() => onclickCancelSale()}
-                      >
-                        판매취소
-                      </Button>
+                      {Number(localStorage.getItem("userId")) ===
+                      item.userId ? (
+                        <Button
+                          variant="contained"
+                          onClick={() => onclickCancelSale()}
+                        >
+                          판매취소
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            setOpen(true);
+                          }}
+                        >
+                          구매하기
+                        </Button>
+                      )}
                     </>
                   )}
                   {status === "normal" && (
