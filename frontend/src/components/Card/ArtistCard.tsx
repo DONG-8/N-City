@@ -1,12 +1,13 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import artistpng from './images/artist.png'
+import enterpng from './images/enterprise.png'
+import infpng from './images/influencer.png'
 
 interface Iprops{
   user:{
     "authId": Number,
-    "followeeCnt": Number,
-    "followerCnt": Number,
     "userAddress": String,
     "userDescription": String,
     "userEmail": String,
@@ -64,11 +65,15 @@ const CardBottom = styled.div`
       width: 90% ;
     }
 `
-
+const Badge = styled.div`
+  img{
+    height:3vh;
+  }
+`
 const ArtistCard:React.FC<Iprops> = ({user}) => {
   const navigate = useNavigate()
   const goMyPage = ()=>{
-    navigate('/mypage')
+    navigate(`/mypage/${user.userId}`)
     localStorage.setItem("item",JSON.stringify(user))
   }
   return (<>
@@ -87,12 +92,14 @@ const ArtistCard:React.FC<Iprops> = ({user}) => {
         </ProfileImg>
         <CardBottom>
           <div className='name'>
-            {user.userNick}
-            {user.userEmailConfirm &&
-            <img alt="verified" style={{"height":'1.5rem'}} src= "/essets/images/verified.png" />}
+            <Badge>
+              <span>{user.userNick} </span>
+              {user.userRole==='ROLE_USER' && <img alt='badge' src= {artistpng}/>}
+              {user.userRole==='ROLE_ENTERPRISE' && <img alt='badge' src= {enterpng}/>}
+              {user.userRole==='ROLE_ARTIST' && <img alt='badge' src= {artistpng}/>}
+              {user.userRole==='ROLE_INFLUENCER' && <img alt='badge' src= {infpng}/>}
+            </Badge>
           </div>
-          
-
           <div className='description'>
             {user.userDescription ? 
             <p>{user.userDescription}</p>:
