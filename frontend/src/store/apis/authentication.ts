@@ -12,7 +12,8 @@ const apiClient = axios.create({
 
 // file update 이용 시 사용되는  axios
 const fileApiClient = axios.create({
-  baseURL: "https://j6e106.p.ssafy.io/api",
+  // baseURL: "https://j6e106.p.ssafy.io/api",
+  baseURL: "http://localhost:8080/api",
   headers: {
   'Content-Type': 'multipart/form-data'
 },
