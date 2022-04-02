@@ -79,7 +79,7 @@ public class UserController {
         Integer addressLength = userAddress.length();
         // 올바른 지갑 주소인지 확인
         if(!addressLength.equals(42)) {
-            return ResponseEntity.status(401).body(LoginPostRes.of(401, "Incorrect Wallet", null, null));
+            return ResponseEntity.status(401).body(LoginPostRes.of(401, "Incorrect Wallet", null, null,null));
         } else {
             User user = logService.getUserDetailByAddress(userAddress);
             // 토큰
@@ -95,7 +95,7 @@ public class UserController {
 
             response.addCookie(accessToken);
             response.addCookie(refreshToken);
-            return ResponseEntity.status(201).body(LoginPostRes.of(201, "Success", accessJwt, user.getUserId()));
+            return ResponseEntity.status(201).body(LoginPostRes.of(201, "Success", accessJwt, user.getUserId(),user.getUserNick()));
         }
     }
 
@@ -152,7 +152,6 @@ public class UserController {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "이미 로그아웃한 유저입니다."));
         }
     }
-
 
     @GetMapping("/{userId}")
     @ApiOperation(value = "유저 정보 조회", notes = "<strong>UserId에 해당하는 유저의 정보</strong>을 넘겨준다.")
