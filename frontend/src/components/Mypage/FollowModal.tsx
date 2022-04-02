@@ -60,7 +60,7 @@ const ModalSection = styled.div<{ visible: boolean }>`
   font-family: "Noto Sans KR", sans-serif;
   width: 600px;
   height: 810px;
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: column;
   top: 500px;
@@ -161,7 +161,7 @@ const FollowModal = ({
         <Title visible={visible}>{isFollower ? "팔로워" : "팔로우"}</Title>
         <Divider />
         {isFollower
-          ? followers.map((user, idx) => {
+          ? followers.map((user) => {
               return (
                 <div
                   key={user.userId}
@@ -171,7 +171,7 @@ const FollowModal = ({
                 </div>
               );
             })
-          : followees.map((user, idx) => {
+          : followees.map((user) => {
               return (
                 <div
                   key={user.userId}
