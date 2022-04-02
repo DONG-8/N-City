@@ -4,14 +4,12 @@ import ItemCard from "../../components/Card/ItemCard";
 import { Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import SaleModal from "../../components/Store/SaleModal";
-import SellIcon from "@mui/icons-material/Sell";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import ReplayIcon from '@mui/icons-material/Replay';
 import Tooltip from "@mui/material/Tooltip";
-import { items as itm } from "../NFTStore/items";
 import { QueryClient, useMutation, useQuery } from "react-query";
 import FollowModal from "../../components/Mypage/FollowModal";
 import { deleteFollow, getFollowee, getFollower, postFollow } from "../../store/apis/follow";
@@ -20,6 +18,7 @@ import bg from "../../essets/images/login_background.png"
 
 const MypageWrapper = styled.div`
   box-shadow: 1px 3px 7px;
+  font-family: "Noto Sans KR", sans-serif;
 `;
 const Background = styled.div`
   width: 100%;
@@ -31,50 +30,36 @@ const Background = styled.div`
     overflow: hidden;
   }
 `;
+
 const ProfileWrapper = styled.div`
   box-shadow: 1px 1px 3px;
-
   background-color: #faf3f399;
   position: absolute;
+  display: flex;
+  align-items: center;
   top: 20vh;
   left: 8vw;
   width: 85vw;
   height: 30vh;
   border-radius: 10px;
 `;
-const Wallet = styled.div`
-  background-color: white;
-  position: absolute;
-  top: 2vh;
-  left: 54vw;
-  width: 30vw;
-  height: 15vh;
 
-  .border {
-    display: flex;
-    border: 1px solid gray;
-    width: 98%;
-    height: 90%;
-    margin: auto;
-    margin-top: 0.5vh;
+const FollowTextBox = styled.div`
+  margin-left: 10px;
+  margin-bottom: 10px;
+  span {
+    cursor: pointer;
+    font-weight: 500;
     div {
-      flex: 2.5;
-      height: 100%;
-      border-right: 1px solid gray;
-      justify-content: center;
-      text-align: center;
-      .number {
-        font-weight: 1000;
-        font-size: 3vh;
-      }
-      .description {
-        font-size: 2vh;
-        color: gray;
-      }
+      display: inline;
+      font-weight: 600;
+      margin-right: 15px;
     }
   }
-`;
+`
+
 const FilterBar = styled.div`
+  font-family: "Noto Sans KR", sans-serif;
   margin: auto;
   margin-top: 3vh;
   width: 70%;
@@ -91,7 +76,7 @@ const FilterBar = styled.div`
     p {
       font-size: 2.5vh;
       margin-top: 1vh;
-      font-weight: 1000;
+      font-weight: 600;
     }
   }
   div {
@@ -122,16 +107,22 @@ const ProfileImg = styled.div`
 `;
 const Profile = styled.div`
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   top: 2vh;
   left: 18vw;
+  width: 70%;
   h1 {
     font-size: 5vh;
+    margin-bottom: 20px;
   }
   h2 {
     font-size: 3vh;
   }
   button {
-    font-weight: 1000;
+    font-family: "Noto Sans KR", sans-serif;
+    font-weight: 600;
     background-color: #e89669;
     width: 14vw;
     height: 5vh;
@@ -140,6 +131,11 @@ const Profile = styled.div`
       transition: 0.2s;
       background-color: #f08850;
     }
+  }
+  .joinRoomBtn {
+    width: 450px;
+    height: 100px;
+    font-size: 35px;
   }
 `;
 const ItemCards = styled.div`
@@ -152,10 +148,7 @@ const ItemCards = styled.div`
 `;
 const Card = styled.div`
   button {
-    position: absolute;
-    margin-left: 10rem;
-    margin-top: -4rem;
-    font-size: 1.5rem;
+    font-family: "Noto Sans KR", sans-serif;
   }
 `;
 
@@ -206,6 +199,8 @@ export const Event = styled.div`
     font-weight: 500;
   }
 `
+
+
 interface IUserInfo {
   userId: number;
   authId: number;
@@ -263,7 +258,6 @@ export default function Mypage() {
   const [myLikes, setMyLikes] = useState<any[]>([]);
   const [myHistory, setMyHistory] = useState<any[]>([]);
   const [item, setItem] = useState<any>();
-  const [dealTypeMean, setDealTypeMean] = useState<string>("");
   //모달창
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
@@ -383,7 +377,7 @@ export default function Mypage() {
     {
       onSuccess: async (res) => {
         console.log("내가가진 NFT들", res);
-        setMyTokens(res.content)
+        setMyTokens(res.content.reverse())
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
@@ -399,7 +393,7 @@ export default function Mypage() {
     {
       onSuccess: async (res) => {
         console.log("내가민팅한 NFT들", res);
-        setMyMint(res.content)
+        setMyMint(res.content.reverse())
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
@@ -415,7 +409,7 @@ export default function Mypage() {
     {
       onSuccess: async (res) => {
         console.log("내가좋아요한 NFT들", res);
-        setMyLikes(res.content)
+        setMyLikes(res.content.reverse())
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
@@ -492,29 +486,43 @@ export default function Mypage() {
         <ProfileWrapper>
           <ProfileImg>
             <img
-              src={userInfo?.userImgUrl? userInfo.userImgUrl : "http://kaihuastudio.com/common/img/default_profile.png"}
+              src={
+                userInfo?.userImgUrl
+                  ? userInfo.userImgUrl
+                  : "http://kaihuastudio.com/common/img/default_profile.png"
+              }
               alt="프로필"
             />
           </ProfileImg>
           <Profile>
-            <h1>{userInfo?.userNick}</h1>
             <div>
-              <span onClick={() => handleModalOpen("follower")}>팔로워 {userInfo?.followerCnt} </span>
-              <span onClick={() => handleModalOpen("followee")}>팔로우 {userInfo?.followeeCnt} </span>
+
+            <h1>{userInfo?.userNick}</h1>
+            <FollowTextBox>
+              <span onClick={() => handleModalOpen("follower")}>
+                팔로워 <div>{userInfo?.followerCnt}</div>{" "}
+              </span>
+              <span onClick={() => handleModalOpen("followee")}>
+                팔로우 <div>{userInfo?.followeeCnt}</div>{" "}
+              </span>
+            </FollowTextBox>
+            {Number(localStorage.getItem("userId")) === userInfo?.userId ? (
+              <Button
+                onClick={() => {
+                  navigate("/profilesetting");
+                }}
+                color="warning"
+                variant="contained"
+              >
+                프로필 수정
+              </Button>
+            ) : (
+              <button onClick={onClickFollow}>
+                {followBtnState ? "팔로우" : "언팔로우"}
+              </button>
+            )}
             </div>
-            {Number(localStorage.getItem("userId")) === userInfo?.userId ? 
-            <Button
-              onClick={() => {
-                navigate("/profilesetting");
-              }}
-              color="warning"
-              variant="contained"
-            >
-              프로필 수정
-            </Button> : 
-            <button onClick={onClickFollow}>{followBtnState?"팔로우":"언팔로우"}</button>
-            }
-          <button>방입장</button>
+            <button className="joinRoomBtn">방입장</button>
           </Profile>
         </ProfileWrapper>
       </MypageWrapper>
@@ -560,77 +568,72 @@ export default function Mypage() {
           <p>활동내역</p>
         </div>
       </FilterBar>
-      {status === "myNFT" &&
-      <ItemCards>
-        {myTokens.map((item, idx) => {
-          return (
-            <Card>
-              <ItemCard key={idx} item={item} />
-              {
-                item.productState === 3 ? <Tooltip title="판매하기">
-                <Button onClick={() => handleOpen(item)}>
-                  <SellIcon />
-                </Button>
-              </Tooltip> :
-                (item.productState === 1 ? <div>경매중 {item.productPrice}NCT</div> : <div>판매중 {item.productPrice}NCT</div>)
-              }
-            </Card>
-          );
-        })}
-      </ItemCards>}
-      {status === "myMint" &&
-      <ItemCards>
-        {myMint.map((item, idx) => {
-          return (
-            <Card>
-              <ItemCard key={idx} item={item} />
-            </Card>
-          );
-        })}
-      </ItemCards>}
-      {status === "myLikes" &&
-      <ItemCards>
-        {myLikes.map((item, idx) => {
-          return (
-            <Card>
-              <ItemCard key={idx} item={item} />
-            </Card>
-          );
-        })}
-      </ItemCards>}
+      {status === "myNFT" && (
+        <ItemCards>
+          {myTokens.map((item, idx) => {
+            return (
+              <Card>
+                <ItemCard key={idx} item={item} handleOpen={handleOpen} />
+              </Card>
+            );
+          })}
+        </ItemCards>
+      )}
+      {status === "myMint" && (
+        <ItemCards>
+          {myMint.map((item, idx) => {
+            return (
+              <Card>
+                <ItemCard key={idx} item={item} handleOpen={handleOpen}  />
+              </Card>
+            );
+          })}
+        </ItemCards>
+      )}
+      {status === "myLikes" && (
+        <ItemCards>
+          {myLikes.map((item, idx) => {
+            return (
+              <Card>
+                <ItemCard key={idx} item={item} handleOpen={handleOpen} />
+              </Card>
+            );
+          })}
+        </ItemCards>
+      )}
       {status === "history" && (
         <List>
-        <ListCategory>
-          <div>Event</div>
-          <div>product</div>
-          <div>Price</div>
-          <div>From</div>
-          <div>To</div>
-          <div>Date</div>
-        </ListCategory>
-        {myHistory.map((history, idx) => {
-          return (
-            <ListItem key={idx}>
-              <div>{dealTypeConvert(history.dealType)}</div>
-              <div>{history.productTitle}</div>
-              <div>{history.dealPrice}</div>
-              <div>{history.dealFromUserNick}</div>
-              <div>{history.dealToUserNick}</div>
-              <div>{history.dealCreatedAt}</div>
-              {/* <div className="id">{dealTypeConvert(history.dealType)}</div> */}
-            </ListItem>
-          );
-        })}
-      </List>
+          <ListCategory>
+            <div>Event</div>
+            <div>product</div>
+            <div>Price</div>
+            <div>From</div>
+            <div>To</div>
+            <div>Date</div>
+          </ListCategory>
+          {myHistory.map((history, idx) => {
+            return (
+              <ListItem key={idx}>
+                <div>{dealTypeConvert(history.dealType)}</div>
+                <div>{history.productTitle}</div>
+                <div>{history.dealPrice}</div>
+                <div>{history.dealFromUserNick}</div>
+                <div>{history.dealToUserNick}</div>
+                <div>{history.dealCreatedAt}</div>
+                {/* <div className="id">{dealTypeConvert(history.dealType)}</div> */}
+              </ListItem>
+            );
+          })}
+        </List>
       )}
-      <SaleModal open={open} setOpen={setOpen} item={item}/>
+      <SaleModal open={open} setOpen={setOpen} item={item} />
       <FollowModal
-          visible={isOpen}
-          onClose={handleModalClose}
-          userId={Number(userId)}
-          isFollower={isFollower}
-          followers={followers}
-          followees={followees}
+        visible={isOpen}
+        onClose={handleModalClose}
+        userId={Number(userId)}
+        isFollower={isFollower}
+        followers={followers}
+        followees={followees}
       ></FollowModal>
     </>
   );

@@ -40,7 +40,7 @@ public class DealController {
     public ResponseEntity<BaseResponseBody> buyNowRegister(@RequestBody BuyNowRegisterPostReq buyNowRegisterPostReq, Principal principal){
 
         log.info("dealRegister - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Long res = dealService.buyNowRegister(buyNowRegisterPostReq,userId);
         if(!res.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
@@ -60,7 +60,7 @@ public class DealController {
     public ResponseEntity<BaseResponseBody> auctionRegister(@RequestBody AuctionRegisterPostReq auctionRegisterPostReq, Principal principal){
 
         log.info("dealRegister - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Long res = dealService.auctionRegister(auctionRegisterPostReq,userId);
         if(!res.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
@@ -68,7 +68,6 @@ public class DealController {
         else {
             return ResponseEntity.status(404).body(BaseResponseBody.of(404, "등록 실패"));
         }
-
     }
 
     // auction 참가 (bid)
@@ -80,7 +79,7 @@ public class DealController {
     })
     public ResponseEntity<BaseResponseBody> bidRegister(@RequestBody BuyNowRegisterPostReq buyNowRegisterPostReq, Principal principal){
         log.info("bidRegister - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Deal deal = dealService.bidRegister(buyNowRegisterPostReq,userId);
         if(!deal.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
@@ -99,7 +98,7 @@ public class DealController {
     })
     public ResponseEntity<BaseResponseBody> buyNow( @ApiParam(value = "상품id") @PathVariable("productId") Long productId, Principal principal){
         log.info("buyNow - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Deal deal = dealService.buyNow(productId,userId);
         if(!deal.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
@@ -118,7 +117,7 @@ public class DealController {
     })
     public ResponseEntity<BaseResponseBody> buyNowCancel(@ApiParam(value = "상품id") @PathVariable("productId") Long proudctId, Principal principal){
         log.info("buyNowCancel - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Deal deal = dealService.buyNowCancel(proudctId,userId);
         if(!deal.equals(null)){
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
@@ -127,8 +126,6 @@ public class DealController {
             return ResponseEntity.status(404).body(BaseResponseBody.of(404, "등록 실패"));
         }
     }
-
-
 
     // 경매 입찰
     @PostMapping("/buy/auction/{productId}")
@@ -139,7 +136,7 @@ public class DealController {
     })
     public ResponseEntity<BaseResponseBody> buyAuction( @ApiParam(value = "상품id") @PathVariable("productId") Long productId, Principal principal){
         log.info("buyAuction - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Deal deal = dealService.buyAuction(productId,userId);
         if(!deal.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
@@ -151,7 +148,6 @@ public class DealController {
 
     // READ
     // productId에 해당하는 지난 거래 내역들 조회
-
     @ApiOperation(value = "지난 거래내역 조회")
     @GetMapping("/{productId}")
     @ApiResponses({

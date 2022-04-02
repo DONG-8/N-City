@@ -3,6 +3,8 @@ import styled from "styled-components";
 import MetaMaskOnboarding from "@metamask/onboarding";
 import { useMutation } from 'react-query';
 import { postLogin } from "../../store/apis/log";
+import { useNavigate } from "react-router-dom";
+
 
 //// style
 const Wrapper = styled.div`
@@ -81,7 +83,7 @@ const Login = () => {
   const { ethereum } = window;
   const currentUrl = new URL(window.location.href);
   const forwarderOrigin ="https://j6e106.p.ssafy.io";
-
+  const navigate = useNavigate();
   const onboarding = new MetaMaskOnboarding({ forwarderOrigin });
 
   const initialize = () => {
@@ -139,6 +141,9 @@ const Login = () => {
       onSuccess: (res) => {
         console.log("로그인요청 성공", res);
         localStorage.setItem("userId", res.userId)
+        localStorage.setItem("userNickname", res.userNick)
+        navigate("/")
+        window.location.reload();
       },
       onError: (err: any) => {
         console.log("로그인요청 실패", err);

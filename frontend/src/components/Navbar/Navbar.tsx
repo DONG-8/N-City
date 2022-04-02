@@ -198,9 +198,9 @@ export default function Navbar() {
   },[isLogin])
   
   const login = ()=>{ // 위에 세줄 지우기 ⭐
-    localStorage.setItem('userId','1')
-    localStorage.setItem('userNickname','아이유')
-    setIsLogin(true) 
+    // localStorage.setItem('userId','1')
+    // localStorage.setItem('userNickname','아이유')
+    // setIsLogin(true) 
     navigate("/login");
   }
 

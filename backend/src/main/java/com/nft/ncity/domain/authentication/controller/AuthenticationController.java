@@ -104,7 +104,7 @@ public class AuthenticationController {
         // 1. 인증 등록 정보를 Authentication 테이블에 저장하고, 해당 인증 ID와 함께 인증 파일들을 AuthFile 테이블에 저장한다.
         // 2. 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
         log.info("AuthenticationRegister - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Authentication authentication = authenticationService.AuthenticationRegister(authenticationRegisterPostReq,multipartFile, userId);
 
         if(!authentication.equals(null)) {
