@@ -79,7 +79,7 @@ public class UserController {
         Integer addressLength = userAddress.length();
         // 올바른 지갑 주소인지 확인
         if(!addressLength.equals(42)) {
-            return ResponseEntity.status(401).body(LoginPostRes.of(401, "Incorrect Wallet", null, null,null));
+            return ResponseEntity.status(401).body(LoginPostRes.of(401, "Incorrect Wallet", null, null,null,false));
         } else {
             User user = logService.getUserDetailByAddress(userAddress);
             // 토큰
@@ -95,7 +95,10 @@ public class UserController {
 
             response.addCookie(accessToken);
             response.addCookie(refreshToken);
-            return ResponseEntity.status(201).body(LoginPostRes.of(201, "Success", accessJwt, user.getUserId(),user.getUserNick()));
+
+            boolean isNew = user.getUserRole().equals("Role_NEW") ? true : false;
+
+            return ResponseEntity.status(201).body(LoginPostRes.of(201, "Success", accessJwt, user.getUserId(),user.getUserNick(), isNew));
         }
     }
 
