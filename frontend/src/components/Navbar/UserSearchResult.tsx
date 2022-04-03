@@ -5,7 +5,9 @@ import styled from "styled-components";
 
 const ResultDiv = styled.div`
   width: 100%;
-  height: 50px;
+  min-height: 100px;
+  max-height: 30vh;
+  overflow-y: auto;
   border: solid;
   border-color: rgba(100, 100, 111, 0.2);
   border-width: 1px;
@@ -21,16 +23,29 @@ const ResultDiv = styled.div`
 `;
 
 const InnerContentContainer = styled.div`
-  width: 100%;
+  border-bottom: 0.3px solid #e1dddd;
+  img{
+    width: 3vw;
+    height: 3vw;
+    margin-left: 1vw;
+  }
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
+
 `;
 
 const InnerContent = styled.div`
   margin: auto 20px;
 `;
-
+const Noresult = styled.div`
+  margin-left: 2vw;
+  margin-top: 2vw;
+  .searchValue{
+    color:#4343e2 
+  }
+`
 interface IUser {
   item : {
   authId: number;
@@ -44,10 +59,12 @@ interface IUser {
   userRole: string;
   }[]
   onclose: () => void;
+  searchValue:string;
+
 }
 
 
-const UserSearchResult:React.FC<IUser> = ({item, onclose}) => {
+const UserSearchResult:React.FC<IUser> = ({searchValue,item, onclose}) => {
   const [items, setItems] = useState(item)
   const navigate = useNavigate();
 
@@ -60,28 +77,27 @@ const UserSearchResult:React.FC<IUser> = ({item, onclose}) => {
   },[item])
   return (
     <ResultDiv>
-      {items ? (
-        items.map((i, idx) => (
+      {items.length>0 ? (
+        items.map((item, idx) => (
           <InnerContentContainer
             key={idx}
-            onClick={() => onClickItem(i.userId)}
+            onClick={() => onClickItem(item.userId)}
           >
             <img
               src={
-                i.userImgUrl
-                  ? i.userImgUrl
+                item.userImgUrl
+                  ? item.userImgUrl
                   : "http://kaihuastudio.com/common/img/default_profile.png"
               }
               alt="프로필사진"
             />
-            <InnerContent>{i.userNick}</InnerContent>
-            <InnerContent>{i.userRole}</InnerContent>
+            <InnerContent>{item.userNick}</InnerContent>
+            <InnerContent>{item.userRole}</InnerContent>
           </InnerContentContainer>
         ))
       ) : (
-        <InnerContentContainer>
-          <InnerContent>검색된 유저 없음</InnerContent>
-        </InnerContentContainer>
+        <Noresult> <span className="searchValue">'{searchValue}'</span>
+         가 포함된 유저가 없습니다</Noresult>
       )}
     </ResultDiv>
   );

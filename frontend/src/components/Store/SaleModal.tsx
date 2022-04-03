@@ -246,6 +246,11 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
       return;
     }
     try {
+      // 토큰 권한 승인시키기
+      await NFTcreatorContract.methods
+      .setApprovalForAll(SaleFactoryAddress, true)
+      .send({ from: accounts[0] });
+
       // 판매등록
       const date = new Date();
       const response = await SaleFactoryContract.methods
@@ -280,6 +285,11 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
       return;
     }
     try {
+      // 토큰 권한 승인시키기
+      await NFTcreatorContract.methods
+      .setApprovalForAll(SaleFactoryAddress, true)
+      .send({ from: accounts[0] });
+      
       //경매등록
       const date = new Date();
       const response = await SaleFactoryContract.methods
