@@ -28,8 +28,9 @@ public interface UserService {
 	UserInfoRes getUserInfo(User user);
 	List<User> searchUser(String userNick);
 	Page<User> getUserList(Pageable pageable);
-	Page<User> getNewUserList(Pageable pageable);
+	Page<User> getNewUserList(Pageable pageable, String userRole);
 	Long modifyUserRole(Long userId);
+	Long modifyUserRoleAsRequest(Long userId);
     Page<UserDealInfoWithProductRes> getUserDealInfoWithProduct(Long userId, Pageable pageable);
 	Page<UserProductWithIsFavoriteRes> getUserProductWithIsFavorite(Page<Product> products, Long userId);
 	List<UserAllRes> getUserAll();

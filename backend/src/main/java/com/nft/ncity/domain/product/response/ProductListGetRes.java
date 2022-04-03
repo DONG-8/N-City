@@ -46,25 +46,6 @@ public class ProductListGetRes {
     @ApiModelProperty(value = "좋아요 누른 사람")
     List<User> productFavoriteUser;
 
-    public static Page<ProductListGetRes> of(Page<Product> products){
-        List<ProductListGetRes> productListGetRes = new ArrayList<>();
-
-        Pageable pageable = products.getPageable();
-        long total = products.getTotalElements();
-
-        for(Product p : products.getContent()){
-            ProductListGetRes productList = new ProductListGetRes();
-
-            productList.setProductTitle(p.getProductTitle());
-            productList.setProductPrice(p.getProductPrice());
-            productList.setProductRegDt(p.getProductRegDt());
-            productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
-
-            productListGetRes.add(productList);
-        }
-
-        Page<ProductListGetRes> res = new PageImpl<>(productListGetRes, pageable, total);
-
-        return res;
-    }
+    @ApiModelProperty(value = "유저 종류")
+    String userRole;
 }

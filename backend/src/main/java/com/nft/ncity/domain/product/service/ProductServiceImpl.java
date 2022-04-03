@@ -18,6 +18,7 @@ import com.nft.ncity.domain.product.response.ProductDetailGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
+import com.nft.ncity.domain.user.db.repository.UserRepositorySupport;
 import com.nft.ncity.domain.user.response.UserMintProductRes;
 import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,8 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserRepositorySupport userRepositorySupport;
 
     @Autowired
     DealRepositorySupport dealRepositorySupport;
@@ -159,6 +162,9 @@ public class ProductServiceImpl implements ProductService{
         for(Product p : products.getContent()){
             ProductListGetRes productList = new ProductListGetRes();
 
+            User user = userRepositorySupport.findUserByUserId(p.getUserId());
+
+            productList.setUserRole(user.getUserRole());
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
@@ -184,6 +190,9 @@ public class ProductServiceImpl implements ProductService{
         for(Product p : products.getContent()){
             ProductListGetRes productList = new ProductListGetRes();
 
+            User user = userRepositorySupport.findUserByUserId(p.getUserId());
+
+            productList.setUserRole(user.getUserRole());
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
@@ -210,7 +219,9 @@ public class ProductServiceImpl implements ProductService{
 
         for(Product p : products.getContent()){
             ProductDealListGetRes productDealList = new ProductDealListGetRes();
+            User user = userRepositorySupport.findUserByUserId(p.getUserId());
 
+            productDealList.setUserRole(user.getUserRole());
             productDealList.setProductTitle(p.getProductTitle());
             productDealList.setProductPrice(p.getProductPrice());
             productDealList.setProductRegDt(p.getProductRegDt());
@@ -238,7 +249,9 @@ public class ProductServiceImpl implements ProductService{
 
         for(Product p : products.getContent()){
             ProductDealListGetRes productDealList = new ProductDealListGetRes();
+            User user = userRepositorySupport.findUserByUserId(p.getUserId());
 
+            productDealList.setUserRole(user.getUserRole());
             productDealList.setProductTitle(p.getProductTitle());
             productDealList.setProductPrice(p.getProductPrice());
             productDealList.setProductRegDt(p.getProductRegDt());
@@ -267,7 +280,9 @@ public class ProductServiceImpl implements ProductService{
 
         for(Product p : products.getContent()){
             ProductListGetRes productList = new ProductListGetRes();
+            User user = userRepositorySupport.findUserByUserId(p.getUserId());
 
+            productList.setUserRole(user.getUserRole());
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
@@ -344,6 +359,7 @@ public class ProductServiceImpl implements ProductService{
 
                     .productId(p.getProductId())
                     .userId(p.getUserId())
+                    .userRole(userRepositorySupport.findUserByUserId(p.getUserId()).getUserRole())
                     .tokenId(p.getTokenId())
                     .productTitle(p.getProductTitle())
                     .productDesc(p.getProductDesc())
@@ -374,6 +390,7 @@ public class ProductServiceImpl implements ProductService{
         for(Product p : productList.getContent()) {
             UserMintProductRes userMintProductRes = UserMintProductRes.builder()
                     .userId(p.getUserId())
+                    .userRole(userRepositorySupport.findUserByUserId(p.getUserId()).getUserRole())
                     .tokenId(p.getTokenId())
                     .productPrice(p.getProductPrice())
                     .productCode(p.getProductCode())

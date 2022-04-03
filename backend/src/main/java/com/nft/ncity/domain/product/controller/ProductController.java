@@ -154,8 +154,6 @@ public class ProductController {
         Page<ProductListGetRes> products = productService.getProductListByTitle(pageable,productTitle);
 
         return ResponseEntity.status(200).body(products);
-
-
     }
 
     @ApiOperation(value = "상품 상세 조회")

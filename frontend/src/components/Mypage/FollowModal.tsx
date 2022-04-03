@@ -42,8 +42,8 @@ const fadeOut = keyframes`
 const modalSettings = (visible: boolean) => css`
   visibility: ${visible ? "visible" : "hidden"};
   z-index: 15;
-  animation: ${visible ? fadeIn : fadeOut} 0.15s ease-out;
-  transition: visibility 0.15s ease-out;
+  animation: ${visible ? fadeIn : fadeOut} 0.3s ease-out;
+  transition: visibility 0.3s ease-out;
 `;
 
 const Background = styled.div<{ visible: boolean }>`
@@ -58,8 +58,9 @@ const Background = styled.div<{ visible: boolean }>`
 
 const ModalSection = styled.div<{ visible: boolean }>`
   font-family: "Noto Sans KR", sans-serif;
-  width: 600px;
-  height: 810px;
+  width: 25vw;
+  height: 70vh;
+  overflow-y: auto;
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -72,6 +73,10 @@ const ModalSection = styled.div<{ visible: boolean }>`
   background-color: rgba(255, 255, 255, 1);
   padding: 16px;
   ${(props) => modalSettings(props.visible)}
+  .name{
+    margin: 2vh;
+    font-size: 2.5vh;
+  }
 `;
 
 const Title = styled.h1<{ visible: boolean }>`
@@ -82,7 +87,7 @@ const Title = styled.h1<{ visible: boolean }>`
 `;
 
 const Divider = styled.hr`
-  border: solid 1px #ff865b;
+  border: solid 1px #6225E6  ;
   width: 65%;
   margin-bottom: 30px;
 `;
@@ -157,13 +162,14 @@ const FollowModal = ({
     <div>
       <Background visible={visible} onClick={onClose} />
       <ModalSection visible={visible}>
-        <CloseButton onClick={onClose}></CloseButton>
+        <CloseButton onClick={onClose}/>
         <Title visible={visible}>{isFollower ? "팔로워" : "팔로우"}</Title>
         <Divider />
         {isFollower
           ? followers.map((user) => {
               return (
                 <div
+                  className="name"
                   key={user.userId}
                   onClick={() => handleOnClickFollower(user.userId)}
                 >
@@ -174,6 +180,7 @@ const FollowModal = ({
           : followees.map((user) => {
               return (
                 <div
+                  className="name"
                   key={user.userId}
                   onClick={() => handleOnClickFollower(user.userId)}
                 >

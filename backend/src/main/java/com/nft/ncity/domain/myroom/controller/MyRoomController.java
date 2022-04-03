@@ -35,6 +35,24 @@ public class MyRoomController {
     @Autowired
     MyRoomRepositorySupport myRoomRepositorySupport;
 
+    @ApiOperation(value = "유저 캐릭터 정보 받기")
+    @GetMapping("/{userId}")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = MyRoom.class),
+            @ApiResponse(code = 404, message = "존재하지 않는 userId 입니다.")
+    })
+    public ResponseEntity<MyRoomGetRes> getUserCharacter(@PathVariable @ApiParam(value = "방 주인의 유저 id", required = true) Long userId){
+        log.info("getUserCharacter - Call");
+
+        MyRoom userRoom = myRoomService.getUserCharacter(userId);
+
+        if(userRoom == null) {  // userId 존재하지 않는 경우
+            return ResponseEntity.status(404).body(null);
+        } else {
+            return ResponseEntity.status(200).body(MyRoomGetRes.of(200, "마이룸 불러오기 성공", userRoom));
+        }
+    }
+
     @ApiOperation(value = "유저 방 입장하기")
     @PostMapping("/{userId}")
     @ApiResponses({

@@ -59,4 +59,7 @@ public class UserMintProductRes {
 
     @ApiModelProperty(value = "상품 좋아요 수")
     private Long productFavoriteCount;
+
+    @ApiModelProperty(value = "유저 종류")
+    private String userRole;
 }
