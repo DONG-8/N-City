@@ -180,6 +180,7 @@ const Admin = () => {
   const [artist, setArtist] = useState<IApply["apply"][]>([]);
   const [enterprise, setEnterprise] = useState<IApply["apply"][]>([]);
   const [newUsers, setNewUsers] = useState<any[]>([]);
+  const [tokenApplyUsers, setTokenApplyUsers] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isMintOpen, setIsMintOpen] = useState<boolean>(false);
   const [status, setStatus] = useState("influencer");
@@ -257,7 +258,7 @@ const Admin = () => {
   const getNewUsers = useMutation<any, Error>(
     "getNewUsers",
     async () => {
-      return await getAuthNewUsers();
+      return await getAuthNewUsers("ROLE_NEW");
     },
     {
       onSuccess: (res) => {
@@ -266,6 +267,22 @@ const Admin = () => {
       },
       onError: (err: any) => {
         console.log("❌신규유저 불러오기 실패!",err);
+      },
+    }
+  );
+
+  const getReApplyTokenUsers = useMutation<any, Error>(
+    "getNewUsers",
+    async () => {
+      return await getAuthNewUsers("ROLE_REQUEST");
+    },
+    {
+      onSuccess: (res) => {
+        console.log("토큰신청유저 불러오기 성공!",res);
+        setTokenApplyUsers(res.content);
+      },
+      onError: (err: any) => {
+        console.log("❌토큰신청유저 불러오기 실패!",err);
       },
     }
   );
@@ -290,6 +307,7 @@ const Admin = () => {
     getInfluencer.mutate()
     getEnterpise.mutate()
     getNewUsers.mutate()
+    getReApplyTokenUsers.mutate()
   }, [])
 
   const onClickApprove = (apply: IApply, idx: number) => {
@@ -314,7 +332,6 @@ const Admin = () => {
     if (idx > -1) {
       temp.splice(idx, 1);
     }
-
     switch (status) {
       case "influencer":
         setInfluencer(temp);
@@ -327,6 +344,9 @@ const Admin = () => {
         break;
       case "newUsers":
         setNewUsers(temp)
+        break
+      case "tokenApplyUsers":
+        setTokenApplyUsers(temp)
         break
       default:
         break;
@@ -343,6 +363,8 @@ const Admin = () => {
         return enterprise;
       case "newUsers":
         return newUsers;
+      case "tokenApplyUsers":
+        return tokenApplyUsers
       default:
         return influencer;
     }
@@ -358,6 +380,7 @@ const Admin = () => {
       removeList(user)
       console.log("토큰전송 성공")
     } catch (error) {
+      console.log(error)
       console.log("토큰전송 실패")
     }
   }
@@ -443,9 +466,18 @@ const Admin = () => {
         >
           <p>신규 유저</p>
         </div>
+        <div
+          className="tokenApplyUsers"
+          id={status === "tokenApplyUsers" ? "select" : ""}
+          onClick={() => {
+            setStatus("tokenApplyUsers");
+          }}
+        >
+          <p>토큰신청 유저</p>
+        </div>
       </FilterBar>
       <List>
-        {status !== "newUsers" ? chooseList().map((apply, idx) => {
+        {(status === "designer" || status === "influencer" || status === "enterprise") && chooseList().map((apply, idx) => {
           return (
             <ListItem key={idx}>
               <div className="id">닉네임: {apply.userNick}</div>
@@ -473,7 +505,8 @@ const Admin = () => {
               </ApproveBtnBox>
             </ListItem>
           );
-        }): newUsers.map((user, idx) => {
+        })}
+        {status === "newUsers" && newUsers.map((user, idx) => {
           return (
             <ListItem key={idx}>
               <div className="userId">ID: {user.userId}</div>
@@ -488,7 +521,21 @@ const Admin = () => {
                 </button>
               </ApproveBtnBox>
             </ListItem>)})}
-        
+            {status === "tokenApplyUsers" && tokenApplyUsers.map((user, idx) => {
+          return (
+            <ListItem key={idx}>
+              <div className="userId">ID: {user.userId}</div>
+              <div className="nickname">닉네임: {user.userNick}</div>
+              <div className="address">지갑주소: {user.userAddress}</div>
+              <ApproveBtnBox>
+                <button
+                  className="sendBtn button"
+                  onClick={() => onClickSendToken(user, idx)}
+                >
+                  토큰전송
+                </button>
+              </ApproveBtnBox>
+            </ListItem>)})}
       </List>
       <ConfirmModal
         visible={isOpen}

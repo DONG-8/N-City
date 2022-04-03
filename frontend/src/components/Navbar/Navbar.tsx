@@ -283,7 +283,7 @@ export default function Navbar() {
                 
                 <div className="hide">
                   <div>
-                      <p onClick = {()=>{setOpenCoin(true)}}>코인 충전</p>
+                      <p onClick = {()=>{setOpenCoin(true)}}>NCT 충전</p>
                       <CoinChargeModal open={openCoin} setOpen={setOpenCoin} /> 
                   </div>
                   <div>
