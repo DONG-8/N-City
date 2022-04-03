@@ -17,6 +17,7 @@ public interface DealService {
     Deal buyNow(Long productId,Long userId);
     Deal buyNowCancel(Long productId, Long userId);
     Deal buyAuction(Long productId,Long userId);
+    Deal auctionCancel(Long productId, Long userId);
 
     //READ
     Page<DealListGetRes> getDealListByProductId(Pageable pageable,Long productId);
