@@ -99,10 +99,10 @@ public class UserRepositorySupport {
         return new PageImpl<User>(userList,pageable,userList.size());
     }
 
-    public Page<User> findNewUserList(Pageable pageable) {
+    public Page<User> findNewUserList(Pageable pageable,String userRole) {
         List<User> userList = jpaQueryFactory.select(qUser)
                 .from(qUser)
-                .where(qUser.userRole.eq("ROLE_NEW"))
+                .where(qUser.userRole.eq(userRole))
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .fetch();

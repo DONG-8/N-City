@@ -167,21 +167,21 @@ public class AuthenticationController {
     }
 
     /**
-     신규유저 정보 조회
+     권한별 유저 정보 조회
      */
-    @GetMapping("/user/new")
-    @ApiOperation(value = "신규유저 정보 조회", notes = "<strong>신규유저 정보</strong>를 넘겨준다.")
+    @GetMapping("/user/{userRole}")
+    @ApiOperation(value = "권한별 유저 정보 조회", notes = "<strong>권한별 유저 정보</strong>를 넘겨준다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "유저 없음.")
     })
-    public ResponseEntity<Page<User>>getNewUserList(@PageableDefault(page = 0, size = 10) Pageable pageable) {
+    public ResponseEntity<Page<User>>getNewUserList(@PageableDefault(page = 0, size = 10) Pageable pageable, @PathVariable("userRole") String userRole) {
 
         // 0. 받아올 유저 ID를 받음
         // 1. 해당 유저가 가진 작품 목록을 넘겨준다.
 
         log.info("getNewUserList - 호출");
-        Page<User> users = userService.getNewUserList(pageable);
+        Page<User> users = userService.getNewUserList(pageable, userRole);
 
         if(users == null) {
             log.error("getNewUserList - User doesn't exist.");
