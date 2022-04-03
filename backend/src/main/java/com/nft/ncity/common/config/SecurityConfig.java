@@ -75,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                        "/api/authentication",
 //                        "/api/guestbooks", "/api/guestbooks/(\\d)",
 //                        "/api/deals", "/api/deals/purchase/**",
-//                        "/api/myroom/**").hasAnyRole("NEW", "USER", "ENTERPRISE", "ARTIST", "INFLUENCER", "ADMIN") // 로그인한 유저만 접근 가능 경로
+//                        "/api/myroom/**").hasAnyRole("NEW", "USER", "REQUEST","ENTERPRISE", "ARTIST", "INFLUENCER", "ADMIN") // 로그인한 유저만 접근 가능 경로
 //                .antMatchers("/api/authentication/**").hasRole("ADMIN") // 관리자만 접근 가능 경로
                 .antMatchers("/v3/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/swagger-ui/**").permitAll()
     	        	    .anyRequest().permitAll()

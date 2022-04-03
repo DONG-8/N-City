@@ -130,4 +130,13 @@ public class UserRepositorySupport {
 
         return user;
     }
+
+    public Long updateUserRoleAsRequest(Long userId) {
+        Long execute = jpaQueryFactory.update(qUser)
+                .where(qUser.userId.eq(userId))
+                .set(qUser.userRole,"ROLE_REQUEST")
+                .execute();
+
+        return execute;
+    }
 }

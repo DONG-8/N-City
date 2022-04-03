@@ -36,6 +36,7 @@ public class User {
             - ROLE_ADMIN : 사이트 관리자
             - ROLE_NEW : 신규 유저
             - ROLE_USER : 일반 회원
+            - ROLE_REQUEST : 토큰 추가요청 회원
             - ROLE_ENTERPRISE : 기업
             - ROLE_ARTIST : 아티스트
             - ROLE_INFLUENCER : 인플루언서
@@ -44,6 +45,7 @@ public class User {
             "ROLE_ADMIN : 사이트 관리자, " +
             "ROLE_NEW : 신규 유저, " +
             "ROLE_USER : 일반회원 (default), " +
+            "ROLE_REQUEST : 토큰 추가요청 회원, " +
             "ROLE_ENTERPRISE : 기업, " +
             "ROLE_ARTIST : 아티스트, " +
             "ROLE_INFLUENCER : 인플루언서)")
