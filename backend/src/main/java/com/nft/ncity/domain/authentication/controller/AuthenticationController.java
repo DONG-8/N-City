@@ -177,8 +177,7 @@ public class AuthenticationController {
     })
     public ResponseEntity<Page<User>>getNewUserList(@PageableDefault(page = 0, size = 10) Pageable pageable, @PathVariable("userRole") String userRole) {
 
-        // 0. 받아올 유저 ID를 받음
-        // 1. 해당 유저가 가진 작품 목록을 넘겨준다.
+        // ROLE_NEW : 신규 유저, ROLE_REQUEST : 토큰 재충전 요청 유저
 
         log.info("getNewUserList - 호출");
         Page<User> users = userService.getNewUserList(pageable, userRole);
@@ -191,10 +190,31 @@ public class AuthenticationController {
     }
 
     /**
-     신규유저 토큰 지급
+     * 유저 토큰 재요청
+     */
+    @PutMapping("/token/request/{userId}")
+    @ApiOperation(value = "유저 토큰 재지급 요청", notes = "<strong>유저 토큰 재지급 요청정보</strong>를 넘겨준다.")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "성공", response = User.class),
+            @ApiResponse(code = 404, message = "유저 없음.")
+    })
+    public ResponseEntity<BaseResponseBody>ModifyUserRoleByUserId(@PathVariable Long userId){
+
+        log.info("ModifyUserRoleByUserId - 호출");
+        Long execute = userService.modifyUserRoleAsRequest(userId);
+
+        if(execute < 1) {
+            log.error("ModifyUserRoleByUserId - User doesn't exist.");
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404,"유저 없음."));
+        }
+        return ResponseEntity.status(201).body(BaseResponseBody.of(201,"유저 토큰 재지급 완료."));
+    }
+
+    /**
+     유저 토큰 지급
      */
     @PutMapping("/token/{userId}")
-    @ApiOperation(value = "신규 유저 토큰 지급", notes = "<strong>신규 유저 토큰 지급 정보</strong>를 넘겨준다.")
+    @ApiOperation(value = "유저 토큰 지급", notes = "<strong>유저 토큰 지급 정보</strong>를 넘겨준다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "유저 없음.")
@@ -205,9 +225,9 @@ public class AuthenticationController {
         Long execute = userService.modifyUserRole(userId);
 
         if(execute < 1) {
-            log.error("ModifyUserListByUserIdList - New User doesn't exist.");
-            return ResponseEntity.status(404).body(BaseResponseBody.of(404,"신규 유저 목록 없음."));
+            log.error("ModifyUserListByUserIdList - User doesn't exist.");
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404,"유저 없음."));
         }
-        return ResponseEntity.status(201).body(BaseResponseBody.of(201,"신규 유저 토큰 지급 완료."));
+        return ResponseEntity.status(201).body(BaseResponseBody.of(201,"유저 토큰 지급 완료."));
     }
 }

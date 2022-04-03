@@ -164,6 +164,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Long modifyUserRoleAsRequest(Long userId) {
+        Long execute = userRepositorySupport.updateUserRoleAsRequest(userId);
+        return execute;
+    }
+
+    @Override
     public Page<UserDealInfoWithProductRes> getUserDealInfoWithProduct(Long userId, Pageable pageable) {
 
         // deal 정보 받아오고 여기에 + deal정보에 해당하는 유저들 닉네임, tokenId에 해당하는 상품 정보들 받아오기.
