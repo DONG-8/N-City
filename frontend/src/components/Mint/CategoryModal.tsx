@@ -84,7 +84,7 @@ const Title = styled.h1`
 `;
 
 const Divider = styled.hr`
-  border: solid 1px #ff865b;
+  border: solid 1px #6225E6  ;
   width: 65%;
   margin-bottom: 15px;
 `;
@@ -94,7 +94,7 @@ const AddButton = styled.button`
   position: absolute;
   right: 30px;
   bottom: 30px;
-  background-color: #ff865b;
+  background-color: #6225E6;
   color: #fff;
   font-weight: bold;
   text-align: center;
@@ -106,10 +106,11 @@ const AddButton = styled.button`
   box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
   &:hover {
     font-weight: bold;
+    background-color: #5c29c9;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   }
   &:active {
-    background-color: #de5d30;
+    background-color: #5421c2;
     box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
   }
 `;
@@ -130,7 +131,7 @@ const SelectCategory = styled.div`
   width: 90%;
   padding: 10px;
   .active {
-    background-color: #feaf84;
+    background-color: #c5acfc;
     box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
   }
   button {
@@ -147,7 +148,7 @@ const SelectCategory = styled.div`
     height: 20px;
     cursor: pointer;
     &:active {
-      background-color: #ff9e69;
+      background-color: #6225E6;
       box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
     }
   }
