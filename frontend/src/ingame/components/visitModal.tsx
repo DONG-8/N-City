@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 // x 아이콘 넣기
 import IconButton from "@mui/material/IconButton";
@@ -8,7 +8,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useMutation, useQuery } from "react-query";
 import { getUserInfo } from "../../../src/store/apis/user"; //  유저정보 가져오기
 import { postRoomJoin } from "../../store/apis/myRoom";
-import { getGuestBook } from "../../../src/store/apis/gestbook";
+import { getGuestBook, postGuestBook } from "../../../src/store/apis/gestbook";
 import { client } from "../../../src/index";
 // 스토어 state, dispatch
 import { useAppSelector, useAppDispatch } from "../hooks";
@@ -52,6 +52,7 @@ const Body = styled.div`
   color: black;
   background-color: yellow;
   overflow-y: scroll;
+  margin-bottom: 10px;
 `;
 
 const InputLine = styled.div`
@@ -68,7 +69,10 @@ const VisitModal = () => {
   const dispatch = useAppDispatch();
   const [pagenumber, setPagenumber] = useState(1);
   const [pageArr, setPageArr] = useState<number[]>([]);
-
+  const refscroll = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [inputValue, setInputValue] = useState("");
+  const myid = JSON.parse(localStorage.getItem("userId") || "");
   // 파라미터에서 userid를 받아온다
   // 현재는 임시 데이터이다.
   const { data: userInfo, isLoading: userInfoLoading } = useQuery<any>(
@@ -85,6 +89,19 @@ const VisitModal = () => {
     return await postRoomJoin(userId);
   });
 
+  const postBook = useMutation<any, Error>(
+    "postBookinput",
+    async () => {
+      return await postGuestBook(inputValue, userId, myid);
+    },
+    {
+      onSuccess: (res) => {
+        console.log(res, "작성하기 성공");
+        client.invalidateQueries("guestbook");
+      },
+    }
+  );
+
   const {
     data: guestbookdata,
     isLoading: guestbookLoaing,
@@ -100,10 +117,26 @@ const VisitModal = () => {
       },
     }
   );
+  const scrollTop = () => {
+    refscroll.current?.scrollTo(0, 0);
+  };
+
+  // 입력 변경
+  const ChangeInputValue = (e) => {
+    // console.log(e.target.value);
+    setInputValue(e.target.value);
+  };
+
+  const InputBook = () => {
+    setInputValue("");
+    console.log(inputRef.current, "레프");
+    postBook.mutate();
+  };
 
   useEffect(() => {
     console.log(pagenumber, "페이지변경");
     action();
+    scrollTop();
   }, [pagenumber]);
 
   useEffect(() => {
@@ -126,7 +159,7 @@ const VisitModal = () => {
           <div>팔로잉 수 : {userInfo.followeeCnt}</div>
         </Head>
       </ColorBar>
-      <Body>
+      <Body ref={refscroll}>
         <div>
           {guestbookdata.content.map((obj, i) => {
             return <Visitbook key={i} book={obj}></Visitbook>;
@@ -139,7 +172,24 @@ const VisitModal = () => {
           />
         </div>
       </Body>
-      {/* <InputLine></InputLine> */}
+      <InputLine>
+        <div>방명록을 입력하세용</div>
+        <input
+          type="text"
+          onChange={(e) => {
+            ChangeInputValue(e);
+          }}
+          ref={inputRef}
+          value={inputValue}
+        />
+        <button
+          onClick={() => {
+            InputBook();
+          }}
+        >
+          입력하기
+        </button>
+      </InputLine>
     </Wrapper>
   );
 };
