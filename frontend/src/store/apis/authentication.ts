@@ -74,3 +74,19 @@ export const getAuthFileDownload = async (file : string) => {
   )
   return response.data
 }
+
+// 신규유저 받아오기
+export const getAuthNewUsers = async () => {
+  const response = await apiClient.get<any>(
+    `/authentication/user/new`,
+  )
+  return response.data
+}
+
+// 신규유저 토큰 지급
+export const putAuthSendToken = async (userId:number) => {
+  const response = await apiClient.put<any>(
+    `/authentication/token/${userId}`,
+  )
+  return response.data
+}

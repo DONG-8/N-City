@@ -50,6 +50,7 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
   const [RESTTIME,setRESTTIME] = useState({days:0,hours:0,minutes:0,seconds:0}) 
   // const [history, setHistory] = useState<IState["history"][]>([])
   const [lastBidder, setLastBidder] = useState("")
+  const [lastBidderId, setLastBidderId] = useState(0)
   const [isBidderExist, setIsBidderExist] = useState(false)
   const {ethereum} = window;
 
@@ -67,7 +68,8 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
           // console.log(bidArray)
           // console.log(bidArray[bidArray.length - 1].dealFromNickName);
           if (bidArray.length > 0) {
-            setLastBidder(bidArray[bidArray.length - 1].dealFromNickName);
+            setLastBidder(bidArray[0].dealFromNickName);
+            setLastBidderId(bidArray[0].dealFrom)
             setIsBidderExist(true)
           } else {
             setLastBidder("입찰자가 없습니다.");
@@ -142,8 +144,8 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
           <div className="content">최종 입찰자 : {lastBidder} </div>
           {isBidderExist && // 경매끝, 내가 최종구매자거나 경매등록한 사람이면 confirm버튼 보이기
             (Number(localStorage.getItem("userId")) === item.userId ||
-              Number(localStorage.getItem("userId")) === 12321) && ( /// 나중에 담겨져오는 하이스트비더아이디로 바꾸기
-              <button onClick={onClickConfirm}>Confirm</button>
+              Number(localStorage.getItem("userId")) === lastBidderId) && ( /// 나중에 담겨져오는 하이스트비더아이디로 바꾸기
+              <button onClick={onClickConfirm}>{isBidderExist ? "Confirm" : "경매닫기"}</button>
             )}
         </div>
       ) : (
