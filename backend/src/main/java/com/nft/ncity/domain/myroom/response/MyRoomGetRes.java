@@ -21,7 +21,7 @@ public class MyRoomGetRes extends BaseResponseBody {
     Map myRoomBackground;
 
     @ApiModelProperty(value = "캐릭터 이미지 경로")
-    Integer myRoomCharacter;
+    String myRoomCharacter;
 
     @ApiModelProperty(value = "오늘 방문자 수")
     Integer myRoomTodayCnt;

@@ -2,8 +2,7 @@ import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-query';
 import styled from 'styled-components';
-import { getCharacter } from '../../store/apis/myRoom';
-import { getProductCategori } from '../../store/apis/product';
+import { getCharacter, putCharacterChange } from '../../store/apis/myRoom';
 import { getUsercollectedInfo } from '../../store/apis/user';
 import img1 from './images/character1.png'
 import img2 from './images/character2.png'
@@ -137,12 +136,12 @@ interface Istate{
     }
 }
 const Character = () => {
-  const [userId,setUserId] = useState(Number(localStorage.getItem('userId')))
+  const [userId,setUserId] = useState(Number(localStorage.getItem('userId')||""))
   const [characters,setCharacters ] = useState<Istate['item'][]>([])
   const [items,setItems] = useState<Istate['item'][]>([])
-  const [myChar,setMyChar] = useState(0)
+  const [myChar,setMyChar] = useState(1)
   const getsave = ()=>{
-    //⭐
+    changeCharacter.mutate()
   }
 
   const { isLoading:ILS, data:everyitems } = useQuery<any>(
@@ -164,13 +163,31 @@ const Character = () => {
       onSuccess:(res)=>{ 
         console.log('캐릭터 받음')
         setMyChar(res.userId)
+        if (res.userId===null){
+          changeCharacter.mutate()
+          setMyChar(1) 
+        }
       },
       onError: (err: any) => {console.log(err, "캐릭터못받음")}
       }
   );
+  const changeCharacter = useMutation<any, Error>(
+    "putCharacterChange",
+    async () => {
+      return await putCharacterChange(String(myChar));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("캐릭터 바꾸기 성공",res);
+
+      },
+      onError: (err: any) => {
+        console.log("❌캐릭터 실패",err);
+      },
+    }
+  );
   useEffect(()=>{
     console.log('🎨',myChar)
-    console.log('🎨',characterId)
   },[myChar])
   return (
     <Wrapper>
@@ -192,7 +209,7 @@ const Character = () => {
       </IntroBox>
       
       <h1 className='title'>내가 소유한 캐릭터 
-      {characterId.userId!==myChar&&<Button onClick={()=>{getsave()}} className='save'  variant='contained' >저장하기</Button>}</h1>
+      {characterId!==undefined && characterId.userId !== myChar && <Button onClick={()=>{getsave()}} className='save'  variant='contained' >저장하기</Button>}</h1>
       <Cards>
         <div className='cards'>
         {everyitems !== undefined && characterId !==undefined &&
