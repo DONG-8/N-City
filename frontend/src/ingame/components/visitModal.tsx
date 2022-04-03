@@ -9,11 +9,18 @@ import { useMutation, useQuery } from "react-query";
 import { getUserInfo } from "../../../src/store/apis/user"; //  유저정보 가져오기
 import { postRoomJoin } from "../../store/apis/myRoom";
 import { getGuestBook } from "../../../src/store/apis/gestbook";
+import { client } from "../../../src/index";
 // 스토어 state, dispatch
 import { useAppSelector, useAppDispatch } from "../hooks";
 
 // 방명록 개별 콘텐츠
 import Visitbook from "./Visitbook";
+import { Book } from "@mui/icons-material";
+import { dividerClasses } from "@mui/material";
+
+// 버튼
+import PagenationButton from "./PagenationButton";
+import { queryByTitle } from "@testing-library/react";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -59,6 +66,8 @@ const VisitModal = () => {
   // 스토어에서 받아온 유저정보
   const userId = useAppSelector((state) => state.edit.userId);
   const dispatch = useAppDispatch();
+  const [pagenumber, setPagenumber] = useState(1);
+  const [pageArr, setPageArr] = useState<number[]>([]);
 
   // 파라미터에서 userid를 받아온다
   // 현재는 임시 데이터이다.
@@ -76,15 +85,30 @@ const VisitModal = () => {
     return await postRoomJoin(userId);
   });
 
-  const { data: guestbookdata, isLoading: guestbookLoaing } = useQuery<any>(
+  const {
+    data: guestbookdata,
+    isLoading: guestbookLoaing,
+    refetch: action,
+  } = useQuery<any>(
     ["guestbook"],
     async () => {
-      return await getGuestBook(userId);
+      return await getGuestBook(userId, pagenumber);
+    },
+    {
+      onSuccess: (res) => {
+        console.log(res.totalPages);
+      },
     }
   );
 
   useEffect(() => {
+    console.log(pagenumber, "페이지변경");
+    action();
+  }, [pagenumber]);
+
+  useEffect(() => {
     // 컴포넌트 생성 시 방의 정보를 불러온다
+    console.log(pageArr);
     RoomInfo();
   }, []);
 
@@ -103,13 +127,30 @@ const VisitModal = () => {
         </Head>
       </ColorBar>
       <Body>
-        {guestbookdata.content.map((obj, i) => {
-          return <Visitbook key={i} book={obj}></Visitbook>;
-        })}
+        <div>
+          {guestbookdata.content.map((obj, i) => {
+            return <Visitbook key={i} book={obj}></Visitbook>;
+          })}
+        </div>
+        <div>
+          <PagenationButton
+            number={guestbookdata.totalPages}
+            setValue={setPagenumber}
+          />
+        </div>
       </Body>
-      <InputLine></InputLine>
+      {/* <InputLine></InputLine> */}
     </Wrapper>
   );
 };
 
 export default VisitModal;
+
+// {guestbookLoaing ? null : (
+//   <div>
+//     {arr.map((obj, i) => {
+//       return <div key={i}>{i + 1}</div>;
+//     })}
+//     1
+//   </div>
+// )}

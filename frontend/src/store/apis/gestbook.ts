@@ -47,9 +47,9 @@ export const delGuestBook = async (guestbookId: number) => {
 }
 
 // 방명록 조회 
-export const getGuestBook = async (getGuestBookOwnerId : number) => {
+export const getGuestBook = async (getGuestBookOwnerId : number, pagenumber?:number) => {
   const response = await apiClient.get<any>(
-    `guestbooks/get-${getGuestBookOwnerId}`,
+    `guestbooks/get-${getGuestBookOwnerId}?page=${pagenumber}`,
   )
   return response.data
 }
