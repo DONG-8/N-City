@@ -14,4 +14,5 @@ public interface MyRoomRepository extends JpaRepository<MyRoom, Long> {
     List<MyRoom> findTop5ByOrderByMyRoomTotalCntDesc();
     @Query(nativeQuery=true, value="SELECT * FROM myroom ORDER BY rand() LIMIT 1")
     Optional<MyRoom> getMyRoomByRandom();
+    Optional<MyRoom> findMyRoomByUserId(Long userId);
 }
