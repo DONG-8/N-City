@@ -161,7 +161,6 @@ public class DealServiceImpl implements DealService{
                     .build();
             Deal savedDeal = dealRepository.save(deal);
 
-            product.doneTransaction();
             // product update
             dealRepositorySupport.modifyProductForBuyNowByProductId(productId, userId);
             return savedDeal;
@@ -187,7 +186,7 @@ public class DealServiceImpl implements DealService{
                     .productId(productId)
                     .build();
             Deal savedDeal = dealRepository.save(deal);
-            product.doneTransaction();
+
             // product update
             dealRepositorySupport.modifyProductForBuyNowCancelByProductId(productId, userId);
             return savedDeal;
@@ -215,7 +214,6 @@ public class DealServiceImpl implements DealService{
                     .build();
             Deal savedDeal = dealRepository.save(deal);
 
-            product.doneTransaction();
             // product update
             dealRepositorySupport.modifyProductForBuyAuctionByProductId(productId, userId);
             return savedDeal;

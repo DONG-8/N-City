@@ -70,6 +70,7 @@ public class DealRepositorySupport {
         long excute = jpaQueryFactory.update(qProduct)
                 .set(qProduct.userId,userId)
                 .set(qProduct.productState,3)
+                .set(qProduct.productPrice,0.0)
                 .where(qProduct.productId.eq(productId))
                 .execute();
         return excute;
@@ -95,6 +96,7 @@ public class DealRepositorySupport {
         long excute = jpaQueryFactory.update(qProduct)
                 .set(qProduct.userId,userId)
                 .set(qProduct.productState,3)
+                .set(qProduct.productPrice,0.0)
                 .where(qProduct.productId.eq(productId))
                 .execute();
         return excute;
