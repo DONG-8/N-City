@@ -69,4 +69,8 @@ public class Product {
     @Transient
     @Setter
     private Long favoriteCount;
+
+    public void doneTransaction() {
+        this.productPrice = 0;
+    }
 }
