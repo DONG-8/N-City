@@ -50,20 +50,30 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
   const [RESTTIME,setRESTTIME] = useState({days:0,hours:0,minutes:0,seconds:0}) 
   // const [history, setHistory] = useState<IState["history"][]>([])
   const [lastBidder, setLastBidder] = useState("")
+  const [isBidderExist, setIsBidderExist] = useState(false)
   const {ethereum} = window;
 
   const getHistory = useMutation<any>( // 추가 // 추천 데이터
     "getPastHistory",
     async () => {
+      if (item.productId === -1) return ;
       return await getPastHistory(Number(item.productId));
     },
     {
       onSuccess: (res) => {
         console.log("히스토리받아오기 성공", res);
-        const bidArray = res.content.filter((item) => item.dealType === 3);
-        // console.log(bidArray)
-        console.log(bidArray[bidArray.length - 1].dealFromNickName);
-        setLastBidder(bidArray[bidArray.length - 1].dealFromNickName);
+        if (res) {
+          const bidArray = res.content.filter((item) => item.dealType === 3);
+          // console.log(bidArray)
+          // console.log(bidArray[bidArray.length - 1].dealFromNickName);
+          if (bidArray.length > 0) {
+            setLastBidder(bidArray[bidArray.length - 1].dealFromNickName);
+            setIsBidderExist(true)
+          } else {
+            setLastBidder("입찰자가 없습니다.");
+            setIsBidderExist(false)
+          }
+        }
       },
       onError: (err: any) => {
         console.log(err, "히스토리 오류");
@@ -91,14 +101,19 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
       //salecontract address
       const saleContractAddress = await SaleFactoryContract.methods.getSaleContractAddress(item.tokenId).call()
       const saleContract = await createSaleContract(saleContractAddress)
-      const response = await saleContract.methods.confirmItem().send({ from: accounts[0] });
-      const temp = (response.events.SaleEnded.returnValues.winner);
-      const temp2 = (response.events.SaleEnded.returnValues.amount);
-      console.log("경매끝 최종 구매자", temp)
-      console.log("경매끝 최종 구매 가격", temp2)
-      confirmProduct.mutate()
+      if (isBidderExist) {
+        const response = await saleContract.methods.confirmItem().send({ from: accounts[0] });
+        const temp = (response.events.SaleEnded.returnValues.winner);
+        const temp2 = (response.events.SaleEnded.returnValues.amount);
+        console.log("경매끝 최종 구매자", temp)
+        console.log("경매끝 최종 구매 가격", temp2)
+        confirmProduct.mutate()
+      } else {
+        const response = await saleContract.methods.cancelAuction().send({ from: accounts[0] });
+        // 경매취소API 만들기
+      }
     } catch (error) {
-      console.log("confirm 실패", error)
+      console.log("confirm (경매닫기) 실패", error)
     }
   }
 
@@ -120,26 +135,41 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
 
   return (
     <div>
-    {isEnd ? 
-      <div>
-       <h3>경매 종료</h3>
-       <div className='content'>최종 입찰가 : {item.productPrice} </div>
-       <div className='content'>최종 입찰자 : {lastBidder} </div>
-       <button onClick={onClickConfirm}>Confirm</button>
-      </div>
-    : 
-    <>
-      <h3>진행중</h3>
-      {/* <div className='content'>판매 종료 시간 : {item.productAuctionEndTime} </div> */}
-      <div className='content'>판매 종료 시간 : {date} </div>
-      <div className='content'>현재가 : {item.productPrice} </div>
-      <div className='content'>현재 최종 입찰자 : {lastBidder} </div>
-      <div className='content'>{RESTTIME.days}일 {RESTTIME.hours}시간 {RESTTIME.minutes}분 {RESTTIME.seconds}초 남았습니다</div>
-      <Button variant="contained" onClick={()=>{setOpen(true)}}>제안하기</Button>
-    </>
-  }
+      {isEnd ? (
+        <div>
+          <h3>경매 종료</h3>
+          <div className="content">최종 입찰가 : {item.productPrice} </div>
+          <div className="content">최종 입찰자 : {lastBidder} </div>
+          {isBidderExist && // 경매끝, 내가 최종구매자거나 경매등록한 사람이면 confirm버튼 보이기
+            (Number(localStorage.getItem("userId")) === item.userId ||
+              Number(localStorage.getItem("userId")) === 12321) && ( /// 나중에 담겨져오는 하이스트비더아이디로 바꾸기
+              <button onClick={onClickConfirm}>Confirm</button>
+            )}
+        </div>
+      ) : (
+        <>
+          <h3>경매 진행중</h3>
+          {/* <div className='content'>판매 종료 시간 : {item.productAuctionEndTime} </div> */}
+          <div className="content">판매 종료 시간 : {date} </div>
+          <div className="content">현재가 : {item.productPrice} </div>
+          <div className="content">현재 최종 입찰자 : {lastBidder} </div>
+          <div className="content">
+            {RESTTIME.days}일 {RESTTIME.hours}시간 {RESTTIME.minutes}분{" "}
+            {RESTTIME.seconds}초 남았습니다
+          </div>
+          {Number(localStorage.getItem("userId")) !== item.userId &&
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            제안하기
+          </Button>}
+        </>
+      )}
     </div>
-  )
+  );
 }
 
 export default BidBox

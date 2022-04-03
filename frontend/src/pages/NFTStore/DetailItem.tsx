@@ -356,28 +356,6 @@ const DetailItem = () => {
     mintUserId: ""
   });
   const [items, setItems] = useState<Istate["item"][]>([
-    {
-      productId: 1,
-      productTitle: "string",
-      productPrice: 1,
-      productThumbnailUrl: "string",
-      productFavorite: 1,
-      productRegDt: 1,
-      productCode: 1,
-      productFavoriteUser: [
-        {
-          authId: 1,
-          userAddress: "string",
-          userDescription: "string",
-          userEmail: "string",
-          userEmailConfirm: true,
-          userId: 0,
-          userImgUrl: "string",
-          userNick: "string",
-          userRole: "string",
-        },
-      ],
-    },
   ]);
   const [followBtnState, setFollowBtnState] = useState<boolean | null>(null);
 
@@ -389,7 +367,7 @@ const DetailItem = () => {
   const [MyAddress, setMyAddress] = useState(localStorage.getItem("userId"));
   const [productId, setProductId] = useState(useParams().productId);
   const [item, setItem] = useState({
-    productId: 0,
+    productId: -1,
     mintUserId: "",
     userId: 0,
     tokenId: 0,
@@ -411,7 +389,6 @@ const DetailItem = () => {
   const [isImg, setIsImg] = useState(true)
   const { ethereum } = window
 
-
   const { isLoading: ILA, data: newItem } = useQuery<any>( // 추가 // 추천 데이터
     "getProductAll",
     async () => {
@@ -427,7 +404,7 @@ const DetailItem = () => {
   const { isLoading: ILC, data: collection } = useQuery<any>( // 이 유저가 가진 그림
     "getUserCollection",
     async () => {
-      return await getUsercollectedInfo(Number(user.mintUserId));
+      return await getUsercollectedInfo(Number(item.mintUserId));
     },
     {
       onError: (err) => {
@@ -459,6 +436,7 @@ const DetailItem = () => {
         console.log("상품상세받아오기성공", res);
         setItem(res);
         setLikes(res.favoriteCount);
+        getUser.mutate()
       },
       onError: (err: any) => {
         console.log(err, "❌디테일 페이지 실패!");
@@ -469,6 +447,9 @@ const DetailItem = () => {
   const getUser = useMutation<any, Error>(
     "getuserdetail",
     async () => {
+      if (!item.mintUserId) {
+        return
+      }
       return await getUserInfo(Number(item.mintUserId));
     },
     {
@@ -477,6 +458,7 @@ const DetailItem = () => {
         setUser(res);
         setFollowees(res.followeeCnt);
         setFollowers(res.followerCnt);
+        getUserFollower.mutate()
       },
     }
   );
@@ -512,7 +494,7 @@ const DetailItem = () => {
   const follow = useMutation<any, Error>(
     "follow",
     async () => {
-      return await postFollow(Number(user.mintUserId));
+      return await postFollow(Number(item.mintUserId));
     },
     {
       onSuccess: (res) => {
@@ -526,7 +508,7 @@ const DetailItem = () => {
   const unFollow = useMutation<any, Error>(
     "follow",
     async () => {
-      return await deleteFollow(Number(user.mintUserId));
+      return await deleteFollow(Number(item.mintUserId));
     },
     {
       onSuccess: (res) => {
@@ -540,7 +522,8 @@ const DetailItem = () => {
   const getUserFollower = useMutation<any, Error>(
     "getFollower",
     async () => {
-      return await getFollowee(Number(user.mintUserId));
+      if (!item.mintUserId) return;
+      return await getFollowee(Number(item.mintUserId));
     },
     {
       onSuccess: async (res) => {
@@ -563,7 +546,8 @@ const DetailItem = () => {
   const cancelSale = useMutation<any, Error>(
     "postCancelPurchase",
     async () => {
-      return await postCancelPurchase(item.productId);
+      if (!productId) return;
+      return await postCancelPurchase(Number(productId));
     },
     {
       onSuccess: async (res) => {
@@ -645,7 +629,6 @@ const DetailItem = () => {
 
   useEffect(() => {
     getStatus();
-    getUser.mutate();
     isImage()
   }, [item]);
 
@@ -654,13 +637,12 @@ const DetailItem = () => {
     getLiked.mutate();
     window.scrollTo(0, 0);
   }, [productId]);
-
+  
   useEffect(() => {
     getLiked.mutate();
   }, [likes]);
-
+  
   useEffect(() => {
-    getUserFollower.mutate();
   }, [user]);
 
   if (newItem && collection) {
@@ -738,8 +720,8 @@ const DetailItem = () => {
                     <div>카테고리 : {item.productCode}</div>
                     <div>등록일자 : {item.productRegDt}</div>
                     <div>NFT 소유자 : {item.userNick}</div>
-                    <div>상품상태/판매중?:{item.productState}</div>
-                    <div>상품상태/판매중?:{status}</div>
+                    <div>상품상태/판매중? : {item.productState}</div>
+                    <div>상품상태/판매중? : {status}</div>
                     <FavoriteBox className="icon">
                       {liked ? (
                         <FavoriteIcon
@@ -806,7 +788,7 @@ const DetailItem = () => {
                   )}
                   {status === "normal" && (
                     <>
-                      <div className="content">판매 등록이 없습니다</div>
+                      <div className="content">작품이 판매중이 아닙니다.</div>
                     </>
                   )}
                 </div>

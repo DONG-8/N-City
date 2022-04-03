@@ -25,7 +25,7 @@ public class MyRoom {
 
     @ApiModelProperty(value = "캐릭터 이미지 경로")
     @Column(name = "myroom_character")
-    private String myRoomCharacter;
+    private Integer myRoomCharacter;
 
     @ApiModelProperty(value = "오늘 방문자 수")
     @Column(name = "myroom_today_cnt")

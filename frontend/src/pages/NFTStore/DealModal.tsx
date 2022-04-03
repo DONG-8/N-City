@@ -170,6 +170,7 @@ const DealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPriceValue(e.target.value);
+    console.log(priceValue)
   }; // 인풋창 수정
 
 
@@ -345,8 +346,8 @@ const DealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
         </Exit>
         {status === "bid" && (
           <Content>
-            <div className="price"> 현재 가격:{price}</div>
-            <p>현재 가격에 최소 1NCT 이상의 입찰가를 입력하세요</p>
+            <div className="price"> 현재 가격 : {price}NCT</div>
+            <p>최소 {price}NCT 이상의 입찰가를 입력하세요</p>
             <Input
               id={
                 check === "true" ? "true" : check === "false" ? "false" : "null"

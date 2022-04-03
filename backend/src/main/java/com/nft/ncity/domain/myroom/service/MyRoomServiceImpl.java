@@ -50,12 +50,12 @@ public class MyRoomServiceImpl implements MyRoomService{
         MyRoom myOldRoom = myRoomRepository.getById(userId);
 
         String myRoomBackground = myOldRoom.getMyRoomBackground();
-        String myRoomCharacter = myOldRoom.getMyRoomCharacter();
+        Integer myRoomCharacter = myOldRoom.getMyRoomCharacter();
 
         if (code == 1) {    // 방 테마 변경
             myRoomBackground = changeInfo;
         } else if (code == 2) { // 캐릭터 변경
-            myRoomCharacter = changeInfo;
+            myRoomCharacter = Integer.valueOf(changeInfo);
         }
 
         MyRoom myNewRoom = MyRoom.builder()

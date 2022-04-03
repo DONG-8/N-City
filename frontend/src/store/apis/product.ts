@@ -70,7 +70,7 @@ export const deleteProduct = async (productId : number) => {
 // 상품판매 전체 조회
 export const getSellProduct = async () => {
   const response = await apiClient.get<any>(
-    `/products/deal`
+    `/products/deal?size=1000`
   )
   return response.data
 }
