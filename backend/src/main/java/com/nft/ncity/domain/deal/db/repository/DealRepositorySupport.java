@@ -78,7 +78,7 @@ public class DealRepositorySupport {
 
     //즉시구매취소
     @Transactional
-    public long modifyProductForBuyNowCancelByProductId(Long productId, Long userId){
+    public long modifyProductForDealCancelByProductId(Long productId, Long userId){
 
         long excute = jpaQueryFactory.update(qProduct)
                 .set(qProduct.productPrice,0.0)
@@ -113,7 +113,7 @@ public class DealRepositorySupport {
 
 
     // READ
-    // 거래내역
+    // 거래내역 history
     @Transactional
     public Page<Deal> findDealListByProductId(Pageable pageable, Long productId){
         List<Deal> dealListQueryResults = jpaQueryFactory.select(qDeal)

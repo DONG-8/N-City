@@ -141,6 +141,31 @@ public class DealServiceImpl implements DealService{
         return null;
     }
 
+    // 경매 취소 , 입찰자가 없을 경우
+    @Override
+    @Transactional
+    public Deal auctionCancel(Long productId, Long userId) {
+        Product product = productRepository.getById(productId);
+
+        if(product.getProductState() == 1) {
+            //Deal cancel 생성
+            Deal deal = Deal.builder()
+                    .dealFrom(product.getUserId())
+                    .dealTo(product.getUserId())
+                    .dealType(4)
+                    .dealPrice(0.0)
+                    .dealCreatedAt(LocalDateTime.now())
+                    .tokenId(product.getTokenId())
+                    .productId(productId)
+                    .build();
+            Deal savedDeal = dealRepository.save(deal);
+
+            // product update
+            dealRepositorySupport.modifyProductForDealCancelByProductId(productId, userId);
+            return savedDeal;
+        }
+        return null;
+    }
     //즉시구매
     @Override
     @Transactional
@@ -188,7 +213,7 @@ public class DealServiceImpl implements DealService{
             Deal savedDeal = dealRepository.save(deal);
 
             // product update
-            dealRepositorySupport.modifyProductForBuyNowCancelByProductId(productId, userId);
+            dealRepositorySupport.modifyProductForDealCancelByProductId(productId, userId);
             return savedDeal;
         }
         return null;
