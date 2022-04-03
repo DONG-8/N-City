@@ -38,6 +38,9 @@ interface Iprops{
 }
 
 const Content = styled.div`
+  .noNFT{
+    margin: 3vw;
+  }
 `
 const ImgBox = styled.div`
   margin-top: 2vh;
@@ -86,6 +89,11 @@ const SelectImage:React.FC<Iprops> = ({userId,open,setOpen,setuserURL}) => {
 
         <Content>
           <ImgBox>
+          {items!==undefined && items.content.length ===0 &&
+            <div className='noNFT'>
+              <h1 >가진 작품이 없어요...</h1>
+            </div>
+          }
           {items!==undefined &&
             (items.content).map((item)=>{
               return(<img alt='img' 

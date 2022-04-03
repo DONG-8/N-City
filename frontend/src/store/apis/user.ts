@@ -89,11 +89,12 @@ export const patchUserInfoChange = async(formdata : any) => {
 }
 
 // 이메일 인증 요청하기
-export const postConfirmEmail = async (emailAuthEmail : string) => {
+export const postConfirmEmail = async (userId:number,emailAuthEmail : string) => {
   // userid는 자동으로 들어갈 것 같아서 빼놓음
   const response = await apiClient.post<any>(
     `users/confirm`, {
-      emailAuthEmail
+      emailAuthEmail,
+      userId
     }
   )
   return response.data

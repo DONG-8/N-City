@@ -27,9 +27,15 @@ const SettingWrapper = styled.div`
   margin-top: 3vh;
   margin-bottom:10vh;
 `
+const EmailBox = styled.div`
+  display: flex;
+  input{
+    font-size: 2vh;
+  }
+`
 const Left = styled.div`
-  flex:6;
-  margin-left:3vw;
+  flex: 6;
+  margin-left: 3vw;
   .bigTitle {
     font-size: 4vh;
     font-weight: 1000;
@@ -48,27 +54,34 @@ const Left = styled.div`
   .input {
     width: 15vw;
     height: 5vh;
-    font-size: 3vh;
+    font-size: 2.5vh;
   }
-  .img_name{
+  .img_name {
     display: flex;
   }
-  .name_box{
-    margin: auto;
+  .name_box {
+    margin-left: 3vw;
+    .input_check {
+      display: flex;
+      .nickcheck {
+        button{
+          margin-top: 1vh;
+          font-size: 1.5vh;
+        }
+      }
+    }
   }
-  .btnbox{
+  .btnbox {
     display: flex;
     height: 4vh;
     margin-top: 3vh;
     justify-content: space-between;
-    button{
+    button {
       margin-left: 3vh;
     }
-    
   }
-  .nickcheck{
-    margin-right: 30vh;
-
+  h4{
+    color: gray;
   }
 `;
 
@@ -81,14 +94,15 @@ const Right = styled.div`
     margin-top: 2vh;
   }
   textarea {
-    width: 40vw;
+    width: 32vw;
     height: 25vh;
     resize: none;
-    font-size: 2rem;
+    font-size: 2vh;
+    margin-right: 5vw;
     &:focus {
       border-color: teal;
       outline: none;
-      box-shadow: 0 0 4px teal;
+      box-shadow: 0 0 4px #333;
       transition: 0.2s ease-in;
     }
   }
@@ -127,7 +141,7 @@ const BeforeAddress = styled.div`
 const ProfileSetting = () => {
   
   const navigate = useNavigate()
-  const userId = Number(localStorage.getItem('userId'))
+  const userId = Number(localStorage.getItem('userId')||"")
   const [nameInput,setNameInput]  = useState('')
   const [Email,setEmail] = useState('')
   const [EmailInput,setEmailInput] = useState('')
@@ -136,7 +150,6 @@ const ProfileSetting = () => {
   const [Description,setDescription]  = useState('')
   const [userURL,setuserURL] = useState('') 
   const [AddressCheck,setAddressCheck] = useState(false)
-  const [afterAddress,setAfterAddress] = useState(false)
   //모달창
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
@@ -159,19 +172,7 @@ const ProfileSetting = () => {
       },
     }
   );
-  const tmp = {
-    authId: 12,
-    followeeCnt: 0,
-    followerCnt: 1,
-    userAddress: "0x462c2D22e9AF266AB1F235D3cEa7902D8BbdEC6A",
-    userDescription: null,
-    userEmail: null,
-    userEmailConfirm: false,
-    userId: 1,
-    userImgUrl: null,
-    userNick: "noname1",
-    userRole: "ROLE_ADMIN",
-  }
+ 
   useEffect(()=>{
     if (user!==undefined){
       if (nameInput === userName){
@@ -197,31 +198,28 @@ const ProfileSetting = () => {
   const postEmail = useMutation<any, Error>(
     "postConfirmEmail",
     async () => {
-      return await postConfirmEmail(EmailInput);
+      return await postConfirmEmail(userId,EmailInput);
     },
     {
       onSuccess: (res) => { 
         console.log(res)
-        setAfterAddress(true) 
+        setAddressCheck(true)
       },
-      onError: (err: any) => {console.log('이메일 에러')},
+      onError: (err: any) => {
+        alert('이메일 중복 오류')
+      },
     }
   );
   const saveChange = useMutation<any, Error>(
     "patchUserInfoChange",
     async () => {
-      const formdata = new FormData()
-      formdata.append("userDescription",'123123')
-      formdata.append("userEmail",'5dfhasu')
-      formdata.append("userId",'2')
-      formdata.append("userImgUrl",'sdalijzxcl')
-      formdata.append("userNick",'우끼끼끾')
-      for (var key of formdata.keys()) {
-        console.log(key);
-      }
-      for (var value of formdata.values()) {
-        console.log(value);
-      }
+      const formdata= new FormData()
+      formdata.append("userDescription",Description)
+      formdata.append("userEmail",EmailInput)
+      formdata.append("userId",String(userId))
+      formdata.append("userImgUrl",userURL)
+      formdata.append("userNick",nameInput)
+      
       return await patchUserInfoChange(formdata);
     },
     {
@@ -231,11 +229,10 @@ const ProfileSetting = () => {
   );
   const sendemail = ()=>{
     postEmail.mutate()
-    setAfterAddress(true) // postEmail에서 바꿔줄값⭐
   }
   return (
     <>
-      {user !== undefined && AddressCheck &&
+      {user !== undefined &&
       <SettingWrapper>
         <Up>
         <Left>
@@ -246,36 +243,44 @@ const ProfileSetting = () => {
             <img className='profileImg' src='https://www.taggers.io/common/img/default_profile.png' alt='profile'/>
             }
             <div className='name_box'>
+              <Button variant="contained"
+              onClick={()=>{setOpen(true)}} >이미지 수정</Button>
               <p className="title">Username</p>
-              <Input value={nameInput} 
-              onChange={(e: React.ChangeEvent)=>{
-                setNameInput((e.target as HTMLInputElement).value)
-              }}  className="input" /> 
+
+              <div className='input_check'>
+                <Input value={nameInput} 
+                onChange={(e: React.ChangeEvent)=>{
+                  setNameInput((e.target as HTMLInputElement).value)
+                }}  className="input" /> 
+                <div className='nickcheck'>
+                  {nameCheck ? <p>✔</p>:
+                    <Button onClick={()=>{getNameCheck.mutate()}}> 
+                      닉네임 중복 확인 
+                    </Button> }
                 </div>
-          </div>
-          <div className='btnbox'>
-            <Button variant="contained"
-              onClick={()=>{setOpen(true)}} >프로필 수정</Button>
-            <div className='nickcheck'>
-            {nameCheck ?
-              <p>✔</p>:
-              <Button onClick={()=>{getNameCheck.mutate()}}> 
-                  닉네임 중복 확인 
-              </Button> }
+              </div>
+
             </div>
           </div>
-            
-            
-          {/* <p className="title">이메일</p> 
-          <Input value={EmailInput} onChange={(e: React.ChangeEvent)=>{
-            setEmailInput((e.target as HTMLInputElement).value)
-          }} 
-           className="input" />
-          <Button>이메일 검증 </Button>
-          {user.userEmailConfirm ? 
-          <p>확인</p> :
-          <p>미확인</p>
-        } */}
+
+          <p className="title">이메일</p> 
+          <EmailBox>
+            <Input value={EmailInput} onChange={(e: React.ChangeEvent)=>{
+              setEmailInput((e.target as HTMLInputElement).value)}} 
+            className="input" />
+            {user.userEmailConfirm ? 
+             <p>✔</p> :
+             <p>❌</p>
+            }
+          </EmailBox>
+            {EmailInput !=='' && EmailInput.includes('@')&&EmailInput.includes('.com')?
+              <div>
+                <Button onClick={()=>{sendemail()}} color="inherit" variant="contained">이메일 요청 보내기 </Button>
+              </div>:
+              <div>올바르지 않은 이메일 속성입니다.</div>
+            }
+            {!user.userEmailConfirm &&
+            <h4>이메일 인증을 하지 않으면 프로필 수정이 불가합니다.</h4> }
         </Left>
         <Right>
           <p className="title">자기소개</p>
@@ -287,7 +292,7 @@ const ProfileSetting = () => {
           <p >{user.userAddress}</p>
           <p className="title">userRole</p>
           <p >{user.userRole}</p>
-          <Button  variant="contained" >인증마크 신청 페이지</Button>
+          <Button variant="contained" >인증마크 신청 페이지</Button>
         </Right>
         </Up>
       <BTN>
@@ -295,42 +300,10 @@ const ProfileSetting = () => {
         color="info" onClick={()=>{navigate(-1)}}>뒤로가기</Button>
         <Button className='save' variant="contained" 
         color="success" 
-        onClick={()=>{ saveChange.mutate();}}>저장하기</Button>
+        onClick={()=>{ saveChange.mutate()}}>저장하기</Button>
       </BTN>
       <SelectImage setuserURL={setuserURL} userId={Number(userId)} open={open} setOpen={setOpen}/>
       </SettingWrapper>
-      } 
-      {user !== undefined && !AddressCheck && 
-      <AddressWrapper>
-        <h1>이메일 검증</h1>
-        <h3>N-city를 즐겁게 이용하기 위해서는 본인인증을 위한 이메일 인증이 필요합니다.</h3>
-          
-        {afterAddress ? 
-          <AfterAddress>
-            <h1>이메일 전송을 완료했습니다 </h1>
-            <h1> N-city를 즐기면서 기다려주세요 </h1>
-            <h3> 30분 정도 소요될 수 있습니다. </h3>
-            <Button onClick={()=>{navigate('/')}} variant="contained">메인으로 돌아가기</Button>
-          </AfterAddress>:
-          <BeforeAddress>
-            <h3 className="title">이메일</h3> 
-            <Input value={EmailInput} 
-              autoFocus
-              placeholder='n-city@google.com'
-              onChange={(e: React.ChangeEvent)=>{
-              setEmailInput((e.target as HTMLInputElement).value)
-            }} 
-            className="input" />
-            {EmailInput !=='' && EmailInput.includes('@')&&EmailInput.includes('.com')?
-              <div>
-                <Button onClick={()=>{sendemail()}} variant="contained">이메일 요청 보내기 </Button>
-              </div>:
-              <div>올바르지 않은 이메일 속성입니다.</div>
-            }
-            
-          </BeforeAddress>
-        }
-      </AddressWrapper>
       }
     </>
   );
