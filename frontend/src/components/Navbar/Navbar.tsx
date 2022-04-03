@@ -91,12 +91,13 @@ const NavbarBox = styled.div`
         height: auto;
         background-color: white;
         color: black;
-        box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px;
         position: absolute;
         top: 60px;
-        right: 750px;
+        right: 820px;
         margin-right: 1px;
         border-radius: 0 0 5px 5px;
+        border-bottom: 0.5px solid #63638b;
+
         div {
           margin-top: 10px;
           margin-bottom: 10px;
@@ -123,12 +124,13 @@ const NavbarBox = styled.div`
         height: auto;
         background-color: white;
         color: black;
-        box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px;
+        /* box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px; */
         position: absolute;
         top: 60px;
-        right: 250px;
+        right: 300px;
         margin-right: 1px;
         border-radius: 0 0 5px 5px;
+        border-bottom: 0.5px solid #63638b;
         div {
           margin-top: 10px;
           margin-bottom: 10px;

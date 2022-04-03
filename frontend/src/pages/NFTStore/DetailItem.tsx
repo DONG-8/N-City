@@ -23,8 +23,13 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import BidBox from "./BidBox";
 import { deleteFollow, getFollowee, postFollow } from "../../store/apis/follow";
-import { postCancelPurchase } from "../../store/apis/deal";
+import { getPastHistory, postCancelPurchase } from "../../store/apis/deal";
 import { createSaleContract, SaleFactoryContract } from "../../web3Config";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import ReplayIcon from '@mui/icons-material/Replay';
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -95,6 +100,12 @@ const MainBannerWrapper = styled.div`
 
 const Wrapper = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
+  .title2{
+    margin-left: 5vw;
+  }
+  .color{
+    color:#6225E6  ;
+  }
 `;
 
 const Top = styled.div`
@@ -130,7 +141,7 @@ const UserBox = styled.div`
       }
     }
   }
-  .profile {
+  .profile { 
     border-radius: 100%;
     height: 12vh;
     margin: 5vh;
@@ -140,7 +151,12 @@ const UserBox = styled.div`
     font-size: 4vh;
     font-weight: 800;
   }
+  button{
+    margin-left: 3vw;
+    margin-top: 1vh;
+  }
 `;
+
 const UserDescription = styled.div`
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee,
     inset 1px 1px 0 rgb(233 235 242 / 10%);
@@ -161,6 +177,7 @@ const UserDescription = styled.div`
     font-size: 1.1rem;
     margin-left: 2vw;
     margin-top: 2vh;
+    
   }
 `;
 const TopR = styled.div`
@@ -186,6 +203,13 @@ const TopR = styled.div`
     .content {
       margin-top: 3vh;
       margin-left: 2vw;
+      display: flex;
+      font-size: 2vh;
+    .left{
+    }
+    .right{
+      margin-left: 3vw ;
+    }
     }
   }
   .img {
@@ -211,12 +235,11 @@ const Description = styled.div`
   }
   .box {
     width: 26vw;
-    height: 15vh;
+    height: 19vh;
     background-color: white;
     margin-left: 2vw;
     border-radius: 10px;
     border: 0.5px solid #e7e4e4;
-
     p {
       margin-left: 1vw;
       padding-top: 1vh;
@@ -283,7 +306,7 @@ const FavoriteBox = styled.div`
 
 interface Istate {
   item: {
-    productId: Number;
+    productId: number;
     productTitle: string;
     productPrice: Number;
     productThumbnailUrl: string;
@@ -332,6 +355,15 @@ interface Istate {
     userRole: String;
     mintUserId : String;
   };
+  history: {
+    dealCreatedAt: number[];
+    dealFrom: number;
+    dealFromNickName: string;
+    dealPrice: number;
+    dealTo: number;
+    dealToNickName: string;
+    dealType: number;
+  };
 }
 const DetailItem = () => {
   const [localitem, setLocalitem] = useState<Istate["item"]>(
@@ -363,6 +395,7 @@ const DetailItem = () => {
   const [open, setOpen] = useState(false);
 
   // 1: bid , 2:sell , 3:normal
+  const CATEGORY =['All','Music',' Picture','Video','Art','Celebrity','Sports','Character','Animation']
   const [status, setStatus] = useState("bid");
   const [MyAddress, setMyAddress] = useState(localStorage.getItem("userId"));
   const [productId, setProductId] = useState(useParams().productId);
@@ -386,9 +419,30 @@ const DetailItem = () => {
     favoriteCount: 0,
     userNick: ""
   });
+  const [history, setHistory] = useState<Istate["history"][]>([])
   const [isImg, setIsImg] = useState(true)
   const { ethereum } = window
-
+  useEffect(() => {
+    getHistory.mutate()
+  }, [])
+  const dealTypeConvert = (dealType) => {
+    switch (dealType) {
+      case 1: // 경매등록
+        return <div className="event"><ShoppingCartIcon /><span>Create auction</span></div>
+      case 2: // 판매등록
+        return <div className="event"><ShoppingCartIcon /><span>Create Sale</span></div>
+      case 3: // 경매참여
+        return <div className="event"><LocalOfferIcon /><span>Bid</span></div>
+      case 4: // 판매취소
+        return <div className="event"><ReplayIcon /><span>Cancel sale</span></div>
+      case 5: // 소유권 전달
+        return <div className="event"><CompareArrowsIcon /><span>Transfer</span></div>
+      case 6: // 민팅
+        return <div className="event"><ChildFriendlyIcon /><span>Minted</span></div>
+      default:
+        return "알수없는 dealType"
+    }
+  };
   const { isLoading: ILA, data: newItem } = useQuery<any>( // 추가 // 추천 데이터
     "getProductAll",
     async () => {
@@ -400,6 +454,86 @@ const DetailItem = () => {
       },
     }
   );
+  const getHistory = useMutation<any>( // 추가 // 추천 데이터
+    "getPastHistory",
+    async () => {
+      return await getPastHistory(localitem.productId);
+    },
+    {
+      onSuccess: (res) => {
+        console.log("히스토리받아오기 성공", res)
+        const temp = res.content
+        setHistory(temp)
+      },
+      onError: (err: any) => {
+        console.log(err, "히스토리 오류");
+      },
+    }
+  );
+const List = styled.div`
+  background-color: #F7F8FA ;
+  border-radius: 10px;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  max-height: 50vh;
+  width: 91vw;
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  overflow-y: auto;
+`;
+
+const ListItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid grey;
+  margin-bottom: 0.5vh;
+  width: 89vw;
+  padding: 10px;     
+  border-radius: 5px;
+           
+  div{
+    flex:1;
+    text-align: center;
+  }
+  .event{
+    text-align: start;
+    margin-left: 3vw;
+  }
+  .price{
+    margin-left: -3vw;
+  }
+
+`;
+
+const ListCategory = styled.div`
+  border: 1px solid #333;
+  width: 90vw;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 2vh;
+  border-bottom: 2px solid #333;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  margin-top: 2vh;
+  div{
+    flex: 1;
+    text-align: center;
+  }
+`
+function leadingZeros(n, digits) {
+  var zero = '';
+  n = n.toString();
+
+  if (n.length < digits) {
+    for (var i = 0; i < digits - n.length; i++)
+      zero += '0';
+  }
+  return zero + n;
+}
 
   const { isLoading: ILC, data: collection } = useQuery<any>( // 이 유저가 가진 그림
     "getUserCollection",
@@ -641,7 +775,12 @@ const DetailItem = () => {
   useEffect(() => {
     getLiked.mutate();
   }, [likes]);
-  
+  const convertDate = (dateArray) => {
+    const year = String(dateArray[0]);
+    const month = String(dateArray[1]);
+    const day = String(dateArray[2]);
+    return year + "-" + leadingZeros(month, 2) + "-" + leadingZeros(day, 2)
+  }
   useEffect(() => {
   }, [user]);
 
@@ -673,6 +812,12 @@ const DetailItem = () => {
                     />
                   )}
                   <p className="name">{user.userNick}</p>
+                  {Number(localStorage.getItem("userId")) ===
+                    Number(item.mintUserId) ? null : followBtnState ? (
+                      <Button color="info" variant="contained" onClick={onClickFollow}>Follow</Button>
+                    ) : (
+                    <Button color="warning" variant="contained" onClick={onClickUnFollow}>Unfollow</Button>
+                  )}
                 </div>
                 <div className="mid">
                   <div className="mid-l">
@@ -685,17 +830,20 @@ const DetailItem = () => {
                         />
                       )}
                     </div>
-                    <div className="email"> email:{user.userEmail}</div>
-                    <div>userId:{item.mintUserId}</div>
-                    <div>직업:{user.userRole}</div>
-                    <div>팔로워수:{followers}</div>
-                    <div>팔로잉수:{followees}</div>
-                    {Number(localStorage.getItem("userId")) ===
-                    Number(item.mintUserId) ? null : followBtnState ? (
-                      <Button onClick={onClickFollow}>Follow</Button>
-                    ) : (
-                      <Button onClick={onClickUnFollow}>Unfollow</Button>
-                    )}
+                    <div>
+                      <div className="left">
+                        <div className="email"> email:{user.userEmail}</div>
+                        <div>userId:{item.mintUserId}</div>
+                        <div>직업:{user.userRole}</div>
+                        <div>팔로워수:{followers}</div>
+                        <div>팔로잉수:{followees}</div>
+                      </div>
+                      <div className="right">
+                        
+                      </div>
+                    </div>
+                    
+                    
                   </div>
                 </div>
               </UserBox>
@@ -717,29 +865,32 @@ const DetailItem = () => {
                 <div className="top-left">
                   <div className="title">{item.productTitle}</div>
                   <div className="content">
-                    <div>카테고리 : {item.productCode}</div>
-                    <div>등록일자 : {item.productRegDt}</div>
-                    <div>NFT 소유자 : {item.userNick}</div>
-                    <div>상품상태/판매중? : {item.productState}</div>
-                    <div>상품상태/판매중? : {status}</div>
-                    <FavoriteBox className="icon">
-                      {liked ? (
-                        <FavoriteIcon
-                          onClick={() => {
-                            cancelLike();
-                          }}
-                          color="error"
-                        />
-                      ) : (
-                        <FavoriteBorderIcon
-                          onClick={() => {
-                            Like();
-                          }}
-                          color="error"
-                        />
-                      )}
-                      {likes}
-                    </FavoriteBox>
+                    <div className="left">
+                      <div>카테고리 : {CATEGORY[item.productCode]}</div>
+                      <div>등록일자 : {item.productRegDt}</div>
+                      <div>NFT 소유자 : {item.userNick}</div>
+                    </div>
+                    <div className="right">
+                      <div>상품상태 : {status}</div>
+                      <FavoriteBox className="icon">
+                        {liked ? (
+                          <FavoriteIcon
+                            onClick={() => {
+                              cancelLike();
+                            }}
+                            color="error"
+                          />
+                        ) : (
+                          <FavoriteBorderIcon
+                            onClick={() => {
+                              Like();
+                            }}
+                            color="error"
+                          />
+                        )}
+                        {likes}
+                      </FavoriteBox>
+                    </div>     
                   </div>
                   <Description>
                     <h3>작품설명</h3>
@@ -758,6 +909,7 @@ const DetailItem = () => {
                   <video src={item.productFileUrl} controls></video>
                 )}
               </div>
+
               <Bottom>
                 <div className="right">
                   {status === "bid" && <BidBox setOpen={setOpen} item={item} />}
@@ -797,6 +949,29 @@ const DetailItem = () => {
           </TopR>
         )}
       </Top>
+      <h1 className="title2"><span className='color'>{item.productTitle}</span>의 거래내역</h1>
+      <List>
+        <ListCategory>
+          <div>Event</div>
+          <div>Price</div>
+          <div>From</div>
+          <div>To</div>
+          <div>Date</div>
+        </ListCategory>  
+        {history.map((his, idx) => {
+            return (
+              <ListItem key={idx}>
+                <div className="event">{dealTypeConvert(his.dealType)}</div>
+                <div className="price">{his.dealPrice}</div>
+                <div className="from">{his.dealFromNickName}</div>
+                <div className="to">{his.dealToNickName}</div>
+                <div className="date">{his.dealCreatedAt}</div>
+                {/* <div className="id">{dealTypeConvert(history.dealType)}</div> */}
+              </ListItem>
+            );
+          })}
+      </List>
+
       <Mid>
         {items.length > 0 && (
           <>

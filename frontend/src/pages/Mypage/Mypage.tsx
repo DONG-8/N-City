@@ -179,7 +179,9 @@ const ListItem = styled.div`
   border: 1px solid grey;
   margin-bottom: 3px;
   width: 79vw;
-  padding: 10px;                
+  padding: 10px;     
+  border-radius: 5px;
+           
   div{
     flex:1;
     text-align: center;
@@ -210,6 +212,9 @@ const ListCategory = styled.div`
   display: flex;
   align-items: center;
   font-size: 2vh;
+  border-bottom: 2px solid #333;
+  border-radius: 5px;
+  margin-bottom: 5px;
   div{
     flex: 1;
     text-align: center;

@@ -5,6 +5,8 @@ import { useMutation, useQuery } from 'react-query'
 import ItemCard2 from '../../components/Card/ItemCard2'
 import ToggleSwitch from './ToggleSwitch'
 import ToggleSwitch2 from './ToggleSwitch2'
+import IsLoading2 from './IsLoading2'
+import IsLoading from './IsLoading'
 
 
 const CategoryBar = styled.div`
@@ -235,6 +237,8 @@ const NFTStore = () => {
           </div>
         </Right>
       </IntroBox>
+      {showItems.length>0 &&
+      <>
         <FilterButton>
           <div className='toggle'>
             {status?<div className='name'>판매하는</div >:<div className='name'>모든물품</div>}
@@ -292,7 +296,10 @@ const NFTStore = () => {
           </p>
         </li>
       </CategoryBar>
+      </>
+      }
         <ItemCards>
+          {showItems.length===0 &&<IsLoading2/>}
           {!status && showItems && !order&&
           ([...showItems].reverse()).map((item,idx) => {
           return(
