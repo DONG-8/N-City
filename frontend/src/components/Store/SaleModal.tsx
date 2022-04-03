@@ -248,7 +248,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
     try {
       // 토큰 권한 승인시키기
       await NFTcreatorContract.methods
-      .approve(SaleFactoryAddress, item.tokenId)
+      .setApprovalForAll(SaleFactoryAddress, true)
       .send({ from: accounts[0] });
 
       // 판매등록
@@ -287,7 +287,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
     try {
       // 토큰 권한 승인시키기
       await NFTcreatorContract.methods
-      .approve(SaleFactoryAddress, item.tokenId)
+      .setApprovalForAll(SaleFactoryAddress, true)
       .send({ from: accounts[0] });
       
       //경매등록
