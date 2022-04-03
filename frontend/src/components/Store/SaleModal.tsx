@@ -272,6 +272,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
       console.log(error);
     }
   };
+
   const onClickAuction = async () => {
     const accounts = await ethereum.request({ method: "eth_accounts" });
     if (!accounts[0]) {
@@ -295,10 +296,10 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
       const response = await SaleFactoryContract.methods
         .createSale(
           item.tokenId,
-          20,
+          value,
           999999999999,
           Math.round(date.getTime() / 1000),
-          Math.round(date.getTime() / 1000 + (period * 60 * 60 * 24)),
+          Math.round((date.getTime() / 1000) + (period * 60 * 60 * 24)),
           SSFTokenAddress,
           NFTcreatorAddress
         )
