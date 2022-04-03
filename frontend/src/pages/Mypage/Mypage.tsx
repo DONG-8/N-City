@@ -15,9 +15,10 @@ import FollowModal from "../../components/Mypage/FollowModal";
 import { deleteFollow, getFollowee, getFollower, postFollow } from "../../store/apis/follow";
 import { getUsercollectedInfo, getUsercreatedInfo, getUserfavoritesInfo, getUserTradeInfo, getUserInfo } from "../../store/apis/user";
 import bg from "../../essets/images/login_background.png"
+import GameStartButton2 from "./GameStartButton2";
 
 const MypageWrapper = styled.div`
-  box-shadow: 1px 3px 7px;
+  box-shadow: 1px 1px 1px;
   font-family: "Noto Sans KR", sans-serif;
 `;
 const Background = styled.div`
@@ -80,20 +81,18 @@ const FilterBar = styled.div`
     }
   }
   div {
-    /* background-color: #F5B6A0; */
-    border-bottom: 2px solid #f43b00;
+    border-bottom: 2px solid #6225E6  ;
   }
 
   #select {
     background-color: white;
-    border-left: 2px solid #f43b00;
-    border-right: 2px solid #f43b00;
-    border-top: 2px solid #f43b00;
+    border-left: 2px solid #6225E6  ;
+    border-right: 2px solid #6225E6  ;
+    border-top: 2px solid #6225E6  ;
     border-bottom: none;
-    color: #ff7248;
+    color: #6225E6  ;
     &:hover {
       background-color: #f9f9f9;
-      transition: 0.3s;
     }
   }
 `;
@@ -120,19 +119,32 @@ const Profile = styled.div`
   h2 {
     font-size: 3vh;
   }
-  button {
+  .profilesetting{
     font-family: "Noto Sans KR", sans-serif;
     font-weight: 600;
-    background-color: #e89669;
+    background-color: #6225E6  ;
+    width: 14vw;
+    height: 5vh;
+    font-size: 2.2vh;
+    margin-top: 5vh;
+    &:hover {
+      transition: 0.2s;
+      background-color: #5615e2  ;
+    }
+  }
+  .joinRoomBtn {
+    font-family: "Noto Sans KR", sans-serif;
+    font-weight: 600;
+    background-color: #6225E6  ;
+    border-radius:15px;
+    color: white;
     width: 14vw;
     height: 5vh;
     font-size: 2.2vh;
     &:hover {
       transition: 0.2s;
-      background-color: #f08850;
+      background-color: #5615e2  ;
     }
-  }
-  .joinRoomBtn {
     width: 450px;
     height: 100px;
     font-size: 35px;
@@ -166,27 +178,42 @@ const ListItem = styled.div`
   align-items: center;
   border: 1px solid grey;
   margin-bottom: 3px;
-  width: 80%;
-  padding: 10px;
-  .id {
-    width: 12%;
-    margin-left: 20px;
+  width: 79vw;
+  padding: 10px;                
+  div{
+    flex:1;
+    text-align: center;
   }
-  .name {
-    width: 12%;
+  .event{
+    text-align: start;
+    margin-left: 2vw;
   }
-  .email {
-    width: 30%;
+  .title{
+    margin-left: -2vw;
+  }
+  .price{
+  }
+  .from{
+  }
+  .to{
+
+  }
+  .date{
+
   }
 `;
 
 const ListCategory = styled.div`
-  border: 1px solid teal;
-  width: 80%;
+  border: 1px solid #333;
+  width: 80vw;
   height: 40px;
   display: flex;
-  justify-content: space-around;
   align-items: center;
+  font-size: 2vh;
+  div{
+    flex: 1;
+    text-align: center;
+  }
 `
 
 export const Event = styled.div`
@@ -449,17 +476,17 @@ export default function Mypage() {
   const dealTypeConvert = (dealType) => {
     switch (dealType) {
       case 1: // 경매등록
-        return <Event><ShoppingCartIcon /><div>Create auction</div></Event>
+        return <div className="event"><ShoppingCartIcon /><span>Create auction</span></div>
       case 2: // 판매등록
-        return <Event><ShoppingCartIcon /><div>Create Sale</div></Event>
+        return <div className="event"><ShoppingCartIcon /><span>Create Sale</span></div>
       case 3: // 경매참여
-        return <Event><LocalOfferIcon /><div>Bid</div></Event>
+        return <div className="event"><LocalOfferIcon /><span>Bid</span></div>
       case 4: // 판매취소
-        return <Event><ReplayIcon /><div>Cancel sale</div></Event>
+        return <div className="event"><ReplayIcon /><span>Cancel sale</span></div>
       case 5: // 소유권 전달
-        return <Event><CompareArrowsIcon /><div>Transfer</div></Event>
+        return <div className="event"><CompareArrowsIcon /><span>Transfer</span></div>
       case 6: // 민팅
-        return <Event><ChildFriendlyIcon /><div>Minted</div></Event>
+        return <div className="event"><ChildFriendlyIcon /><span>Minted</span></div>
       default:
         return "알수없는 dealType"
     }
@@ -481,7 +508,9 @@ export default function Mypage() {
     <>
       <MypageWrapper>
         <Background>
-          <img alt="배경" src={bg} />
+          {/* <img alt="배경" src={bg} /> */}
+          {/* <img alt="배경" src='https://cutewallpaper.org/21/pixel-wallpaper-gif/Vaporwave-Background-Gif-1920x1080-Spicesncurry.com.gif' /> */}
+          <img alt="배경" src='https://i.pinimg.com/originals/0b/32/92/0b3292b81f6edb020142fbf0c92a264b.gif' />
         </Background>
         <ProfileWrapper>
           <ProfileImg>
@@ -508,21 +537,23 @@ export default function Mypage() {
             </FollowTextBox>
             {Number(localStorage.getItem("userId")) === userInfo?.userId ? (
               <Button
+                className="profilesetting"
                 onClick={() => {
                   navigate("/profilesetting");
                 }}
-                color="warning"
                 variant="contained"
               >
                 프로필 수정
               </Button>
             ) : (
-              <button onClick={onClickFollow}>
+              <Button className="profilesetting" variant="contained" onClick={onClickFollow}>
                 {followBtnState ? "팔로우" : "언팔로우"}
-              </button>
+              </Button>
             )}
             </div>
-            <button className="joinRoomBtn">방입장</button>
+            {/* ⭐ 남의방일 때만 방입장 보이게 ? */}
+            {/* <button className="joinRoomBtn">방입장</button> */}
+            <GameStartButton2 userNick={userInfo?.userNick}/>
           </Profile>
         </ProfileWrapper>
       </MypageWrapper>
@@ -614,12 +645,12 @@ export default function Mypage() {
           {myHistory.map((history, idx) => {
             return (
               <ListItem key={idx}>
-                <div>{dealTypeConvert(history.dealType)}</div>
-                <div>{history.productTitle}</div>
-                <div>{history.dealPrice}</div>
-                <div>{history.dealFromUserNick}</div>
-                <div>{history.dealToUserNick}</div>
-                <div>{history.dealCreatedAt}</div>
+                <div className="event">{dealTypeConvert(history.dealType)}</div>
+                <div className="title">{history.productTitle}</div>
+                <div className="price">{history.dealPrice}</div>
+                <div className="from">{history.dealFromUserNick}</div>
+                <div className="to">{history.dealToUserNick}</div>
+                <div className="date">{history.dealCreatedAt}</div>
                 {/* <div className="id">{dealTypeConvert(history.dealType)}</div> */}
               </ListItem>
             );

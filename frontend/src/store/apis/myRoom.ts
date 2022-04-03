@@ -55,3 +55,10 @@ export const postRandomJoin = async ()=> {
     `/myroom/random`
   )
 }
+
+export const getCharacter= async (userId:number)=> {
+  const response = await apiClient.get<any>(
+    `/myroom/${userId}`
+  )
+  return response.data
+}
