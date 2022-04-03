@@ -5,8 +5,9 @@ import { useAppSelector, useAppDispatch } from "../hooks";
 // api 요청
 import { useMutation, useQuery, QueryClient } from "react-query";
 import { getUserInfo } from "../../store/apis/user";
-import { delGuestBook } from "../../store/apis/gestbook";
+import { delGuestBook, putGuestBook } from "../../store/apis/gestbook";
 import { client } from "../../../src/index";
+import { dividerClasses } from "@mui/material";
 interface IguestInfo {
   book: {
     guestbookContents: string;
@@ -23,6 +24,7 @@ const Visitbook: React.FC<IguestInfo> = ({ book }) => {
   const [clickDel, setClickdel] = useState(false);
   const [clickModify, setClickModify] = useState(false);
 
+  const [inputValue, setInputValue] = useState(book.guestbookContents);
   const myid = JSON.parse(localStorage.getItem("userId") || "");
 
   // 작성자 정보 불러오기
@@ -30,6 +32,18 @@ const Visitbook: React.FC<IguestInfo> = ({ book }) => {
     "witerInfo",
     async () => {
       return await getUserInfo(book.guestbookWriterId);
+    }
+  );
+
+  const PutApi = useMutation<any, Error>(
+    "putBook",
+    async () => {
+      return await putGuestBook(inputValue, book.guestbookId);
+    },
+    {
+      onSuccess: (res) => {
+        client.invalidateQueries("guestbook");
+      },
     }
   );
 
@@ -55,6 +69,11 @@ const Visitbook: React.FC<IguestInfo> = ({ book }) => {
     console.log("삭제실행");
     DeleteApi.mutate();
   };
+
+  const ChangeInputValue = (e) => {
+    // console.log(e.target.value);
+    setInputValue(e.target.value);
+  };
   // 로딩시 현재 접속한 userid를 불러온다.
   useEffect(() => {
     if (myid === book.guestbookOwnerId || myid === book.guestbookWriterId) {
@@ -69,9 +88,23 @@ const Visitbook: React.FC<IguestInfo> = ({ book }) => {
       <div>{book.guestbookId} 번째 게시글</div>
       {writerInfo ? <div>{writerInfo.userNick}</div> : "로딩중"}
       {writerInfo ? <div>{writerInfo.userImgUrl}</div> : "로딩중"}
-      <div>{book.guestbookCreatedAt}</div>
+
       {/* 바디 */}
-      <div>{book.guestbookContents}</div>
+      <div>{book.guestbookCreatedAt}</div>
+      {clickModify ? (
+        <div>
+          <input
+            type="text"
+            placeholder={book.guestbookContents}
+            onChange={(e) => {
+              ChangeInputValue(e);
+            }}
+            value={inputValue}
+          />
+        </div>
+      ) : (
+        <div>{book.guestbookContents}</div>
+      )}
       {/* 버튼라인 */}
       {deletebtn ? <div onClick={() => deleteRequets()}>삭제버튼</div> : null}
       {modifybtn ? (
@@ -79,6 +112,7 @@ const Visitbook: React.FC<IguestInfo> = ({ book }) => {
           {clickModify ? (
             <div
               onClick={() => {
+                PutApi.mutate();
                 changeModify();
               }}
             >
