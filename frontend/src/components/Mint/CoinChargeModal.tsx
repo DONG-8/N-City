@@ -2,19 +2,22 @@ import { Modal,Input,Button } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import CloseIcon from '@mui/icons-material/Close';
+import { useMutation } from 'react-query';
+import { putAuthApplyToken } from '../../store/apis/authentication';
 
 interface Iprops{
   open:boolean,
   setOpen:React.Dispatch<React.SetStateAction<boolean>>
 }
 const Wrapper = styled.div`
+font-family: "Noto Sans KR", sans-serif;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #3f3f8d  ;
   width: 40%;
-  height: 50vh;
+  height: 45vh;
   border-radius: 5px;
   border: none;
   display: flex;
@@ -50,26 +53,51 @@ const Contents= styled.div`
   }
   p{
     font-size: 2.5vh;
-    font-weight: 700;
+    margin: 5px 0;
+    font-weight: 600;
   }
   button{
-    margin-top: 2vh;
+    font-family: "Noto Sans KR", sans-serif;
+    margin: 2vh 0;
     width: 15vw;
     height: 8vh;
     font-size: 2vh;
-    font-weight: 1000;
+    font-weight: 500;
     color: black;
   }
   .gray{
     color: gray;
-    font-size: 1.5vh;
-    font-weight: 500;
+    font-size: 1.6vh;
+    font-weight: 400;
   }
 `
 
 
 const CoinChargeModal:React.FC<Iprops> = ({open,setOpen}) => {
   const handleClose = () => setOpen(false);
+
+  const applyToken = useMutation<any, Error>(
+    "applyToken",
+    async () => {
+      return await putAuthApplyToken(Number(localStorage.getItem("userId")));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("토큰신청  성공!",res);
+        alert("성공적으로 신청되었습니다.")
+        handleClose();
+      },
+      onError: (err: any) => {
+        alert("신청오류")
+        console.log("❌토큰신청 실패!",err);
+      },
+    }
+  );
+
+  const onClickApplyToken =() => {
+    applyToken.mutate()
+  }
+
   return (
     <Modal
       open={open}
@@ -83,18 +111,18 @@ const CoinChargeModal:React.FC<Iprops> = ({open,setOpen}) => {
         </Exit>
         <Title>
           <div className="title">
-            NCT 코인 충전소
+            NCT 토큰 충전소
           </div>
         </Title>
         <Contents>
             <div className="content">
-              <p> N-city 테스트 서버를 이용하기 위해</p>
-              <p> NCT 코인 발급 받으세요.</p>
+              <p> 토큰이 부족하세요?</p>
+              <p> 운영자에게 달라고 쫄라보세요.</p>
             </div>
-            <Button color='inherit' variant="contained">
-              NCT 코인으로 교환하기
+            <Button color='inherit' variant="contained" onClick={onClickApplyToken}>
+              NCT 토큰충전 신청하기
             </Button>
-            <p className='gray'>테스트용 코인이며 현금으로 교환은 불가합니다.</p>
+            <p className='gray'>저희 서비스내에서만 이용가능한 토큰이며 현금으로 교환은 불가합니다.</p>
         </Contents>
       </Wrapper>
     </Modal>
