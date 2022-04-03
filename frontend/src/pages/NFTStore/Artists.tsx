@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ArtistCard from '../../components/Card/ArtistCard'
 import styled from 'styled-components'
 import { artists as art } from './items'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { getUserAll } from '../../store/apis/user'
 
 const ArtistCards = styled.div`
@@ -129,58 +129,81 @@ const Artists = () => {
   const [allUsers,setAllUsers] = useState<IState["user"][]>([])
   const [filter,setFilter] = useState(0) 
 
-  const { isLoading:ILS, data } = useQuery<any>(
-    "getSellProduct",
-    async () => {return (await (getUserAll()))
-      },
-    { 
-      onSuccess:(res)=>{
+  // const { isLoading:ILS, data } = useQuery<any>(
+  //   "getUserAll",
+  //   async () => {return (await (getUserAll()))
+  //     },
+  //   { 
+  //     onSuccess:(res)=>{
+  //       let tmp:IState['user'][] = []
+  //       res.map((data)=>{tmp.push(data.user)})
+  //       setAllUsers(tmp)
+  //       setUsers(tmp)
+  //     },
+  //     onError: (err: any) => {
+  //       console.log(err, "유저 불러오기 실패");
+  //     },
+  //   }
+  // );
+  const getArtist = useMutation<any, Error>(
+    "getUserAll",
+    async () => {
+      return await getUserAll();
+    },
+    {
+      onSuccess: (res) => {
         let tmp:IState['user'][] = []
         res.map((data)=>{tmp.push(data.user)})
-        console.log('🎨',tmp)
         setAllUsers(tmp)
         setUsers(tmp)
       },
       onError: (err: any) => {
-        console.log(err, "유저 불러오기 실패");
+        console.log("❌유저 불러오기 실패!",err);
       },
     }
   );
+
   const getFilter = (number)=>{
     let tmp:IState['user'][] = []
-    if (number===0){
-      setUsers(allUsers)
-    }
-    if (number===1){
-      allUsers.map(user=>{
-        if(user.userRole==='ROLE_INFLUENCER'){
-          tmp.push(user)
-        }
-      })
-      setUsers(tmp)
-    }
-    if (number===2){
-      allUsers.map(user=>{
-        if(user.userRole==='ROLE_ARTIST'){
-          tmp.push(user)
-        }
-      })
-      setUsers(tmp)
-    }
-    if (number===3){
-      allUsers.map(user=>{
-        if(user.userRole==='ROLE_ENTERPRISE'){
-          tmp.push(user)
-        }
-      })
-      setUsers(tmp)
+    switch (number){
+      case 0:
+        setUsers(allUsers)
+        break;
+      case 1:
+        allUsers.map(user=>{
+          if(user.userRole==='ROLE_INFLUENCER'){
+            tmp.push(user)
+          }
+        })
+        setUsers(tmp)
+        break;
+      case 2:
+        allUsers.map(user=>{
+          if(user.userRole==='ROLE_ARTIST'){
+            tmp.push(user)
+          }
+        })
+        setUsers(tmp)
+        break;
+      case 3:
+        allUsers.map(user=>{
+          if(user.userRole==='ROLE_ENTERPRISE'){
+            tmp.push(user)
+          }
+        })
+        setUsers(tmp)
+        break;
     }
   }
   useEffect(()=>{
+    console.log('EFFECT')
     getFilter(filter)
   },[filter])
-
-  console.log(data)
+  useEffect(()=>{
+    console.log('🚗🎶',allUsers)
+    console.log('👍',users)
+    getArtist.mutate()
+  },[])
   return (
     <div>
       <IntroBox>
@@ -227,7 +250,7 @@ const Artists = () => {
         
       </CategoryBar>
       </div>
-      {users.length > 0 && 
+      {users.length>0 && 
         <ArtistCards>
           {users.map((user,idx) => {
             return <ArtistCard key={idx} user={user} />;
