@@ -9,6 +9,7 @@ import { getSearchUserNick } from "../../store/apis/user";
 import ProductSearchResult from "./ProductSearchResult";
 import SearchResult from "./ProductSearchResult";
 import UserSearchResult from "./UserSearchResult";
+import CloseIcon from '@mui/icons-material/Close';
 
 const SearchBarWrapper = styled.div`
   position: relative;
@@ -96,11 +97,25 @@ const SearchResultDiv = styled.div`
 const DivideContent = styled.div`
   width: 90%;
   margin: 2% 5%;
-  /* background-color: yellow; */
 `;
 
 const MenuBox = styled.div`
-
+  button{
+    margin-left: 1vw;
+    margin-top: 1vh;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  #select{
+    color:#4343e2 ;
+  }
+  .x{
+    position: absolute;
+    top:10px;
+    right:4.5vw;
+    cursor: pointer;
+  }
 `
 export interface IUser {
   item : {
@@ -228,7 +243,7 @@ const SearchBar = () => {
       <SearchBarDiv>
         <SearchIcon />
         <SearchInput
-          placeholder="Search items, collections, and accounts `Press Enter`"
+          placeholder="Search NFT or Citizen and 'Press Enter'"
           onChange={(e) => valueChange(e)}
           onKeyPress={(e) => handleEnter(e)}
           spellCheck={false}
@@ -237,26 +252,28 @@ const SearchBar = () => {
           <SearchResultWrapper className={searchResult ? "hide" : "none"}>
             <SearchResultDiv>
               <MenuBox>
-                <button onClick={() => setIsItemState(true)}>작품 정보</button>
-                <button onClick={() => setIsItemState(false)}>유저</button>
-                <button onClick={() => setSearchResult(false)}>X</button>
+                <button id={isItemState?"select":""} onClick={() => setIsItemState(true)}>작품 정보</button>
+                <button id={isItemState?"":"select"} onClick={() => setIsItemState(false)}>유저</button>
+                <CloseIcon className="x" fontSize='small' onClick={() => {setSearchResult(false);}}/>
               </MenuBox>
               {isItemState ? (
                 <div>
-                  <DivideContent>작품 정보</DivideContent>
+                  <DivideContent/>
                   <hr />
                     <ProductSearchResult
                       item={products}
                       onclose={onclose}
+                      searchValue={searchValue}
                     ></ProductSearchResult>
                 </div>
               ) : (
                 <div>
-                  <DivideContent>유저</DivideContent>
+                  <DivideContent/>
                   <hr />
                   <UserSearchResult
                     item={users}
                     onclose={onclose}
+                    searchValue={searchValue}
                   ></UserSearchResult>
                 </div>
               )}
