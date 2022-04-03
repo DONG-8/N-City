@@ -153,8 +153,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> getNewUserList(Pageable pageable) {
-        return userRepositorySupport.findNewUserList(pageable);
+    public Page<User> getNewUserList(Pageable pageable, String userRole) {
+        return userRepositorySupport.findNewUserList(pageable, userRole);
     }
 
     @Override
@@ -217,6 +217,7 @@ public class UserServiceImpl implements UserService {
 
                     .productId(p.getProductId())
                     .userId(p.getUserId())
+                    .userRole(userRepositorySupport.findUserByUserId(p.getUserId()).getUserRole())
                     .tokenId(p.getTokenId())
                     .productTitle(p.getProductTitle())
                     .productDesc(p.getProductDesc())
