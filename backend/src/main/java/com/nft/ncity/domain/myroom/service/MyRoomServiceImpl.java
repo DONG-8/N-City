@@ -77,5 +77,15 @@ public class MyRoomServiceImpl implements MyRoomService{
         return myRoomRepository.findTop5ByOrderByMyRoomTotalCntDesc();
     }
 
+    @Override
+    public MyRoom getUserCharacter(Long userId) {
+        MyRoom myRoom = myRoomRepository.findMyRoomByUserId(userId).orElse(null);
+
+        if(myRoom == null) {
+            return null;
+        }
+        return myRoom;
+    }
+
 
 }
