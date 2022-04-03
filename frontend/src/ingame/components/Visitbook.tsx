@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { useAppSelector, useAppDispatch } from "../hooks";
 
 // api 요청
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, QueryClient } from "react-query";
 import { getUserInfo } from "../../store/apis/user";
-
+import { delGuestBook } from "../../store/apis/gestbook";
+import { client } from "../../../src/index";
 interface IguestInfo {
   book: {
     guestbookContents: string;
@@ -32,10 +33,28 @@ const Visitbook: React.FC<IguestInfo> = ({ book }) => {
     }
   );
 
-  const deletButtonSetting = () => {};
+  const DeleteApi = useMutation<any, Error>(
+    "DeleteBook",
+    async () => {
+      return await delGuestBook(book.guestbookId);
+    },
+    {
+      onSuccess: (res) => {
+        // queryClient.setQueryData(["guestbook", book.guestbookOwnerId]);
+        // todo로 시작하는 모든 쿼리를 무효화한다. ex) ['todos', 1], ['todos', 2], ...
+        client.invalidateQueries("guestbook");
+      },
+    }
+  );
 
-  const modifyButtonSetting = () => {};
+  const changeModify = () => {
+    setClickModify(!clickModify);
+  };
 
+  const deleteRequets = () => {
+    console.log("삭제실행");
+    DeleteApi.mutate();
+  };
   // 로딩시 현재 접속한 userid를 불러온다.
   useEffect(() => {
     if (myid === book.guestbookOwnerId || myid === book.guestbookWriterId) {
@@ -46,13 +65,36 @@ const Visitbook: React.FC<IguestInfo> = ({ book }) => {
 
   return (
     <>
+      {/* 상단 */}
       <div>{book.guestbookId} 번째 게시글</div>
-      <div>{book.guestbookContents}</div>
-      <div>{book.guestbookCreatedAt}</div>
-      {deletebtn ? <div>삭제버튼</div> : null}
-      {modifybtn ? <div>수정버튼</div> : null}
       {writerInfo ? <div>{writerInfo.userNick}</div> : "로딩중"}
       {writerInfo ? <div>{writerInfo.userImgUrl}</div> : "로딩중"}
+      <div>{book.guestbookCreatedAt}</div>
+      {/* 바디 */}
+      <div>{book.guestbookContents}</div>
+      {/* 버튼라인 */}
+      {deletebtn ? <div onClick={() => deleteRequets()}>삭제버튼</div> : null}
+      {modifybtn ? (
+        <>
+          {clickModify ? (
+            <div
+              onClick={() => {
+                changeModify();
+              }}
+            >
+              수정완료
+            </div>
+          ) : (
+            <div
+              onClick={() => {
+                changeModify();
+              }}
+            >
+              수정
+            </div>
+          )}
+        </>
+      ) : null}
       <br></br>
     </>
   );

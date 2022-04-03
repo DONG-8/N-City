@@ -44,6 +44,7 @@ const Body = styled.div`
   height: 520px;
   color: black;
   background-color: yellow;
+  overflow-y: scroll;
 `;
 
 const InputLine = styled.div`
@@ -76,7 +77,7 @@ const VisitModal = () => {
   });
 
   const { data: guestbookdata, isLoading: guestbookLoaing } = useQuery<any>(
-    "guestbook",
+    ["guestbook"],
     async () => {
       return await getGuestBook(userId);
     }
@@ -90,7 +91,6 @@ const VisitModal = () => {
   if (userInfoLoading === true) {
     return <div>로딩중</div>;
   }
-  console.log(guestbookdata.content);
 
   return (
     <Wrapper>
