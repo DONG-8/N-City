@@ -25,13 +25,13 @@ export const putGuestBook = async (guestbookContents : string, guestbookId: numb
 }
 
 // 방명록 작성
-export const postGuestBook = async (guestbookContents : string, guestbookId: number,guestbookWiterId:number) => {
+export const postGuestBook = async (guestbookContents : string, guestbookOwnerId: number,guestbookWriterId:number) => {
   const response = await apiClient.post<any>(
     `guestbooks`,
     {
       guestbookContents,
-      guestbookId,
-      guestbookWiterId
+      guestbookOwnerId,
+      guestbookWriterId
     }
   )
   return response.data
