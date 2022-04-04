@@ -81,7 +81,8 @@ public class User {
         this.userEmailConfirm = false;
     }
 
-    public void emailVerifiedSuccess() {
+    public void emailVerifiedSuccess(String userEmail) {
+        this.userEmail = userEmail;
         this.userEmailConfirm = true;
     }
 

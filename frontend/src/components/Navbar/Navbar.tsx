@@ -188,6 +188,14 @@ export default function Navbar() {
   const [nickName,setNickName] = useState('')
   const [userId,setUserId] = useState('')
   
+  window.onstorage = event => {
+    if (event.key !== "userNickname") return;
+    console.log("스토리지변경감지")
+    const newNick = sessionStorage.getItem("userNickname")
+    if (newNick) setNickName(newNick)
+  }
+
+
   useEffect(()=>{
     setUserId(sessionStorage.getItem('userId')||'')
     if (userId===''){setIsLogin(false)}// userId가 있다면 로그인 되어있음

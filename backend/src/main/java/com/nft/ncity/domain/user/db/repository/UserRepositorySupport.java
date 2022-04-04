@@ -58,27 +58,10 @@ public class UserRepositorySupport {
      * @param userInfo
      * @return
      */
-    public Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo) throws IOException {
+    public Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo, String userEmail) throws IOException {
 
         long execute = jpaQueryFactory.update(qUser)
-                .set(qUser.userEmail, userInfo.getUserEmail())
-                .set(qUser.userNick, userInfo.getUserNick())
-                .set(qUser.userDescription, userInfo.getUserDescription())
-                .set(qUser.userImgUrl, userInfo.getUserImgUrl())
-                .where(qUser.userId.eq(userInfo.getUserId()))
-                .execute();
-        return execute;
-    }
-
-    /**
-     * 프로필 이미지 빼고 변경
-     * @param userInfo
-     * @return
-     */
-    public Long userUpdateNoProfileImg(UserModifyUpdateReq userInfo) {
-
-        long execute = jpaQueryFactory.update(qUser)
-                .set(qUser.userEmail, userInfo.getUserEmail())
+                .set(qUser.userEmail, userEmail)
                 .set(qUser.userNick, userInfo.getUserNick())
                 .set(qUser.userDescription, userInfo.getUserDescription())
                 .set(qUser.userImgUrl, userInfo.getUserImgUrl())

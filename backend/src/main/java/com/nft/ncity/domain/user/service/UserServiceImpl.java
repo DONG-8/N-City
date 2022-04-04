@@ -79,26 +79,15 @@ public class UserServiceImpl implements UserService {
      * @return Long (수정 성공한 행 개수)
      */
     @Override
-    public Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo) throws IOException {
-        Long execute = userRepositorySupport.userUpdateWithProfileImg(userInfo);
+    public Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo, String userEmail) throws IOException {
+        Long execute = userRepositorySupport.userUpdateWithProfileImg(userInfo, userEmail);
 
         return execute;
     }
 
-    /**
-     * 프로필 이미지 포함하지 않음.
-     * @param userInfo
-     * @return Long (수정 성공한 행 개수)
-     */
     @Override
-    public Long userUpdateNoProfileImg(UserModifyUpdateReq userInfo) {
-        Long execute = userRepositorySupport.userUpdateNoProfileImg(userInfo);
-        return execute;
-    }
-
-    @Override
-    public EmailAuth EmailAuthRegister(String emailAuthEmail) {
-        EmailAuth emailAuth = emailAuthRepositorySupport.emailAuthRegister(emailAuthEmail);
+    public EmailAuth emailAuthRegister(Long userId, String emailAuthEmail) {
+        EmailAuth emailAuth = emailAuthRepositorySupport.emailAuthRegister(userId,emailAuthEmail);
 
         // 해당 이메일로 인증메일 전송
         emailService.send(emailAuth.getEmailAuthEmail(),emailAuth.getEmailAuthToken());
@@ -111,9 +100,10 @@ public class UserServiceImpl implements UserService {
         // emailAuth 테이블 갱신
         EmailAuth emailAuth = emailAuthRepositorySupport.findValidAuthByEmail(emailAuthEmail,authToken, LocalDateTime.now()).get();
         emailAuth.useToken();
+        emailAuth.confirmEmail();
 
-        User user = userRepository.findByUserEmail(emailAuthEmail).get();
-        user.emailVerifiedSuccess();
+//        User user = userRepository.findUserByUserId(emailAuth.getUserId()).get();
+//        user.emailVerifiedSuccess(emailAuthEmail);
     }
 
     @Override
