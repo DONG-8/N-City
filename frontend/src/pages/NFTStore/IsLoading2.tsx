@@ -9,7 +9,6 @@ const Wrapper = styled.div`
   img{
     width: 15vw;
     height: 15vw;
-    margin-bottom: 10vh;
   }
 `
 const IsLoading2 = () => {

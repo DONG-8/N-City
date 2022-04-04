@@ -1,5 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import img1 from './image/character/1.png'
+import img2 from './image/character/2.png'
+import img3 from './image/character/3.png'
+import img4 from './image/character/3.png'
+import img5 from './image/character/3.png'
+const charimg = {
+  '1':img1,'2':img2,'3':img3,'4':img4,'5':img5
+}
 
 const RankCardWrapper = styled.div`
   position: relative;
@@ -175,16 +183,35 @@ const TodayInformationDiv = styled.div`
     margin-right: 5px;
   }
 `;
+interface Iprops {
+  user:{
+    myRoomCharacter: string;
+    myRoomTodayCnt: number;
+    myRoomTotalCnt: number;
+    userId: number;
+  }
+}
 
-const RankArtistCard = () => {
+const RankArtistCard:React.FC<Iprops>= ({user}) => {
+  useEffect(()=>{
+    if (user.myRoomCharacter===null){
+      setImgurl(img1)
+    }
+    else{
+      setImgurl(charimg[user.myRoomCharacter])
+    }
+    console.log('🌱',imgurl)
+  },[])
+  const [imgurl,setImgurl] = useState('')
   return (
     <RankCardWrapper>
       <RankCardDiv>
+          {imgurl!=="" &&
         <TitleCardDiv>
           <div className="container1">
             <img
               id="profileImg"
-              src="essets/images/charicter.png"
+              src={imgurl}
               alt="사진없노"
             ></img>
             <div id="explain">
@@ -208,6 +235,7 @@ const RankArtistCard = () => {
             </div>
           </div>
         </TitleCardDiv>
+        }
         <TodayInformationDiv></TodayInformationDiv>
       </RankCardDiv>
     </RankCardWrapper>

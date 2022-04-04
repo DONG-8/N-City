@@ -2,9 +2,13 @@ package com.nft.ncity.domain.myroom.service;
 
 import com.nft.ncity.domain.myroom.db.entity.MyRoom;
 import com.nft.ncity.domain.myroom.db.repository.MyRoomRepository;
+import com.nft.ncity.domain.myroom.db.repository.MyRoomRepositorySupport;
+import com.nft.ncity.domain.myroom.response.MyRoomTop5GetRes;
+import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +17,9 @@ public class MyRoomServiceImpl implements MyRoomService{
 
     @Autowired
     MyRoomRepository myRoomRepository;
+
+    @Autowired
+    MyRoomRepositorySupport myRoomRepositorySupport;
 
     @Override
     public MyRoom getUserRoom(Integer code, Long userId) {
@@ -73,8 +80,25 @@ public class MyRoomServiceImpl implements MyRoomService{
     }
 
     @Override
-    public List<MyRoom> getMyRoomRank() {
-        return myRoomRepository.findTop5ByOrderByMyRoomTotalCntDesc();
+    public List<MyRoomTop5GetRes> getMyRoomRank() {
+
+//        return myRoomRepository.findTop5ByOrderByMyRoomTotalCntDesc();
+        List<MyRoom> list = myRoomRepositorySupport.findTop5ByOrderByMyRoomTotalCntDesc();
+        List<MyRoomTop5GetRes> myRoomTop5GetResList = new ArrayList<MyRoomTop5GetRes>();
+        for(int i = 0; i < list.size(); i++) {
+            MyRoom myRoom = list.get(i);
+
+            MyRoomTop5GetRes myRoomTop5GetRes = MyRoomTop5GetRes.builder()
+                    .userId(myRoom.getUserId())
+                    .myRoomCharacter(myRoom.getMyRoomCharacter())
+                    .myRoomTotalCnt(myRoom.getMyRoomTotalCnt())
+                    .myRoomTodayCnt(myRoom.getMyRoomTodayCnt())
+                    .build();
+
+            myRoomTop5GetResList.add(myRoomTop5GetRes);
+        }
+
+        return myRoomTop5GetResList;
     }
 
     @Override

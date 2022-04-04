@@ -8,6 +8,7 @@ import com.nft.ncity.domain.myroom.db.repository.MyRoomRepositorySupport;
 import com.nft.ncity.domain.myroom.request.MyRoomBackgroundPutReq;
 import com.nft.ncity.domain.myroom.request.MyRoomCharacterPutReq;
 import com.nft.ncity.domain.myroom.response.MyRoomGetRes;
+import com.nft.ncity.domain.myroom.response.MyRoomTop5GetRes;
 import com.nft.ncity.domain.myroom.service.MyRoomService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -121,10 +122,10 @@ public class MyRoomController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = MyRoom.class),
     })
-    public ResponseEntity<List<MyRoom>> getMyRoomRank() {
+    public ResponseEntity<List<MyRoomTop5GetRes>> getMyRoomRank() {
         log.info("getMyRoomRank - Call");
 
-        List<MyRoom> myRoom = myRoomService.getMyRoomRank();
+        List<MyRoomTop5GetRes> myRoom = myRoomService.getMyRoomRank();
         return ResponseEntity.status(200).body(myRoom);
     }
 
