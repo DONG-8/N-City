@@ -268,6 +268,7 @@ export default function Navbar() {
                 </Link>
               </div>
             </div>
+            
             <Link className="inner" to="store">
               <p>NFTs</p>
             </Link>

@@ -10,6 +10,15 @@ import IsLoading2 from './IsLoading2'
 import IsLoading from './IsLoading'
 import StoreItemCard from '../../components/Card/StoreItemCard'
 
+const Wrapper = styled.div`
+  .loading{
+    text-align: center;
+    font-size: 2.5vh;
+    font-weight: 1000;
+    margin-top: -5vh;
+  }
+
+`
 
 const CategoryBar = styled.div`
   margin: auto;
@@ -224,7 +233,7 @@ const NFTStore = () => {
 
 
   return (
-    <>
+    <Wrapper>
       <IntroBox>
         <Left>
           <div className='text'>
@@ -302,8 +311,12 @@ const NFTStore = () => {
       </CategoryBar>
       </>
       }
+          {showItems.length===0 &&
+          <>
+          <IsLoading2/>
+          <div className='loading'>Loading..</div>
+          </>}
         <ItemCards>
-          {showItems.length===0 &&<IsLoading2/>}
           {!status && showItems && !order&&
           ([...showItems].reverse()).map((item,idx) => {
           return(
@@ -329,7 +342,7 @@ const NFTStore = () => {
             )
           })}
         </ItemCards>
-      </>
+      </Wrapper>
   );
 }
 

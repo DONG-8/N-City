@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import GuideSlide from "./GuideSlide";
+import HotRoomSlide from "./HotRoomSlide";
 import SmallSlide from "./SmallSlide";
 
 const InnreContent = styled.div`
@@ -59,9 +61,9 @@ const Guide = () => {
             <h3>Hot Room</h3>
             <h1>+</h1>
           </SubText>
-
-          <SmallSlide></SmallSlide>
+          <HotRoomSlide/>
         </InnerFlexBox>
+
         <InnerFlexBox>
           <SubText>
             <h3>Hot Artist</h3>
@@ -69,12 +71,13 @@ const Guide = () => {
           </SubText>
           <SmallSlide></SmallSlide>
         </InnerFlexBox>
+
         <InnerFlexBox>
           <SubText>
             <h3>Guide</h3>
             <h1>+</h1>
           </SubText>
-          <SmallSlide></SmallSlide>
+          <GuideSlide/>
         </InnerFlexBox>
       </FlexBox>
       <FlexBox>

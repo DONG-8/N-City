@@ -3,7 +3,8 @@ import styled from "styled-components";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import RankArtistCard from "./RankArtistCard";
-
+import { useMutation, useQuery } from 'react-query';
+import {getRoomTop5} from '../../store/apis/myRoom'
 const SubBannerWrraper = styled.div`
   position: relative;
   width: 448px;
@@ -73,7 +74,7 @@ const SubPagenationBanner = styled.div`
   }
 `;
 
-const SmallSlide = () => {
+const HotRoomSlide = () => {
   const [subPosition, setSubPosition] = useState<number>(0);
   const [subEventNumber, setSubEventNumber] = useState<number>(0);
   const [subCheck, setSubCheck] = useState<number>(0);
@@ -144,27 +145,40 @@ const SmallSlide = () => {
   // useEffect(() => {
   //   moveSubAuto();
   // }, [subCheck]);
-
+  interface IState{
+    user:{
+      myRoomCharacter: string
+      myRoomTodayCnt: number
+      myRoomTotalCnt: number
+      userId: number
+    }
+  }
+  const { isLoading:ILC, data:characters } = useQuery<any>(
+    "getSellProductCategori",
+    async () => {return (await (getRoomTop5( )))
+      },
+    { onSuccess:(res)=>{
+      console.log(res)
+    },
+      onError: (err: any) => {
+        console.log(err, "판매중 정보 실패");
+      },
+    }
+  );
   return (
     <>
       <SubBannerWrraper>
         <SubBanner>
-          {subImages.map((value, idx) => {
+          {characters!==undefined &&
+          characters.map((value, idx) => {
             return (
-              <div className="inner">
-                <img
-                  src={value.pic}
-                  key={idx + value.name}
-                  alt="사진없노"
-                  style={{
-                    transform: `translate(${subPosition}px)`,
-                    transition: `transform 0.5s`,
-                  }}
-                />
+              <div className="inner"
+              key={idx}
+              style={{ transform: `translate(${subPosition}px)`,transition: `transform 0.5s`,}}>
+                <RankArtistCard user={value}/>
               </div>
             );
           })}
-          {/* <RankArtistCard></RankArtistCard> */}
         </SubBanner>
         <SubPagenationBanner>
           <button
@@ -190,4 +204,4 @@ const SmallSlide = () => {
   );
 };
 
-export default SmallSlide;
+export default HotRoomSlide;
