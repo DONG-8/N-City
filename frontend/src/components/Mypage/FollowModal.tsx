@@ -4,6 +4,10 @@ import { useMutation, useQuery } from "react-query";
 import { postAuthentiaction } from "../../store/apis/authentication";
 import { getFollowee, getFollower } from "../../store/apis/follow";
 import { useNavigate } from "react-router-dom";
+import influencer from "../../essets/images/influencer-mark.png"
+import artist from "../../essets/images/artist-mark.png"
+import enterprise from "../../essets/images/enterprise-mark.png"
+
 
 export type ModalBaseProps = {
   /** 모달에 들어갈 컴포넌트 */
@@ -74,8 +78,13 @@ const ModalSection = styled.div<{ visible: boolean }>`
   padding: 16px;
   ${(props) => modalSettings(props.visible)}
   .name{
-    margin: 2vh;
+    margin: 8px 0 8px 20px;
+    position: relative;
     font-size: 2.5vh;
+    cursor: pointer;
+    img {
+      position: absolute;
+    }
   }
 `;
 
@@ -103,6 +112,7 @@ const CloseButton = styled.div`
   justify-content: flex-end;
   cursor: pointer;
 `;
+
 interface IUsers {
   userAddress: string;
   userDescription: string;
@@ -139,6 +149,19 @@ const FollowModal = ({
   //   }
   // },[isOpen])
 
+  const getVerifiedMark = (userType: string|undefined) => {
+    switch (userType) {
+      case "ROLE_INFLUENCER":
+        return <img src={influencer} alt="mark" />;
+      case "ROLE_ARTIST":
+        return <img src={artist} alt="mark" />;
+      case "ROLE_ENTERPRISE":
+        return <img src={enterprise} alt="mark" />;
+      default:
+        return;
+    }
+  }
+
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     if (visible) {
@@ -173,7 +196,10 @@ const FollowModal = ({
                   key={user.userId}
                   onClick={() => handleOnClickFollower(user.userId)}
                 >
+                  <span>
                   {user.userNick}
+                  </span>
+                  {getVerifiedMark(user.userRole)}
                 </div>
               );
             })
@@ -184,7 +210,10 @@ const FollowModal = ({
                   key={user.userId}
                   onClick={() => handleOnClickFollower(user.userId)}
                 >
+                  <span>
                   {user.userNick}
+                  </span>
+                  {getVerifiedMark(user.userRole)}
                 </div>
               );
             })}
