@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 
 const ResultDiv = styled.div`
+  font-family: 'Noto Sans KR', sans-serif;
   width: 100%;
   min-height: 100px;
   max-height: 30vh;
@@ -23,7 +25,7 @@ const ResultDiv = styled.div`
 
 const InnerContentContainer = styled.div`
   border-bottom: 0.3px solid #e1dddd;
-  img{
+  img {
     width: 3vw;
     height: 3vw;
     margin-left: 1vw;
@@ -32,10 +34,18 @@ const InnerContentContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  :hover {
+    font-weight: bold;
+  }
 `;
 
 const InnerContent = styled.div`
+display: flex;
+align-items: center;
   margin-right: 4vw;
+  svg {
+    width: 12px;
+  }
 `;
 const Noresult = styled.div`
   margin-left: 2vw;
@@ -53,6 +63,7 @@ interface Iitem {
     productRegDt: Array<number>;
     productThumbnailUrl: string;
     productTitle: string;
+    userRole: string;
   }[]
   onclose: () => void;
   searchValue:string;
@@ -68,6 +79,18 @@ interface Iitem {
     navigate(`/store/detail/${productId}`)
   }
   
+  const getVerifiedMark = (userType: string) => {
+    switch (userType) {
+      case "USER_INFLUENCER":
+        return <img src="essets/marks/influencer-mark.png" alt="mark" />;
+      case "USER_ARTIST":
+        return <img src="essets/marks/artist-mark.png" alt="mark" />;
+      case "USER_ENTERPRISE":
+        return <img src="essets/marks/enterprise-mark.png" alt="mark" />;
+      default:
+        return;
+    }
+  }
 
   useEffect(()=>{
     setItems(item)
@@ -75,20 +98,29 @@ interface Iitem {
 
   return (
     <ResultDiv>
-      {items.length>0 ? (
+      {items.length > 0 ? (
         items.map((item, idx) => (
           <InnerContentContainer
             key={idx}
             onClick={() => onClickItem(item.productId)}
           >
             <img src={item.productThumbnailUrl} alt="썸네일" />
-            <InnerContent>{item.productTitle}</InnerContent>
-            <InnerContent>{item.productFavorite}</InnerContent>
+            <InnerContent>
+              {item.productTitle}
+              <span>{getVerifiedMark(item.userRole)}</span>
+            </InnerContent>
+            <InnerContent className="title">
+              <FavoriteIcon color="error" />
+              {item.productFavorite}
+            </InnerContent>
           </InnerContentContainer>
         ))
       ) : (
-         <Noresult> <span className="searchValue">'{searchValue}'</span>
-         가 포함된 작품이 없습니다</Noresult>
+        <Noresult>
+          {" "}
+          <span className="searchValue">'{searchValue}'</span>가 포함된 작품이
+          없습니다
+        </Noresult>
       )}
     </ResultDiv>
   );

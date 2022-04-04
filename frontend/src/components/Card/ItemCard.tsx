@@ -103,6 +103,9 @@ const SaleState = styled.div`
 const Title = styled.div`
   font-size: 1.5rem;
   font-weight: 600;
+  img{
+    position: absolute;
+  }
 `;
 interface Iprops {
   item: {
@@ -117,6 +120,7 @@ interface Iprops {
     productFavoriteCount: number;
     favorite: boolean;
     tokenId?: number;
+    userRole: string;
   };
   handleOpen: (item) => void;
 }
@@ -160,6 +164,19 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
     }
   ); 
 
+  const getVerifiedMark = (userType: string) => {
+    switch (userType) {
+      case "USER_INFLUENCER":
+        return <img src="essets/marks/influencer-mark.png" alt="mark" />;
+      case "USER_ARTIST":
+        return <img src="essets/marks/artist-mark.png" alt="mark" />;
+      case "USER_ENTERPRISE":
+        return <img src="essets/marks/enterprise-mark.png" alt="mark" />;
+      default:
+        return;
+    }
+  }
+
   const onClickAddLike = async () => {
     addLike.mutate();
   }
@@ -195,7 +212,7 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
             {/* <Artist>
               {item.name}
             </Artist> */}
-            <Title>{item.productTitle}</Title>
+            <Title><span>{item.productTitle}</span>{getVerifiedMark(item.userRole)}</Title>
           </DesLeft>
         </CardCenter>
         <CardBottom>

@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 
 const ResultDiv = styled.div`
+font-family: 'Noto Sans KR', sans-serif;
   width: 100%;
   min-height: 100px;
   max-height: 30vh;
@@ -18,7 +19,7 @@ const ResultDiv = styled.div`
   flex-direction: column;
   
   :hover {
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px;
+    /* box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px; */
   }
 `;
 
@@ -27,16 +28,21 @@ const InnerContentContainer = styled.div`
   img{
     width: 3vw;
     height: 3vw;
-    margin-left: 1vw;
+    margin: 3px 1vw;
   }
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-
+  :hover {
+   font-weight: bold;
+  }
 `;
 
+
+
 const InnerContent = styled.div`
+display: flex;
   margin: auto 20px;
 `;
 const Noresult = styled.div`
@@ -72,12 +78,26 @@ const UserSearchResult:React.FC<IUser> = ({searchValue,item, onclose}) => {
     onclose();
     navigate(`/mypage/${userId}`)
   }
+
+  const getVerifiedMark = (userType: string) => {
+    switch (userType) {
+      case "USER_INFLUENCER":
+        return <img src="essets/marks/influencer-mark.png" alt="mark" />;
+      case "USER_ARTIST":
+        return <img src="essets/marks/artist-mark.png" alt="mark" />;
+      case "USER_ENTERPRISE":
+        return <img src="essets/marks/enterprise-mark.png" alt="mark" />;
+      default:
+        return <div></div>;
+    }
+  }
+  
   useEffect(()=>{
     setItems(item)
   },[item])
   return (
     <ResultDiv>
-      {items.length>0 ? (
+      {items.length > 0 ? (
         items.map((item, idx) => (
           <InnerContentContainer
             key={idx}
@@ -92,12 +112,15 @@ const UserSearchResult:React.FC<IUser> = ({searchValue,item, onclose}) => {
               alt="프로필사진"
             />
             <InnerContent>{item.userNick}</InnerContent>
-            <InnerContent>{item.userRole}</InnerContent>
+            <InnerContent>{getVerifiedMark(item.userRole)}</InnerContent>
           </InnerContentContainer>
         ))
       ) : (
-        <Noresult> <span className="searchValue">'{searchValue}'</span>
-         가 포함된 유저가 없습니다</Noresult>
+        <Noresult>
+          {" "}
+          <span className="searchValue">'{searchValue}'</span>가 포함된 유저가
+          없습니다
+        </Noresult>
       )}
     </ResultDiv>
   );

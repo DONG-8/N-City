@@ -152,6 +152,7 @@ const Artists = () => {
     },
     {
       onSuccess: (res) => {
+        console.log(res)
         let tmp:IState['user'][] = []
         res.map((data)=>{tmp.push(data.user)})
         setAllUsers(tmp)

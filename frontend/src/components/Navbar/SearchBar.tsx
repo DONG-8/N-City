@@ -11,6 +11,7 @@ import SearchResult from "./ProductSearchResult";
 import UserSearchResult from "./UserSearchResult";
 import CloseIcon from '@mui/icons-material/Close';
 
+
 const SearchBarWrapper = styled.div`
   position: relative;
   width: 900px;
@@ -140,6 +141,7 @@ export interface IProduct {
   productRegDt: Array<number>;
   productThumbnailUrl: string;
   productTitle: string;
+  userRole: string
   }
 }
 
