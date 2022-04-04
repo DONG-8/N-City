@@ -139,7 +139,7 @@ interface Iprops{
 
 const ItemCard2:React.FC<Iprops>= ({item}) => {
   const [liked,setLiked] = useState(false) // 내가 좋아요 했나
-  const [MyAddress,setMyAddress] = useState(localStorage.getItem('userId'))
+  const [MyAddress,setMyAddress] = useState(sessionStorage.getItem('userId'))
   useEffect(()=>{
     var tmp = false
     item.productFavoriteUser.map((user)=>{

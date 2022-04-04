@@ -140,8 +140,8 @@ const Login = () => {
     {
       onSuccess: (res) => {
         console.log("로그인요청 성공", res);
-        localStorage.setItem("userId", res.userId)
-        localStorage.setItem("userNickname", res.userNick)
+        sessionStorage.setItem("userId", res.userId)
+        sessionStorage.setItem("userNickname", res.userNick)
         navigate("/")
         window.location.reload();
       },
