@@ -1,10 +1,59 @@
 import React, { useState, useEffect, useRef } from "react";
 import AudioControls from "./AudioControls";
+import styled from "styled-components";
 
-/*
- * Read the blog post here:
- * https://letsbuildui.dev/articles/building-an-audio-player-with-react-hooks
- */
+const Wrapper = styled.div`
+  width: 180px;
+  height: 80px;
+  margin: 0;
+`;
+
+const Content = styled.div`
+  width: 100%;
+  /* height: 100px; */
+  margin: 0px;
+  /* background-color: #eeedee; */
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+
+  .musicimg {
+    width: 25px;
+    height: 25px;
+    border-radius: 15px;
+    margin: 10px;
+  }
+`;
+
+const Header = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  h2 {
+    font-size: 12px;
+    /* margin: 0px; */
+  }
+`;
+
+const Player = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    width: 100%;
+  }
+
+  input {
+    width: 50%;
+    margin-top: -10px;
+    margin-right: 5px;
+  }
+`;
+
 const AudioPlayer = ({ tracks }) => {
   // State
   const [trackIndex, setTrackIndex] = useState(0);
@@ -108,35 +157,40 @@ const AudioPlayer = ({ tracks }) => {
   }, []);
 
   return (
-    <div className="audio-player">
-      <div className="track-info">
-        <img
-          className="artwork"
-          src={image}
-          alt={`track artwork for ${title} by ${artist}`}
-        />
-        <h2 className="title">{title}</h2>
-        <h3 className="artist">{artist}</h3>
-        <AudioControls
-          isPlaying={isPlaying}
-          onPrevClick={toPrevTrack}
-          onNextClick={toNextTrack}
-          onPlayPauseClick={setIsPlaying}
-        />
-        <input
-          type="range"
-          value={trackProgress}
-          step="1"
-          min="0"
-          max={duration ? duration : `${duration}`}
-          className="progress"
-          onChange={(e) => onScrub(e.target.value)}
-          onMouseUp={onScrubEnd}
-          onKeyUp={onScrubEnd}
-          style={{ background: trackStyling }}
-        />
-      </div>
-    </div>
+    <Wrapper>
+      <Content>
+        <Header>
+          <img
+            className="musicimg"
+            src={image}
+            alt={`track artwork for ${title} by ${artist}`}
+          />
+          <h2 className="title">
+            {artist} : {title}
+          </h2>
+        </Header>
+        <Player>
+          <AudioControls
+            isPlaying={isPlaying}
+            onPrevClick={toPrevTrack}
+            onNextClick={toNextTrack}
+            onPlayPauseClick={setIsPlaying}
+          />
+          <input
+            type="range"
+            value={trackProgress}
+            step="1"
+            min="0"
+            max={duration ? duration : `${duration}`}
+            className="progress"
+            onChange={(e) => onScrub(e.target.value)}
+            onMouseUp={onScrubEnd}
+            onKeyUp={onScrubEnd}
+            style={{ background: trackStyling }}
+          />
+        </Player>
+      </Content>
+    </Wrapper>
   );
 };
 

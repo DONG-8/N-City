@@ -1,8 +1,20 @@
 import React from "react";
-// import { ReactComponent as Play } from "./assets/play.svg";
-// import { ReactComponent as Pause } from "./assets/pause.svg";
-// import { ReactComponent as Next } from "./assets/next.svg";
-// import { ReactComponent as Prev } from "./assets/prev.svg";
+import styled from "styled-components";
+
+const AudioWrapper = styled.div`
+  width: 50%;
+  height: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 5px;
+
+  .btnimg {
+    width: 20px;
+    height: 30px;
+    margin: 0;
+  }
+`;
 
 const AudioControls = ({
   isPlaying,
@@ -10,14 +22,14 @@ const AudioControls = ({
   onPrevClick,
   onNextClick,
 }) => (
-  <div className="audio-controls">
+  <AudioWrapper>
     <button
       type="button"
       className="prev"
       aria-label="Previous"
       onClick={onPrevClick}
     >
-      이전
+      <img className="btnimg" src="essets/room/arrow-left.png" alt="" />
     </button>
     {isPlaying ? (
       <button
@@ -26,7 +38,7 @@ const AudioControls = ({
         onClick={() => onPlayPauseClick(false)}
         aria-label="Pause"
       >
-        일시정지
+        <img className="btnimg" src="essets/room/pause-line.png" alt="" />
       </button>
     ) : (
       <button
@@ -35,7 +47,7 @@ const AudioControls = ({
         onClick={() => onPlayPauseClick(true)}
         aria-label="Play"
       >
-        플레이
+        <img className="btnimg" src="essets/room/play.png" alt="" />
       </button>
     )}
     <button
@@ -44,9 +56,9 @@ const AudioControls = ({
       aria-label="Next"
       onClick={onNextClick}
     >
-      다음
+      <img className="btnimg" src="essets/room/arrow-right.png" alt="" />
     </button>
-  </div>
+  </AudioWrapper>
 );
 
 export default AudioControls;
