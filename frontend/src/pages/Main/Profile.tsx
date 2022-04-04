@@ -101,12 +101,13 @@ const TitleCardDiv = styled.div`
       flex-direction: row;
       #set {
         color: #12abdc;
-        font-size: 14px;
+        font-size: 13px;
         margin-left: 20px;
+        margin-top: -0.5px
       }
 
       #data {
-        font-size: 15px;
+        font-size: 13px;
         margin-left: 10px;
       }
     }
@@ -353,8 +354,12 @@ const Profile = () => {
                 <div id="data">{user?.userRole}</div>
               </div>
               <div className="status">
-                <div id="set">followers</div>
+                <div id="set">followee</div>
                 <div id="data">{user?.followeeCnt}</div>
+              </div>
+              <div className="status"> 
+                <div id="set">follower</div>
+                <div id="data">{user?.followerCnt}</div>
               </div>
             </>:
             <>
@@ -362,10 +367,6 @@ const Profile = () => {
                 <div id="set">N-city에 로그인하고 Myroom을 꾸며보세요</div>
               </div>
             </>}
-            {/* <div className="status"> 
-              <div id="set">즐겨찾기</div>
-              <div id="data">{user.}</div>
-            </div> */}
           </div>
         </TitleCardDiv>
         <MusicDiv>

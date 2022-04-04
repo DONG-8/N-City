@@ -199,16 +199,18 @@ const SubBottomItem = styled.div`
 
 const HotTokkenWrraper = styled.div`
   width: 100%;
-  height: auto;
+  height: 60vh;
   min-width: 1236px;
+  
 `;
 
 const HotTokken = styled.div`
-  width: 1320px;
+  /* width: 1320px; */
   height: 100%;
   margin: 0 auto;
   min-width: 1320px;
   h1 {
+    margin-left: 5vw;
     width: 1320px;
     padding-top: 40px;
     /* font-family: "DungGeunMo"; */
