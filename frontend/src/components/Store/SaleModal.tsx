@@ -25,7 +25,7 @@ const Wrapper = styled.div`
   transform: translate(-50%, -50%);
   background-color: white;
   width: 50%;
-  height: 60%;
+  height: 65%;
   border-radius: 5px;
   .title {
     color: #35357a;
@@ -104,79 +104,81 @@ const Wrapper = styled.div`
     }
   `;
 const Session2 = styled.div`
-  .box{
+  .box {
     margin: auto;
-    margin-top:5vh;
-    background-color: #F7F8FA ;
-    box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+    margin-top: 5vh;
+    background-color: #f7f8fa;
+    box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee,
+      inset 1px 1px 0 rgb(233 235 242 / 10%);
     border-radius: 10px;
     width: 35vw;
     height: 30vh;
-    .inputs{
-      display:flex
+    .inputs {
+      display: flex;
     }
-    .title{
+    .title {
+      display: flex;
+      justify-content: center;
       align-items: center;
       background-color: #35357a;
       color: white;
       border-radius: 10px 10px 0 0;
       width: 100%;
-        font-size: 1.5rem;
-        height: 7vh;
-        margin: auto;  
+      font-size: 2.5rem;
+      height: 7vh;
+      margin: auto;
+      text-align: center;
+      p {
         text-align: center;
-        p{
-          text-align: center;
-          padding-top: 2vh;
-        }
+      }
     }
   }
-  .tmp{
+  .tmp {
     height: 1vh;
   }
-  .intro{
-    margin-left:3vw;
+  .intro {
+    margin-left: 3vw;
     font-size: 2vh;
+    font-weight: 500;
   }
-  .price{
-    margin-left:3vw;
-    font-size:2.2vh;
-    margin-top: 5vh;
-    input{
-      font-size:2vh;
+  .price {
+    display: flex;
+    margin-left: 3vw;
+    font-size: 2.2vh;
+    margin-top: 3vh;
+    input {
+      font-size: 2vh;
       width: 5vw;
-      text-align:right;
-    }
-    img{
-      margin-left:0.5vw;
-      position: absolute;
-      height: 2rem;   
+      text-align: right;
     }
   }
-  .back{
-    width:3vw;
+  .back {
+    width: 3vw;
     font-weight: 600;
-    font-size:2rem;
+    font-size: 2rem;
   }
-  .sell{
+  .sell {
     margin-left: 1vw;
-    width:61vh;
-    font-size:1.5rem;
-    background-color:#3f3f8d  ;
+    width: 31vw;
+    font-size: 2rem;
+    background-color: #3f3f8d;
   }
-  .buttons{
+  .buttons {
     height: 7vh;
     display: flex;
-    margin-top: 2vh;
-    margin-left: 8vw;
+    margin-top: 5vh;
+    font-weight: 600;
   }
-  
-`
+`;
 const Exit = styled.div`
   position: absolute;
-  right:5px;
-  top:5px;
+  right:15px;
+  top:15px;
   cursor: pointer;
+  svg {
+    width: 30px;
+    height: 30px;
+  }
 `
 interface Iprops {
   open: boolean;
@@ -344,16 +346,18 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
               <div className='tmp'></div>
               <p className='intro'> NFT 작품들을 즉시 판매할 수 있습니다</p>
               <p className='intro'> 희망 가격을 적어 판매를 시작하세요 </p>
+              <div className='inputs'>
             <div className='price'>
                 희망 가격 : <Input onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
                 setValue(Number(e.target.value))
                 console.log(value)
-              }}/> <img alt="ether" src={etherimg}/>
+              }}/> <span>NCT</span>
             </div>
-          </div>
+              </div>
           <div className='buttons'>
             <Button onClick={()=>setSession1("")} className='back' variant="contained" color='inherit'><ArrowBackIcon/></Button>
             <Button className='sell' onClick={onClickSell} variant="contained" >판매 시작</Button>
+          </div>
           </div>
         </Session2>
         }
@@ -361,7 +365,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
         <Session2>
           <div className='box'>
             <div className='title'>
-              <p> 경매등록</p>
+              <p>경매 등록</p>
             </div>
             <div className='tmp'/>
             <p className='intro'> NFT 작품들을 경매에 등록할 수 있습니다</p>
@@ -371,17 +375,17 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
               시작가격 : <Input onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
                 setValue(Number(e.target.value))
                 console.log(value)
-              }}/> <img alt="ether" src={etherimg}/>
+              }}/> NCT
             </div>
             <div className="price">경매기간 :{" "}<Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setPeriod(Number(e.target.value)); console.log(period);}}/>일
+              setPeriod(Number(e.target.value)); console.log(period);}}/>일
             </div>
             </div>
-          </div>
             <div className='buttons'>
               <Button onClick={()=>setSession1("")} className='back' variant="contained" color='inherit'><ArrowBackIcon/></Button>
               <Button className='sell' onClick={onClickAuction} variant="contained" color='primary' >경매 시작</Button>
             </div>
+          </div>
         </Session2>
         }
       </Wrapper>

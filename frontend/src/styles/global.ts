@@ -19,6 +19,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   button {
+    font-family: "Noto Sans KR", sans-serif;
     background: transparent;
     border: none;
     cursor: pointer;
