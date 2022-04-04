@@ -1,11 +1,14 @@
 package com.nft.ncity.domain.product.db.repository;
 
 import com.nft.ncity.domain.deal.db.entity.QDeal;
+import com.nft.ncity.domain.favorite.db.entity.QFavorite;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.entity.QProduct;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
+import com.nft.ncity.domain.product.response.ProductTop10GetRes;
 import com.nft.ncity.domain.user.db.entity.QUser;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,9 @@ public class ProductRepositorySupport {
     QDeal qDeal = QDeal.deal;
 
     QUser qUser = QUser.user;
+
+    QFavorite qFavorite = QFavorite.favorite;
+
     //CREATE
     @Transactional
     public long updateTokenByProductId(TokenRegisterPutReq tokenRegisterPutReq){
@@ -151,6 +157,20 @@ public class ProductRepositorySupport {
         if(products.isEmpty()) return Page.empty();
 
         return new PageImpl<Product>(products, pageable, products.size());
+    }
+
+
+    public List<Tuple> getFavoriteTop10Product(){
+
+        List<Tuple> res = jpaQueryFactory.select(qProduct,qFavorite.count())
+                .from(qProduct)
+                .join(qFavorite)
+                .on(qProduct.productId.eq(qFavorite.productId))
+                .groupBy(qFavorite.productId)
+                .orderBy(qFavorite.count().desc())
+                .limit(10)
+                .fetch();
+        return res;
     }
 
 

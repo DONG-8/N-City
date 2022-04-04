@@ -6,8 +6,10 @@ import com.nft.ncity.domain.deal.db.entity.Deal;
 import com.nft.ncity.domain.deal.db.repository.DealRepository;
 import com.nft.ncity.domain.deal.db.repository.DealRepositorySupport;
 import com.nft.ncity.domain.favorite.db.entity.Favorite;
+import com.nft.ncity.domain.favorite.db.entity.QFavorite;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
 import com.nft.ncity.domain.product.db.entity.Product;
+import com.nft.ncity.domain.product.db.entity.QProduct;
 import com.nft.ncity.domain.product.db.repository.ProductRepository;
 import com.nft.ncity.domain.product.db.repository.ProductRepositorySupport;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
@@ -16,11 +18,13 @@ import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.response.ProductDealListGetRes;
 import com.nft.ncity.domain.product.response.ProductDetailGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
+import com.nft.ncity.domain.product.response.ProductTop10GetRes;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.nft.ncity.domain.user.db.repository.UserRepositorySupport;
 import com.nft.ncity.domain.user.response.UserMintProductRes;
 import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +73,10 @@ public class ProductServiceImpl implements ProductService{
     DealRepositorySupport dealRepositorySupport;
     @Autowired
     AwsS3Service awsS3Service;
+
+    QProduct qProduct = QProduct.product;
+    QFavorite qFavorite = QFavorite.favorite;
+
 
     // CREATE
     @Override
@@ -328,6 +336,35 @@ public class ProductServiceImpl implements ProductService{
         productDetailGetRes.setMintUserId(productRepositorySupport.getMintUserIdByProductId(productId));
         productDetailGetRes.setFavoriteCount(favoriteRepositorySupport.getFavoriteCount(productId));
         return productDetailGetRes;
+    }
+
+
+    // 좋아요 높은 10개 상품 가져오기
+    @Override
+    public List<ProductTop10GetRes> getProductFavoriteRank(){
+
+        List<Tuple> productList = productRepositorySupport.getFavoriteTop10Product();
+
+        List<ProductTop10GetRes> res = new ArrayList<ProductTop10GetRes>();
+
+        productList.forEach(product -> {
+
+                    ProductTop10GetRes productTop10GetRes = ProductTop10GetRes.builder()
+                    .productId(product.get(qProduct).getProductId())
+                    .productTitle(product.get(qProduct).getProductTitle())
+                    .productPrice(product.get(qProduct).getProductPrice())
+                    .productThumbnailUrl(product.get(qProduct).getProductThumbnailUrl())
+                    .productFavorite(product.get(qFavorite.count()).longValue())
+                    .productRegDt(product.get(qProduct).getProductRegDt())
+                    .productCode(product.get(qProduct).getProductCode())
+                    .build();
+
+            res.add(productTop10GetRes);
+
+                }
+                );
+
+        return res;
     }
 
 
