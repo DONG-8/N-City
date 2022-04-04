@@ -20,6 +20,7 @@ import AudioPlayer from "../Music/AudioPlayer";
 import { Tooltip } from "@mui/material";
 import MusicModal from "../Music/MusicModal";
 import StoreModal from "../StoreModal";
+import VisitModal from "../visitModal";
 
 const UIBar = () => {
   const [musicList, setMusic] = useState();
@@ -28,6 +29,7 @@ const UIBar = () => {
   const [tog, setTog] = useState(true);
   const [musicTog, setMusicTog] = useState(true);
   const [shopTog, setShopTog] = useState(true);
+  const [visitTog, setVisitTog] = useState(true);
   const toggle = () => {
     setTog(!tog);
   };
@@ -82,6 +84,9 @@ const UIBar = () => {
     setShopTog(!shopTog);
   };
 
+  const openVisit = () => {
+    setVisitTog(!visitTog);
+  };
   return (
     <Wrapper>
       <Head className={tog ? "close" : "open"}>
@@ -109,6 +114,7 @@ const UIBar = () => {
       <BodyWrapper>
         <Body className={tog ? "close" : "open"}>
           <Absol>{shopTog ? null : <StoreModal></StoreModal>}</Absol>
+          <Absol>{visitTog ? null : <VisitModal></VisitModal>}</Absol>
           <div
             className="Icon"
             onClick={() => {
@@ -144,7 +150,12 @@ const UIBar = () => {
               <p>store</p>
             </div>
           </div>
-          <div className="Icon">
+          <div
+            className="Icon"
+            onClick={() => {
+              openVisit();
+            }}
+          >
             <img src="essets/room/visit.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <p>Guest Book</p>

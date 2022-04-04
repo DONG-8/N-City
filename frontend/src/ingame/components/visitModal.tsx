@@ -23,7 +23,13 @@ import PagenationButton from "./PagenationButton";
 import { queryByTitle } from "@testing-library/react";
 
 const Wrapper = styled.div`
-  width: 100%;
+  position: absolute;
+  width: 1000px;
+  right: 100px;
+  height: 70vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  transition: all 0.3s ease;
 `;
 
 const ColorBar = styled.div`
@@ -151,14 +157,14 @@ const VisitModal = () => {
 
   return (
     <Wrapper>
-      <ColorBar>
+      {/* <ColorBar>
         <Head>
           <img src={userInfo.userImgUrl} alt="사진없노" />
           <div>방 주인장 : {userInfo.userNick}</div>
           <div>팔로워 수 : {userInfo.followerCnt}</div>
           <div>팔로잉 수 : {userInfo.followeeCnt}</div>
         </Head>
-      </ColorBar>
+      </ColorBar> */}
       <Body ref={refscroll}>
         <div>
           {guestbookdata.content.map((obj, i) => {
@@ -180,7 +186,7 @@ const VisitModal = () => {
             ChangeInputValue(e);
           }}
           ref={inputRef}
-          value={inputValue}
+          // value={input}
         />
         <button
           onClick={() => {
