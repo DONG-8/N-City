@@ -3,14 +3,9 @@ package com.nft.ncity.domain.myroom.service;
 import com.nft.ncity.domain.myroom.db.entity.MyRoom;
 import com.nft.ncity.domain.myroom.db.repository.MyRoomRepository;
 import com.nft.ncity.domain.myroom.db.repository.MyRoomRepositorySupport;
-<<<<<<< HEAD
 import com.nft.ncity.domain.myroom.response.MyRoomTop5GetRes;
-import com.querydsl.core.Tuple;
-=======
->>>>>>> 6f32d83e2ba7ad3e58cdeb04390d0acfb9efb745
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,7 +78,6 @@ public class MyRoomServiceImpl implements MyRoomService{
     }
 
     @Override
-<<<<<<< HEAD
     public List<MyRoomTop5GetRes> getMyRoomRank() {
 
 //        return myRoomRepository.findTop5ByOrderByMyRoomTotalCntDesc();
@@ -104,9 +98,6 @@ public class MyRoomServiceImpl implements MyRoomService{
 
         return myRoomTop5GetResList;
     }
-=======
-    public List<MyRoom> getMyRoomRank() { return myRoomRepository.findTop5ByOrderByMyRoomTotalCntDesc(); }
->>>>>>> 6f32d83e2ba7ad3e58cdeb04390d0acfb9efb745
 
     @Override
     public MyRoom getUserCharacter(Long userId) {
