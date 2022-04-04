@@ -432,6 +432,22 @@ public class UserController {
     }
 
     /**
+     * 유저 팔로우 기준 상위 5명 불러오기
+     */
+    @GetMapping("/follower/top5")
+    @ApiOperation(value = "유저 팔로우수 상위 5명 조회", notes = "<strong>유저 팔로우수 상위 5명 조회</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "검색 완료", response = User.class),
+    })
+    public ResponseEntity<List<UserFollowerTop5GetRes>> getUserTop5OrderByFollowCnt() {
+
+        log.info("getUserTop5OrderByFollowCnt - 호출");
+        List<UserFollowerTop5GetRes> users = userService.getUserTop5OrderByFollowCnt();
+
+        return ResponseEntity.status(200).body(users);
+    }
+
+    /**
      * 이메일 인증여부 확인
      */
     @GetMapping("/email/confirm")
