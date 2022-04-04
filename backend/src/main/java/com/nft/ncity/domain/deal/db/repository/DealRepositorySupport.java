@@ -154,4 +154,14 @@ public class DealRepositorySupport {
 
         return new PageImpl<Deal>(deals, pageable, deals.size());
     }
+
+    public Deal findDealByProductIdOrderByCreatedAt(Long productId) {
+        Deal deal = jpaQueryFactory.select(qDeal)
+                .from(qDeal)
+                .where(qDeal.productId.eq(productId))
+                .orderBy(qDeal.dealCreatedAt.desc())
+                .fetchFirst();
+
+        return deal;
+    }
 }
