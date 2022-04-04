@@ -5,41 +5,25 @@ const Wrapper = styled.div`
   @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@700&display=swap');
   display: flex;
   justify-content: center;
-  margin-left:1vw;
-  margin-right: 2vw;
   .cta {
     display: flex;
-    padding: 3px 45px;
+    padding: 10px 80px;
     text-decoration: none;
     font-family: 'Poppins', sans-serif;
     font-size: 40px;
     color: white;
     background: #129fce;
     transition: 1s;
-    box-shadow: 6px 6px 0 #333;
     border-radius: 10px;
+    :hover{
+      background: #41a6c7;
+      transition: 0.2s;
+    }
 }
 
 .cta:focus {
    outline: none; 
 }
-
-.cta:hover {
-    transition: 0.5s;
-    box-shadow: 10px 10px 0 #FBC638;
-}
-
-.cta span:nth-child(2) {
-    transition: 0.5s;
-    margin-right: 0px;
-}
-
-.cta:hover  span:nth-child(2) {
-    transition: 0.5s;
-    margin-right: 45px;
-}
-  span {
-  }
 
   span:nth-child(2) {
     width:33px;

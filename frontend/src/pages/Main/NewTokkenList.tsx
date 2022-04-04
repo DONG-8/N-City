@@ -1,9 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import Slider from "react-slick";
 import styled from "styled-components";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ItemCard2 from "../../components/Card/ItemCard2";
+import { useMutation, useQuery } from "react-query";
+import { getProductAll } from "../../store/apis/product";
 // interface Iprops{
 //   items :{
 //     productId: Number,
@@ -30,7 +32,6 @@ const RCricle = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 30px;
-  /* background-color: red; */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' %3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z'/%3E%3C/svg%3E");
   position: absolute;
   top: 200px;
@@ -78,8 +79,8 @@ const MainBannerWrapper = styled.div`
   color: black;
   margin: 0 auto;
 `;
-interface Iprops{
-  items :{
+interface Istate{
+  item :{
     productId: Number,
     productTitle: string,
     productPrice: Number,
@@ -97,16 +98,37 @@ interface Iprops{
       userImgUrl: string,
       userNick: string,
       userRole: string,
+      userTokenRequest?:boolean|null,
     }[],
-  }[],
+    userRole: string,
+    productState:number
+  }
 }
 
-const NewTokkenList:React.FC<Iprops>= ({items}) => {
+const NewTokkenList:React.FC = () => {
+  const [items,setItems] = useState<Istate['item'][]>([])
+  const { isLoading:ILC, data:allitems } = useQuery<any>(
+    "getProductAll",
+    async () => {return (await (getProductAll({ page: 1, size: 1000 })))
+      },
+    { onSuccess:(res)=>{
+      const tmp:Istate['item'][] = [...res.content].reverse().slice(0,10)
+      console.log(tmp)
+      setItems(tmp)
+      console.log(items)
+    },
+      onError: (err: any) => {
+        console.log(err, "판매중 정보 실패");
+      },
+    }
+  );
+
   return (
     <MainBannerWrapper>
       <div>
         <Slider {...settings}>
-          {items.map((item,idx) => {
+          {allitems && 
+         items.map((item,idx) => {
             return <ItemCard2 key={idx} item={item} />;
           })}
         </Slider>

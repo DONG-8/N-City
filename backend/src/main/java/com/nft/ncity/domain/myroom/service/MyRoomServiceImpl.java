@@ -4,6 +4,8 @@ import com.nft.ncity.domain.myroom.db.entity.MyRoom;
 import com.nft.ncity.domain.myroom.db.repository.MyRoomRepository;
 import com.nft.ncity.domain.myroom.db.repository.MyRoomRepositorySupport;
 import com.nft.ncity.domain.myroom.response.MyRoomTop5GetRes;
+import com.nft.ncity.domain.user.db.entity.User;
+import com.nft.ncity.domain.user.db.repository.UserRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -18,6 +20,9 @@ public class MyRoomServiceImpl implements MyRoomService{
 
     @Autowired
     MyRoomRepositorySupport myRoomRepositorySupport;
+
+    @Autowired
+    UserRepositorySupport userRepositorySupport;
 
     @Override
     public MyRoom getUserRoom(Integer code, Long userId) {
@@ -86,8 +91,11 @@ public class MyRoomServiceImpl implements MyRoomService{
         for(int i = 0; i < list.size(); i++) {
             MyRoom myRoom = list.get(i);
 
+            User user = userRepositorySupport.findUserByUserId(myRoom.getUserId());
+
             MyRoomTop5GetRes myRoomTop5GetRes = MyRoomTop5GetRes.builder()
                     .userId(myRoom.getUserId())
+                    .userNick(user.getUserNick())
                     .myRoomCharacter(myRoom.getMyRoomCharacter())
                     .myRoomTotalCnt(myRoom.getMyRoomTotalCnt())
                     .myRoomTodayCnt(myRoom.getMyRoomTodayCnt())

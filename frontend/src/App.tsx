@@ -18,7 +18,6 @@ import GameApp from "./ingame/GameApp";
 import { Provider } from "react-redux";
 import gamestore from "./ingame/stores";
 import phaserGame from "./ingame/PhaserGame";
-import Main2 from "./pages/Main/Main2";
 import YNTest from "./pages/Test/YNTest";
 import SearchPage from "./pages/NFTStore/SearchPage";
 import MapChoice from "./pages/Room/MapChoice";

@@ -3,9 +3,10 @@ import styled from "styled-components";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import RankArtistCard from "./RankArtistCard";
-import Img1 from './image/1.png'
-import Img2 from './image/2.png'
-import Img3 from './image/3.png'
+import { useMutation, useQuery } from 'react-query';
+import {getRoomTop5} from '../../store/apis/myRoom'
+import RankCitizen from "./RankCitizen";
+
 const SubBannerWrraper = styled.div`
   position: relative;
   width: 448px;
@@ -16,7 +17,6 @@ const SubBannerWrraper = styled.div`
 `;
 
 const SubBanner = styled.div`
-  border: 1px solid #dfdfdf;
   width: 420px;
   height: 300px;
   object-fit: cover;
@@ -76,30 +76,14 @@ const SubPagenationBanner = styled.div`
   }
 `;
 
-const GuideSlide = () => {
+const HotArtistSlide = () => {
   const [subPosition, setSubPosition] = useState<number>(0);
   const [subEventNumber, setSubEventNumber] = useState<number>(0);
   const [subCheck, setSubCheck] = useState<number>(0);
 
-  const subImages = [
-    {
-      pic: Img1,
-      ID: 1,
-      name: "구찌",
-    },
-    {
-      pic: Img2,
-      ID: 2,
-      name: "로아 프레딧 룩",
-    },
-    {
-      pic: Img3,
-      ID: 3,
-      name: "로아 도화가",
-    },
-  ];
+  
   const moveSubAuto = () => {
-    const len = subImages.length;
+    const len = characters.length;
     const idx = Math.floor((subEventNumber + 1) % len);
     setSubEventNumber(idx);
     if (idx === 0) {
@@ -119,7 +103,7 @@ const GuideSlide = () => {
   };
 
   const moveSubRight = () => {
-    const len = subImages.length;
+    const len = characters.length;
     const idx = Math.floor((subEventNumber + 1) % len);
     setSubEventNumber(idx);
     if (idx === 0) {
@@ -130,7 +114,7 @@ const GuideSlide = () => {
   };
 
   const moveSubLeft = () => {
-    const len = subImages.length;
+    const len = characters.length;
     const idx = Math.floor((subEventNumber - 1) % len);
     if (0 === subPosition) {
       setSubPosition((len - 1) * -448);
@@ -145,51 +129,60 @@ const GuideSlide = () => {
   };
 
   useEffect(() => {
-    moveSubAuto();
+    if (characters!==undefined ){
+    moveSubAuto();}
   }, [subCheck]);
-
+  interface IState{
+    user:{
+      myRoomCharacter: string
+      myRoomTodayCnt: number
+      myRoomTotalCnt: number
+      userId: number
+      userNick:string
+    }
+  }
+  const { isLoading:ILC, data:characters } = useQuery<any>(
+    "getSellProductCategori",
+    async () => {return (await (getRoomTop5( )))
+      },
+    { onSuccess:(res)=>{
+    },
+      onError: (err: any) => {
+        console.log(err, "판매중 정보 실패");
+      },
+    }
+  );
   return (
     <>
+    {characters!==undefined &&
       <SubBannerWrraper>
         <SubBanner>
-          {subImages.map((value, idx) => {
+          
+          {characters.map((value, idx) => {
             return (
-              <div className="inner">
-                <img
-                  src={value.pic}
-                  key={idx + value.name}
-                  alt="이미지"
-                  style={{
-                    transform: `translate(${subPosition}px)`,
-                    transition: `transform 0.5s`,
-                  }}
-                />
+              <div className="inner"
+              key={idx}
+              style={{ transform: `translate(${subPosition}px)`,transition: `transform 0.5s`,}}>
+                <RankCitizen user={value}/>
               </div>
             );
           })}
         </SubBanner>
         <SubPagenationBanner>
-          <button
-            onClick={() => {
-              moveSubLeft();
-            }}
-          >
-            <ArrowBackIcon></ArrowBackIcon>
+          <button onClick={() => {moveSubLeft()}}>
+            <ArrowBackIcon/>
           </button>
           <button>
-            {subEventNumber + 1}/{subImages.length}
+            {subEventNumber + 1}/{characters.length}
           </button>
-          <button
-            onClick={() => {
-              moveSubRight();
-            }}
-          >
-            <ArrowForward></ArrowForward>
+          <button onClick={() => {moveSubRight()}}>
+            <ArrowForward/>
           </button>
         </SubPagenationBanner>
       </SubBannerWrraper>
+      }
     </>
   );
 };
 
-export default GuideSlide;
+export default HotArtistSlide;

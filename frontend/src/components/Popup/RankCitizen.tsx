@@ -15,6 +15,7 @@ const RankCardWrapper = styled.div`
   height: 300px;
   background-color: #f6f6f7;
   border-radius: 10px;
+
 `;
 
 const RankCardDiv = styled.div`
@@ -29,32 +30,29 @@ const TitleCardDiv = styled.div`
   height: 200px;
   margin: 5px auto;
   font-size: 15px;
-  background-color: #eefeff;
+  background-color: #ffffff;
   display: flex;
   border-radius: 10px;
-  flex-direction: column;
+  /* flex-direction: column; */
   .container1 {
-    /* background-color: #12abdc; */
     width: 100%;
     height: 65%;
     display: flex;
     flex-direction: row;
-    .nickname{
-      margin-top: 10px;
-      margin-left: 20px;
-      font-size: 1.2rem;
-      color:#333;
-      align-items: center;
-    }
   }
 
   .container2 {
     width: 100%;
     height: 20%;
-    display: flex;
     align-items: center;
     margin: 0 auto;
     cursor: pointer;
+    .nickname{
+      font-size: 1.1rem;
+      color:#333;
+      align-items: center;
+      margin: auto;
+    }
     .status {
       margin:auto;
       margin-top: 20px;
@@ -62,7 +60,7 @@ const TitleCardDiv = styled.div`
       display: flex;
       flex-direction: row;
       #set {
-        color: #12abdc;
+        color: #030338 ;
         font-size: 14px;
         margin-left: 13px;
       }
@@ -76,11 +74,12 @@ const TitleCardDiv = styled.div`
   }
 
   #profileImg {
-    width: 135px;
-    height: 135px;
+    margin-top: 20px;
+    width: 160px;
+    height: 160px;
     object-fit: fill;
-    border-radius: 10px;
-    border: #12abdc   solid 1px;
+    border-radius: 5px;
+    border: gray   solid 1px;
   }
 
   #explain {
@@ -107,14 +106,14 @@ const TitleCardDiv = styled.div`
 const TodayInformationDiv = styled.div`
   width: 400px;
   height: 65px;
-  background-color: #129fce;
+  background-color: #9f9ff8 ;
   margin: 0 auto;
   margin-top: 10px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   &:hover{
-      background-color: #23afde;
+      background-color: #a9a9f2 ;
       transition: 0.1s;
   }
   p {
@@ -146,7 +145,7 @@ const TodayInformationDiv = styled.div`
     color: white;
     margin-left: 10px;
     margin-right: 5px;
-  }
+  } 
 `;
 interface Iprops {
   user:{
@@ -158,7 +157,7 @@ interface Iprops {
   }
 }
 
-const RankArtistCard:React.FC<Iprops>= ({user}) => {
+const RankCitizen:React.FC<Iprops>= ({user}) => {
   useEffect(()=>{
     if (user.myRoomCharacter===null){
       setImgurl(img1)
@@ -179,31 +178,23 @@ const RankArtistCard:React.FC<Iprops>= ({user}) => {
               id="profileImg"
               src={imgurl}
               alt="사진없노"
-            ></img>
+            />
+          </div>
+          <div className="container2">
             <div className="nickname">
               <h1>{user.userNick}</h1>
             </div>
-          </div>
-          <div className="container2">
             <div className="status">
-              <div id="set">Today</div>
+              <div id="set">Follower</div>
               <div id="data">{user.myRoomTodayCnt}</div>
             </div>
-            <div className="status">
-              <div id="set">Total</div>
-              <div id="data">{user.myRoomTotalCnt}</div>
-            </div>
-            {/* <div className="status">
-              <div id="set">즐겨찾기</div>
-              <div id="data">9,999</div>
-            </div> */}
           </div>
         </TitleCardDiv>
         }
-        <TodayInformationDiv><div className="gobutton">{user.userNick} 방으로 이동하기</div></TodayInformationDiv>
+        <TodayInformationDiv><div className="gobutton">{user.userNick} 프로필로 이동하기</div></TodayInformationDiv>
       </RankCardDiv>
     </RankCardWrapper>
   );
 };
 
-export default RankArtistCard;
+export default RankCitizen;
