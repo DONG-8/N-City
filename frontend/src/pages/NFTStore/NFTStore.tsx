@@ -60,6 +60,7 @@ const ItemCards = styled.div`
   width: 90vw ;
   display: flex ;
   flex-wrap: wrap ;
+  justify-content: center;
   &:last-child {
     margin-right: auto;
   }
