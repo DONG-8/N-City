@@ -2,6 +2,7 @@ package com.nft.ncity.domain.myroom.service;
 
 import com.nft.ncity.domain.myroom.db.entity.MyRoom;
 import com.nft.ncity.domain.myroom.db.repository.MyRoomRepository;
+import com.nft.ncity.domain.myroom.db.repository.MyRoomRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,9 +74,7 @@ public class MyRoomServiceImpl implements MyRoomService{
     }
 
     @Override
-    public List<MyRoom> getMyRoomRank() {
-        return myRoomRepository.findTop5ByOrderByMyRoomTotalCntDesc();
-    }
+    public List<MyRoom> getMyRoomRank() { return myRoomRepository.findTop5ByOrderByMyRoomTotalCntDesc(); }
 
     @Override
     public MyRoom getUserCharacter(Long userId) {

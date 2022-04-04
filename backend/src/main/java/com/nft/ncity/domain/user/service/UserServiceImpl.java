@@ -164,8 +164,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long modifyUserRoleAsRequest(Long userId) {
-        Long execute = userRepositorySupport.updateUserRoleAsRequest(userId);
+    public Long modifyUserTokenRequest(Long userId) {
+        Long execute = userRepositorySupport.updateUserTokenRequest(userId);
         return execute;
     }
 

@@ -179,7 +179,7 @@ public class ProductController {
 
     // DELETE
     @ApiOperation(value="상품 삭제")
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/delete/{productId}")
     public ResponseEntity<BaseResponseBody> productRemove(@ApiParam(value = "상품 번호") @PathVariable Long productId){
         log.info("productRemove - 호출");
         if (productService.productRemove(productId)) {  // 정상 작동
