@@ -16,6 +16,9 @@ import { deleteFollow, getFollowee, getFollower, postFollow } from "../../store/
 import { getUsercollectedInfo, getUsercreatedInfo, getUserfavoritesInfo, getUserTradeInfo, getUserInfo } from "../../store/apis/user";
 import bg from "../../essets/images/login_background.png"
 import GameStartButton2 from "./GameStartButton2";
+import influencer from "../../essets/images/influencer-mark.png"
+import artist from "../../essets/images/artist-mark.png"
+import enterprise from "../../essets/images/enterprise-mark.png"
 
 const MypageWrapper = styled.div`
   box-shadow: 1px 1px 1px;
@@ -50,6 +53,7 @@ const FollowTextBox = styled.div`
   margin-bottom: 10px;
   span {
     cursor: pointer;
+    font-size: 22px;
     font-weight: 500;
     div {
       display: inline;
@@ -96,6 +100,7 @@ const FilterBar = styled.div`
     }
   }
 `;
+
 const ProfileImg = styled.div`
   margin: 3vh;
   img {
@@ -104,6 +109,7 @@ const ProfileImg = styled.div`
     border-radius: 100%;
   }
 `;
+
 const Profile = styled.div`
   position: absolute;
   display: flex;
@@ -126,7 +132,7 @@ const Profile = styled.div`
     width: 14vw;
     height: 5vh;
     font-size: 2.2vh;
-    margin-top: 5vh;
+    margin-top: 3vh;
     &:hover {
       transition: 0.2s;
       background-color: #5615e2  ;
@@ -150,6 +156,22 @@ const Profile = styled.div`
     font-size: 35px;
   }
 `;
+
+const ProfileName = styled.div`
+    margin-top: 20px;
+    position: relative;
+  span {
+    font-size: 70px;
+    font-weight: bold;
+  }
+  img {
+    margin-top: 20px;
+    position: absolute;
+    width: 40px;
+    height: auto;
+  }
+`
+
 const ItemCards = styled.div`
   margin: auto;
   margin-top: 10vh;
@@ -372,6 +394,7 @@ export default function Mypage() {
       onSuccess: async (res) => {
         console.log("팔로우요청 성공", res);
         await getMyInfo.mutate();
+        getUserFollower.mutate()
       },
       onError: (err: any) => {
         console.log("에러발생", err);
@@ -388,6 +411,7 @@ export default function Mypage() {
       onSuccess: async (res) => {
         console.log("언팔로우요청 성공", res);
         await getMyInfo.mutate();
+        getUserFollower.mutate()
       },
       onError: (err: any) => {
         console.log("에러발생", err);
@@ -497,6 +521,19 @@ export default function Mypage() {
     }
   };
 
+  const getVerifiedMark = (userType: string|undefined) => {
+    switch (userType) {
+      case "ROLE_INFLUENCER":
+        return <img src={influencer} alt="mark" />;
+      case "ROLE_ARTIST":
+        return <img src={artist} alt="mark" />;
+      case "ROLE_ENTERPRISE":
+        return <img src={enterprise} alt="mark" />;
+      default:
+        return;
+    }
+  }
+
   useEffect(() => {
     window.scrollTo(0, 0);
     getMyInfo.mutate();
@@ -515,7 +552,10 @@ export default function Mypage() {
         <Background>
           {/* <img alt="배경" src={bg} /> */}
           {/* <img alt="배경" src='https://cutewallpaper.org/21/pixel-wallpaper-gif/Vaporwave-Background-Gif-1920x1080-Spicesncurry.com.gif' /> */}
-          <img alt="배경" src='https://i.pinimg.com/originals/0b/32/92/0b3292b81f6edb020142fbf0c92a264b.gif' />
+          <img
+            alt="배경"
+            src="https://i.pinimg.com/originals/0b/32/92/0b3292b81f6edb020142fbf0c92a264b.gif"
+          />
         </Background>
         <ProfileWrapper>
           <ProfileImg>
@@ -530,35 +570,42 @@ export default function Mypage() {
           </ProfileImg>
           <Profile>
             <div>
+              <ProfileName>
+                <span>{userInfo?.userNick}</span>
+                {getVerifiedMark(userInfo?.userRole)}
+              </ProfileName>
 
-            <h1>{userInfo?.userNick}</h1>
-            <FollowTextBox>
-              <span onClick={() => handleModalOpen("follower")}>
-                팔로워 <div>{userInfo?.followerCnt}</div>{" "}
-              </span>
-              <span onClick={() => handleModalOpen("followee")}>
-                팔로우 <div>{userInfo?.followeeCnt}</div>{" "}
-              </span>
-            </FollowTextBox>
-            {Number(localStorage.getItem("userId")) === userInfo?.userId ? (
-              <Button
-                className="profilesetting"
-                onClick={() => {
-                  navigate("/profilesetting");
-                }}
-                variant="contained"
-              >
-                프로필 수정
-              </Button>
-            ) : (
-              <Button className="profilesetting" variant="contained" onClick={onClickFollow}>
-                {followBtnState ? "팔로우" : "언팔로우"}
-              </Button>
-            )}
+              <FollowTextBox>
+                <span onClick={() => handleModalOpen("follower")}>
+                  팔로워 <div>{userInfo?.followerCnt}</div>{" "}
+                </span>
+                <span onClick={() => handleModalOpen("followee")}>
+                  팔로우 <div>{userInfo?.followeeCnt}</div>{" "}
+                </span>
+              </FollowTextBox>
+              {Number(localStorage.getItem("userId")) === userInfo?.userId ? (
+                <Button
+                  className="profilesetting"
+                  onClick={() => {
+                    navigate("/profilesetting");
+                  }}
+                  variant="contained"
+                >
+                  프로필 수정
+                </Button>
+              ) : (
+                <Button
+                  className="profilesetting"
+                  variant="contained"
+                  onClick={onClickFollow}
+                >
+                  {followBtnState ? "팔로우" : "언팔로우"}
+                </Button>
+              )}
             </div>
             {/* ⭐ 남의방일 때만 방입장 보이게 ? */}
             {/* <button className="joinRoomBtn">방입장</button> */}
-            <GameStartButton2 userNick={userInfo?.userNick}/>
+            <GameStartButton2 userNick={userInfo?.userNick} />
           </Profile>
         </ProfileWrapper>
       </MypageWrapper>
@@ -620,7 +667,7 @@ export default function Mypage() {
           {myMint.map((item, idx) => {
             return (
               <Card>
-                <ItemCard key={idx} item={item} handleOpen={handleOpen}  />
+                <ItemCard key={idx} item={item} handleOpen={handleOpen} />
               </Card>
             );
           })}

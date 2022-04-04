@@ -173,6 +173,7 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
             productList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
+            productList.setProductState(p.getProductState());
 
             productListGetRes.add(productList);
         }
@@ -201,6 +202,7 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
             productList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
+            productList.setProductState(p.getProductState());
 
             productListGetRes.add(productList);
         }
