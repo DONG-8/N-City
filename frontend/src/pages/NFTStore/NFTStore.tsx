@@ -3,10 +3,12 @@ import styled from 'styled-components'
 import { getProductAll, getSellProduct } from '../../store/apis/product'
 import { useMutation, useQuery } from 'react-query'
 import ItemCard2 from '../../components/Card/ItemCard2'
+import ItemCard from '../../components/Card/ItemCard'
 import ToggleSwitch from './ToggleSwitch'
 import ToggleSwitch2 from './ToggleSwitch2'
 import IsLoading2 from './IsLoading2'
 import IsLoading from './IsLoading'
+import StoreItemCard from '../../components/Card/StoreItemCard'
 
 
 const CategoryBar = styled.div`
@@ -147,6 +149,7 @@ interface Istate{
       userNick: string,
       userRole: string,
     }[],
+    userRole: string
   }
 }
 const NFTStore = () => {
@@ -155,13 +158,14 @@ const NFTStore = () => {
   const [order,setOrder]  = useState(false)
   const [allitems,setAllitems] = useState([])
   const [saleitems,setSaleitems] = useState([])
-  const [showItems,setShowItems] = useState<Istate['item'][]>([])
-  const [showSales,setShowSales] = useState<Istate['item'][]>([])
+  const [showItems,setShowItems] = useState<any[]>([])
+  const [showSales,setShowSales] = useState<any[]>([])
     // 상품 정보 모두 가져오기
   const getAll = useMutation<any,Error>(
     "prouductAll",
     async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))},
     { onSuccess:(res)=>{
+      console.log(res)
       setAllitems(res.content)
       setShowItems(res.content)
     },
@@ -303,25 +307,25 @@ const NFTStore = () => {
           {!status && showItems && !order&&
           ([...showItems].reverse()).map((item,idx) => {
           return(
-            <ItemCard2 key={idx} item={item} />
+            <StoreItemCard key={idx} item={item} />
             )
           })}
           {!status && showItems && order&&
           showItems.map((item,idx) => {
           return(
-            <ItemCard2 key={idx} item={item} />
+            <StoreItemCard key={idx} item={item} />
             )
           })}
           {status && showSales && !order&&
           ([...showSales].reverse()).map((item,idx) => {
           return(
-            <ItemCard2 key={idx} item={item} />
+            <StoreItemCard key={idx} item={item} />
             )
           })}
           {status && showSales && order&&
           showSales.map((item,idx) => {
           return(
-            <ItemCard2 key={idx} item={item} />
+            <StoreItemCard key={idx} item={item} />
             )
           })}
         </ItemCards>

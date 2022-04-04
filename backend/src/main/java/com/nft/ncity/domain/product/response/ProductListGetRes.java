@@ -48,4 +48,7 @@ public class ProductListGetRes {
 
     @ApiModelProperty(value = "유저 종류")
     String userRole;
+
+    @ApiModelProperty(value = "상품 거래상태")
+    int productState;
 }
