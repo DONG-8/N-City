@@ -71,6 +71,10 @@ public class User {
     @ApiModelProperty(value = "회원 프로필 이미지 url")
     String userImgUrl;
 
+    // 토큰 재지급 요청
+    @ApiModelProperty(value = "회원 프로필 이미지 url")
+    Boolean userTokenRequest;
+
     // 이메일 변경시 false로 값 변환해주기
     public void updateEmail(String userEmail) {
         this.userEmail = userEmail;
