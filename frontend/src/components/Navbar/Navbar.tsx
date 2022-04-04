@@ -91,13 +91,12 @@ const NavbarBox = styled.div`
         height: auto;
         background-color: white;
         color: black;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px;
         position: absolute;
         top: 60px;
-        right: 820px;
+        right: 750px;
         margin-right: 1px;
         border-radius: 0 0 5px 5px;
-        border-bottom: 0.5px solid #63638b;
-
         div {
           margin-top: 10px;
           margin-bottom: 10px;
@@ -106,7 +105,7 @@ const NavbarBox = styled.div`
     }
 
     .profile {
-      font-weight: 1000;
+      font-weight: 600;
       width: 160px;
       height: 80px;
       display: flex;
@@ -116,7 +115,7 @@ const NavbarBox = styled.div`
       .name{
         margin-left: 10px;
         color:#6225E6; //🎨메인색🎨
-        font-weight: 1000;
+        font-weight: 600;
       }
       .hide {
         display: none;
@@ -124,13 +123,12 @@ const NavbarBox = styled.div`
         height: auto;
         background-color: white;
         color: black;
-        /* box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px; */
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px;
         position: absolute;
         top: 60px;
-        right: 300px;
+        right: 250px;
         margin-right: 1px;
         border-radius: 0 0 5px 5px;
-        border-bottom: 0.5px solid #63638b;
         div {
           margin-top: 10px;
           margin-bottom: 10px;
@@ -190,12 +188,20 @@ export default function Navbar() {
   const [nickName,setNickName] = useState('')
   const [userId,setUserId] = useState('')
   
+  window.onstorage = event => {
+    if (event.key !== "userNickname") return;
+    console.log("스토리지변경감지")
+    const newNick = sessionStorage.getItem("userNickname")
+    if (newNick) setNickName(newNick)
+  }
+
+
   useEffect(()=>{
-    setUserId(localStorage.getItem('userId')||'')
+    setUserId(sessionStorage.getItem('userId')||'')
     if (userId===''){setIsLogin(false)}// userId가 있다면 로그인 되어있음
     else{
       setIsLogin(true)
-      setNickName(localStorage.getItem('userNickname')||'')
+      setNickName(sessionStorage.getItem('userNickname')||'')
     }
   },[isLogin])
   
@@ -207,9 +213,6 @@ export default function Navbar() {
   }
 
   const logout = ()=>{
-    setIsLogin(false)
-    localStorage.removeItem('userId')
-    localStorage.removeItem('userNickname')
     get_logout.mutate()
     navigate("/");
 
@@ -222,8 +225,8 @@ export default function Navbar() {
     )},
     {onSuccess:(res)=>{
       setIsLogin(false)
-      localStorage.removeItem('userId')
-      localStorage.removeItem('userNickname')
+      sessionStorage.removeItem('userId')
+      sessionStorage.removeItem('userNickname')
     },onError:(err)=>{console.log('로그아웃실패')}
     }
   )
@@ -289,7 +292,7 @@ export default function Navbar() {
                       <CoinChargeModal open={openCoin} setOpen={setOpenCoin} /> 
                   </div>
                   <div>
-                      <Link to={"mypage/" + localStorage.getItem("userId")}>
+                      <Link to={"mypage/" + sessionStorage.getItem("userId")}>
                         <p>마이페이지</p>
                       </Link>
                   </div>

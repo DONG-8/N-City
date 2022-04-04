@@ -60,7 +60,7 @@ const DesLeft = styled.div`
 
 const DesRight = styled.div`
   flex: 4;
-  font-weight: 1000;
+  font-weight: 600;
   font-size: 1rem;
   display: flex;
   margin-left: 1rem;
@@ -107,7 +107,7 @@ const DesRight = styled.div`
 const Title = styled.div`
   font-size: 1rem;
   margin-left: 0.5rem;
-  font-weight: 1000;
+  font-weight: 600;
   margin-top: 0.2rem;
 `;
 const DesCenter = styled.div`
@@ -139,7 +139,7 @@ interface Iprops{
 
 const ItemCard2:React.FC<Iprops>= ({item}) => {
   const [liked,setLiked] = useState(false) // 내가 좋아요 했나
-  const [MyAddress,setMyAddress] = useState(localStorage.getItem('userId'))
+  const [MyAddress,setMyAddress] = useState(sessionStorage.getItem('userId'))
   useEffect(()=>{
     var tmp = false
     item.productFavoriteUser.map((user)=>{

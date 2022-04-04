@@ -21,9 +21,8 @@ import java.util.List;
 public interface UserService {
 
 	User getUserByEmail(String userEmail);
-	Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo) throws IOException;
-	Long userUpdateNoProfileImg(UserModifyUpdateReq userInfo);
-	EmailAuth EmailAuthRegister(String emailAuthEmail);
+	Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo, String userEmail) throws IOException;
+	EmailAuth emailAuthRegister(Long userId, String emailAuthEmail);
 	void confirmEmail(String emailAuthEmail,String authToken);
 	UserInfoRes getUserInfo(User user);
 	List<User> searchUser(String userNick);

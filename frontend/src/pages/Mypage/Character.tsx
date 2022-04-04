@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   }
   .save{
     margin-left: 2vw;
-    font-weight: 700;
+    font-weight: 600;
     background-color: #2394f6;
     color: white;
   }
@@ -52,7 +52,7 @@ const Left = styled.div`
   }
   button{
     color: #2d2d9c;
-    font-weight: 700;
+    font-weight: 600;
     margin-left: -0.5vw;
   }
 }
@@ -136,7 +136,7 @@ interface Istate{
     }
 }
 const Character = () => {
-  const [userId,setUserId] = useState(Number(localStorage.getItem('userId')||""))
+  const [userId,setUserId] = useState(Number(sessionStorage.getItem('userId')||""))
   const [characters,setCharacters ] = useState<Istate['item'][]>([])
   const [items,setItems] = useState<Istate['item'][]>([])
   const [myChar,setMyChar] = useState(1)

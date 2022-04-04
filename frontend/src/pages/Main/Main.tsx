@@ -11,13 +11,14 @@ import HotTokkenList from "./HotTokkenList";
 import NewTokkenList from "./NewTokkenList";
 import VideoGuide from "./VideoGuide";
 import Profile from "./Profile";
-import { items as itm } from "../NFTStore/items";
+import { events as images } from "./events";
+import ZigZag from "./ZigZag";
 
 const MainBackGround = styled.div`
   /* margin-top: 80px; */
   /* top: 80px; */
   width: 100%;
-  height: 650px;
+  height: 550px;
 `;
 
 const MainBackImg = styled.img`
@@ -28,7 +29,7 @@ const MainBackImg = styled.img`
 `;
 
 const MainWrapper = styled.div`
-  width: 100%;
+  width: 80%;
   display: flex;
   margin: 0 auto;
 `;
@@ -37,10 +38,11 @@ const MainBannerWrapper = styled.div`
   width: 890px;
   height: 508px;
   color: white;
-  margin: -400px 10px 0 auto;
+  margin: -400px auto;
 `;
 
 const MainBanner = styled.div`
+  border-radius: 10px 10px 0 0 ;
   width: 890px;
   height: 508px;
   object-fit: cover;
@@ -197,17 +199,18 @@ const SubBottomItem = styled.div`
 
 const HotTokkenWrraper = styled.div`
   width: 100%;
-  height: auto;
+  height: 60vh;
   min-width: 1236px;
-  background-color: #fffbd8;
+  
 `;
 
 const HotTokken = styled.div`
-  width: 1320px;
+  /* width: 1320px; */
   height: 100%;
   margin: 0 auto;
   min-width: 1320px;
   h1 {
+    margin-left: 5vw;
     width: 1320px;
     padding-top: 40px;
     /* font-family: "DungGeunMo"; */
@@ -341,78 +344,7 @@ export default function Main() {
   const [subCheck, setSubCheck] = useState<number>(0);
 
   // 나중에 DB 기반의 데이터 형성시켜주고 이미지 받아오기 아니면 그냥 여기서 사용
-  const images = [
-    {
-      pic: "https://nimage.g-enews.com/phpwas/restmb_allidxmake.php?idx=5&simg=2020121617202605478e0eaf3841f218144160198.jpg",
-      ID: 1,
-      name: "구찌",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg",
-      ID: 2,
-      name: "로아 프레딧 룩",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/uploadfiles/banner/93964914d8904123a71323313b1a95ba.jpg",
-      ID: 3,
-      name: "로아 도화가",
-    },
-    {
-      pic: "https://nimage.g-enews.com/phpwas/restmb_allidxmake.php?idx=5&simg=2020121617202605478e0eaf3841f218144160198.jpg",
-      ID: 1,
-      name: "구찌",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg",
-      ID: 2,
-      name: "로아 프레딧 룩",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/uploadfiles/banner/93964914d8904123a71323313b1a95ba.jpg",
-      ID: 3,
-      name: "로아 도화가",
-    },
-    {
-      pic: "https://nimage.g-enews.com/phpwas/restmb_allidxmake.php?idx=5&simg=2020121617202605478e0eaf3841f218144160198.jpg",
-      ID: 1,
-      name: "구찌",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg",
-      ID: 2,
-      name: "로아 프레딧 룩",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg",
-      ID: 2,
-      name: "로아 프레딧 룩",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg",
-      ID: 2,
-      name: "로아 프레딧 룩",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/uploadfiles/banner/93964914d8904123a71323313b1a95ba.jpg",
-      ID: 3,
-      name: "로아 도화가",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg",
-      ID: 2,
-      name: "로아 프레딧 룩",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg",
-      ID: 2,
-      name: "로아 프레딧 룩",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/uploadfiles/banner/93964914d8904123a71323313b1a95ba.jpg",
-      ID: 3,
-      name: "로아 도화가",
-    },
-  ];
+  
 
   const subImages = [
     {
@@ -627,10 +559,7 @@ export default function Main() {
 
   return (
     <MainH>
-      <Popup></Popup>
-      {/* <MainWord>
-        <div className="typing">Welcome N-City</div>
-      </MainWord> */}
+      {/* <Popup/> */}
       <MainBackGround>
         <MainBackImg src="https://post-phinf.pstatic.net/MjAyMDEyMjJfMjc0/MDAxNjA4NjQ0MzExMzM4.BKpiZi7BKqbKceFNFAg0mB1JUZXGsGiDZsB2shTf2NYg.w-SkrTWCzjoyLu_-9moNkS3ZUGu0FljmpuuE-JMJRRwg.GIF/tumblr_nm6j1ghB7C1qze3hdo1_500.gif?type=w1200" />
       </MainBackGround>
@@ -640,6 +569,7 @@ export default function Main() {
             {images.map((value, idx) => {
               return (
                 <div
+                  key={idx}
                   className="inner"
                   style={{
                     transform: `translate(${position}px)`,
@@ -666,6 +596,7 @@ export default function Main() {
                 if (idx === eventNumber) {
                   return (
                     <div
+                      key={idx}
                       className="inner"
                       id={id}
                       onClick={(e) => {
@@ -711,71 +642,28 @@ export default function Main() {
               {eventNumber + 1}/{images.length}
             </button>
             <button>
-              <ListAltIcon></ListAltIcon>
             </button>
           </MainPagenationBanner>
         </MainBannerWrapper>
-        {/* <SubBannerWrraper>
-          <SubBanner>
-            {subImages.map((value, idx) => {
-              // style={{transform: `translate(${position}px)`, transition: `transform 0.5s`}}
-              return (
-                <div className="inner">
-                  <img
-                    src={value.pic}
-                    key={idx + value.name}
-                    alt="사진없노"
-                    style={{
-                      transform: `translate(${subPosition}px)`,
-                      transition: `transform 0.5s`,
-                    }}
-                  />
-                </div>
-              );
-            })}
-          </SubBanner>
-          <SubPagenationBanner>
-            <button
-              onClick={() => {
-                moveSubLeft();
-              }}
-            >
-              <ArrowBackIcon></ArrowBackIcon>
-            </button>
-            <button>
-              {subEventNumber + 1}/{subImages.length}
-            </button>
-            <button
-              onClick={() => {
-                moveSubRight();
-              }}
-            >
-              <ArrowForward></ArrowForward>
-            </button>
-          </SubPagenationBanner>
-          <SubBottomItem>
-            <div className="plus">+</div>
-            <h2>My Room</h2>
-            <div>Today's : 100</div>
-            <div>Total : 11111</div>
-            <div>follower : 1K</div>
-          </SubBottomItem>
-        </SubBannerWrraper> */}
-        <Profile></Profile>
+        
+        <Profile/>
       </MainWrapper>
+
       <GuideWrapper>
-        <Guide></Guide>
+        <Guide/>
       </GuideWrapper>
+      
       <HotTokkenWrraper>
         <HotTokken>
           <h1>New Tokken</h1>
-          {/* <NewTokkenList items={itm}/> */}
+          {/* <ZigZag /> */}
+          <NewTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>
       <HotTokkenWrraper>
         <HotTokken>
           <h1>Hot Tokken</h1>
-          <HotTokkenList></HotTokkenList>
+          <HotTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>
       <VideoGuide />

@@ -52,7 +52,7 @@ const FilterBar = styled.div`
     p {
       font-size: 2.5vh;
       margin-top: 1vh;
-      font-weight: 1000;
+      font-weight: 600;
     }
   }
   div {

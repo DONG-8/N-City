@@ -81,9 +81,10 @@ export const getUserduplicateInfo = async (userNick : string ) => {
 //   "userNick": "string"
 // } -- 이와같은 key value의 formdata를 생성시켜준다.
 
-export const patchUserInfoChange = async(formdata : any) => {
-  const response = await fileApiClient.patch<any>(
-    `users/change-info`
+export const patchUserInfoChange = async(body : any) => {
+  const response = await apiClient.patch<any>(
+    `users/change-info`,
+    body
   )
   return response.data
 }
@@ -96,6 +97,15 @@ export const postConfirmEmail = async (userId:number,emailAuthEmail : string) =>
       emailAuthEmail,
       userId
     }
+  )
+  return response.data
+}
+
+// 이메일 인증여부 조회
+export const getCheckConfirmEmail = async (userId:number,emailAuthEmail : string) => {
+  // userid는 자동으로 들어갈 것 같아서 빼놓음
+  const response = await apiClient.get<any>(
+    `users/email/confirm?userId=${userId}&userEmail=${emailAuthEmail}`, 
   )
   return response.data
 }

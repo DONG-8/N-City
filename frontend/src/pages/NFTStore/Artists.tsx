@@ -82,7 +82,7 @@ const CategoryBar = styled.div`
   }
   p{
     font-size:2vh;
-    font-weight:1000;
+    font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
     position: relative;

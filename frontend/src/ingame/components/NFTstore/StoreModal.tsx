@@ -16,7 +16,7 @@ const Wrapper = styled.div`
     width: 60vw;
     background-color: #030338 ;
     font-size: 5vh;
-    font-weight: 1000;
+    font-weight: 600;
     color:white;
     padding-top:3vh ;
   }

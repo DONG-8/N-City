@@ -18,10 +18,6 @@ public class UserModifyUpdateReq {
     @ApiModelProperty(value="회원 닉네임")
     String userNick;
 
-    // 이메일
-    @ApiModelProperty(value = "회원 이메일")
-    String userEmail;
-
     // 프로필 설명란
     @ApiModelProperty(value = "회원 프로필 설명란")
     String userDescription;

@@ -3,7 +3,9 @@ import styled from "styled-components";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import RankArtistCard from "./RankArtistCard";
-
+import Img1 from './image/1.png'
+import Img2 from './image/2.png'
+import Img3 from './image/3.png'
 const SubBannerWrraper = styled.div`
   position: relative;
   width: 448px;
@@ -14,6 +16,7 @@ const SubBannerWrraper = styled.div`
 `;
 
 const SubBanner = styled.div`
+  border: 1px solid #dfdfdf;
   width: 420px;
   height: 300px;
   object-fit: cover;
@@ -73,24 +76,24 @@ const SubPagenationBanner = styled.div`
   }
 `;
 
-const SmallSlide = () => {
+const GuideSlide = () => {
   const [subPosition, setSubPosition] = useState<number>(0);
   const [subEventNumber, setSubEventNumber] = useState<number>(0);
   const [subCheck, setSubCheck] = useState<number>(0);
 
   const subImages = [
     {
-      pic: "https://nimage.g-enews.com/phpwas/restmb_allidxmake.php?idx=5&simg=2020121617202605478e0eaf3841f218144160198.jpg",
+      pic: Img1,
       ID: 1,
       name: "구찌",
     },
     {
-      pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg",
+      pic: Img2,
       ID: 2,
       name: "로아 프레딧 룩",
     },
     {
-      pic: "https://cdn-lostark.game.onstove.com/uploadfiles/banner/93964914d8904123a71323313b1a95ba.jpg",
+      pic: Img3,
       ID: 3,
       name: "로아 도화가",
     },
@@ -141,9 +144,9 @@ const SmallSlide = () => {
     }
   };
 
-  // useEffect(() => {
-  //   moveSubAuto();
-  // }, [subCheck]);
+  useEffect(() => {
+    moveSubAuto();
+  }, [subCheck]);
 
   return (
     <>
@@ -155,7 +158,7 @@ const SmallSlide = () => {
                 <img
                   src={value.pic}
                   key={idx + value.name}
-                  alt="사진없노"
+                  alt="이미지"
                   style={{
                     transform: `translate(${subPosition}px)`,
                     transition: `transform 0.5s`,
@@ -164,7 +167,6 @@ const SmallSlide = () => {
               </div>
             );
           })}
-          {/* <RankArtistCard></RankArtistCard> */}
         </SubBanner>
         <SubPagenationBanner>
           <button
@@ -190,4 +192,4 @@ const SmallSlide = () => {
   );
 };
 
-export default SmallSlide;
+export default GuideSlide;

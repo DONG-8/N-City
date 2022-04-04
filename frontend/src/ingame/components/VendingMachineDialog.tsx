@@ -68,7 +68,7 @@ const Title = styled.div`
   }
   p{
     margin-top: 10vh;
-    font-weight: 1000 ;
+    font-weight: 600;
     font-size: 1.5rem;
   }
   margin-bottom: 0;
@@ -83,7 +83,7 @@ const CategoryBar = styled.div`
   }
   p{
     font-size:3vh;
-    font-weight:1000;
+    font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
     position: relative;

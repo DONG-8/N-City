@@ -51,13 +51,13 @@ const Event = styled.div`
   }
   .title{
     font-size: 2.2vh;
-    font-weight: 1000;
+    font-weight: 600;
     margin: 1vh;
 
   }
   .date{
     font-size: 1.5vh;
-    font-weight: 1000;
+    font-weight: 600;
     margin: 1vh;
     color:blue;
   }
@@ -67,7 +67,7 @@ const CategoryBar= styled.div`
   display: flex;
   div{
     font-size: 1.2rem;
-    font-weight: 1000;
+    font-weight: 600;
     margin-top: 2rem;
     margin-left: 2rem;
   }

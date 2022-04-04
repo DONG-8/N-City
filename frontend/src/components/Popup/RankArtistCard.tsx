@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import img1 from './image/character/1.png'
+import img2 from './image/character/2.png'
+import img3 from './image/character/3.png'
+import img4 from './image/character/3.png'
+import img5 from './image/character/3.png'
+const charimg = {
+  '1':img1,'2':img2,'3':img3,'4':img4,'5':img5
+}
 
 const RankCardWrapper = styled.div`
   position: relative;
   width: 410px;
   height: 300px;
   background-color: #f6f6f7;
+  border-radius: 10px;
 `;
 
 const RankCardDiv = styled.div`
@@ -20,25 +29,35 @@ const TitleCardDiv = styled.div`
   height: 200px;
   margin: 5px auto;
   font-size: 15px;
-  background-color: white;
+  background-color: #eefeff;
   display: flex;
   border-radius: 10px;
   flex-direction: column;
   .container1 {
+    /* background-color: #12abdc; */
     width: 100%;
     height: 65%;
     display: flex;
     flex-direction: row;
+    .nickname{
+      margin-top: 10px;
+      margin-left: 20px;
+      font-size: 1.2rem;
+      color:#333;
+      align-items: center;
+    }
   }
 
   .container2 {
     width: 100%;
-    height: 35%;
+    height: 20%;
     display: flex;
     align-items: center;
     margin: 0 auto;
     cursor: pointer;
     .status {
+      margin:auto;
+      margin-top: 20px;
       width: 143px;
       display: flex;
       flex-direction: row;
@@ -49,6 +68,7 @@ const TitleCardDiv = styled.div`
       }
 
       #data {
+        color: #12abdc;
         font-size: 15px;
         margin-left: 10px;
       }
@@ -56,10 +76,11 @@ const TitleCardDiv = styled.div`
   }
 
   #profileImg {
-    width: 125px;
-    height: 125px;
+    width: 135px;
+    height: 135px;
     object-fit: fill;
     border-radius: 10px;
+    border: #12abdc   solid 1px;
   }
 
   #explain {
@@ -72,7 +93,7 @@ const TitleCardDiv = styled.div`
       margin: 0px;
       margin-bottom: 20px;
       font-size: 25px;
-      font-weight: 1000;
+      font-weight: 600;
     }
 
     p {
@@ -82,64 +103,6 @@ const TitleCardDiv = styled.div`
   }
 `;
 
-const MusicDiv = styled.div`
-  width: 400px;
-  height: 65px;
-  margin: 5px auto;
-  font-size: 15px;
-  background-color: white;
-  display: flex;
-  border-radius: 10px;
-  align-items: center;
-  .box {
-    width: 240px;
-    overflow: hidden;
-    margin-left: 10px;
-    cursor: pointer;
-  }
-  .musicInfo {
-    font-size: 15px;
-    font-weight: 700;
-    color: black;
-    width: 240px;
-    cursor: pointer;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    animation: filter 5s linear infinite;
-  }
-
-  .bgm {
-    font-size: 20px;
-    color: #12abdc;
-    cursor: pointer;
-  }
-  @keyframes filter {
-    to {
-      transform: translateX(-300px);
-      filter: hue-rotate(0);
-    }
-    from {
-      transform: translateX(300px);
-      filter: hue-rotate(360deg);
-    }
-  }
-`;
-
-const NextIcon = styled.div`
-  width: 30px;
-  height: 30px;
-  margin-left: 90px;
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' %3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z' fill='rgba(255,255,255,1)'/%3E%3C/svg%3E");
-`;
-
-const PlayIcon = styled.div`
-  cursor: pointer;
-  width: 50px;
-  height: 50px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M19.376 12.416L8.777 19.482A.5.5 0 0 1 8 19.066V4.934a.5.5 0 0 1 .777-.416l10.599 7.066a.5.5 0 0 1 0 .832z'/%3E%3C/svg%3E");
-`;
 
 const TodayInformationDiv = styled.div`
   width: 400px;
@@ -150,12 +113,21 @@ const TodayInformationDiv = styled.div`
   border-radius: 10px;
   display: flex;
   align-items: center;
+  &:hover{
+      background-color: #23afde;
+      transition: 0.1s;
+  }
   p {
+    margin-left:20px;
     font-size: 10px;
     color: white;
     margin: 5px;
   }
-
+  .gobutton{
+    margin-left:20px;
+    font-size: 1.4rem;
+    
+  }
   h5 {
     font-size: 12px;
     color: #f2c953;
@@ -163,6 +135,7 @@ const TodayInformationDiv = styled.div`
   }
 
   h4 {
+    margin-left:20px;
     font-size: 12px;
     color: white;
     margin: 0;
@@ -175,40 +148,59 @@ const TodayInformationDiv = styled.div`
     margin-right: 5px;
   }
 `;
+interface Iprops {
+  user:{
+    myRoomCharacter: string;
+    myRoomTodayCnt: number;
+    myRoomTotalCnt: number;
+    userId: number;
+    userNick:string;
+  }
+}
 
-const RankArtistCard = () => {
+const RankArtistCard:React.FC<Iprops>= ({user}) => {
+  useEffect(()=>{
+    if (user.myRoomCharacter===null){
+      setImgurl(img1)
+    }
+    else{
+      setImgurl(charimg[user.myRoomCharacter])
+    }
+  },[])
+  
+  const [imgurl,setImgurl] = useState('')
   return (
     <RankCardWrapper>
       <RankCardDiv>
+          {imgurl!=="" &&
         <TitleCardDiv>
           <div className="container1">
             <img
               id="profileImg"
-              src="essets/images/charicter.png"
+              src={imgurl}
               alt="사진없노"
             ></img>
-            <div id="explain">
-              <h1>싸피</h1>
-              <p>NFT를 통해</p>
-              <p>당신만의 공간을 꾸며보아요!</p>
+            <div className="nickname">
+              <h1>{user.userNick}</h1>
             </div>
           </div>
           <div className="container2">
             <div className="status">
-              <div id="set">Today is..</div>
-              <div id="data">🎀</div>
+              <div id="set">Today</div>
+              <div id="data">{user.myRoomTodayCnt}</div>
             </div>
             <div className="status">
-              <div id="set">followers</div>
-              <div id="data">9,999</div>
+              <div id="set">Total</div>
+              <div id="data">{user.myRoomTotalCnt}</div>
             </div>
-            <div className="status">
+            {/* <div className="status">
               <div id="set">즐겨찾기</div>
               <div id="data">9,999</div>
-            </div>
+            </div> */}
           </div>
         </TitleCardDiv>
-        <TodayInformationDiv></TodayInformationDiv>
+        }
+        <TodayInformationDiv><div className="gobutton">{user.userNick} 방으로 이동하기</div></TodayInformationDiv>
       </RankCardDiv>
     </RankCardWrapper>
   );

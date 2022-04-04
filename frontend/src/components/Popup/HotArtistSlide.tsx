@@ -3,6 +3,9 @@ import styled from "styled-components";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForward from "@material-ui/icons/ArrowForward";
 import RankArtistCard from "./RankArtistCard";
+import { useMutation, useQuery } from 'react-query';
+import {getRoomTop5} from '../../store/apis/myRoom'
+import RankCitizen from "./RankCitizen";
 
 const SubBannerWrraper = styled.div`
   position: relative;
@@ -73,30 +76,14 @@ const SubPagenationBanner = styled.div`
   }
 `;
 
-const SmallSlide = () => {
+const HotArtistSlide = () => {
   const [subPosition, setSubPosition] = useState<number>(0);
   const [subEventNumber, setSubEventNumber] = useState<number>(0);
   const [subCheck, setSubCheck] = useState<number>(0);
 
-  const subImages = [
-    {
-      pic: "https://nimage.g-enews.com/phpwas/restmb_allidxmake.php?idx=5&simg=2020121617202605478e0eaf3841f218144160198.jpg",
-      ID: 1,
-      name: "구찌",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg",
-      ID: 2,
-      name: "로아 프레딧 룩",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/uploadfiles/banner/93964914d8904123a71323313b1a95ba.jpg",
-      ID: 3,
-      name: "로아 도화가",
-    },
-  ];
+  
   const moveSubAuto = () => {
-    const len = subImages.length;
+    const len = characters.length;
     const idx = Math.floor((subEventNumber + 1) % len);
     setSubEventNumber(idx);
     if (idx === 0) {
@@ -116,7 +103,7 @@ const SmallSlide = () => {
   };
 
   const moveSubRight = () => {
-    const len = subImages.length;
+    const len = characters.length;
     const idx = Math.floor((subEventNumber + 1) % len);
     setSubEventNumber(idx);
     if (idx === 0) {
@@ -127,7 +114,7 @@ const SmallSlide = () => {
   };
 
   const moveSubLeft = () => {
-    const len = subImages.length;
+    const len = characters.length;
     const idx = Math.floor((subEventNumber - 1) % len);
     if (0 === subPosition) {
       setSubPosition((len - 1) * -448);
@@ -141,53 +128,61 @@ const SmallSlide = () => {
     }
   };
 
-  // useEffect(() => {
-  //   moveSubAuto();
-  // }, [subCheck]);
-
+  useEffect(() => {
+    if (characters!==undefined ){
+    moveSubAuto();}
+  }, [subCheck]);
+  interface IState{
+    user:{
+      myRoomCharacter: string
+      myRoomTodayCnt: number
+      myRoomTotalCnt: number
+      userId: number
+      userNick:string
+    }
+  }
+  const { isLoading:ILC, data:characters } = useQuery<any>(
+    "getSellProductCategori",
+    async () => {return (await (getRoomTop5( )))
+      },
+    { onSuccess:(res)=>{
+    },
+      onError: (err: any) => {
+        console.log(err, "판매중 정보 실패");
+      },
+    }
+  );
   return (
     <>
+    {characters!==undefined &&
       <SubBannerWrraper>
         <SubBanner>
-          {subImages.map((value, idx) => {
+          
+          {characters.map((value, idx) => {
             return (
-              <div className="inner">
-                <img
-                  src={value.pic}
-                  key={idx + value.name}
-                  alt="사진없노"
-                  style={{
-                    transform: `translate(${subPosition}px)`,
-                    transition: `transform 0.5s`,
-                  }}
-                />
+              <div className="inner"
+              key={idx}
+              style={{ transform: `translate(${subPosition}px)`,transition: `transform 0.5s`,}}>
+                <RankCitizen user={value}/>
               </div>
             );
           })}
-          {/* <RankArtistCard></RankArtistCard> */}
         </SubBanner>
         <SubPagenationBanner>
-          <button
-            onClick={() => {
-              moveSubLeft();
-            }}
-          >
-            <ArrowBackIcon></ArrowBackIcon>
+          <button onClick={() => {moveSubLeft()}}>
+            <ArrowBackIcon/>
           </button>
           <button>
-            {subEventNumber + 1}/{subImages.length}
+            {subEventNumber + 1}/{characters.length}
           </button>
-          <button
-            onClick={() => {
-              moveSubRight();
-            }}
-          >
-            <ArrowForward></ArrowForward>
+          <button onClick={() => {moveSubRight()}}>
+            <ArrowForward/>
           </button>
         </SubPagenationBanner>
       </SubBannerWrraper>
+      }
     </>
   );
 };
 
-export default SmallSlide;
+export default HotArtistSlide;
