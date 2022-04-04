@@ -226,11 +226,17 @@ public class DealServiceImpl implements DealService{
 
         Product product = productRepository.getById(productId);
 
+        // 상품 상태가 경매중임.
         if(product.getProductState() == 1){
+
+            // Deal 테이블에서 가장 마지막에 빌드한 사람의 id 를 받아온다.
+            Deal lastDeal = dealRepositorySupport.findDealByProductIdOrderByCreatedAt(productId);
+
             //Deal transfer 생성
             Deal deal = Deal.builder()
                     .dealFrom(product.getUserId())
-                    .dealTo(Long.valueOf(userId))
+                    // 마지막 가격을 제안한 사람이기 때문에 From임.
+                    .dealTo(lastDeal.getDealFrom())
                     .dealType(5)
                     .dealPrice(product.getProductPrice())
                     .dealCreatedAt(LocalDateTime.now())
@@ -240,7 +246,7 @@ public class DealServiceImpl implements DealService{
             Deal savedDeal = dealRepository.save(deal);
 
             // product update
-            dealRepositorySupport.modifyProductForBuyAuctionByProductId(productId, userId);
+            dealRepositorySupport.modifyProductForBuyAuctionByProductId(productId, lastDeal.getDealFrom());
             return savedDeal;
         }
         return null;

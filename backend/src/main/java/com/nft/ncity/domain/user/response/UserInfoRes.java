@@ -2,6 +2,7 @@ package com.nft.ncity.domain.user.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nft.ncity.domain.user.db.entity.User;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -72,4 +73,10 @@ public class UserInfoRes {
     // 팔로잉수
     @ApiModelProperty(value="내가 팔로우 하는 사람 수")
     Long followeeCnt;
+
+    @ApiModelProperty(value = "내 방 오늘 방문자수")
+    Integer myRoomTodayCnt;
+
+    @ApiModelProperty(value = "내 방 토탈 방문자수")
+    Integer myRoomTotalCnt;
 }

@@ -5,8 +5,11 @@ import com.nft.ncity.domain.deal.db.entity.Deal;
 import com.nft.ncity.domain.deal.service.DealService;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepository;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
+import com.nft.ncity.domain.follow.db.entity.QFollow;
 import com.nft.ncity.domain.follow.db.repository.FollowRepository;
 import com.nft.ncity.domain.follow.db.repository.FollowRepositorySupport;
+import com.nft.ncity.domain.myroom.db.entity.MyRoom;
+import com.nft.ncity.domain.myroom.db.repository.MyRoomRepository;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.repository.ProductRepositorySupport;
 import com.nft.ncity.domain.user.db.entity.EmailAuth;
@@ -15,10 +18,8 @@ import com.nft.ncity.domain.user.db.repository.EmailAuthRepositorySupport;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
 import com.nft.ncity.domain.user.db.repository.UserRepositorySupport;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
-import com.nft.ncity.domain.user.response.UserAllRes;
-import com.nft.ncity.domain.user.response.UserDealInfoWithProductRes;
-import com.nft.ncity.domain.user.response.UserInfoRes;
-import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
+import com.nft.ncity.domain.user.response.*;
+import com.querydsl.core.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -64,6 +65,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     FavoriteRepositorySupport favoriteRepositorySupport;
+
+    @Autowired
+    MyRoomRepository myRoomRepository;
+
+    QFollow qFollow = QFollow.follow;
 
     @Override
     public User getUserByEmail(String userEmail) {
@@ -115,6 +121,8 @@ public class UserServiceImpl implements UserService {
         // userId가 팔로우 하는사람 수
         Long followeeCnt = followRepositorySupport.getFolloweeCount(user.getUserId());
 
+        MyRoom myRoom = myRoomRepository.findMyRoomByUserId(user.getUserId()).orElse(null);
+
         UserInfoRes userInfoRes = UserInfoRes.builder()
                 .userId(user.getUserId())
                 .authId(user.getAuthId())
@@ -127,6 +135,8 @@ public class UserServiceImpl implements UserService {
                 .userEmailConfirm(user.getUserEmailConfirm())
                 .userNick(user.getUserNick())
                 .userRole(user.getUserRole())
+                .myRoomTotalCnt(myRoom.getMyRoomTotalCnt())
+                .myRoomTodayCnt(myRoom.getMyRoomTodayCnt())
                 .build();
 
         return userInfoRes;
@@ -253,6 +263,25 @@ public class UserServiceImpl implements UserService {
             listRes.add(userRes);
         }
         return listRes;
+    }
+
+    @Override
+    public List<UserFollowerTop5GetRes> getUserTop5OrderByFollowCnt() {
+        List<Tuple> list = followRepositorySupport.getUserTop5FollowerCnt();
+
+        List<UserFollowerTop5GetRes> userList = new ArrayList<>();
+
+        list.forEach(follow -> {
+            UserFollowerTop5GetRes userFollowerTop5GetRes = UserFollowerTop5GetRes.builder()
+                    .userId(follow.get(qFollow.followFollowee).getUserId())
+                    .userNick(follow.get(qFollow.followFollowee).getUserNick())
+                    .userImgUrl(follow.get(qFollow.followFollowee).getUserImgUrl())
+                    .userFollowerCnt(follow.get(qFollow.count()).intValue())
+                    .build();
+
+            userList.add(userFollowerTop5GetRes);
+        });
+        return userList;
     }
 }
 

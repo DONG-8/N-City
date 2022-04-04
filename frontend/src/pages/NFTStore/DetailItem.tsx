@@ -30,6 +30,9 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import ReplayIcon from '@mui/icons-material/Replay';
+import influencer from "../../essets/images/influencer-mark.png"
+import artist from "../../essets/images/artist-mark.png"
+import enterprise from "../../essets/images/enterprise-mark.png"
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -122,22 +125,32 @@ const TopL = styled.div`
 const UserBox = styled.div`
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee,
     inset 1px 1px 0 rgb(233 235 242 / 10%);
-
   height: 55%;
   background-color: #f7f8fa;
   border-radius: 30px;
   .top {
     display: flex;
     align-items: center;
+    margin-left: 2vw;
+    /* justify-content: center; */
   }
   .mid {
-    margin-left: 3vw;
+    margin-left: 2vw;
     display: flex;
     font-size: 1.8vh;
     .mid-l {
+      .left {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
       flex: 1;
       button {
         font-size: 1.5vh;
+      }
+      span {
+        font-weight: 600;
       }
     }
   }
@@ -145,15 +158,38 @@ const UserBox = styled.div`
     border-radius: 100%;
     height: 12vh;
     margin: 5vh;
+    margin-bottom: 2vh;
+  }
+  .nextpofileimg2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+    button {
+      width: 80%;
+    }
+
+  }
+  .nextprofileimg {
+    display: flex;
+    position: relative;
+    img {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      right: -20px;
+      top: 40%;
+    }
   }
   .name {
     color: #272793;
     font-size: 4vh;
     font-weight: 800;
+    margin-bottom: 20px;
   }
   button{
-    margin-left: 3vw;
-    margin-top: 1vh;
+
   }
 `;
 
@@ -205,11 +241,6 @@ const TopR = styled.div`
       margin-left: 2vw;
       display: flex;
       font-size: 2vh;
-    .left{
-    }
-    .right{
-      margin-left: 3vw ;
-    }
     }
   }
   .img {
@@ -232,17 +263,20 @@ const Mid = styled.div`
 const Description = styled.div`
   h3 {
     margin-left: 2vw;
+    font-size: 25px;
+    margin-bottom: 10px;
   }
   .box {
     width: 26vw;
     height: 19vh;
-    background-color: white;
+    /* background-color: white; */
     margin-left: 2vw;
     border-radius: 10px;
-    border: 0.5px solid #e7e4e4;
+    /* border: 0.5px solid #e7e4e4; */
     p {
-      margin-left: 1vw;
-      padding-top: 1vh;
+      /* margin-left: 1vw; */
+      margin: 5px 0;
+      font-size: 20px;
     }
   }
 `;
@@ -299,8 +333,13 @@ const StoreWapper = styled.div`
 
 const FavoriteBox = styled.div`
   display: flex;
+  align-items: center;
+  .icon {
+
+  }
   svg {
     cursor: pointer;
+    margin-right: 5px;
   }
 `;
 
@@ -443,6 +482,20 @@ const DetailItem = () => {
         return "알수없는 dealType"
     }
   };
+
+  const getVerifiedMark = (userType: string) => {
+    switch (userType) {
+      case "ROLE_INFLUENCER":
+        return <img src={influencer} alt="mark" />;
+      case "ROLE_ARTIST":
+        return <img src={artist} alt="mark" />;
+      case "ROLE_ENTERPRISE":
+        return <img src={enterprise} alt="mark" />;
+      default:
+        return;
+    }
+  }
+
   const { isLoading: ILA, data: newItem } = useQuery<any>( // 추가 // 추천 데이터
     "getProductAll",
     async () => {
@@ -732,7 +785,7 @@ function leadingZeros(n, digits) {
   };
 
   const onClickUnFollow = () => {
-    setFollowees(followers - 1);
+    setFollowers(followers - 1);
     unFollow.mutate();
   };
 
@@ -798,52 +851,60 @@ function leadingZeros(n, digits) {
             <>
               <UserBox>
                 <div className="top">
-                  {user.userImgUrl ? (
-                    <img
-                      className="profile"
-                      src={user.userImgUrl as any}
-                      alt="profile"
-                    />
-                  ) : (
-                    <img
-                      className="profile"
-                      src="https://www.taggers.io/common/img/default_profile.png"
-                      alt="profile"
-                    />
-                  )}
-                  <p className="name">{user.userNick}</p>
-                  {Number(sessionStorage.getItem("userId")) ===
-                    Number(item.mintUserId) ? null : followBtnState ? (
-                      <Button color="info" variant="contained" onClick={onClickFollow}>Follow</Button>
+                  <div className="nextpofileimg2">
+                    {user.userImgUrl ? (
+                      <img
+                        className="profile"
+                        src={user.userImgUrl as any}
+                        alt="profile"
+                      />
                     ) : (
-                    <Button color="warning" variant="contained" onClick={onClickUnFollow}>Unfollow</Button>
-                  )}
+                      <img
+                        className="profile"
+                        src="https://www.taggers.io/common/img/default_profile.png"
+                        alt="profile"
+                      />
+                    )}
+                    {Number(sessionStorage.getItem("userId")) ===
+                    Number(item.mintUserId) ? null : followBtnState ? (
+                      <Button
+                        color="info"
+                        variant="contained"
+                        onClick={onClickFollow}
+                      >
+                        Follow
+                      </Button>
+                    ) : (
+                      <Button
+                        color="warning"
+                        variant="contained"
+                        onClick={onClickUnFollow}
+                      >
+                        Unfollow
+                      </Button>
+                    )}
+                  </div>
+                  <div className="nextprofileimg">
+                    <p className="name">{user.userNick}</p>
+                    {getVerifiedMark(String(user.userRole))}
+                  </div>
                 </div>
                 <div className="mid">
                   <div className="mid-l">
-                    <div className="verified">
-                      {user.userEmailConfirm && (
-                        <img
-                          alt="verified"
-                          style={{ height: "1.5rem" }}
-                          src="/essets/images/verified.png"
-                        />
-                      )}
-                    </div>
                     <div>
                       <div className="left">
                         <div className="email"> email:{user.userEmail}</div>
-                        <div>userId:{item.mintUserId}</div>
-                        <div>직업:{user.userRole}</div>
-                        <div>팔로워수:{followers}</div>
-                        <div>팔로잉수:{followees}</div>
+                        {/* <div>userId:{item.mintUserId}</div> */}
+                        {/* <div>직업:{user.userRole}</div> */}
+                        <div className="followtext">
+                          팔로워: <span>{followers}</span>
+                        </div>
+                        <div className="followtext">
+                          팔로잉: <span>{followees}</span>
+                        </div>
                       </div>
-                      <div className="right">
-                        
-                      </div>
+                      <div className="right"></div>
                     </div>
-                    
-                    
                   </div>
                 </div>
               </UserBox>
@@ -869,28 +930,28 @@ function leadingZeros(n, digits) {
                       <div>카테고리 : {CATEGORY[item.productCode]}</div>
                       <div>등록일자 : {item.productRegDt}</div>
                       <div>NFT 소유자 : {item.userNick}</div>
+                      <div className="right">
+                        {/* <div>상품상태 : {status}</div> */}
+                        <FavoriteBox className="icon">
+                          {liked ? (
+                            <FavoriteIcon
+                              onClick={() => {
+                                cancelLike();
+                              }}
+                              color="error"
+                            />
+                          ) : (
+                            <FavoriteBorderIcon
+                              onClick={() => {
+                                Like();
+                              }}
+                              color="error"
+                            />
+                          )}
+                          {likes}
+                        </FavoriteBox>
+                      </div>
                     </div>
-                    <div className="right">
-                      <div>상품상태 : {status}</div>
-                      <FavoriteBox className="icon">
-                        {liked ? (
-                          <FavoriteIcon
-                            onClick={() => {
-                              cancelLike();
-                            }}
-                            color="error"
-                          />
-                        ) : (
-                          <FavoriteBorderIcon
-                            onClick={() => {
-                              Like();
-                            }}
-                            color="error"
-                          />
-                        )}
-                        {likes}
-                      </FavoriteBox>
-                    </div>     
                   </div>
                   <Description>
                     <h3>작품설명</h3>
@@ -949,7 +1010,9 @@ function leadingZeros(n, digits) {
           </TopR>
         )}
       </Top>
-      <h1 className="title2"><span className='color'>{item.productTitle}</span>의 거래내역</h1>
+      <h1 className="title2">
+        <span className="color">{item.productTitle}</span>의 거래내역
+      </h1>
       <List>
         <ListCategory>
           <div>Event</div>
@@ -957,19 +1020,19 @@ function leadingZeros(n, digits) {
           <div>From</div>
           <div>To</div>
           <div>Date</div>
-        </ListCategory>  
+        </ListCategory>
         {history.map((his, idx) => {
-            return (
-              <ListItem key={idx}>
-                <div className="event">{dealTypeConvert(his.dealType)}</div>
-                <div className="price">{his.dealPrice}</div>
-                <div className="from">{his.dealFromNickName}</div>
-                <div className="to">{his.dealToNickName}</div>
-                <div className="date">{his.dealCreatedAt}</div>
-                {/* <div className="id">{dealTypeConvert(history.dealType)}</div> */}
-              </ListItem>
-            );
-          })}
+          return (
+            <ListItem key={idx}>
+              <div className="event">{dealTypeConvert(his.dealType)}</div>
+              <div className="price">{his.dealPrice}</div>
+              <div className="from">{his.dealFromNickName}</div>
+              <div className="to">{his.dealToNickName}</div>
+              <div className="date">{his.dealCreatedAt}</div>
+              {/* <div className="id">{dealTypeConvert(history.dealType)}</div> */}
+            </ListItem>
+          );
+        })}
       </List>
 
       <Mid>

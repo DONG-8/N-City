@@ -59,7 +59,7 @@ const SearchBarDiv = styled.div`
 `;
 
 const SearchInput = styled.input`
-  width: 500px;
+  width: 750px;
   height: 40px;
   border: none;
   :focus {

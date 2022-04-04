@@ -74,6 +74,14 @@ export const postRegisterAuction = async (dealPrice: number, productId:number, p
   return response.data
 }
 
+// 경매 취소
+export const postCancelAuction = async (productId:number) => {
+  const response = await apiClient.post<any>(
+    `/deals/auction/cancel/${productId}`
+  )
+  return response.data
+}
+
 // 즉시 구매 등록
 export const postRegisterPurchase = async (dealPrice: number, productId:any) => {
   const body = {
@@ -87,7 +95,7 @@ export const postRegisterPurchase = async (dealPrice: number, productId:any) => 
   return response.data
 }
 
-// 즉시 구매 등록
+// 즉시 구매 취소
 export const postCancelPurchase = async (productId:number) => {
   const response = await apiClient.post<any>(
     `/deals/buy/cancel/${productId}`
