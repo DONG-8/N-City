@@ -79,6 +79,7 @@ const NavbarBox = styled.div`
     }
 
     .community{
+      position: relative;
       width: 120px;
       height: 80px;
       display: flex;
@@ -94,7 +95,6 @@ const NavbarBox = styled.div`
         box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px;
         position: absolute;
         top: 60px;
-        right: 750px;
         margin-right: 1px;
         border-radius: 0 0 5px 5px;
         div {
@@ -105,6 +105,7 @@ const NavbarBox = styled.div`
     }
 
     .profile {
+      position: relative;
       font-weight: 600;
       width: 160px;
       height: 80px;
@@ -126,7 +127,6 @@ const NavbarBox = styled.div`
         box-shadow: rgba(100, 100, 111, 0.2) 0px 5px 20px 0px;
         position: absolute;
         top: 60px;
-        right: 250px;
         margin-right: 1px;
         border-radius: 0 0 5px 5px;
         div {
@@ -198,7 +198,7 @@ export default function Navbar() {
 
   useEffect(()=>{
     setUserId(sessionStorage.getItem('userId')||'')
-    if (userId===''){setIsLogin(false)}// userId가 있다면 로그인 되어있음
+    if (userId===''){setIsLogin(false)} // userId가 있다면 로그인 되어있음
     else{
       setIsLogin(true)
       setNickName(sessionStorage.getItem('userNickname')||'')
@@ -215,7 +215,6 @@ export default function Navbar() {
   const logout = ()=>{
     get_logout.mutate()
     navigate("/");
-
   }
 
   const get_logout = useMutation<any,Error>(
