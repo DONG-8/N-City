@@ -15,14 +15,13 @@ import artist from "../../essets/images/artist-mark.png"
 import enterprise from "../../essets/images/enterprise-mark.png"
 
 const CardWrapper = styled.div`
-  font-family: 'Noto Sans KR', sans-serif;
   cursor: pointer;
-  height: 420;
-  width: 350px;
+  height: 361px;
+  width: 280px;
   background-color: #ffffff;
-  border-radius: 10px;
-  border:0.5px solid #E9E4E4;
+  border-radius: 10px;  
   margin: 30px ;
+  border:0.5px solid #E9E4E4;
   &:hover{
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     .buy{
@@ -35,49 +34,57 @@ const CardWrapper = styled.div`
     }
   }
 `
+
 const Image = styled.div`
   img{
-    width:350px;
-    height:300px ;
-    border-radius: 5px 5px 0 0 ;
+    width:280px;
+    height:280px ;
+    border-radius: 10px 10px 0 0 ;
     object-fit: cover;    
-    }
+  }
 `
 const CardCenter = styled.div`
   display: flex;
-  height: 60px;
+  height: 55px;
+  display: flex;
+  border-radius: 0 0 2px 2px ;
 `;
 
 const CardBottom = styled.div`
-    height:40px;
-    border-radius:0 0 5px 5px ;
-    background-color: whitesmoke ;
+  margin-top: -14px;
+  height: 35px;
+  border-radius: 0 0 5px 5px;
+  background-color: whitesmoke;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .buy {
+    visibility: hidden;
+    font-weight: 1000;
+    color: #ff865b;
+    font-size: 1.2rem;
+    margin: 5px;
+    margin-left: 1.5rem;
+  }
+  .like {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 7px;
     display: flex;
-    justify-content: space-between ;
     align-items: center;
-    .buy{
-      visibility: hidden ;
-      font-weight: 1000 ;
-      color:#FF865B ;
-      font-size:1.2rem ;
-      margin:5px ;
-      margin-left: 1.5rem ; 
-    }
-    .like{
-      font-size:1.2rem ;
-      font-weight:1000;
-      margin: 7px ;
-      display: flex;
-    }
-    .icon{
+  }
+  .icon {
+    display: flex;
+    align-items: center;
     cursor: pointer;
     margin-right: 0.5vw;
-    margin-top:0.2vh;
-    &:hover{
-      transform: scale(1.1);
+    svg {
+      &:hover {
+        transform: scale(1.1);
+      }
     }
   }
-`
+`;
 const DesLeft = styled.div`
   width: 100%;
   display: flex;
@@ -104,14 +111,18 @@ const SaleState = styled.div`
   font-weight: 500;
 `
 const Title = styled.div`
-  font-size: 1.5rem;
+  margin-top: -15px;
+  font-size: 1.2rem;
   font-weight: 600;
   img{
     position: absolute;
+    width: 15px;
+    height: auto;
   }
 `;
 interface Iprops {
   item: {
+    productFavoriteUser: Array<any>;
     productId: number;
     productTitle: string;
     productPrice: number;
@@ -124,18 +135,17 @@ interface Iprops {
     favorite: boolean;
     tokenId?: number;
     userRole: string;
-  };
-  handleOpen: (item) => void;
+  }; 
 }
 
-const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
+const StoreItemCard:React.FC<Iprops>= ({item}) => {
   const navigate = useNavigate()
   const goDetailPage = (productId)=>{
     // localStorage.setItem("item",JSON.stringify(item))
     navigate(`/store/detail/${productId}`)
   }
   const [liked,setLiked] = useState(item.favorite)
-  const [likes,setLikes] = useState(Number(item.productFavoriteCount))
+  const [likes,setLikes] = useState(item.productFavoriteUser.length)
 
   const addLike = useMutation<any, Error>(
     "addLike",
@@ -208,7 +218,10 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
         </Image>
         <CardCenter>
           <DesLeft>
-            <Title><span>{item.productTitle}</span>{getVerifiedMark(item.userRole)}</Title>
+            <Title>
+              <span>{item.productTitle}</span>
+              {getVerifiedMark(item.userRole)}
+            </Title>
           </DesLeft>
         </CardCenter>
         <CardBottom>
@@ -244,15 +257,7 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
               <SaleState>경매중 {item.productPrice}NCT</SaleState>
             ) : item.productState === 2 ? (
               <SaleState>판매중 {item.productPrice}NCT</SaleState>
-            ) : (
-              <div>
-                <Button onClick={() => handleOpen(item)}>
-              <Tooltip title="판매하기">
-                  <SellIcon />
-              </Tooltip>
-                </Button>
-              </div>
-            )}
+            ) : null}
           </div>
         </CardBottom>
       </CardWrapper>
@@ -260,4 +265,4 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
   );
 }
 
-export default ItemCard
+export default StoreItemCard

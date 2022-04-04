@@ -5,18 +5,22 @@ const Wrapper2 = styled.div`
   @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@700&display=swap');
   display: flex;
   justify-content: center;
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .cta {
     display: flex;
     padding: 0px 30px 0px 30px;
     text-decoration: none;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Noto Sans KR", sans-serif;
     color: white;
     background: #b195ea;
     transition: 1s;
     box-shadow: 6px 6px 0 #333;
     border-radius: 10px;
     transform: skewX(-5deg);
-
 }
 span {
     transform: skewX(5deg) 
@@ -32,7 +36,7 @@ span {
 }
 .cta span:nth-child(1) {
   font-size: 4vh;
-  margin-top: 2.5vh;
+  /* margin-top: 2.5vh; */
 }
 .cta span:nth-child(2) {
   margin-top: -1vh;

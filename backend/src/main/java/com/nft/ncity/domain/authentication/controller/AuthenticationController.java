@@ -201,7 +201,7 @@ public class AuthenticationController {
     public ResponseEntity<BaseResponseBody>ModifyUserRoleByUserId(@PathVariable Long userId){
 
         log.info("ModifyUserRoleByUserId - 호출");
-        Long execute = userService.modifyUserRoleAsRequest(userId);
+        Long execute = userService.modifyUserTokenRequest(userId);
 
         if(execute < 1) {
             log.error("ModifyUserRoleByUserId - User doesn't exist.");
