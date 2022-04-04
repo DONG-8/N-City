@@ -138,12 +138,14 @@ const UserBox = styled.div`
     margin-left: 2vw;
     display: flex;
     font-size: 1.8vh;
+
     .mid-l {
       .left {
         margin-top: 30px;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        font-weight: 500;
       }
       flex: 1;
       button {
@@ -210,10 +212,10 @@ const UserDescription = styled.div`
   .content {
     width: 90%;
     height: 15vh;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
     margin-left: 2vw;
     margin-top: 2vh;
-    
   }
 `;
 const TopR = styled.div`
@@ -241,6 +243,7 @@ const TopR = styled.div`
       margin-left: 2vw;
       display: flex;
       font-size: 2vh;
+      font-weight: 500;
     }
   }
   .img {
@@ -277,6 +280,7 @@ const Description = styled.div`
       /* margin-left: 1vw; */
       margin: 5px 0;
       font-size: 20px;
+      font-weight: 500;
     }
   }
 `;
@@ -288,6 +292,8 @@ const Bottom = styled.div`
     border-top: 0.5px solid #e0dede;
     .content {
       margin: 2vh;
+      font-weight: 500;
+      font-size: 20px;
     }
     button {
       margin-left: 10vw;
@@ -342,6 +348,63 @@ const FavoriteBox = styled.div`
     margin-right: 5px;
   }
 `;
+
+const List = styled.div`
+  background-color: #F7F8FA ;
+  border-radius: 10px;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  max-height: 50vh;
+  width: 91vw;
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  overflow-y: auto;
+  font-weight: bold;
+`;
+
+const ListItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid grey;
+  margin-bottom: 0.5vh;
+  width: 89vw;
+  padding: 10px;     
+  border-radius: 5px;
+           
+  div{
+    flex:1;
+    text-align: center;
+    font-weight: 500;
+  }
+  .event{
+    text-align: start;
+    margin-left: 3vw;
+  }
+  .price{
+    margin-left: -3vw;
+  }
+
+`;
+
+const ListCategory = styled.div`
+  border: 1px solid #333;
+  width: 90vw;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 2vh;
+  border-bottom: 2px solid #333;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  margin-top: 2vh;
+  div{
+    flex: 1;
+    text-align: center;
+  }
+`
 
 interface Istate {
   item: {
@@ -523,60 +586,7 @@ const DetailItem = () => {
       },
     }
   );
-const List = styled.div`
-  background-color: #F7F8FA ;
-  border-radius: 10px;
-  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
-  max-height: 50vh;
-  width: 91vw;
-  display: flex;
-  /* justify-content: center; */
-  flex-direction: column;
-  align-items: center;
-  margin: auto;
-  overflow-y: auto;
-`;
 
-const ListItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid grey;
-  margin-bottom: 0.5vh;
-  width: 89vw;
-  padding: 10px;     
-  border-radius: 5px;
-           
-  div{
-    flex:1;
-    text-align: center;
-  }
-  .event{
-    text-align: start;
-    margin-left: 3vw;
-  }
-  .price{
-    margin-left: -3vw;
-  }
-
-`;
-
-const ListCategory = styled.div`
-  border: 1px solid #333;
-  width: 90vw;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  font-size: 2vh;
-  border-bottom: 2px solid #333;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  margin-top: 2vh;
-  div{
-    flex: 1;
-    text-align: center;
-  }
-`
 function leadingZeros(n, digits) {
   var zero = '';
   n = n.toString();
@@ -909,7 +919,7 @@ function leadingZeros(n, digits) {
                 </div>
               </UserBox>
               <UserDescription>
-                <div className="title">Description</div>
+                <div className="title">User description</div>
                 {user.userDescription ? (
                   <div className="content">{user.userDescription}</div>
                 ) : (
