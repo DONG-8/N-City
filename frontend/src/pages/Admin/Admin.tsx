@@ -3,7 +3,7 @@ import { useMutation } from "react-query";
 import styled from "styled-components";
 import ConfirmModal from "../../components/admin/ConfirmModal";
 import MintERC20Modal from "../../components/admin/MintERC20Modal";
-import { getAllAuthentication, patchAutentication } from "../../store/apis/authentication";
+import { getAllAuthentication, getAuthNewUsers, patchAutentication, putAuthSendToken } from "../../store/apis/authentication";
 import { SSFTokenContract } from "../../web3Config";
 
 const Wrapper = styled.div`
@@ -112,12 +112,27 @@ const ListItem = styled.div`
       width: 100px;
     }
   }
+  .userId {
+    width: 5%;
+    margin-left: 20px;
+  }
+  .nickname {
+    width: 10%;
+  }
+  .address {
+
+  }  
   .button {
     border-radius: 15px;
     padding: 10px 0;
     font-weight: bold;
     text-align: center;
     width: 70px;
+  }
+  .sendBtn {
+    border: 1px solid #3d1da9;
+    color: #3d1da9;
+    margin-right: 20px;
   }
   .approveBtn {
     border: 1px solid #399b20;
@@ -135,27 +150,37 @@ const ApproveBtnBox = styled.div`
 `
 
 export interface IApply {
-  // id: string;
-  // name: string;
-  // email: string;
-  // file?: any; // 나중에 수정하기
-  userNick: string;
-  authentication : {
-    authEmail : string
-    authExtra?: string
-    authId: number
-    authName: string
-    authRegAt: string
-    authType: number
-    authUrl: string
-
-  }
+  "apply": {
+    userNick: string;
+    authentication: {
+      authEmail: string;
+      authExtra?: string;
+      authId: number;
+      authName: string;
+      authRegAt: string;
+      authType: number;
+      authUrl: string;
+    };
+  };
+  // "newUsers": {
+  //   authId?: number;
+  //   userAddress: string;
+  //   userDescription?: string;
+  //   userEmail?: string;
+  //   userEmailConfirm: boolean;
+  //   userId: number;
+  //   userImgUrl?: string;
+  //   userNick: string;
+  //   userRole: string;
+  // };
 }
 
 const Admin = () => {
-  const [influencer, setInfluencer] = useState<IApply[]>([]);
-  const [artist, setArtist] = useState<IApply[]>([]);
-  const [enterprise, setEnterprise] = useState<IApply[]>([]);
+  const [influencer, setInfluencer] = useState<IApply["apply"][]>([]);
+  const [artist, setArtist] = useState<IApply["apply"][]>([]);
+  const [enterprise, setEnterprise] = useState<IApply["apply"][]>([]);
+  const [newUsers, setNewUsers] = useState<any[]>([]);
+  const [tokenApplyUsers, setTokenApplyUsers] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isMintOpen, setIsMintOpen] = useState<boolean>(false);
   const [status, setStatus] = useState("influencer");
@@ -164,6 +189,7 @@ const Admin = () => {
   const [account, setAccount] = useState("")
   const [balance, setBalance] = useState(0)
   const [total, setTotal] = useState(0)
+  const [newUserId, setNewUserId] = useState(0)
   // 이름, 이메일, 파일
   const { ethereum } = window;
 
@@ -229,11 +255,60 @@ const Admin = () => {
     }
   );
 
+  const getNewUsers = useMutation<any, Error>(
+    "getNewUsers",
+    async () => {
+      return await getAuthNewUsers("ROLE_NEW");
+    },
+    {
+      onSuccess: (res) => {
+        console.log("신규유저 불러오기 성공!",res);
+        setNewUsers(res.content);
+      },
+      onError: (err: any) => {
+        console.log("❌신규유저 불러오기 실패!",err);
+      },
+    }
+  );
+
+  const getReApplyTokenUsers = useMutation<any, Error>(
+    "getNewUsers",
+    async () => {
+      return await getAuthNewUsers("ROLE_REQUEST");
+    },
+    {
+      onSuccess: (res) => {
+        console.log("토큰신청유저 불러오기 성공!",res);
+        setTokenApplyUsers(res.content);
+      },
+      onError: (err: any) => {
+        console.log("❌토큰신청유저 불러오기 실패!",err);
+      },
+    }
+  );
+
+  const putSendToken = useMutation<any, Error>(
+    "putSendToken",
+    async () => {
+      return await putAuthSendToken(newUserId);
+    },
+    {
+      onSuccess: (res) => {
+        console.log("토큰전송 성공!",res);
+      },
+      onError: (err: any) => {
+        console.log("❌토큰전송 실패!",err);
+      },
+    }
+  );
+
   useEffect(()=>{
     getArtist.mutate()
     getInfluencer.mutate()
     getEnterpise.mutate()
-  },[])
+    getNewUsers.mutate()
+    getReApplyTokenUsers.mutate()
+  }, [])
 
   const onClickApprove = (apply: IApply, idx: number) => {
     setControl("승인");
@@ -257,7 +332,6 @@ const Admin = () => {
     if (idx > -1) {
       temp.splice(idx, 1);
     }
-
     switch (status) {
       case "influencer":
         setInfluencer(temp);
@@ -268,6 +342,12 @@ const Admin = () => {
       case "enterprise":
         setEnterprise(temp);
         break;
+      case "newUsers":
+        setNewUsers(temp)
+        break
+      case "tokenApplyUsers":
+        setTokenApplyUsers(temp)
+        break
       default:
         break;
     }
@@ -281,10 +361,29 @@ const Admin = () => {
         return artist;
       case "enterprise":
         return enterprise;
+      case "newUsers":
+        return newUsers;
+      case "tokenApplyUsers":
+        return tokenApplyUsers
       default:
         return influencer;
     }
   };
+
+  const onClickSendToken = async (user, idx) => {
+    try {
+      setNewUserId(user.userId)
+      await SSFTokenContract.methods
+        .forceToTransfer(account, user.userAddress, 1000)
+        .send({ from: account });
+      await putSendToken.mutate();
+      removeList(user)
+      console.log("토큰전송 성공")
+    } catch (error) {
+      console.log(error)
+      console.log("토큰전송 실패")
+    }
+  }
 
   const handleModalOpen = () => {
     setIsOpen(true);
@@ -311,7 +410,7 @@ const Admin = () => {
   }, [])
   useEffect(() => {
     getBalance();
-  }, [account])
+  }, [account, newUsers])
   return (
     <Wrapper>
       <Title>
@@ -358,9 +457,27 @@ const Admin = () => {
         >
           <p>기업 신청</p>
         </div>
+        <div
+          className="newUsers"
+          id={status === "newUsers" ? "select" : ""}
+          onClick={() => {
+            setStatus("newUsers");
+          }}
+        >
+          <p>신규 유저</p>
+        </div>
+        <div
+          className="tokenApplyUsers"
+          id={status === "tokenApplyUsers" ? "select" : ""}
+          onClick={() => {
+            setStatus("tokenApplyUsers");
+          }}
+        >
+          <p>토큰신청 유저</p>
+        </div>
       </FilterBar>
       <List>
-        {chooseList().map((apply, idx) => {
+        {(status === "designer" || status === "influencer" || status === "enterprise") && chooseList().map((apply, idx) => {
           return (
             <ListItem key={idx}>
               <div className="id">닉네임: {apply.userNick}</div>
@@ -389,6 +506,36 @@ const Admin = () => {
             </ListItem>
           );
         })}
+        {status === "newUsers" && newUsers.map((user, idx) => {
+          return (
+            <ListItem key={idx}>
+              <div className="userId">ID: {user.userId}</div>
+              <div className="nickname">닉네임: {user.userNick}</div>
+              <div className="address">지갑주소: {user.userAddress}</div>
+              <ApproveBtnBox>
+                <button
+                  className="sendBtn button"
+                  onClick={() => onClickSendToken(user, idx)}
+                >
+                  토큰전송
+                </button>
+              </ApproveBtnBox>
+            </ListItem>)})}
+            {status === "tokenApplyUsers" && tokenApplyUsers.map((user, idx) => {
+          return (
+            <ListItem key={idx}>
+              <div className="userId">ID: {user.userId}</div>
+              <div className="nickname">닉네임: {user.userNick}</div>
+              <div className="address">지갑주소: {user.userAddress}</div>
+              <ApproveBtnBox>
+                <button
+                  className="sendBtn button"
+                  onClick={() => onClickSendToken(user, idx)}
+                >
+                  토큰전송
+                </button>
+              </ApproveBtnBox>
+            </ListItem>)})}
       </List>
       <ConfirmModal
         visible={isOpen}
@@ -405,8 +552,6 @@ const Admin = () => {
       account={account}
       getBalance={getBalance}
       >
-      
-
       </MintERC20Modal>
     </Wrapper>
   );

@@ -74,3 +74,27 @@ export const getAuthFileDownload = async (file : string) => {
   )
   return response.data
 }
+
+// 토큰 재신청
+export const putAuthApplyToken = async (userId: number) => {
+  const response = await apiClient.put<any>(
+    `/authentication/token/request/${userId}`,
+  )
+  return response.data
+}
+
+// 신규유저 or 재신청유저 받아오기
+export const getAuthNewUsers = async (userRole: string) => {
+  const response = await apiClient.get<any>(
+    `/authentication/user/${userRole}?size=1000`,
+  )
+  return response.data
+}
+
+// 신규유저 토큰 지급
+export const putAuthSendToken = async (userId:number) => {
+  const response = await apiClient.put<any>(
+    `/authentication/token/${userId}`,
+  )
+  return response.data
+}

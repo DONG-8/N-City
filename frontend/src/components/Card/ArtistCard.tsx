@@ -67,7 +67,8 @@ const CardBottom = styled.div`
 `
 const Badge = styled.div`
   img{
-    height:3vh;
+    position: absolute;
+    /* height:3vh; */
   }
 `
 const ArtistCard:React.FC<Iprops> = ({user}) => {
@@ -94,10 +95,9 @@ const ArtistCard:React.FC<Iprops> = ({user}) => {
           <div className='name'>
             <Badge>
               <span>{user.userNick} </span>
-              {user.userRole==='ROLE_USER' && <img alt='badge' src= {artistpng}/>}
-              {user.userRole==='ROLE_ENTERPRISE' && <img alt='badge' src= {enterpng}/>}
-              {user.userRole==='ROLE_ARTIST' && <img alt='badge' src= {artistpng}/>}
-              {user.userRole==='ROLE_INFLUENCER' && <img alt='badge' src= {infpng}/>}
+              {user.userRole==='ROLE_ENTERPRISE' && <img alt='badge' src="essets/marks/enterprise-mark.png"/>}
+              {user.userRole==='ROLE_ARTIST' && <img alt='badge' src="essets/marks/artist-mark.png"/>}
+              {user.userRole==='ROLE_INFLUENCER' && <img alt='badge' src="essets/marks/influencer-mark.png"/>}
             </Badge>
           </div>
           <div className='description'>
