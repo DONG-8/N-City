@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   width: 360px;
   height: 460px;
   background-color: white;
-  left: 200px;
+  right: 30px;
   border-radius: 10px;
   padding: 20px;
 `;
@@ -137,7 +137,6 @@ const MusicModal = () => {
       </Body>
       <Foot>
         <button>리스트 변경</button>
-        {musicList && <AudioPlayer tracks={musicList} />}
       </Foot>
     </Wrapper>
   );
