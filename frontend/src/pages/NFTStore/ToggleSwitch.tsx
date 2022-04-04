@@ -11,8 +11,8 @@ const Wrapper = styled.div`
 }
 
 .input_wrapper input[type="checkbox"]{
-  width: 4.3vw;
-  height: 4.2vh;
+  width: 80px;
+  height: 40px;
   cursor: pointer;
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -30,10 +30,10 @@ const Wrapper = styled.div`
   content: "";
   top: 3px;
   left: 3px;
-  width: 1.8vw;
-  height: 3.5vh;
+  width: 35px;
+  height: 35px;
   background: #dfeaec;
-  z-index: 2;
+  z-index: 1;
   border-radius: 100%;
   -webkit-transition: all .35s;
   transition: all .35s;

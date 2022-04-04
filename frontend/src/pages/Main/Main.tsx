@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-// import { clearInterval } from 'timers';
-import ItemCard from "../../components/Card/ItemCard";
-import ListAltIcon from "@material-ui/icons/ListAlt";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForward from "@material-ui/icons/ArrowForward";
-import Popup from "../../components/Popup/Popup";
 import Guide from "../../components/Popup/Guide";
 import HotTokkenList from "./HotTokkenList";
 import NewTokkenList from "./NewTokkenList";
 import VideoGuide from "./VideoGuide";
 import Profile from "./Profile";
 import { events as images } from "./events";
-import ZigZag from "./ZigZag";
 
 const MainBackGround = styled.div`
   /* margin-top: 80px; */
@@ -655,14 +650,14 @@ export default function Main() {
       
       <HotTokkenWrraper>
         <HotTokken>
-          <h1>New Tokken</h1>
+          <h1>New Token</h1>
           {/* <ZigZag /> */}
           <NewTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>
       <HotTokkenWrraper>
         <HotTokken>
-          <h1>Hot Tokken</h1>
+          <h1>Hot Token</h1>
           <HotTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>

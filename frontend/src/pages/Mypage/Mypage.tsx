@@ -37,7 +37,7 @@ const Background = styled.div`
 
 const ProfileWrapper = styled.div`
   box-shadow: 1px 1px 3px;
-  background-color: #faf3f399;
+  background-color: #faf3f3c2;
   position: absolute;
   display: flex;
   align-items: center;
@@ -554,7 +554,8 @@ export default function Mypage() {
           {/* <img alt="배경" src='https://cutewallpaper.org/21/pixel-wallpaper-gif/Vaporwave-Background-Gif-1920x1080-Spicesncurry.com.gif' /> */}
           <img
             alt="배경"
-            src="https://i.pinimg.com/originals/0b/32/92/0b3292b81f6edb020142fbf0c92a264b.gif"
+            src="https://i.pinimg.com/originals/9f/92/6c/9f926c8c220127d81c8ba6897aa8d5db.gif"
+            // src="https://i.pinimg.com/originals/0b/32/92/0b3292b81f6edb020142fbf0c92a264b.gif"
           />
         </Background>
         <ProfileWrapper>

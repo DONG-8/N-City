@@ -12,12 +12,13 @@ const Wrapper = styled.div`
     text-decoration: none;
     font-family: 'Poppins', sans-serif;
     font-size: 30px;
+    font-weight: 600;
     color: white;
     background: #129fce;
     transition: 1s;
     border-radius: 10px;
     :hover{
-      background: #41a6c7;
+      background: #36a3c7;
       transition: 0.2s;
     }
 }

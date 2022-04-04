@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import img1 from './image/character/1.png'
 import img2 from './image/character/2.png'
@@ -159,6 +160,7 @@ interface Iprops {
 }
 
 const RankArtistCard:React.FC<Iprops>= ({user}) => {
+  const navigate = useNavigate()
   useEffect(()=>{
     if (user.myRoomCharacter===null){
       setImgurl(img1)
@@ -169,6 +171,11 @@ const RankArtistCard:React.FC<Iprops>= ({user}) => {
   },[])
   
   const [imgurl,setImgurl] = useState('')
+  const goGame = ()=>{
+    // ⭐⭐⭐⭐⭐⭐⭐⭐ api 요청
+    navigate(`/ingame/${user.userId}`)
+  }
+
   return (
     <RankCardWrapper>
       <RankCardDiv>
@@ -200,7 +207,8 @@ const RankArtistCard:React.FC<Iprops>= ({user}) => {
           </div>
         </TitleCardDiv>
         }
-        <TodayInformationDiv><div className="gobutton">{user.userNick} 방으로 이동하기</div></TodayInformationDiv>
+        <TodayInformationDiv onClick={()=>{goGame()}}
+        ><div className="gobutton">{user.userNick} 방으로 이동하기</div></TodayInformationDiv>
       </RankCardDiv>
     </RankCardWrapper>
   );
