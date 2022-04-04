@@ -2,6 +2,7 @@ package com.nft.ncity.domain.product.controller;
 
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.common.model.response.FileUrlResponseBody;
+import com.nft.ncity.domain.myroom.response.MyRoomTop5GetRes;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
@@ -9,6 +10,7 @@ import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.response.ProductDealListGetRes;
 import com.nft.ncity.domain.product.response.ProductDetailGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
+import com.nft.ncity.domain.product.response.ProductTop10GetRes;
 import com.nft.ncity.domain.product.service.ProductService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @Slf4j
 @Api(value = "상품정보")
@@ -162,6 +165,19 @@ public class ProductController {
         log.info("productDetail - 호출");
         return productService.productDetail(productId);
     }
+
+    @ApiOperation(value = "총 좋아요 수 높은 상품 10개 반환")
+    @GetMapping("/rank")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = Product.class),
+    })
+    public ResponseEntity<List<ProductTop10GetRes>> getProductFavoriteRank() {
+        log.info("ProductTop10GetRes - Call");
+
+        List<ProductTop10GetRes> productRank = productService.getProductFavoriteRank();
+        return ResponseEntity.status(200).body(productRank);
+    }
+
 
     // UPDATE
     // 제목, 설명, 카테고리, 상품id 무조건 던져줘야함! 안주면 0으로 초기화... 된다..
