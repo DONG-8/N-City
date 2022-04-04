@@ -290,7 +290,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "해당 유저 없음."),
             @ApiResponse(code = 404, message = "해당 유저 없음.")
     })
-    public ResponseEntity<BaseResponseBody> modifyUserInfoByUserId(@RequestPart(value = "body") UserModifyUpdateReq userInfo) throws IOException {
+    public ResponseEntity<BaseResponseBody> modifyUserInfoByUserId(@RequestBody UserModifyUpdateReq userInfo) throws IOException {
 
         // 0. 유저 ID를 받음.
         // 1. 해당 유저의 거래 내역 DB에서 받아와서 보내주기.
