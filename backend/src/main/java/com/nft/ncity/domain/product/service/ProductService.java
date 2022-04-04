@@ -38,7 +38,7 @@ public interface ProductService {
 
     ProductDetailGetRes productDetail(Long productId); // 상품 상세 조회
 
-    List<ProductTop10GetRes> getProductFavoriteRank(); // 상품 좋아요 높은 top10 받아오기
+    List<ProductListGetRes> getProductFavoriteRank(); // 상품 좋아요 높은 top10 받아오기
 
     // update
     long productModify(ProductModifyPutReq productModify);

@@ -3,8 +3,9 @@ import { useMutation } from "react-query";
 import styled from "styled-components";
 import { getCharacter, putCharacterChange } from "../../store/apis/myRoom";
 import { getUserInfo } from "../../store/apis/user";
+import { SSFTokenContract } from "../../web3Config";
 import GameStartButton3 from "./GameStartButton";
-
+import coinurl from './image/coin.png'
 const SubBannerWrraper = styled.div`
   position: relative;
   width: 430px;
@@ -94,11 +95,12 @@ const TitleCardDiv = styled.div`
     display: flex;
     align-items: center;
     margin: 0 auto;
-    cursor: pointer;
     .status {
+      margin-left: 10px;
       width: 100%;
       display: flex;
       flex-direction: row;
+      justify-content: space-around;
       #set {
         color: #12abdc;
         font-size: 13px;
@@ -108,7 +110,7 @@ const TitleCardDiv = styled.div`
 
       #data {
         font-size: 13px;
-        margin-left: 10px;
+        margin-right: 20px;
       }
     }
   }
@@ -146,7 +148,7 @@ const TitleCardDiv = styled.div`
   }
 `;
 
-const MusicDiv = styled.div`
+const Wallet = styled.div`
   width: 400px;
   height: 65px;
   margin: 5px auto;
@@ -161,22 +163,34 @@ const MusicDiv = styled.div`
     margin-left: 10px;
     cursor: pointer;
   }
-  .musicInfo {
-    font-size: 15px;
+  .balance {
+    font-size: 20px;
     font-weight: 600;
     color: black;
     width: 240px;
-    cursor: pointer;
+    margin-left: 40px;
+    /* cursor: pointer;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    animation: filter 5s linear infinite;
+    animation: filter 5s linear infinite; */
+    
+  }
+  .coinimg{
+    height: 40px;
+    width: 40px;
+    margin-left: 20px;
   }
 
   .bgm {
+    margin-right: 20px;
     font-size: 20px;
     color: #12abdc;
-    cursor: pointer;
+    .blue{
+      color: #6225E6  ;
+      font-weight: 700;
+      margin-right: 20px;
+    }
   }
   @keyframes filter {
     to {
@@ -240,14 +254,39 @@ interface Istate{
     "userId": Number,
     "userImgUrl": string,
     "userNick": String,
-    "userRole": String
+    "userRole": String,
+    "myRoomTodayCnt": number,
+    "myRoomTotalCnt": number
   }
 }
 const Profile = () => {
-  const [userId,setUserId] = sessionStorage.getItem("userId")||""
+  const [userId,setUserId] = useState(sessionStorage.getItem("userId")||"")
   // const [isLogin,setIsLogin] = useState(userId!==undefined?true:false)
   const [user,setUser] = useState<Istate['user']>()
   const [myChar,setMyChar] = useState(1)
+  const [account, setAccount] = useState("")
+  const [balance, setBalance] = useState(0)
+  const { ethereum } = window;
+  const [total, setTotal] = useState(0)
+
+  useEffect(() => {
+    getAccount();
+    getBalance()
+  }, [])
+  const getAccount = async () => {
+    const accounts = await ethereum.request({ method: "eth_accounts" });
+    setAccount(accounts[0])
+    console.log(accounts[0])
+  }
+
+  const getBalance = async () => {
+    const response = await SSFTokenContract.methods.balanceOf(account).call();
+    const response2 = await SSFTokenContract.methods.totalSupply().call();
+    
+    console.log(response)
+    setBalance(response)
+    setTotal(response2)
+  }
 
   const imageOnErrorHandler = ( // 사진이 오류날 시 기본 사진
     event: React.SyntheticEvent<HTMLImageElement, Event>
@@ -308,10 +347,10 @@ const Profile = () => {
         <TodayInformationDiv>
           {user!==undefined ?<>
           <h1>TODAY</h1>
-          <h5>999,999</h5>
+          <h5>{user.myRoomTodayCnt}</h5>
           <p>|</p>
           <h1>TOTAL</h1>
-          <h5>999,999</h5></>
+          <h5>{user.myRoomTotalCnt}</h5></>
           :
           <>
           <h1>N-City의 다양한 컨텐츠를 즐기세요</h1>
@@ -350,7 +389,6 @@ const Profile = () => {
             {userId!==undefined?
             <>
               <div className="status">
-                <div id="set">I am</div>
                 <div id="data">{user?.userRole}</div>
               </div>
               <div className="status">
@@ -369,14 +407,16 @@ const Profile = () => {
             </>}
           </div>
         </TitleCardDiv>
-        <MusicDiv>
-          <img src="essets/images/CD.png" alt="" />
-          <div className="bgm">BGM</div>
+        <Wallet>
+          <img src={coinurl} className="coinimg" alt="" />
           <div className="box">
-            <div className="musicInfo">나만의 음악으로 채워주세요</div>
+            <div className="balance">
+              내 지갑</div>
           </div>
-          <PlayIcon></PlayIcon>
-        </MusicDiv>
+          <div className="bgm">
+            <span className="blue">{balance}</span>
+          NCT</div>
+        </Wallet>
         
           {userId!==undefined ? 
              <GameStartButton3/>

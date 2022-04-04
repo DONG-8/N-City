@@ -31,6 +31,13 @@ export const getUserInfo = async (userId : number ) => {
   return response.data
 }
 
+export const getUserfollowTop5 = async () => {
+  const response = await apiClient.get<any>(
+    `/users/follower/top5`
+  )
+  return response.data
+}
+
 // 해당 유저의 거래내역 조회
 export const getUserTradeInfo = async (userId : number ) => {
   const response = await apiClient.get<any>(

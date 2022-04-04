@@ -16,24 +16,23 @@ const Wrapper2 = styled.div`
     text-decoration: none;
     font-family: "Noto Sans KR", sans-serif;
     color: white;
-    background: #b195ea;
+    background: #6225E6  ;
     transition: 1s;
-    box-shadow: 6px 6px 0 #333;
     border-radius: 10px;
-    transform: skewX(-5deg);
+    /* transform: skewX(-5deg); */
 }
 span {
-    transform: skewX(5deg) 
+    /* transform: skewX(5deg)  */
   }
 
 .cta:focus {
    outline: none; 
 }
 
-.cta:hover {
+/* .cta:hover {
     transition: 0.5s;
     box-shadow: 10px 10px 0 #FBC638;
-}
+} */
 .cta span:nth-child(1) {
   font-size: 4vh;
   /* margin-top: 2.5vh; */

@@ -162,8 +162,8 @@ const Character = () => {
     {
       onSuccess:(res)=>{ 
         console.log('캐릭터 받음')
-        setMyChar(res.userId)
-        if (res.userId===null){
+        setMyChar(res.myRoomCharacter)
+        if (res.myRoomCharacter===null){
           changeCharacter.mutate()
           setMyChar(1) 
         }
@@ -212,6 +212,9 @@ const Character = () => {
       {characterId!==undefined && characterId.userId !== myChar && <Button onClick={()=>{getsave()}} className='save'  variant='contained' >저장하기</Button>}</h1>
       <Cards>
         <div className='cards'>
+        <Card onClick={()=>{setMyChar(1)}}>
+          <img className={myChar===1? 'choice':''} alt='캐릭터' src={img1} />
+        </Card>
         {everyitems !== undefined && characterId !==undefined &&
         items.map((item,idx)=>{
           return( 
@@ -219,12 +222,6 @@ const Character = () => {
             <img  className={myChar===idx+1? 'choice':''}  alt='캐릭터' src={item.productFileUrl} />
             </Card>
         )})}
-        <Card onClick={()=>{setMyChar(4)}}>
-          <img className={myChar===4? 'choice':''} alt='캐릭터' src={img1} />
-        </Card>
-        <Card>
-          <img className={myChar===5? 'choice':''} alt='캐릭터' onClick={()=>{setMyChar(5)}} src={img2} />
-        </Card>
         </div>
       </Cards>
     </Wrapper>

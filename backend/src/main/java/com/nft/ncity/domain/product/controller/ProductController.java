@@ -171,10 +171,10 @@ public class ProductController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = Product.class),
     })
-    public ResponseEntity<List<ProductTop10GetRes>> getProductFavoriteRank() {
+    public ResponseEntity<List<ProductListGetRes>> getProductFavoriteRank() {
         log.info("ProductTop10GetRes - Call");
 
-        List<ProductTop10GetRes> productRank = productService.getProductFavoriteRank();
+        List<ProductListGetRes> productRank = productService.getProductFavoriteRank();
         return ResponseEntity.status(200).body(productRank);
     }
 
