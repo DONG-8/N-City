@@ -133,7 +133,7 @@ interface Iprops{
 
 const GameItemCard:React.FC<Iprops>= ({item,setMode}) => {
   const [liked,setLiked] = useState(false) // 내가 좋아요 했나
-  const [MyAddress,setMyAddress] = useState(localStorage.getItem('userId'))
+  const [MyAddress,setMyAddress] = useState(sessionStorage.getItem('userId'))
   const [category,setCategory] = useState('normal') 
   // const [category,setCategory] = useState('character') 
   //⭐ normal로 바꾸기

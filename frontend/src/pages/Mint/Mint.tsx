@@ -348,7 +348,7 @@ const Mint = () => {
           
           putToken.mutate();
           await setIsLoading(false);
-          navigate(`/mypage/${localStorage.getItem("userId")}`)
+          navigate(`/mypage/${sessionStorage.getItem("userId")}`)
           // window.location.reload()
            
       },
@@ -511,8 +511,8 @@ const Mint = () => {
   const getMyInfo = useMutation<any, Error>(
     "getUserInfo",
     async () => {
-      if (localStorage.getItem("userId")) {
-        return await getUserInfo(Number(localStorage.getItem("userId")));
+      if (sessionStorage.getItem("userId")) {
+        return await getUserInfo(Number(sessionStorage.getItem("userId")));
       } else {
         alert("내 정보를 받아올 수 없습니다.");
         return;

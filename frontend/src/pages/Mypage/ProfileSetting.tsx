@@ -141,7 +141,7 @@ const BeforeAddress = styled.div`
 const ProfileSetting = () => {
   
   const navigate = useNavigate()
-  const userId = Number(localStorage.getItem('userId')||"")
+  const userId = Number(sessionStorage.getItem('userId')||"")
   const [nameInput,setNameInput]  = useState('')
   const [Email,setEmail] = useState('')
   const [EmailInput,setEmailInput] = useState('')

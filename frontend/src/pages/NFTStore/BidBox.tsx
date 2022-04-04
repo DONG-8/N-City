@@ -174,8 +174,8 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
           <div className="content">최종 입찰가 : {item.productPrice} </div>
           <div className="content">최종 입찰자 : {lastBidder} </div>
           {isBidderExist && // 경매끝, 내가 최종구매자거나 경매등록한 사람이면 confirm버튼 보이기
-            (Number(localStorage.getItem("userId")) === item.userId ||
-              Number(localStorage.getItem("userId")) === lastBidderId) && ( /// 나중에 담겨져오는 하이스트비더아이디로 바꾸기
+            (Number(sessionStorage.getItem("userId")) === item.userId ||
+              Number(sessionStorage.getItem("userId")) === lastBidderId) && ( /// 나중에 담겨져오는 하이스트비더아이디로 바꾸기
               <button onClick={onClickConfirm}>{isBidderExist ? "Confirm" : "경매닫기"}</button>
             )}
         </div>)}
@@ -195,7 +195,7 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
             </div>      
           </div>
           <div className='boxright'>
-            {Number(localStorage.getItem("userId")) !== item.userId &&
+            {Number(sessionStorage.getItem("userId")) !== item.userId &&
               <Button color='primary' variant="contained" onClick={() => { setOpen(true)}}>
                 제안하기
               </Button>

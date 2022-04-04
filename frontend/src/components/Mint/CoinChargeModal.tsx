@@ -79,7 +79,7 @@ const CoinChargeModal:React.FC<Iprops> = ({open,setOpen}) => {
   const applyToken = useMutation<any, Error>(
     "applyToken",
     async () => {
-      return await putAuthApplyToken(Number(localStorage.getItem("userId")));
+      return await putAuthApplyToken(Number(sessionStorage.getItem("userId")));
     },
     {
       onSuccess: (res) => {

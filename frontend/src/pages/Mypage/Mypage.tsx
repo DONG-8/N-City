@@ -357,7 +357,7 @@ export default function Mypage() {
         console.log("팔로워들", res);
         const userIds = res.map((user) => user.userId);
         console.log(userIds);
-        if (userIds.includes(Number(localStorage.getItem("userId")))) {
+        if (userIds.includes(Number(sessionStorage.getItem("userId")))) {
           setFollowBtnState(false);
         } else {
           setFollowBtnState(true);
@@ -583,7 +583,7 @@ export default function Mypage() {
                   팔로우 <div>{userInfo?.followeeCnt}</div>{" "}
                 </span>
               </FollowTextBox>
-              {Number(localStorage.getItem("userId")) === userInfo?.userId ? (
+              {Number(sessionStorage.getItem("userId")) === userInfo?.userId ? (
                 <Button
                   className="profilesetting"
                   onClick={() => {

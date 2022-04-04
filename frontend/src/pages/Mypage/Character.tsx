@@ -136,7 +136,7 @@ interface Istate{
     }
 }
 const Character = () => {
-  const [userId,setUserId] = useState(Number(localStorage.getItem('userId')||""))
+  const [userId,setUserId] = useState(Number(sessionStorage.getItem('userId')||""))
   const [characters,setCharacters ] = useState<Istate['item'][]>([])
   const [items,setItems] = useState<Istate['item'][]>([])
   const [myChar,setMyChar] = useState(1)

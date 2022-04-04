@@ -397,7 +397,7 @@ const DetailItem = () => {
   // 1: bid , 2:sell , 3:normal
   const CATEGORY =['All','Music',' Picture','Video','Art','Celebrity','Sports','Character','Animation']
   const [status, setStatus] = useState("bid");
-  const [MyAddress, setMyAddress] = useState(localStorage.getItem("userId"));
+  const [MyAddress, setMyAddress] = useState(sessionStorage.getItem("userId"));
   const [productId, setProductId] = useState(useParams().productId);
   const [item, setItem] = useState({
     productId: -1,
@@ -665,7 +665,7 @@ function leadingZeros(n, digits) {
         console.log("팔로워들", res);
         const userIds = res.map((user) => user.userId);
         console.log(userIds);
-        if (userIds.includes(Number(localStorage.getItem("userId")))) {
+        if (userIds.includes(Number(sessionStorage.getItem("userId")))) {
           setFollowBtnState(false);
         } else {
           setFollowBtnState(true);
@@ -812,7 +812,7 @@ function leadingZeros(n, digits) {
                     />
                   )}
                   <p className="name">{user.userNick}</p>
-                  {Number(localStorage.getItem("userId")) ===
+                  {Number(sessionStorage.getItem("userId")) ===
                     Number(item.mintUserId) ? null : followBtnState ? (
                       <Button color="info" variant="contained" onClick={onClickFollow}>Follow</Button>
                     ) : (
@@ -918,7 +918,7 @@ function leadingZeros(n, digits) {
                       <div className="content">
                         즉시구매가 : {item.productPrice}{" "}
                       </div>
-                      {Number(localStorage.getItem("userId")) ===
+                      {Number(sessionStorage.getItem("userId")) ===
                       item.userId ? (
                         <Button
                           variant="contained"
