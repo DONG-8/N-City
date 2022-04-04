@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   .loading{
     text-align: center;
     font-size: 2.5vh;
-    font-weight: 1000;
+    font-weight: 600;
     margin-top: -5vh;
   }
 
@@ -30,7 +30,7 @@ const CategoryBar = styled.div`
   }
   p{
     font-size:2vh;
-    font-weight:1000;
+    font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
     position: relative;

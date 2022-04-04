@@ -105,7 +105,7 @@ const NavbarBox = styled.div`
     }
 
     .profile {
-      font-weight: 1000;
+      font-weight: 600;
       width: 160px;
       height: 80px;
       display: flex;
@@ -115,7 +115,7 @@ const NavbarBox = styled.div`
       .name{
         margin-left: 10px;
         color:#6225E6; //🎨메인색🎨
-        font-weight: 1000;
+        font-weight: 600;
       }
       .hide {
         display: none;

@@ -55,19 +55,19 @@ const Description = styled.div`
     margin-top: 2rem;
     flex:1;
     font-size: 2.2rem;
-    font-weight: 1000;
+    font-weight: 600;
   }
   .date{
     flex:1;
     margin-top: 5vh;  
     font-size: 1.5rem;
-    font-weight: 1000;
+    font-weight: 600;
   }
   .content{
     flex:7;
     margin-top: 5vh;  
     font-size: 2vh;
-    font-weight: 1000;
+    font-weight: 600;
     width: 90%;
   }
   .btnbox{

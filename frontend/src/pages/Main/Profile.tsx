@@ -136,7 +136,7 @@ const TitleCardDiv = styled.div`
       margin: 0px;
       margin-bottom: 20px;
       font-size: 25px;
-      font-weight: 1000;
+      font-weight: 600;
     }
 
     p {
@@ -163,7 +163,7 @@ const MusicDiv = styled.div`
   }
   .musicInfo {
     font-size: 15px;
-    font-weight: 700;
+    font-weight: 600;
     color: black;
     width: 240px;
     cursor: pointer;

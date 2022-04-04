@@ -92,7 +92,7 @@ const TitleCardDiv = styled.div`
       margin: 0px;
       margin-bottom: 20px;
       font-size: 25px;
-      font-weight: 1000;
+      font-weight: 600;
     }
 
     p {

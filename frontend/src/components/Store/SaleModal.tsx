@@ -50,7 +50,7 @@ const Wrapper = styled.div`
         font-size: 2rem;
         text-align: center;
         background-color: #35357a;
-        font-weight: 1000;
+        font-weight: 600;
         color: white;
         border-radius: 10px 0 0 10px;
         &:hover {
@@ -70,7 +70,7 @@ const Wrapper = styled.div`
 
         text-align: center;
         background-color: #35357a;
-        font-weight: 1000;
+        font-weight: 600;
         &:hover {
           background-color: #3f3f8d;
           color: white;
@@ -155,7 +155,7 @@ const Session2 = styled.div`
   }
   .back{
     width:3vw;
-    font-weight: 1000;
+    font-weight: 600;
     font-size:2rem;
   }
   .sell{

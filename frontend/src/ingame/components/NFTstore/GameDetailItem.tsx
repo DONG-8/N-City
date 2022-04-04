@@ -74,7 +74,7 @@ const Box = styled.div`
     width: 30vw;
     .title{
       font-size: 2.5rem;
-      font-weight: 1000;
+      font-weight: 600;
       margin-top: 3vh;
       margin-left: 2vw;
     }

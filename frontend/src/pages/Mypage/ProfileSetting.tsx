@@ -38,7 +38,7 @@ const Left = styled.div`
   margin-left: 3vw;
   .bigTitle {
     font-size: 4vh;
-    font-weight: 1000;
+    font-weight: 600;
   }
   .profileImg {
     border-radius: 100%;
@@ -48,7 +48,7 @@ const Left = styled.div`
   }
   .title {
     font-size: 3vh;
-    font-weight: 1000;
+    font-weight: 600;
     margin-top: 2vh;
   }
   .input {
@@ -90,7 +90,7 @@ const Right = styled.div`
   margin-left: 5vw;
   .title {
     font-size: 3vh;
-    font-weight: 1000;
+    font-weight: 600;
     margin-top: 2vh;
   }
   textarea {

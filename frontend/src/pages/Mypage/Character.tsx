@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   }
   .save{
     margin-left: 2vw;
-    font-weight: 700;
+    font-weight: 600;
     background-color: #2394f6;
     color: white;
   }
@@ -52,7 +52,7 @@ const Left = styled.div`
   }
   button{
     color: #2d2d9c;
-    font-weight: 700;
+    font-weight: 600;
     margin-left: -0.5vw;
   }
 }

@@ -60,7 +60,7 @@ const CardBottom = styled.div`
   align-items: center;
   .buy {
     visibility: hidden;
-    font-weight: 1000;
+    font-weight: 600;
     color: #ff865b;
     font-size: 1.2rem;
     margin: 5px;
@@ -93,7 +93,7 @@ const DesLeft = styled.div`
 `;
 const Artist = styled.div`
   margin: 0.2rem;
-  font-weight: 1000;
+  font-weight: 600;
   margin-left: 0.5rem;
 `;
 const DesRight = styled.div`

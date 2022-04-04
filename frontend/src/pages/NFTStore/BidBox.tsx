@@ -76,7 +76,7 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
       background-color: #e3daf7;
       color:#333;
       font-size: 2.5vh;
-      font-weight: 1000;
+      font-weight: 600;
     }
     }
     .color{

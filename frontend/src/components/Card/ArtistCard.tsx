@@ -51,20 +51,20 @@ const ProfileImg = styled.div`
     }
 `
 const CardBottom = styled.div`
-  text-align:center ;
-    .name{
-      font-size:1.5rem;
-      font-weight:1000 ;
-    }
-    .verified{
-      height: 2rem;
-    }
-    .description{
-      margin: auto ;
-      margin-top:1rem ;
-      width: 90% ;
-    }
-`
+  text-align: center;
+  .name {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .verified {
+    height: 2rem;
+  }
+  .description {
+    margin: auto;
+    margin-top: 1rem;
+    width: 90%;
+  }
+`;
 const Badge = styled.div`
   img{
     position: absolute;
