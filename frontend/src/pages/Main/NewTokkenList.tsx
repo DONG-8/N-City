@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 import ItemCard2 from "../../components/Card/ItemCard2";
 import { useMutation, useQuery } from "react-query";
 import { getProductAll } from "../../store/apis/product";
+import IsLoading2 from "../NFTStore/IsLoading2";
 // interface Iprops{
 //   items :{
 //     productId: Number,
@@ -126,6 +127,7 @@ const NewTokkenList:React.FC = () => {
   return (
     <MainBannerWrapper>
       <div>
+      {ILC &&<IsLoading2/>}
         <Slider {...settings}>
           {allitems && 
          items.map((item,idx) => {
