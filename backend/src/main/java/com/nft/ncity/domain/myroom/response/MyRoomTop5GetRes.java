@@ -5,14 +5,15 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.Map;
-
 @Getter
 @Builder
 @ApiModel(value = "MyRoomTop5GetRes", description = "방문자수 상위 5개 방 정보 반환")
 public class MyRoomTop5GetRes{
         @ApiModelProperty(value = "회원 id")
         Long userId;
+
+        @ApiModelProperty(value = "회원 닉네임")
+        String userNick;
 
         @ApiModelProperty(value = "캐릭터 이미지 경로")
         String myRoomCharacter;

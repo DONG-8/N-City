@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import GuideSlide from "./GuideSlide";
+import HotArtistSlide from "./HotArtistSlide";
 import HotRoomSlide from "./HotRoomSlide";
 import SmallSlide from "./SmallSlide";
 
 const InnreContent = styled.div`
-  width: 1370px;
+  width: 1500px;
   height: 500px;
   /* background-color: pink; */
   display: flex;
@@ -18,8 +19,17 @@ const FlexBox = styled.div`
   display: flex;
   flex-direction: row;
   margin: 0px;
-  justify-content: center;
+  justify-content: space-between;
   margin-left: 10px;
+`;
+const FlexBox2 = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin: 0px;
+  justify-content: space-between;
+  margin-left: 10px;
+  margin-top: 40px;
 `;
 
 const InnerFlexBox = styled.div`
@@ -59,17 +69,15 @@ const Guide = () => {
         <InnerFlexBox>
           <SubText>
             <h3>Hot Room</h3>
-            <h1>+</h1>
           </SubText>
           <HotRoomSlide/>
         </InnerFlexBox>
 
         <InnerFlexBox>
           <SubText>
-            <h3>Hot Artist</h3>
-            <h1>+</h1>
+            <h3>Hot Citizen</h3>
           </SubText>
-          <SmallSlide></SmallSlide>
+          <HotArtistSlide/>
         </InnerFlexBox>
 
         <InnerFlexBox>
@@ -80,7 +88,15 @@ const Guide = () => {
           <GuideSlide/>
         </InnerFlexBox>
       </FlexBox>
-      <FlexBox>
+      <FlexBox2>
+        <ShopIcon>
+            <img src="essets/images/방문.png" alt="" />
+            <h4>
+              다른 사람의 방이 궁금하다면?
+              <br />
+              <br />방 구경하러 가기
+            </h4>
+          </ShopIcon>
         <ShopIcon>
           <img src="essets/images/경매장.png" alt="" />
           <h4>
@@ -99,15 +115,8 @@ const Guide = () => {
             거래소
           </h4>
         </ShopIcon>
-        <ShopIcon>
-          <img src="essets/images/방문.png" alt="" />
-          <h4>
-            다른 사람의 방이 궁금하다면?
-            <br />
-            <br />방 구경하러 가기
-          </h4>
-        </ShopIcon>
-      </FlexBox>
+        
+      </FlexBox2>
     </InnreContent>
   );
 };

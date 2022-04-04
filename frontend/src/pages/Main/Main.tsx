@@ -29,7 +29,7 @@ const MainBackImg = styled.img`
 `;
 
 const MainWrapper = styled.div`
-  width: 100%;
+  width: 80%;
   display: flex;
   margin: 0 auto;
 `;
@@ -38,10 +38,11 @@ const MainBannerWrapper = styled.div`
   width: 890px;
   height: 508px;
   color: white;
-  margin: -400px 10px 0 auto;
+  margin: -400px auto;
 `;
 
 const MainBanner = styled.div`
+  border-radius: 10px 10px 0 0 ;
   width: 890px;
   height: 508px;
   object-fit: cover;
@@ -200,7 +201,6 @@ const HotTokkenWrraper = styled.div`
   width: 100%;
   height: auto;
   min-width: 1236px;
-  background-color: #fffbd8;
 `;
 
 const HotTokken = styled.div`
@@ -643,23 +643,25 @@ export default function Main() {
             </button>
           </MainPagenationBanner>
         </MainBannerWrapper>
+        
         <Profile/>
       </MainWrapper>
 
       <GuideWrapper>
         <Guide/>
       </GuideWrapper>
+      
       <HotTokkenWrraper>
         <HotTokken>
           <h1>New Tokken</h1>
           {/* <ZigZag /> */}
-          <HotTokkenList></HotTokkenList>
+          <NewTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>
       <HotTokkenWrraper>
         <HotTokken>
           <h1>Hot Tokken</h1>
-          <HotTokkenList></HotTokkenList>
+          <HotTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>
       <VideoGuide />

@@ -46,13 +46,14 @@ const TodayInformationDiv = styled.div`
   p {
     font-size: 10px;
     color: white;
-    margin-left: 10px
+    margin-left: 20px
   }
 
   h5 {
-    font-size: 12px;
+    font-size: 14px;
     color: #f2c953;
     margin: 2px;
+    margin-left:10px;
   }
 
   h4 {
@@ -64,7 +65,7 @@ const TodayInformationDiv = styled.div`
   h1 {
     font-size: 15px;
     color: white;
-    margin: auto;
+    margin-left:30px;
   }
 `;
 
@@ -124,6 +125,7 @@ const TitleCardDiv = styled.div`
     justify-content: center;
     margin-left: 30px;
     .box{
+      margin-top: -1vh;
       p{
         font-size: 1.05rem;
         margin-bottom: 5px;
@@ -203,7 +205,6 @@ const LoginDiv = styled.div`
     margin: auto 0;
     margin-left: 40px;
   }
-
   p {
     font-size: 20px;
     font-weight: bolder;
@@ -242,7 +243,7 @@ interface Istate{
   }
 }
 const Profile = () => {
-  const [userId,setUserId] = localStorage.getItem("userId")||""
+  const [userId,setUserId] = sessionStorage.getItem("userId")||""
   // const [isLogin,setIsLogin] = useState(userId!==undefined?true:false)
   const [user,setUser] = useState<Istate['user']>()
   const [myChar,setMyChar] = useState(1)
@@ -308,11 +309,11 @@ const Profile = () => {
           <h1>TODAY</h1>
           <h5>999,999</h5>
           <p>|</p>
-          <p>TOTAL</p>
-          <h4>999,999</h4></>
+          <h1>TOTAL</h1>
+          <h5>999,999</h5></>
           :
           <>
-          <h1>로그인을 하고 N-City의 다양한 컨텐츠를 즐기세요</h1>
+          <h1>N-City의 다양한 컨텐츠를 즐기세요</h1>
           </>
           }
         </TodayInformationDiv>
