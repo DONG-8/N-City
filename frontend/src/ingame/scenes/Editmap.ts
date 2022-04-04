@@ -9,39 +9,46 @@ import Computer from "../items/Computer";
 import Whiteboard from "../items/Whiteboard";
 import VendingMachine from "../items/VendingMachine";
 import {useState} from 'react';
-import Generic from '../items/Generic'
+import { useAppDispatch  } from "../hooks";
+import { LocationInfoChange } from "../stores/EditStore";
 
 enum ItemCategory {
   GROUND,
   WALL,
   CHAIR,
-  WHITEBOARD
+  GENERIC,
+  INTERACTION,
+  RUGS,
+  STAIRS,
+  TABLES,
+  WINDOW_DOOR,
+  BASEMENT,
+  STRUCTURE
 }
 
 class Editmap extends Phaser.Scene {
   selectedItemC = ItemCategory.GROUND;
-  itemGid = 0;
-  private controls;
+  itemGid = 198;
+  itemWidth = 32;
+  itemHeight = 32;
+  isCreateMode = true;
+
   private marker;
 
   network!: Network
   private map!: Phaser.Tilemaps.Tilemap;
   computerMap = new Map<string, Computer>();
   private whiteboardMap = new Map<string, Whiteboard>();
-  private keyZ!: Phaser.Input.Keyboard.Key;
-  private keyA!: Phaser.Input.Keyboard.Key;
-  // private data = new Data 
+ 
   constructor() {
     super('Editmap')
   }
-
-  // context
 
   preload() { // 시작전 세팅 
 
     this.load.image('backdrop_day', 'essets/background/backdrop_day.png')
     
-    this.load.tilemapTiledJSON('tilemap1', 'essets/map/editmap.json') // 배경 다 들고오기 
+    // this.load.tilemapTiledJSON('tilemap1', 'essets/map/editmap.json') // 배경 다 들고오기 
 
     this.load.spritesheet('tiles_wall', 'essets/map/FloorAndGround.png', { // items 사이즈 지정 
       frameWidth: 32,
@@ -72,6 +79,7 @@ class Editmap extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     })
+
     this.load.spritesheet('generic', 'essets/items/Generic.png', {
       frameWidth: 32,
       frameHeight: 32,
@@ -90,52 +98,35 @@ class Editmap extends Phaser.Scene {
       "tiles_wall"
     );
 
-    // const cursor = this.add.image(0, 0, 'chairs', this.itemGid-2561).setVisible(false)
+    this.input.on('gameobjectdown', function(this:any, mousePointer, gameObjects) {
+      console.log('hihi')
+      console.log(this.isCreateMode)
+      if(this.isCreateMode == false) {
+        console.log('hi')
+        console.log(gameObjects)
+        gameObjects.destroy();
+      }
+
+    }, this)
+
+    this.input.on('pointerdown', function(this:any, mousePointer){
+      this.setObject()
+    }, this)
+
+    // 💨 마우스 따라가기 💨💨💨💨💨💨💨💨💨💨💨💨💨
+
+    // let cursor = this.add.image(0, 0, 'chairs', this.itemGid-2561).setVisible(false)
+    // cursor = this.add.image(0, 0, 'chairs', this.itemGid-2560).setVisible(false)
     // this.input.on('pointermove', function (mousePointer){
-    //   console.log('move')
-    //   cursor.setVisible(true).setPosition(mousePointer.x, mousePointer.y)
+    //   console.log(mousePointer.x, mousePointer.y)
+    //   cursor.setVisible(true).setPosition(mousePointer.x, mousePointer.y).setDepth(100000)
     // }, this)
+
+    this.marker = this.add.graphics({ lineStyle: { width: 3, color: 0xffffff, alpha: 1 } });
+    this.marker.strokeRect(0, 0, 32, 32);
     
     const groundLayer = this.map.createLayer("Ground", FloorAndGround);
     groundLayer.setCollisionByProperty({ collides: true });
-
-    // 💨 마우스 따라가기 💨💨💨💨💨💨💨💨💨💨💨💨💨
-    // this.marker = this.add.graphics();
-    // this.input.on(Phaser.Input.Events.POINTER_MOVE, function (mousePointer) {
-    //   console.log('move')
-    //   if (mousePointer.isDown) {
-    //     console.log('fuck')
-    //   }
-
-    // });
-    this.marker = this.add.graphics({ lineStyle: { width: 3, color: 0xffffff, alpha: 1 } });
-    this.marker.strokeRect(0, 0, 32, 32);
-    // this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
-    // const cursors = this.input.keyboard.createCursorKeys();
-    // var controlConfig = {
-    //     camera: this.cameras.main,
-    //     left: cursors.left,
-    //     right: cursors.right,
-    //     up: cursors.up,
-    //     down: cursors.down,
-    //     speed: 0.5
-    // };
-    // this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
-    // this.input.on('gameobjectdown', function(mousePointer, gameObjects) {
-    //   gameObjects.destroy();
-    // })
-
-//     this.input.on('pointerover', function (mousePointer, gameObject) {
-
-//       gameObject.setTint(0xff0000);
-
-//   });
-
-//   this.input.on('gameobjectout', function (pointer, gameObject) {
-
-//     gameObject.clearTint();
-
-// });
 
     const chairs = this.physics.add.staticGroup({ classType: Chair });
     const chairLayer = this.map.getObjectLayer("Chair");
@@ -146,7 +137,6 @@ class Editmap extends Phaser.Scene {
         "chairs",
         "chair"
       ).setInteractive() as Chair;
-      // custom properties[0] is the object direction specified in Tiled
       item.itemDirection = chairObj.properties[0].value;
     });
 
@@ -219,6 +209,63 @@ class Editmap extends Phaser.Scene {
     this.addGroupFromTiled("Basement", "basement", "Basement", true);
   }
 
+  private setObject(){
+    if (this.isCreateMode) {
+
+      switch (this.selectedItemC) {
+        case ItemCategory.GROUND:
+          // this.map.removeTileAtWorldXY(this.game.input.mousePointer.worldX, this.game.input.mousePointer.worldY)
+          // const tileInfo = this.map.getTileAt(pointTileX, pointTileY)
+          // console.log(tileInfo.index) // 타일 (타일 모양) 
+          // console.log(tileInfo.y*40 + tileInfo.x - 1) // 타일 위치 (인덱스)
+          this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
+          console.log(this.marker.x, this.marker.y)
+          break
+        // case ItemCategory.STRUCTURE:
+          // this.map.putTileAtWorldXY(this.itemGid+1, mousePointer.x, mousePointer.y)
+          // if (this.itemHeight === 64) {
+          //   this.map.putTileAtWorldXY(this.itemGid+65, mousePointer.x, mousePointer.y+63)
+          // }
+          //   break
+        case ItemCategory.WALL:
+          this.physics.add.staticSprite(this.marker.x+16, this.marker.y+16, 'tiles_wall', this.itemGid-1).setDepth(this.marker.y+16).setInteractive()
+          // this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
+          this.map.putTileAtWorldXY(this.itemGid+64, this.marker.x, this.marker.y+63)
+          break
+        case ItemCategory.INTERACTION: 
+          if(this.itemGid < 4685) {
+            this.physics.add.staticSprite(this.marker.x+16, this.marker.y, 'computers', this.itemGid-4680).setDepth(this.marker.y).setInteractive()
+          } else {
+            this.physics.add.staticSprite(this.marker.x+16, this.marker.y, 'whiteboards', this.itemGid-4685).setDepth(this.marker.y).setInteractive()
+          }
+          break
+        case ItemCategory.CHAIR: 
+          this.add.image(this.marker.x+16, this.marker.y, 'chairs', this.itemGid-2561).setDepth(this.marker.y).setInteractive()
+          break
+        case ItemCategory.GENERIC: case ItemCategory.STAIRS: case ItemCategory.WINDOW_DOOR:
+          var w = this.itemWidth/ 32
+          var h = this.itemHeight / 32
+          for (let i = 0; i< w; i ++){
+            for (let j = 0; j< h; j ++){
+            this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(this.marker.y+16+(j*32)).setInteractive()
+          }
+          }
+          break
+        case ItemCategory.RUGS: 
+          var w = this.itemWidth/ 32
+          var h = this.itemHeight / 32
+            for (let i = 0; i< w; i ++){
+              for (let j = 0; j< h; j ++){
+              this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(0).setInteractive()
+            }
+          }
+          break
+        default:
+          return null;
+      }
+      store.dispatch(LocationInfoChange({x:this.marker.x, y:this.marker.y}));
+    }}
+
   private addObjectFromTiled(
     //⭐ '타일' 관련.. idk
     group: Phaser.Physics.Arcade.StaticGroup,
@@ -262,44 +309,14 @@ class Editmap extends Phaser.Scene {
     });
   }
 
-  selectItem(itemCategory : ItemCategory, gid : number) {
-    console.log(itemCategory)
-    this.selectedItemC = itemCategory
-    this.itemGid = gid
-  }
-
   update(t: number, dt: number) {  // 매 프레임 update
 
-    // var worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
     var pointTileX = this.map.worldToTileX(this.game.input.mousePointer.worldX)
     var pointTileY = this.map.worldToTileY(this.game.input.mousePointer.worldY);
 
     this.marker.x = this.map.tileToWorldX(pointTileX);
     this.marker.y = this.map.tileToWorldY(pointTileY); 
 
-    if (this.input.manager.activePointer.isDown) {
-      switch (this.selectedItemC) {
-        case ItemCategory.GROUND:
-          // this.map.removeTileAtWorldXY(this.game.input.mousePointer.worldX, this.game.input.mousePointer.worldY)
-          // const tileInfo = this.map.getTileAt(pointTileX, pointTileY)
-          // console.log(tileInfo.index) // 타일 (타일 모양) 
-          // console.log(tileInfo.y*40 + tileInfo.x - 1) // 타일 위치 (인덱스)
-          this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
-          break
-        case ItemCategory.WALL:
-          this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
-          this.map.putTileAtWorldXY(this.itemGid+64, this.marker.x, this.marker.y+63)
-          break
-        case ItemCategory.WHITEBOARD: 
-          this.physics.add.staticSprite(this.marker.x+16, this.marker.y, 'whiteboards', this.itemGid-4685).setDepth(this.marker.y)
-          break
-        case ItemCategory.CHAIR: 
-         this.add.image(this.marker.x+16, this.marker.y, 'chairs', this.itemGid-2561).setDepth(this.marker.y).setDepth(this.marker.y)
-            break
-        default:
-          return 'asdf'
-      }
-    }
   }
 }
 

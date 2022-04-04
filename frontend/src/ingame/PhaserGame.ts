@@ -3,6 +3,7 @@ import Game from './scenes/Game'
 import Background from './scenes/Background'
 import Bootstrap from './scenes/Bootstrap'
 import EditMap from './scenes/Editmap'
+import Start from './scenes/Start'
 
 //phasergame.ts 에서는 scenes들을 불러온다. 
 
@@ -15,6 +16,7 @@ const config: Phaser.Types.Core.GameConfig = { //건드릴거없을듯 ?
     mode: Phaser.Scale.ScaleModes.RESIZE,
     width: window.innerWidth,
     height: window.innerHeight,
+
   },
   physics: {
     default: 'arcade',
@@ -24,7 +26,7 @@ const config: Phaser.Types.Core.GameConfig = { //건드릴거없을듯 ?
     },
   },
   autoFocus: true,
-  scene: [Bootstrap, Background, Game, EditMap], //scene 추가 
+  scene: [Start, Bootstrap, Background, Game, EditMap], //scene 추가 
 } 
 
 const phaserGame = new Phaser.Game(config) // Phaser 시작
