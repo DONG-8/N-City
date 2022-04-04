@@ -69,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()// 인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
                 .antMatchers("/api/favorites/{\\d}",
-                        "/api/users/change-info","/api/users/confirm", "/api/users/confirm-email", "/api/users/{userNick}/duplicate",
+                        "/api/users/change-info","/api/users/confirm", "/api/users/{userNick}/duplicate",
                         "/api/follow/{\\d}",
                         "/api/products", "/api/products/token", "/api/products/{productId}",
                         "/api/authentication",
