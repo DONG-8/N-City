@@ -189,6 +189,35 @@ public class ProductServiceImpl implements ProductService{
         return res;
     }
 
+    // READ
+    // 최신상품 10개 조회
+    @Override
+    public List<ProductListGetRes> getProductNew10List() {
+        List<Product> products = productRepositorySupport.findProductNew10List();
+
+        List<ProductListGetRes> productListGetRes = new ArrayList<>();
+
+        for(Product p : products){
+            ProductListGetRes productList = new ProductListGetRes();
+
+            User user = userRepositorySupport.findUserByUserId(p.getUserId());
+
+            productList.setUserRole(user.getUserRole());
+            productList.setProductTitle(p.getProductTitle());
+            productList.setProductPrice(p.getProductPrice());
+            productList.setProductRegDt(p.getProductRegDt());
+            productList.setProductId(p.getProductId());
+            productList.setProductCode(p.getProductCode());
+            productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
+            productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
+            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
+            productList.setProductState(p.getProductState());
+
+            productListGetRes.add(productList);
+        }
+        return productListGetRes;
+    }
+
     @Override
     public Page<ProductListGetRes> getProductListByCode(Pageable pageable, int productCode) {
         Page<Product> products = productRepositorySupport.findProductListByCode(pageable, productCode);
