@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import { Admin, FAQ, Main, Mypage, NFTStore } from "./pages/index";
@@ -32,6 +32,7 @@ function App() {
       (window as any).game.destroy(true);
     }
   }, []);
+
   return (
     <>
       <GlobalStyle />
