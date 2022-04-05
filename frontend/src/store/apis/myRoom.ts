@@ -29,10 +29,10 @@ export const postRoomJoin = async (roomUserId : number)  => {
 
 // 유저 방 배경 변경 요청
 // 이거 배경 파일이 json이면 변경될 수 있음
-export const putBackGroundChange = async (myRoomBackGround : string) => {
+export const putBackGroundChange = async (myRoomBackground : object) => {
   const response = await apiClient.put<any>(
     `/myroom/background`, {
-      myRoomBackGround
+      myRoomBackground
     }
   )
   return response.data

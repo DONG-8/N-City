@@ -108,14 +108,14 @@ const TitleCardDiv = styled.div`
 const TodayInformationDiv = styled.div`
   width: 400px;
   height: 65px;
-  background-color: #129fce;
+  background-color: #23afde;
   margin: 0 auto;
   margin-top: 10px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   &:hover{
-      background-color: #23afde;
+    background-color: #129fce;
       transition: 0.1s;
   }
   p {

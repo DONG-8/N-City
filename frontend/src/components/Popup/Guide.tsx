@@ -53,6 +53,9 @@ const ShopIcon = styled.div`
   .one{
     margin-top: -10px;
   }
+  &#end{
+    margin-right: 5vw;
+  }
 `;
 
 const SubText = styled.div`
@@ -115,7 +118,7 @@ const Guide = () => {
             거래소
           </h4>
         </ShopIcon>
-        <ShopIcon  onClick={()=>{navigate('/mint')}} >
+        <ShopIcon id="end"  onClick={()=>{navigate('/mint')}} >
           <img src="essets/images/경매장.png" alt="" />
           <h4>
             작품을 등록하고 싶으신가요?

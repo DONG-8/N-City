@@ -1,17 +1,8 @@
 import Phaser from 'phaser'
-import { stringify } from 'querystring'
 import Network from '../services/Network'
 import store from '../stores'
 import { setRoomJoined } from '../stores/RoomStore'
-const ROOMNUM = localStorage.getItem('roomNum')
-
-export const TOKENS = {
-  1:'https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/e625d60d-ebb4-45af-96a0-7986e2ac9f3f.jpg',
-  2:'https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/d9e65217-8f00-49b8-bd71-b66d9ebcb4fe.png',
-  3:'https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/ee371e46-c1aa-4f35-b6bf-d0bcb66684e1.png',
-  4:'https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/6488c6ea-55de-44be-bd52-4c66648c2bb6.png',
-  5:'https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/1e2cd99e-2270-4375-ab9a-bd8e314685ac.jpg',
-}
+import basicData from './map.json';
 
 enum BackgroundMode {
   DAY,
@@ -23,20 +14,14 @@ enum GameMode {
   EDIT
 }
 
-const avatars = [
-  { name: "adam", img: "/essets/login/Adam_login.png" },
-  { name: "ash", img: "/essets/login/Ash_login.png" },
-  { name: "lucy", img: "/essets/login/Lucy_login.png" },
-  { name: "nancy", img: "/essets/login/Nancy_login.png" },
-];
-
 export default class Bootstrap extends Phaser.Scene {
   network!: Network
-  private mapInfo
+  mapInfo = basicData
+  myArtList = {content:[{productThumbnailUrl:'', productId:0}]}
+
   constructor() {
     super('bootstrap');
-    this.mapInfo = store.getState().edit.userMap
-    }
+  }
   
   
   preload() { // 시작전 세팅 
@@ -54,39 +39,10 @@ export default class Bootstrap extends Phaser.Scene {
     )
     this.load.image('backdrop_night', 'essets/background/backdrop_night.png')
     this.load.image('sun_moon', 'essets/background/sun_moon.png')
-    // this.load.tilemapTiledJSON('tilemap', `essets/map/map${ROOMNUM}.json`) // 배경 다 들고오기 
-    this.load.tilemapTiledJSON('tilemap', `essets/map/map.json`) // 배경 다 들고오기 
-    // this.load.tilemapTiledJSON('tilemap', this.mapInfo) // 배경 다 들고오기 
-    //⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
-    this.load.spritesheet({
-      key:'vendingmachines',
-      url: TOKENS[1],
-      frameConfig:{frameWidth: 120,frameHeight: 80},
-    })
-    this.load.spritesheet({
-      key:'vendingmachines2',
-      url:TOKENS[2],
-      frameConfig:{frameWidth:  120,frameHeight: 80},
-    })
-    this.load.spritesheet({
-      key:'vendingmachines3',
-      url:TOKENS[3],
-      frameConfig:{frameWidth: 120,frameHeight:  80},
-    })
-    this.load.spritesheet({
-      key:'vendingmachines4',
-      url:TOKENS[4],
-      frameConfig:{frameWidth: 120,frameHeight:  80,},
-    })
-    this.load.spritesheet({
-      key:'vendingmachines5',
-      url:TOKENS[5],
-      frameConfig:{frameWidth: 120,frameHeight:  80},
-    })
-  //⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
 
-    this.load.spritesheet('tiles_wall', 'essets/map/FloorAndGround.png'
-    ,{ // items 사이즈 지정 
+    this.load.tilemapTiledJSON('tilemap', this.mapInfo) // 배경 다 들고오기 
+
+    this.load.spritesheet('tiles_wall', 'essets/map/FloorAndGround.png', { // items 사이즈 지정 
       frameWidth: 32,
       frameHeight: 32,
     })
@@ -102,7 +58,10 @@ export default class Bootstrap extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64,
     })
-    
+    this.load.spritesheet('vendingmachines', 'essets/items/vendingmachine.png', {
+      frameWidth: 96,
+      frameHeight: 96,
+    })
     this.load.spritesheet('office', 'essets/items/Modern_Office_Black_Shadow.png', {
       frameWidth: 32,
       frameHeight: 32,
@@ -131,7 +90,16 @@ export default class Bootstrap extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 48,
     })
-    
+
+    // 사용자가 가진 이미지 로드 
+    {this.myArtList.content.map((product, idx) => {
+      return (
+        this.load.spritesheet(`${product.productId}`, `https://ncity-bucket-resize.${product.productThumbnailUrl.slice(21)}`, {
+          frameWidth: 120,
+          frameHeight: 80,
+        })
+      )
+    })}
   }
 
   init() { // import Network from '../services/Network'
@@ -161,30 +129,18 @@ export default class Bootstrap extends Phaser.Scene {
     this.launchBackground(backgroundMode)
   }
 
-  changeGameMode(gameMode : GameMode) {
+  changeGameMode(gameMode: GameMode) {
     if (gameMode === GameMode.EDIT) {
       this.scene.stop('game')
       this.scene.launch('Editmap')
-      console.log('게임모드 변경')
+      console.log('게임모드 변경에딧맵으로오ㅗ오오오')
     }
     else {
       this.scene.stop('Editmap')
       this.network.webRTC?.checkPreviousPermission()
       this.scene.launch('game', {network: this.network})
       console.log('게임모드 변경')
-      store.dispatch(setRoomJoined(true))
-      console.log('완료')
-      // const game = phaserGame.scene.keys.game as Game;
-      // game.registerKeys(); // 키 설정
-      // game.myPlayer.setPlayerName("임현홍"); // ❗ 내이름 설정해주기
-      // game.myPlayer.setPlayerTexture(avatars[1].name); // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
-      // game.network.readyToConnect(); // 네트워크 연결
-      // console.log( "ConnectGame?!");
+      store.dispatch(setRoomJoined(false))
     }
-  }
-
-  updateMapInfo(mapInfomation : Object) {
-    this.mapInfo = mapInfomation
-    console.log('맵정보 업데이트')
   }
 }

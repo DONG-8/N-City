@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { getCharacter, putCharacterChange } from '../../store/apis/myRoom';
 import { getUsercollectedInfo } from '../../store/apis/user';
 import img1 from './images/character1.png'
-import img2 from './images/character2.png'
 const Wrapper = styled.div`
   .title{
     margin-left: 8vw;

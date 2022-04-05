@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PersonIcon from "@material-ui/icons/Person";
 import SearchBar from "./SearchBar";
@@ -194,6 +194,11 @@ export default function Navbar() {
     const newNick = sessionStorage.getItem("userNickname")
     if (newNick) setNickName(newNick)
   }
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
 
   useEffect(()=>{
@@ -205,10 +210,7 @@ export default function Navbar() {
     }
   },[isLogin])
   
-  const login = ()=>{ // 위에 세줄 지우기 ⭐
-    // localStorage.setItem('userId','1')
-    // localStorage.setItem('userNickname','아이유')
-    // setIsLogin(true) 
+  const login = ()=>{ // 위에 세줄 지우기 ⭐ 
     navigate("/login");
   }
 
@@ -277,9 +279,11 @@ export default function Navbar() {
             <Link className="inner" to="artists">
               <p>Citizen</p>
             </Link>
+
+            {isLogin &&
             <Link className="inner" to="mint">
               <p>Create</p>
-            </Link>
+            </Link>}
             {isLogin ? ( // 로그인 되었으면 
               <div className="profile">
                 <PersonIcon/>
@@ -314,10 +318,7 @@ export default function Navbar() {
                 </div>
               </>
             )}
-            <GameStartButton />
-            {/* <div className="game" >
-              <a href="/ingame" >Game Start</a>
-            </div> */}
+            <GameStartButton isLogin={isLogin} />
           </div>
         </NavbarBox>
       </NavbarWrrap>

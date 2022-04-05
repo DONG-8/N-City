@@ -650,15 +650,15 @@ export default function Main() {
       
       <HotTokkenWrraper>
         <HotTokken>
-          <h1>New Token</h1>
-          {/* <ZigZag /> */}
-          <NewTokkenList/>
+          <h1>Hot Token</h1>
+          <HotTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>
       <HotTokkenWrraper>
         <HotTokken>
-          <h1>Hot Token</h1>
-          <HotTokkenList/>
+          <h1>New Token</h1>
+          {/* <ZigZag /> */}
+          <NewTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>
       <VideoGuide />

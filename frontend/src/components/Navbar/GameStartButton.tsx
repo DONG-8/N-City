@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -91,11 +92,22 @@ path.two {
     }
 }
 `
-
-const GameStartButton = () => {
+interface Iprops{
+  isLogin :boolean
+}
+const GameStartButton:React.FC<Iprops> = ({isLogin}) => {
+  const navigate = useNavigate()
+  const gamestart = ()=>{
+    //⭐⭐⭐⭐⭐ 
+    if(isLogin){ 
+      navigate('/ingame')
+      window.location.reload()
+  }
+    else{navigate('/login')}
+  }
   return (
     <Wrapper>
-      <a className="cta" href="/ingame">
+      <button onClick={()=>{gamestart()}} className="cta">
         <span>START</span>
         <span>
           <svg width="66px" height="43px" viewBox="0 0 66 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
@@ -106,7 +118,7 @@ const GameStartButton = () => {
             </g>
           </svg>
         </span> 
-      </a>
+      </button>
     </Wrapper>
   )
 }
