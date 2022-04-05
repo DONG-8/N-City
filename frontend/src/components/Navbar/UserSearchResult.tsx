@@ -51,7 +51,7 @@ const InnerContent = styled.div`
   align-items: center;
   img {
     width: 20px;
-    height: auto;
+    height: 20px;
     position:absolute;
     right: 10px;
   }
