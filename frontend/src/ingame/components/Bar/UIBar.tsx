@@ -122,19 +122,19 @@ const UIBar = () => {
               openMusic();
             }}
           >
-            <img className="img" src="essets/room/music.png" alt="사진없노" />
+            <img className="Mimg" src="essets/room/music.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               {musicList && <AudioPlayer tracks={musicList} />}
             </div>
           </div>
           <div className="Icon">
-            <img className="img" src="essets/room/hammer.png" alt="사진없노" />
+            <img className="Mimg" src="essets/room/hammer.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <p>Editing</p>
             </div>
           </div>
           <div className="Icon">
-            <img className="img" src="essets/room/home.png" alt="사진없노" />
+            <img className="Mimg" src="essets/room/home.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <p>Home</p>
             </div>
@@ -145,7 +145,7 @@ const UIBar = () => {
               openShop();
             }}
           >
-            <img className="img" src="essets/room/store.png" alt="사진없노" />
+            <img className="Mimg" src="essets/room/store.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <p>store</p>
             </div>
@@ -156,9 +156,20 @@ const UIBar = () => {
               openVisit();
             }}
           >
-            <img className="img" src="essets/room/visit.png" alt="사진없노" />
+            <img className="Mimg" src="essets/room/visit.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <p>Guest Book</p>
+            </div>
+          </div>
+          <div
+            className="Icon"
+            onClick={() => {
+              openVisit();
+            }}
+          >
+            <img className="Mimg" src="essets/room/visit.png" alt="사진없노" />
+            <div className={tog ? "hidden" : "content"}>
+              <p>UserList</p>
             </div>
           </div>
         </Body>
