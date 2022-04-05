@@ -32,12 +32,15 @@ const avatars = [
 
 export default class Bootstrap extends Phaser.Scene {
   network!: Network
-  
+  private mapInfo
   constructor() {
-    super('bootstrap')
-  }
+    super('bootstrap');
+    this.mapInfo = store.getState().edit.userMap
+    }
+  
   
   preload() { // 시작전 세팅 
+    console.log(this.mapInfo,'맵정보')
     this.load.atlas( // atlas 는 여러개의 스프라이트를 한장의 큰 텍스쳐에 모아놓은 것 
       'cloud_day',
       'essets/background/cloud_day.png',
@@ -53,6 +56,7 @@ export default class Bootstrap extends Phaser.Scene {
     this.load.image('sun_moon', 'essets/background/sun_moon.png')
     // this.load.tilemapTiledJSON('tilemap', `essets/map/map${ROOMNUM}.json`) // 배경 다 들고오기 
     this.load.tilemapTiledJSON('tilemap', `essets/map/map.json`) // 배경 다 들고오기 
+    // this.load.tilemapTiledJSON('tilemap', this.mapInfo) // 배경 다 들고오기 
     //⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
     this.load.spritesheet({
       key:'vendingmachines',
@@ -177,5 +181,10 @@ export default class Bootstrap extends Phaser.Scene {
       // game.network.readyToConnect(); // 네트워크 연결
       // console.log( "ConnectGame?!");
     }
+  }
+
+  updateMapInfo(mapInfomation : Object) {
+    this.mapInfo = mapInfomation
+    console.log('맵정보 업데이트')
   }
 }
