@@ -218,8 +218,14 @@ public class ProductRepositorySupport {
     public List<Product> findProductNew10List() {
         List<Product> productList = jpaQueryFactory.select(qProduct)
                 .from(qProduct)
-                .limit(10)
-                .orderBy(qProduct.productRegDt.desc())
+                .where(qProduct.productId.in(
+                        jpaQueryFactory.select(qDeal.productId)
+                                .from(qDeal)
+                                .where(qDeal.dealType.eq(6))
+                                .orderBy(qDeal.dealCreatedAt.desc())
+                                .limit(10)
+                                .fetch()
+                ))
                 .fetch();
 
         return productList;
