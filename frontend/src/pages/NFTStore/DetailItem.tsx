@@ -524,9 +524,7 @@ const DetailItem = () => {
   const [history, setHistory] = useState<Istate["history"][]>([])
   const [isImg, setIsImg] = useState(true)
   const { ethereum } = window
-  useEffect(() => {
-    getHistory.mutate()
-  }, [])
+
   const dealTypeConvert = (dealType) => {
     switch (dealType) {
       case 1: // 경매등록
@@ -573,7 +571,8 @@ const DetailItem = () => {
   const getHistory = useMutation<any>( // 추가 // 추천 데이터
     "getPastHistory",
     async () => {
-      return await getPastHistory(localitem.productId);
+      if (!productId) return;
+      return await getPastHistory(Number(productId));
     },
     {
       onSuccess: (res) => {
@@ -832,6 +831,7 @@ function leadingZeros(n, digits) {
   useEffect(() => {
     getProduct.mutate();
     getLiked.mutate();
+    getHistory.mutate();
     window.scrollTo(0, 0);
   }, [productId]);
   
