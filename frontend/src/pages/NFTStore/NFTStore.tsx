@@ -251,7 +251,7 @@ const NFTStore = () => {
           </div>
         </Right>
       </IntroBox>
-      {showItems.length>0 &&
+      {allitems.length>0 &&
       <>
         <FilterButton>
           <div className='toggle'>
@@ -312,7 +312,7 @@ const NFTStore = () => {
       </CategoryBar>
       </>
       }
-          {showItems.length===0 &&
+          {allitems.length===0 &&
           <>
           <IsLoading2/>
           <div className='loading'>Loading..</div>
