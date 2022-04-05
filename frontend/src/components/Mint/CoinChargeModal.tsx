@@ -64,6 +64,7 @@ const Contents= styled.div`
     font-size: 2vh;
     font-weight: 500;
     color: black;
+    overflow: hidden;
   }
   .gray{
     color: gray;

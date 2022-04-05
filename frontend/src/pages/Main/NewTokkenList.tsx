@@ -65,7 +65,7 @@ const settings = {
 };
 
 const MainBannerWrapper = styled.div`
-  width: 85vw;
+  width: 1400px;
   height: 600px;
   color: black;
   margin: 0 auto;

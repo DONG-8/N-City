@@ -63,7 +63,7 @@ const FilterBar = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   margin: auto;
   margin-top: 100px;
-  width: 980px;
+  width: 80vw;
   display: flex;
   div {
     cursor: pointer;
@@ -647,6 +647,7 @@ export default function Mypage() {
           <p>활동내역</p>
         </div>
       </FilterBar>
+      {}
       {status === "myNFT" && (
         <ItemCards>
           {myTokens.map((item, idx) => {
