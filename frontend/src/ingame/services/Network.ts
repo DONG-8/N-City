@@ -31,7 +31,7 @@ export default class Network {
   mySessionId!: string
 
   constructor() { // 네트워크 관련 ⭐⭐⭐⭐
-    const protocol = window.location.protocol.replace('http', 'ws')
+    const protocol = window.location.protocol.replace('https', 'ws')
     const endpoint =
       // process.env.NODE_ENV === 'production'
       //   ? `wss://sky-office.herokuapp.com`
