@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   position: absolute;
   width: 340px;
   height: 460px;
-  background-color: #e4e4e4d7;
+  background-color: #f0f0f0e9;
   /* background-color: #656565a5; */
   right: 30px;
   border-radius: 10px;
@@ -31,6 +31,7 @@ const Head = styled.div`
     /* color:white; */
     margin-top: 20px;
     font-size: 30px;
+    font-weight: 600;
   }
 `;
 
@@ -64,12 +65,14 @@ const Foot = styled.div`
 const MusicItem = styled.div`
   width: 100%;
   height: 50px;
+  border-bottom: 0.1px solid #d6d6d6bc;
   /* background-color: #e381ba; */
   display: flex;
   flex-direction: row;
   margin-bottom: 5px;
   align-items: center;
   margin-top: 2px;
+  margin-bottom: 2px;
   img {
     width: 45px;
     height: 45px;
@@ -156,7 +159,6 @@ const MusicModal = () => {
         {Alldata &&
           Alldata.content.map((obj, i) => {
             if (obj.productCode === 1) {
-              console.log('🎶',obj)
               return (
                 <MusicItem>
                   <img src={obj.productThumbnailUrl} alt="사진없노~" />
