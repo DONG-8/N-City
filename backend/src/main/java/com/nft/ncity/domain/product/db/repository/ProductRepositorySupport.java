@@ -127,6 +127,19 @@ public class ProductRepositorySupport {
         return execute;
     }
 
+
+    @Transactional
+    public long updateProductMyroomByProductId(ProductModifyPutReq productModifyPutReq){
+        long execute = jpaQueryFactory.update(qProduct)
+                .set(qProduct.productXCoordinate, productModifyPutReq.getProductXCoordinate())
+                .set(qProduct.productYCoordinate, productModifyPutReq.getProductYCoordinate())
+                .set(qProduct.productView,productModifyPutReq.isProductView())
+                .where(qProduct.productId.eq(productModifyPutReq.getProductId()))
+                .execute();
+        return execute;
+    }
+
+
     public Page<Product> findProductListByUserId(Long userId, Pageable pageable) {
 
         List<Product> productList = jpaQueryFactory.select(qProduct)
