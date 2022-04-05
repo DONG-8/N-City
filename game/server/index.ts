@@ -3,7 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import { Server, LobbyRoom } from 'colyseus'
 import { monitor } from '@colyseus/monitor'
-import { RoomType } from '../../frontend/src/types/Rooms'
+import { RoomType } from './types/Rooms'
 
 
 // import socialRoutes from "@colyseus/social/express"
