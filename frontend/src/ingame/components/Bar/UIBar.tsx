@@ -115,26 +115,26 @@ const UIBar = () => {
         <Body className={tog ? "close" : "open"}>
           <Absol>{shopTog ? null : <StoreModal></StoreModal>}</Absol>
           <Absol>{visitTog ? null : <VisitModal></VisitModal>}</Absol>
+          <Absol>{musicTog ? null : <MusicModal></MusicModal>}</Absol>
           <div
             className="Icon"
             onClick={() => {
               openMusic();
             }}
           >
-            <Absol>{musicTog ? null : <MusicModal></MusicModal>}</Absol>
-            <img className="music" src="essets/room/music.png" alt="사진없노" />
+            <img className="img" src="essets/room/music.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               {musicList && <AudioPlayer tracks={musicList} />}
             </div>
           </div>
           <div className="Icon">
-            <img src="essets/room/hammer.png" alt="사진없노" />
+            <img className="img" src="essets/room/hammer.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <p>Editing</p>
             </div>
           </div>
           <div className="Icon">
-            <img src="essets/room/home.png" alt="사진없노" />
+            <img className="img" src="essets/room/home.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <p>Home</p>
             </div>
@@ -145,7 +145,7 @@ const UIBar = () => {
               openShop();
             }}
           >
-            <img src="essets/room/store.png" alt="사진없노" />
+            <img className="img" src="essets/room/store.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <p>store</p>
             </div>
@@ -156,7 +156,7 @@ const UIBar = () => {
               openVisit();
             }}
           >
-            <img src="essets/room/visit.png" alt="사진없노" />
+            <img className="img" src="essets/room/visit.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <p>Guest Book</p>
             </div>
