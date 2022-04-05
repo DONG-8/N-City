@@ -42,6 +42,7 @@ public interface ProductService {
 
     // update
     long productModify(ProductModifyPutReq productModify);
+    long productMyroomModify(ProductModifyPutReq productModify);
 
     // delete
     boolean productRemove(Long productId);
