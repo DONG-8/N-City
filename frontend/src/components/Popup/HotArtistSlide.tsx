@@ -6,6 +6,7 @@ import RankArtistCard from "./RankArtistCard";
 import { useMutation, useQuery } from 'react-query';
 import {getRoomTop5} from '../../store/apis/myRoom'
 import RankCitizen from "./RankCitizen";
+import { getUserfollowTop5 } from "../../store/apis/user";
 
 const SubBannerWrraper = styled.div`
   position: relative;
@@ -94,11 +95,11 @@ const HotArtistSlide = () => {
     if (subCheck === 0) {
       setTimeout(() => {
         setSubCheck(1);
-      }, 8000);
+      }, 3000);
     } else {
       setTimeout(() => {
         setSubCheck(0);
-      }, 8000);
+      }, 3000);
     }
   };
 
@@ -142,10 +143,11 @@ const HotArtistSlide = () => {
     }
   }
   const { isLoading:ILC, data:characters } = useQuery<any>(
-    "getSellProductCategori",
-    async () => {return (await (getRoomTop5( )))
+    "getUserfollowTop5",
+    async () => {return (await (getUserfollowTop5( )))
       },
     { onSuccess:(res)=>{
+      console.log(res,'🎨')
     },
       onError: (err: any) => {
         console.log(err, "판매중 정보 실패");
@@ -157,7 +159,6 @@ const HotArtistSlide = () => {
     {characters!==undefined &&
       <SubBannerWrraper>
         <SubBanner>
-          
           {characters.map((value, idx) => {
             return (
               <div className="inner"

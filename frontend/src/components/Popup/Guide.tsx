@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import GuideSlide from "./GuideSlide";
 import HotArtistSlide from "./HotArtistSlide";
@@ -41,12 +42,17 @@ const InnerFlexBox = styled.div`
 const ShopIcon = styled.div`
   width: 350px;
   height: 100px;
-  /* background-color: yellow; */
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   flex-direction: row;
   cursor: pointer;
+  h4{
+    margin-left: 20px;
+    margin-top: 40px;
+  }
+  .one{
+    margin-top: -10px;
+  }
 `;
 
 const SubText = styled.div`
@@ -63,6 +69,7 @@ const SubText = styled.div`
 `;
 
 const Guide = () => {
+  const navigate = useNavigate()
   return (
     <InnreContent>
       <FlexBox>
@@ -89,32 +96,35 @@ const Guide = () => {
         </InnerFlexBox>
       </FlexBox>
       <FlexBox2>
-        <ShopIcon>
-            <img src="essets/images/방문.png" alt="" />
+          <ShopIcon  onClick={()=>{navigate('/artists')}}>
+            <img className="one" src="essets/images/방문.png" alt="" />
             <h4>
               다른 사람의 방이 궁금하다면?
               <br />
-              <br />방 구경하러 가기
+              <br />
+              방 구경하러 가기
             </h4>
           </ShopIcon>
-        <ShopIcon>
-          <img src="essets/images/경매장.png" alt="" />
-          <h4>
-            더 다양한 물품들을 만나보세요
-            <br />
-            <br />
-            경매장
-          </h4>
-        </ShopIcon>
-        <ShopIcon>
+
+          <ShopIcon  onClick={()=>{navigate('/nftstore')}}>
           <img src="essets/images/거래소.png" alt="" />
           <h4>
-            구매하고싶은 작품이 있다면?
+            더 다양한 물품들을 만나보세요!
             <br />
             <br />
             거래소
           </h4>
         </ShopIcon>
+        <ShopIcon  onClick={()=>{navigate('/mint')}} >
+          <img src="essets/images/경매장.png" alt="" />
+          <h4>
+            작품을 등록하고 싶으신가요?
+            <br />
+            <br />
+            민팅
+          </h4>
+        </ShopIcon>
+        
         
       </FlexBox2>
     </InnreContent>

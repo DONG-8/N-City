@@ -171,10 +171,10 @@ public class ProductController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = Product.class),
     })
-    public ResponseEntity<List<ProductTop10GetRes>> getProductFavoriteRank() {
+    public ResponseEntity<List<ProductListGetRes>> getProductFavoriteRank() {
         log.info("ProductTop10GetRes - Call");
 
-        List<ProductTop10GetRes> productRank = productService.getProductFavoriteRank();
+        List<ProductListGetRes> productRank = productService.getProductFavoriteRank();
         return ResponseEntity.status(200).body(productRank);
     }
 
@@ -186,6 +186,19 @@ public class ProductController {
     public ResponseEntity<BaseResponseBody> productModify(@RequestBody ProductModifyPutReq productModifyPutReq ){
         log.info("productModify - 호출");
         if (productService.productModify(productModifyPutReq) == 0){
+            log.error("productModify - This productId doesn't exist.");
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "This productId doesn't exist."));
+        } else {    // 정상 작동
+            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success")); //post나 put 요청 성공시 201 사용
+        }
+    }
+
+    //상품 마이룸 정보 업데이트
+    @ApiOperation(value = "마이룸에서 사용되는 상품 정보 수정")
+    @PutMapping("/myroom")
+    public ResponseEntity<BaseResponseBody> productMyroomModify(@RequestBody ProductModifyPutReq productModifyPutReq ){
+        log.info("productMyroomModify - 호출");
+        if (productService.productMyroomModify(productModifyPutReq) == 0){
             log.error("productModify - This productId doesn't exist.");
             return ResponseEntity.status(404).body(BaseResponseBody.of(404, "This productId doesn't exist."));
         } else {    // 정상 작동

@@ -5,7 +5,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ItemCard2 from "../../components/Card/ItemCard2";
 import { useMutation, useQuery } from "react-query";
-import { getProductAll } from "../../store/apis/product";
+import { getliketop10, getProductAll } from "../../store/apis/product";
+import { getUserfollowTop5 } from "../../store/apis/user";
+import IsLoading2 from "../NFTStore/IsLoading2";
 // interface Iprops{
 //   items :{
 //     productId: Number,
@@ -107,15 +109,14 @@ interface Istate{
 
 const NewTokkenList:React.FC = () => {
   const [items,setItems] = useState<Istate['item'][]>([])
+
   const { isLoading:ILC, data:allitems } = useQuery<any>(
-    "getProductAll",
-    async () => {return (await (getProductAll({ page: 1, size: 1000 })))
+    "getliketop10",
+    async () => {return (await (getliketop10()))
       },
     { onSuccess:(res)=>{
-      const tmp:Istate['item'][] = [...res.content].reverse().slice(0,10)
-      console.log(tmp)
-      setItems(tmp)
-      console.log(items)
+      console.log('🎶',res)
+      setItems(res)
     },
       onError: (err: any) => {
         console.log(err, "판매중 정보 실패");
@@ -126,6 +127,7 @@ const NewTokkenList:React.FC = () => {
   return (
     <MainBannerWrapper>
       <div>
+        {ILC &&<IsLoading2/>}
         <Slider {...settings}>
           {allitems && 
          items.map((item,idx) => {

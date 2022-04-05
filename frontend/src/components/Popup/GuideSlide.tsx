@@ -110,11 +110,11 @@ const GuideSlide = () => {
     if (subCheck === 0) {
       setTimeout(() => {
         setSubCheck(1);
-      }, 8000);
+      }, 3000);
     } else {
       setTimeout(() => {
         setSubCheck(0);
-      }, 8000);
+      }, 3000);
     }
   };
 

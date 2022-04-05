@@ -341,30 +341,32 @@ public class ProductServiceImpl implements ProductService{
 
     // 좋아요 높은 10개 상품 가져오기
     @Override
-    public List<ProductTop10GetRes> getProductFavoriteRank(){
+    public List<ProductListGetRes> getProductFavoriteRank(){
 
         List<Tuple> productList = productRepositorySupport.getFavoriteTop10Product();
 
-        List<ProductTop10GetRes> res = new ArrayList<ProductTop10GetRes>();
+        List<ProductListGetRes> res = new ArrayList<ProductListGetRes>();
 
         productList.forEach(product -> {
-            ProductTop10GetRes productTop10GetRes = ProductTop10GetRes.builder()
-            .productId(product.get(qProduct).getProductId())
-            .productTitle(product.get(qProduct).getProductTitle())
-            .productPrice(product.get(qProduct).getProductPrice())
-            .productThumbnailUrl(product.get(qProduct).getProductThumbnailUrl())
-            .productFavorite(product.get(qFavorite.count()).longValue())
-            .productRegDt(product.get(qProduct).getProductRegDt())
-            .productCode(product.get(qProduct).getProductCode())
-            .build();
+            ProductListGetRes productListGetRes = new ProductListGetRes();
 
-            res.add(productTop10GetRes);
+            User user = userRepositorySupport.findUserByUserId(product.get(qProduct).getUserId());
 
-            });
+            productListGetRes.setUserRole(user.getUserRole());
+            productListGetRes.setProductId(product.get(qProduct).getProductId());
+            productListGetRes.setProductTitle(product.get(qProduct).getProductTitle());
+            productListGetRes.setProductPrice(product.get(qProduct).getProductPrice());
+            productListGetRes.setProductThumbnailUrl(product.get(qProduct).getProductThumbnailUrl());
+            productListGetRes.setProductFavorite(product.get(qFavorite.count()).longValue());
+            productListGetRes.setProductRegDt(product.get(qProduct).getProductRegDt());
+            productListGetRes.setProductCode(product.get(qProduct).getProductCode());
+            productListGetRes.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(product.get(qProduct).getProductId()));
+            productListGetRes.setProductState(product.get(qProduct).getProductState());
 
+            res.add(productListGetRes);
+        });
         return res;
     }
-
 
     // UPDATE
     @Override
@@ -375,6 +377,16 @@ public class ProductServiceImpl implements ProductService{
             return execute;
         }else return 0;
     }
+
+    @Override
+    public long productMyroomModify(ProductModifyPutReq productModifyReq) {
+        // 해당 상품이 존재하면 수정, 존재하지않으면 null 반환
+        if (productRepository.findById(productModifyReq.getProductId()).isPresent()){
+            long  execute = productRepositorySupport.updateProductMyroomByProductId(productModifyReq);
+            return execute;
+        }else return 0;
+    }
+
 
     // DELETE
     @Override

@@ -210,7 +210,7 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
             <div className="content">최종 입찰가 : {item.productPrice} </div>
             <div className="content">최종 입찰자 : {lastBidder} </div>
           </div>
-          {isBidderExist && // 경매끝, 내가 최종구매자거나 경매등록한 사람이면 confirm버튼 보이기
+          {// 경매끝, 내가 최종구매자거나 경매등록한 사람이면 confirm버튼 보이기
             (Number(sessionStorage.getItem("userId")) === item.userId ||
               Number(sessionStorage.getItem("userId")) === lastBidderId) && ( /// 나중에 담겨져오는 하이스트비더아이디로 바꾸기
               <Button onClick={onClickConfirm}>
