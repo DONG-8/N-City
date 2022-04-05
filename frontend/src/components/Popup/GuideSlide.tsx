@@ -154,7 +154,7 @@ const GuideSlide = () => {
         <SubBanner>
           {subImages.map((value, idx) => {
             return (
-              <div className="inner">
+              <div key={idx} className="inner">
                 <img
                   src={value.pic}
                   key={idx + value.name}
