@@ -47,16 +47,16 @@ const InnerContentContainer = styled.div`
     img{
       position: absolute;
       width: 15px;
-      height: auto;
+      height: 15px;
       margin-left: 5px;
     }
   }
 `;
 
 const InnerContent = styled.div`
-display: flex;
-align-items: center;
-  margin-right: 4vw;
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
   svg {
     width: 12px;
   }

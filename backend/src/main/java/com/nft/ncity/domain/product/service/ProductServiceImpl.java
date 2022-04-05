@@ -170,7 +170,7 @@ public class ProductServiceImpl implements ProductService{
         for(Product p : products.getContent()){
             ProductListGetRes productList = new ProductListGetRes();
 
-            User user = userRepositorySupport.findUserByUserId(p.getUserId());
+            User user = userRepositorySupport.findMintingUserByProductId(p.getProductId());
 
             productList.setUserRole(user.getUserRole());
             productList.setProductTitle(p.getProductTitle());
@@ -200,7 +200,7 @@ public class ProductServiceImpl implements ProductService{
         for(Product p : products){
             ProductListGetRes productList = new ProductListGetRes();
 
-            User user = userRepositorySupport.findUserByUserId(p.getUserId());
+            User user = userRepositorySupport.findMintingUserByProductId(p.getProductId());
 
             productList.setUserRole(user.getUserRole());
             productList.setProductTitle(p.getProductTitle());
@@ -228,7 +228,7 @@ public class ProductServiceImpl implements ProductService{
         for(Product p : products.getContent()){
             ProductListGetRes productList = new ProductListGetRes();
 
-            User user = userRepositorySupport.findUserByUserId(p.getUserId());
+             User user = userRepositorySupport.findMintingUserByProductId(p.getProductId());
 
             productList.setUserRole(user.getUserRole());
             productList.setProductTitle(p.getProductTitle());
@@ -258,7 +258,7 @@ public class ProductServiceImpl implements ProductService{
 
         for(Product p : products.getContent()){
             ProductDealListGetRes productDealList = new ProductDealListGetRes();
-            User user = userRepositorySupport.findUserByUserId(p.getUserId());
+            User user = userRepositorySupport.findMintingUserByProductId(p.getProductId());
 
             productDealList.setUserRole(user.getUserRole());
             productDealList.setProductTitle(p.getProductTitle());
@@ -288,7 +288,7 @@ public class ProductServiceImpl implements ProductService{
 
         for(Product p : products.getContent()){
             ProductDealListGetRes productDealList = new ProductDealListGetRes();
-            User user = userRepositorySupport.findUserByUserId(p.getUserId());
+            User user = userRepositorySupport.findMintingUserByProductId(p.getProductId());
 
             productDealList.setUserRole(user.getUserRole());
             productDealList.setProductTitle(p.getProductTitle());
@@ -319,7 +319,7 @@ public class ProductServiceImpl implements ProductService{
 
         for(Product p : products.getContent()){
             ProductListGetRes productList = new ProductListGetRes();
-            User user = userRepositorySupport.findUserByUserId(p.getUserId());
+            User user = userRepositorySupport.findMintingUserByProductId(p.getProductId());
 
             productList.setUserRole(user.getUserRole());
             productList.setProductTitle(p.getProductTitle());
@@ -380,7 +380,8 @@ public class ProductServiceImpl implements ProductService{
 
                 ProductListGetRes productListGetRes = new ProductListGetRes();
 
-                User user = userRepositorySupport.findUserByUserId(product.get(qProduct).getUserId());
+//                User user = userRepositorySupport.findUserByUserId(product.get(qProduct).getUserId());
+                User user = userRepositorySupport.findMintingUserByProductId(product.get(qProduct).getProductId());
 
                 productListGetRes.setUserRole(user.getUserRole());
                 productListGetRes.setProductId(product.get(qProduct).getProductId());
@@ -438,11 +439,12 @@ public class ProductServiceImpl implements ProductService{
         List<UserProductWithIsFavoriteRes> list = new ArrayList<>();
 
         for(Product p : productList.getContent()) {
-            UserProductWithIsFavoriteRes userProductWithIsFavoriteRes = UserProductWithIsFavoriteRes.builder()
+            User user = userRepositorySupport.findMintingUserByProductId(p.getProductId());
 
+            UserProductWithIsFavoriteRes userProductWithIsFavoriteRes = UserProductWithIsFavoriteRes.builder()
                     .productId(p.getProductId())
                     .userId(p.getUserId())
-                    .userRole(userRepositorySupport.findUserByUserId(p.getUserId()).getUserRole())
+                    .userRole(user.getUserRole())
                     .tokenId(p.getTokenId())
                     .productTitle(p.getProductTitle())
                     .productDesc(p.getProductDesc())

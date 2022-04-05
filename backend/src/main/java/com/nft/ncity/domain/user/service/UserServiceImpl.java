@@ -219,11 +219,12 @@ public class UserServiceImpl implements UserService {
         List<UserProductWithIsFavoriteRes> list = new ArrayList<>();
 
         for(Product p : products.getContent()) {
-            UserProductWithIsFavoriteRes userProductWithIsFavoriteRes = UserProductWithIsFavoriteRes.builder()
+            User user = userRepositorySupport.findMintingUserByProductId(p.getProductId());
 
+            UserProductWithIsFavoriteRes userProductWithIsFavoriteRes = UserProductWithIsFavoriteRes.builder()
                     .productId(p.getProductId())
                     .userId(p.getUserId())
-                    .userRole(userRepositorySupport.findUserByUserId(p.getUserId()).getUserRole())
+                    .userRole(user.getUserRole())
                     .tokenId(p.getTokenId())
                     .productTitle(p.getProductTitle())
                     .productDesc(p.getProductDesc())
