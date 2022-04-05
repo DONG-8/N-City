@@ -44,5 +44,6 @@ gameServer.define(RoomType.CUSTOM, NCity ).enableRealtimeListing()
 // register colyseus monitor AFTER registering your room handlers
 app.use('/colyseus', monitor())
 
-gameServer.listen(port, "j6e106.p.ssafy.io")
+gameServer.listen(port, "0.0.0.0")
+// gameServer.listen(port)
 console.log(`Listening on ws://localhost:${port}`)
