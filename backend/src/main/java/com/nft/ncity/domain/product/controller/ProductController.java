@@ -99,6 +99,19 @@ public class ProductController {
         return ResponseEntity.status(200).body(products);
     }
 
+    // READ
+    @ApiOperation(value = "최근상품 10개 조회")
+    @GetMapping("/all/new")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = ProductListGetRes.class),
+    })
+    public ResponseEntity<List<ProductListGetRes>> getProductNew10List(){
+        log.info("getProductNew10List - 호출");
+        List<ProductListGetRes> products = productService.getProductNew10List();
+
+        return ResponseEntity.status(200).body(products);
+    }
+
 
     @GetMapping("/{productCode}")
     @ApiOperation(value = "카테고리별 조회")

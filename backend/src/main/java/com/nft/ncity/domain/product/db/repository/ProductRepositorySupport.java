@@ -214,4 +214,20 @@ public class ProductRepositorySupport {
                 .fetchOne();
         return mintUserId;
     }
+
+    public List<Product> findProductNew10List() {
+        List<Product> productList = jpaQueryFactory.select(qProduct)
+                .from(qProduct)
+                .where(qProduct.productId.in(
+                        jpaQueryFactory.select(qDeal.productId)
+                                .from(qDeal)
+                                .where(qDeal.dealType.eq(6))
+                                .orderBy(qDeal.dealCreatedAt.desc())
+                                .limit(10)
+                                .fetch()
+                ))
+                .fetch();
+
+        return productList;
+    }
 }

@@ -31,6 +31,7 @@ public interface ProductService {
 
     // read
     Page<ProductListGetRes> getProductList(Pageable pageable); // 상품 전체 조회
+    List<ProductListGetRes> getProductNew10List();              // 최신상품 10개 조회
     Page<ProductListGetRes> getProductListByCode(Pageable pageable, int productCode); // 카테고리별 상품 전체조회
     Page<ProductDealListGetRes> getProductDealList(Pageable pageable); // 거래상품 전체 조회
     Page<ProductDealListGetRes> getProductDealListByCode(Pageable pageable, int productCode); // 카테고리별 거래상품 전체조회
