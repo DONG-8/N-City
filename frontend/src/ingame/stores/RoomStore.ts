@@ -11,11 +11,18 @@ interface RoomInterface extends RoomAvailable {
   name?: string
 }
 
+interface RoomMusicInterface {
+  title: string,
+  artist: string,
+  audioSrc: string,
+  image:  string,
+  color: string
+}
 
-const isCustomRoom = (room: RoomInterface) => { // room 이름이 만든 방인지 아닌지 알수있는 함수? 
+const isCustomRoom = (room: RoomInterface) => { // room 이름이 만든 방인지 아닌지 알수있는 함수
   return room.name === RoomType.CUSTOM
 }
- 
+
 export const roomSlice = createSlice({
   name: 'room',
   initialState: {
@@ -25,6 +32,7 @@ export const roomSlice = createSlice({
     roomName: '',
     roomDescription: '',
     availableRooms: new Array<RoomAvailable>(),
+    roomMusicList : new Array<RoomMusicInterface>()
   },
   reducers: {
     setLobbyJoined: (state, action: PayloadAction<boolean>) => { //payloadAction => 들어온 값을 사용할 수 있는 함수 
@@ -57,6 +65,10 @@ export const roomSlice = createSlice({
     removeAvailableRooms: (state, action: PayloadAction<string>) => { // 방 삭제하기
       state.availableRooms = state.availableRooms.filter((room) => room.roomId !== action.payload)
     },
+    setMusicList : (state, action :PayloadAction<Array<RoomMusicInterface>>) => {
+      state.roomMusicList = action.payload
+      console.log(state.roomMusicList,'스토어에 넘어온 뮤직리스트')
+    }
   },
 })
 
@@ -67,6 +79,7 @@ export const {
   setAvailableRooms,
   addAvailableRooms,
   removeAvailableRooms,
+  setMusicList
 } = roomSlice.actions
 
 export default roomSlice.reducer
