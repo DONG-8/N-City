@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { NFTcreatorAddress, SSFTokenAddress } from "../../web3Config";
 import Extra from "./extraguide";
 
 const Wrapper = styled.div`
@@ -62,11 +63,11 @@ const Guide = () => {
         <Img src="/essets/guideimage/메타마스크페이지_12_설명추가_cut.png" alt="사진" />
         
         <Token src="/essets/guideimage/메타마스크페이지_13_설명추가_cut.png" alt="사진" />
-        <h1> 토큰 계약 주소에 주소를 입력합니다. 0x6a2BBCa33ad091b4D95A290D18613D8466F3252d </h1>
+        <h1> 토큰 계약 주소에 주소를 입력합니다. {NFTcreatorAddress} </h1>
         <Token src="/essets/guideimage/메타마스크페이지_15_cut.png" alt="사진" />
         <h1>위와 같은 화면이 나옵니다.</h1>
         <Token src="/essets/guideimage/메타마스크페이지_14_설명추가_cut.png" alt="사진" />
-        <h1>한번더 해줍니다. 0x62c08319df3a2aa64fad41049bD377fE46657EBD</h1>
+        <h1>한번더 해줍니다. {SSFTokenAddress}</h1>
         
         <Token src="/essets/guideimage/메타마스크페이지_15-2_설명 추가_cut.png" alt="사진" />
         <h1>토큰 2개를 추가한 화면</h1>
