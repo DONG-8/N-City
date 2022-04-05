@@ -23,6 +23,9 @@ const Token = styled.img`
 width : 450px;
 height : auto;
 `
+const Emphasize = styled.h1`
+color : red;
+`
 //component
 const Guide = () => {
   const explane = "설명입니다."
@@ -33,18 +36,16 @@ const Guide = () => {
       <DDDD>
         <div className="firstdiv">히이이이이이잉</div>
         <div>{explane}</div>
-        <Img src="/essets/guideimage/로그인버튼1_설명추가.png" alt="사진" />
+        <div>1. <Img src="/essets/guideimage/로그인버튼1_설명추가.png" alt="사진" /></div>
         <Img src="/essets/guideimage/로그인페이지_설명추가_big.png" alt="사진" />
         <Img src="/essets/guideimage/메타마스크_첫페이지_설명추가_cut.png" alt="사진" />
-        {/* <Img src="/essets/guideimage/메타마스크페이지_2_cut.png" alt="사진" />
-        동의를 해줍니다. or 삭제? */}
         <Token src="/essets/guideimage/메타마스크페이지_3_cut.png" alt="사진" />
         비밀번호 설정및 이용약관 동의
         {/* <Img src="/essets/guideimage/메타마스크페이지_4_cut.png" alt="사진" />
         아마 삭제? */}
         <Img src="/essets/guideimage/메타마스크페이지_5_설명추가_cut.png" alt="사진" />
         <h1>중요중요</h1>
-        <h2>해당 비밀 복구 구문은 <b>반드시</b> 저장하세요!!!</h2>
+        <h2>위 화면에서 빨간색 박스안의 비밀 복구 구문은 <span color='red'>반드시</span> 저장하세요!!!</h2>
         <Token src="/essets/guideimage/메타마스크페이지_6_cut.png" alt="사진" />
         <h1>해당 화면이 나오면 이전 페이지의 비밀 복구 구문 순서대로 <br/> 하단의 버튼을 눌러주세요.</h1>
         <Token src="/essets/guideimage/메타마스크페이지_7_설명추가_cut.png" alt="사진" />
