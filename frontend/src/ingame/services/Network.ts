@@ -36,7 +36,7 @@ export default class Network {
       // process.env.NODE_ENV === 'production'
       //   ? `wss://sky-office.herokuapp.com`
       //   : `${protocol}//${window.location.hostname}:2567`
-      "https://j6e106.p.ssafy.io/colyseus"
+      "https://13.124.137.243:2567/colyseus"
     this.client = new Client(endpoint)
     this.joinLobbyRoom().then(() => {
       store.dispatch(setLobbyJoined(true))
