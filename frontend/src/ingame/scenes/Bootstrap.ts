@@ -1,10 +1,8 @@
 import Phaser from 'phaser'
-import { stringify } from 'querystring'
 import Network from '../services/Network'
 import store from '../stores'
 import { setRoomJoined } from '../stores/RoomStore'
-import stores from '../../store'
-import basicData from './editmap.json';
+import basicData from './map.json';
 
 enum BackgroundMode {
   DAY,
@@ -23,8 +21,7 @@ export default class Bootstrap extends Phaser.Scene {
 
   constructor() {
     super('bootstrap');
-    this.mapInfo = store.getState().edit.userMap
-    }
+  }
   
   
   preload() { // 시작전 세팅 
@@ -77,10 +74,6 @@ export default class Bootstrap extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     })
-    this.load.spritesheet('generic2', 'essets/items/Generic.png', {
-      frameWidth: 96,
-      frameHeight: 128,
-    })
     this.load.spritesheet('adam', 'essets/character/adam.png', {
       frameWidth: 32,
       frameHeight: 48,
@@ -103,7 +96,7 @@ export default class Bootstrap extends Phaser.Scene {
       return (
         this.load.spritesheet(`${product.productId}`, `https://ncity-bucket-resize.${product.productThumbnailUrl.slice(21)}`, {
           frameWidth: 120,
-          frameHeight: 120,
+          frameHeight: 80,
         })
       )
     })}

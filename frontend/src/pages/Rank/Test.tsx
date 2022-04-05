@@ -40,7 +40,7 @@ const Test = () => {
       onSuccess: (res) => {
         // console.log(res, "성공해쪄염");
         console.log(res.myRoomBackground, "백그라운드 데이터");
-        dispatch(UserMapInfo(res.myRoomBackground));
+        // dispatch(UserMapInfo(res.myRoomBackground));
       },
       onError: (err: any) => {},
     }

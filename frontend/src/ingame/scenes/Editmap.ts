@@ -1,15 +1,10 @@
 import Phaser from 'phaser'
 import Network from '../services/Network'
 import store from '../stores'
-import { setRoomJoined } from '../stores/RoomStore'
-import data from "./editmap.json"
-import Item from "../items/Item";
 import Chair from "../items/Chair";
 import Computer from "../items/Computer";
 import Whiteboard from "../items/Whiteboard";
 import VendingMachine from "../items/VendingMachine";
-import {useState} from 'react';
-import { useAppDispatch  } from "../hooks";
 import { LocationInfoChange } from "../stores/EditStore";
 
 enum ItemCategory {

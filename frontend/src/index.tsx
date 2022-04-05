@@ -7,7 +7,7 @@ import configureStore from './store';
 
 const store = configureStore();
 
-const client = new QueryClient({
+export const client = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,

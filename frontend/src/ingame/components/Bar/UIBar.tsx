@@ -19,7 +19,7 @@ import Chat from "../Chat";
 import AudioPlayer from "../Music/AudioPlayer";
 import { Tooltip } from "@mui/material";
 import MusicModal from "../Music/MusicModal";
-import StoreModal from "../StoreModal";
+import StoreModal from "../NFTstore/StoreModal";
 import VisitModal from "../visitModal";
 
 const UIBar = () => {
