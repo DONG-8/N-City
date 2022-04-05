@@ -886,7 +886,7 @@ function leadingZeros(n, digits) {
                       </Button>
                     ) : (
                       <Button
-                        color="warning"
+                        color="info"
                         variant="contained"
                         onClick={onClickUnFollow}
                       >
