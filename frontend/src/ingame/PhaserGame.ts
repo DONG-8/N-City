@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 import Game from './scenes/Game'
 import Background from './scenes/Background'
 import Bootstrap from './scenes/Bootstrap'
+import Editmap from './scenes/Editmap'
 
 //phasergame.ts 에서는 scenes들을 불러온다. 
 
@@ -23,7 +24,7 @@ const config: Phaser.Types.Core.GameConfig = { //건드릴거없을듯 ?
     },
   },
   autoFocus: true,
-  scene: [Bootstrap, Background, Game], //scene 추가 
+  scene: [Bootstrap, Background, Game, Editmap], //scene 추가 
 } 
 
 const phaserGame = new Phaser.Game(config) // Phaser 시작

@@ -8,10 +8,18 @@ import Chair from "../items/Chair";
 import Computer from "../items/Computer";
 import Whiteboard from "../items/Whiteboard";
 import VendingMachine from "../items/VendingMachine";
+import { CategoriChange,LocationInfoChange } from '../stores/EditStore'
 
 enum MakingMode {
   CREATE, 
   DELETE
+}
+
+enum ItemCategory {
+  GROUND,
+  CHAIR,
+  WHITEBOARD,
+  WALL,
 }
 
 class Editmap extends Phaser.Scene {
@@ -20,18 +28,24 @@ class Editmap extends Phaser.Scene {
   computerMap = new Map<string, Computer>();
   private whiteboardMap = new Map<string, Whiteboard>();
   private keyZ!: Phaser.Input.Keyboard.Key;
-  private keyA!: Phaser.Input.Keyboard.Key;
+  // private keyA!: Phaser.Input.Keyboard.Key;
   private mk !: MakingMode
   // private data = new Data 
   private controls
-
+  private categori
+  private keyA
+  private key5 
+  private keySpace
+  private chairs
+  private chairLayer
   constructor() {
     super('Editmap')
   }
 
 
   preload() { // 시작전 세팅 
-
+    const mapInfo = store.getState().edit.userMap
+    console.log(mapInfo,'에딧맵 맵 인포')
     this.load.image('edit', "essets/map/16x16s.png")
     // this.load.image('chairs','https://assets.repress.co.kr/photos/7247aa20193923b2d047bc29df8e4cdc/original.jpg')
     this.load.atlas( // atlas 는 여러개의 스프라이트를 한장의 큰 텍스쳐에 모아놓은 것 
@@ -48,7 +62,8 @@ class Editmap extends Phaser.Scene {
     this.load.image('backdrop_night', 'essets/background/backdrop_night.png')
     this.load.image('sun_moon', 'essets/background/sun_moon.png')
     
-    this.load.tilemapTiledJSON('tilemap', 'essets/map/editmap.json') // 배경 다 들고오기 
+    // this.load.tilemapTiledJSON('tilemap', 'essets/map/editmap.json') // 배경 다 들고오기 
+    this.load.tilemapTiledJSON('tilemap', mapInfo) // 배경 다 들고오기 
     this.load.spritesheet('tiles_wall', 'essets/map/FloorAndGround.png', { // items 사이즈 지정 
       frameWidth: 32,
       frameHeight: 32,
@@ -108,15 +123,20 @@ class Editmap extends Phaser.Scene {
     groundLayer.setCollisionByProperty({ collides: true });
     
     this.cameras.main.zoom = 1 
-    const chairs = this.physics.add.staticGroup({ classType: Chair });
-    const chairLayer = this.map.getObjectLayer("Chair");
-    chairLayer.objects.forEach((chairObj) => {
+
+    // 스태틱 그룹에 create 될때 추가시켜준다.
+    // 이걸 전부 변수로 상태를 저장시켜준다면?
+
+    this.chairs = this.physics.add.staticGroup({ classType: Chair });
+    console.log(this.chairs,'의자들')
+    this.chairLayer = this.map.getObjectLayer("Chair");
+    this.chairLayer.objects.forEach((chairObj) => {
       const item = this.addObjectFromTiled(
-        chairs,
+        this.chairs,
         chairObj,
         "chairs",
         "chair"
-      ) as Chair;
+      ).setInteractive() as Chair;
       // custom properties[0] is the object direction specified in Tiled
       item.itemDirection = chairObj.properties[0].value;
     });
@@ -199,6 +219,12 @@ class Editmap extends Phaser.Scene {
     };
 
     this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
+
+    this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+
+    this.key5 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE);
+
+    this.keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
   }
 
   private handleItemSelectorOverlap(playerSelector, selectionItem) {
@@ -236,9 +262,11 @@ class Editmap extends Phaser.Scene {
         actualX,
         actualY,
         key,
+        // 프레임
         object.gid! - this.map.getTileset(tilesetName).firstgid
       )
       .setDepth(actualY);
+    // console.log(obj)
     return obj;
   }
 
@@ -249,6 +277,7 @@ class Editmap extends Phaser.Scene {
     tilesetName: string,
     collidable: boolean
   ) {
+    
     const group = this.physics.add.staticGroup();
     const objectLayer = this.map.getObjectLayer(objectLayerName);
     objectLayer.objects.forEach((object) => {
@@ -265,6 +294,7 @@ class Editmap extends Phaser.Scene {
     });
     
   }
+
   // // 만든 내용에 대한 저장을 위한 토큰 매번 새로 불러와지면 초기로 세팅
   private makeArr = []
   private nftArr = []
@@ -273,19 +303,46 @@ class Editmap extends Phaser.Scene {
   modeChange(makingMode : MakingMode) {
     if (makingMode === MakingMode.CREATE) {
       this.mk = MakingMode.CREATE
-      console.log('변경됨')
+      // console.log('변경됨')
     } else {
       this.mk = MakingMode.DELETE
-      console.log('삭제로 변경')
+      // console.log('삭제로 변경')
     }
   }
+
+  changeCategori(categori : ItemCategory) {
+    // 변경 입력을 받은 카테고리 정보로 갱신시켜준다.
+    this.categori = categori
+    
+  }
   
+  // 카테고리별로 분류하는 함수
+  editlayerCollect(categori: ItemCategory) {
+    // console.log('아잉')
+    switch(this.categori) {
+      case ItemCategory.GROUND:
+        // 그라운드에 맞는 속성을 부여한다.
+        // console.log('Ground')
+        break
+      case ItemCategory.CHAIR:
+        // console.log('Chair')
+        break
+      case ItemCategory.WALL:
+        // console.log('Wall')
+        break
+      case ItemCategory.WHITEBOARD:
+        // console.log('WhiteBoard')
+        break
+    }
+  }
+
 
   update(t: number, dt: number) {  // 매 프레임 update
 
     // 카메라 무빙 with 키보드
     this.controls.update(dt)
-
+    // console.log(this.add.image(200,500,"office"),'오피스')
+    // this.add.image(200,500,"office")
     var worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
     var pointTilex = this.map.worldToTileX(this.game.input.mousePointer.worldX)
     var pointTileY = this.map.worldToTileY(this.game.input.mousePointer.worldY);
@@ -294,26 +351,18 @@ class Editmap extends Phaser.Scene {
     marker.x = this.map.tileToWorldX(pointTilex);
     marker.y = this.map.tileToWorldY(pointTileY);
 
-  
-    if (this.mk === MakingMode.CREATE) {
-      console.log('생성모드')
-     
-    
-    } else {
-      console.log('삭제모드')
-
+    // console.log(marker.x)
+    if (this.input.manager.activePointer.isDown){
+      const location = { x: marker.x, y : marker.y }
+      store.dispatch(LocationInfoChange(location))
     }
-
+  
     
     
-    // 모드별로 변경되어야합니다.
-    // 생성모드
-
-    // 제거모드
-
-    // 이전 액션
+    }
     
-      }
+
+    
   
 }
 
@@ -350,3 +399,74 @@ export default Editmap;
 //           console.log(data,'데이터')
 //           console.log(data.layers[2].objects)
 //         }
+
+
+///
+// 모드 변경에 따른 문제점 발견 해결중....
+// if (this.mk === MakingMode.CREATE) {
+
+// } else {
+//   // console.log('삭제모드')
+// }
+// // 모드별로 변경되어야합니다.
+// this.categori = ItemCategory.GROUND
+// // console.log(this.categori,'카테고리')
+// this.editlayerCollect(this.categori)
+// // 이전 액션
+
+
+// // console.log(this.mk)
+// if (this.mk === MakingMode.CREATE) {
+//   if (this.input.manager.activePointer.isDown)
+//   {         
+//     // console.log(this.chairs)
+//     const chair = this.physics.add.staticGroup({ classType: Chair });
+//     // console.log(this.chairs,'의자정보')
+//     // const chair = this.chairs
+//       const item = this.addObjectFromTiled(chair, {"gid":2564,
+//       "height":64,
+//       "id":335,
+//       "name":"",
+//       "properties":[
+//             {
+//             "name":"direction",
+//             "type":"string",
+//             "value":"down"
+//             }],
+//       "rotation":0,
+//       "type":"",
+//       "visible":true,
+//       "width":32,
+//       "x":this.game.input.mousePointer.worldX,
+//       "y":this.game.input.mousePointer.worldY
+//     }, 'chairs', 'chair') as Chair
+//     item.itemDirection = "down"
+  
+//     // 우리의 객체에 추가
+//     const prevChairs = chair.children.entries
+//     console.log(prevChairs)
+//     const newChair = [...prevChairs , item]
+//     console.log(newChair, "뉴체어")
+//     this.chairs.children.entries.push(item)
+//     console.log(this.chairs.children.entries,'정보업데이트가 되었나욤?')
+//   }
+// } else {
+//   if (this.input.manager.activePointer.isDown){
+//     const newArr = this.chairs.children.entries
+
+//     this.chairs.children.entries = newArr.map((obj,i) => {
+      
+//     })
+    
+    
+//   }
+// }
+
+
+// // 키보드 이벤트 추가하는 방법
+// if (this.keyA.isDown) {
+//   console.log('a')
+// } 
+// if (this.key5.isDown) { 
+//   console.log('5')
+// }

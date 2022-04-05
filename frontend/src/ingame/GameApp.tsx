@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { useAppSelector } from "./hooks";
+import { useAppSelector, useAppDispatch } from "./hooks";
 // typescript에서 useSelector 사용 하려면 hooks를 만들어서 불러와야한다.
 
 import MainDialog from "./components/MainDialog"; // 캐릭터 고르는 화면
@@ -18,6 +18,14 @@ import Game from "./scenes/Game";
 import EditBar from "./components/EditBar";
 import Background from "./scenes/Background";
 import store from "./stores";
+import data from "../ingame/map.json";
+import { ReplayOutlined } from "@mui/icons-material";
+
+// axios 요청
+import { UserMapInfo } from "./stores/EditStore";
+// 쿼리
+import { postRoomJoin } from "../store/apis/myRoom";
+import { Mutation, useMutation, useQuery } from "react-query";
 
 enum GameMode {
   GAME,
@@ -61,12 +69,97 @@ window.addEventListener(
 
 const GameApp: Function = () => {
   const Setting = useAppSelector((state) => state.edit.EditMode);
+  const location = useAppSelector((state) => state.edit.locationInfo);
+  const mkMode = useAppSelector((state) => state.edit.makingMode);
+  const userId = useAppSelector((state) => state.edit.userId);
+  const dispatch = useAppDispatch();
+  // console.log(userId, "유저아이디");
+  // 유저 아이디를 통한 방 정보 요청 --> 로딩시간중 안불러와지면? 로딩이 필요하겠다.
+  // 쿼리를 사용해야겠음
+  // const {
+  //   data,
+  //   isLoading,
+  //   mutate: RoomInfo,
+  // } = useMutation<any, Error>(
+  //   "postRoomInfo",
+  //   async () => {
+  //     return await postRoomJoin(userId);
+  //   },
+  //   {
+  //     onSuccess: (res) => {
+  //       // console.log(res, "성공해쪄염");
+  //       console.log(res.myRoomBackground, "백그라운드 데이터");
+  //       dispatch(UserMapInfo(res.myRoomBackground));
+  //       setTimeout(LoadGame, 5000);
+  //     },
+  //     onError: (err: any) => {
+  //       // console.log(err, "실패해쩌염");
+  //       // 실패했을 때 새로고침 화면 로딩
+  //     },
+  //   }
+  // );
+
+  // const LoadGame = () => {
+  //   (window as any).game = phaserGame;
+  //   setTimeout(() => ConnectBootstrap(), 1000); // Bootstrap 연결
+  //   setTimeout(() => ConnectGame(), 1500); // 게임 접속
+  //   console.log(availableRooms, "로드중?!");
+  // };
+
+  // 방의정보를 알려주는 userId가 변경되었을 때 다시한번 post 요청을 보낸다.
+  // useEffect(() => {
+  //   RoomInfo();
+  // }, [userId]);
+
+  const newData = data;
+  function ChangeMap() {
+    if (mkMode === MakingMode.CREATE) {
+      console.log(newData);
+      const item = {
+        gid: 2564,
+        height: 64,
+        id: 335,
+        name: "",
+        properties: [
+          {
+            name: "direction",
+            type: "string",
+            value: "down",
+          },
+        ],
+        rotation: 0,
+        type: "",
+        visible: true,
+        width: 32,
+        x: location.x,
+        y: location.y,
+      };
+      newData.layers[2].objects?.push(item);
+      console.log(newData);
+      // 저장이 눌려지면 newData를 업데이트 시켜줍니다.
+    } else if (mkMode === MakingMode.DELETE) {
+      console.log(newData, "삭제 이전");
+      const DelData = newData.layers[2].objects?.filter((obj, i) => {
+        let locationX = obj.x;
+        let locationY = obj.y;
+        return locationX !== location.x && locationY !== location.y;
+      });
+      console.log(DelData, "삭제 이후");
+    }
+  }
+
+  // useEffect(() => {
+  //   console.log(location, "의 변경에 따라 실행이 되었습니다.");
+  //   ChangeMap();
+  // }, [location]);
 
   useEffect(() => {
     (window as any).game = phaserGame;
     setTimeout(() => ConnectBootstrap(), 1000); // Bootstrap 연결
     setTimeout(() => ConnectGame(), 1500); // 게임 접속
     console.log(availableRooms, "로드중?!");
+    console.log("시작은 됐네용");
+
     return () => {
       (window as any).game.destroy(true);
     };
@@ -104,7 +197,7 @@ const GameApp: Function = () => {
   const checkRoomIsAvaliable = () => {
     console.log(availableRooms);
     for (var roomId in availableRooms) {
-      console.log(roomId, "roomID");
+      // console.log(roomId, "roomID");
       if (roomId === "test") {
         return true;
       }
@@ -120,7 +213,7 @@ const GameApp: Function = () => {
     // if(isAvaliable) { // 방이 이미 존재한다면 참가
     await bootstrap.network
       .createRoom(values)
-      .then(() => bootstrap.launchGame(GameMode.GAME))
+      .then(() => bootstrap.launchGame(Setting))
       .catch((error) => console.error(error));
     // } else {  // 방 없었다면 만들기
     //   // setValues({ ...values, ['roomId']: 'useasrId'}) // 방 아이디 => 유저 아이디
@@ -150,6 +243,10 @@ const GameApp: Function = () => {
 
   let ui: JSX.Element;
 
+  // if (isLoading === true) {
+  //   return <>로딩중이염</>;
+  // }
+
   if (computerDialogOpen) {
     // 화면 공유
     ui = <ComputerDialog />;
@@ -168,6 +265,10 @@ const GameApp: Function = () => {
     );
   }
 
+  const reLoad = () => {
+    window.location.reload();
+  };
+
   return (
     // ui 는 상황별로 다르게 열리고 , 컴퓨터/화이트 보드가 안열린 이상 우측아래 버튼들 활성화
     <>
@@ -175,6 +276,8 @@ const GameApp: Function = () => {
         {ui}
         <MainDialog></MainDialog>
         {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />}
+        <button onClick={() => ChangeMap()}>데이터를 추가 해 보아요!!</button>
+        <button onClick={() => reLoad()}>리로딩</button>
       </Backdrop>
     </>
   );
