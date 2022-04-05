@@ -61,5 +61,5 @@ function getRoomId() {
   //   console.log('roomId exists, remaking another one.')
   //   getRoomId()
   // }
-  return 'asdfas'
+  return 'userId'
 }

@@ -18,7 +18,7 @@ import store from '../stores'
 import { setFocused, setShowChat } from '../stores/ChatStore'
 import stores from "../stores"
 
-enum GameModeSet {
+enum GameMode {
   GAME,
   EDIT
 }
@@ -81,9 +81,11 @@ export default class Game extends Phaser.Scene {
     createCharacterAnims(this.anims)
 
     this.map = this.make.tilemap({ key: 'tilemap' }) // 맵만들기 ⭐⭐⭐
+    console.log(this.map)
     const FloorAndGround = this.map.addTilesetImage('FloorAndGround', 'tiles_wall')
 
     const groundLayer = this.map.createLayer('Ground', FloorAndGround)
+    console.log(groundLayer)
     groundLayer.setCollisionByProperty({ collides: true })
 
     // debugDraw(groundLayer, this) // 만들어둔 debug 사용해보기
@@ -99,7 +101,7 @@ export default class Game extends Phaser.Scene {
       // custom properties[0] is the object direction specified in Tiled
       item.itemDirection = chairObj.properties[0].value
     })
-
+    
     // import computers objects from Tiled map to Phaser
     const computers = this.physics.add.staticGroup({ classType: Computer })
     const computerLayer = this.map.getObjectLayer('Computer')
@@ -147,7 +149,8 @@ export default class Game extends Phaser.Scene {
     this.addGroupFromTiled('GenericObjectsOnCollide', 'generic', 'Generic', true)
     this.addGroupFromTiled('Basement', 'basement', 'Basement', true)
     this.otherPlayers = this.physics.add.group({ classType: OtherPlayer })
-    this.cameras.main.zoom = 1.5
+
+    
     this.cameras.main.startFollow(this.myPlayer, true) // 인칭
 
     this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], groundLayer) // 충돌나는 물건들 
@@ -221,6 +224,9 @@ export default class Game extends Phaser.Scene {
     objectLayer.objects.forEach((object) => {
       const actualX = object.x! + object.width! * 0.5
       const actualY = object.y! - object.height! * 0.5
+      // if (objectLayerName === 'GenericObjects') {
+      //   actualY = 1
+      // }
       group
         .get(actualX, actualY, key, object.gid! - this.map.getTileset(tilesetName).firstgid)
         .setDepth(actualY)
@@ -303,52 +309,7 @@ export default class Game extends Phaser.Scene {
     let marker = this.add.graphics(); 
     marker.x = this.map.tileToWorldX(pointTilex);
     marker.y = this.map.tileToWorldY(pointTileY);
-
-    // if (this.input.manager.activePointer.isDown)
-    // { 
-    //       console.log('여기와쯤')
-    //       var worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
-    //       var pointTilex = this.map.worldToTileX(this.game.input.mousePointer.worldX)
-    //       var pointTileY = this.map.worldToTileY(this.game.input.mousePointer.worldY);
-    //       // console.log(pointTilex, pointTileY)
-    //       let marker = this.add.graphics(); 
-    //       marker.x = this.map.tileToWorldX(pointTilex);
-    //       marker.y = this.map.tileToWorldY(pointTileY);
-    //       // 여기가 클릭한거별로 바뀌어야함
-    //       const chairs = this.physics.add.staticGroup({ classType: VendingMachine })
-    //       const chairLayer = this.map.getObjectLayer('Chair')
-    //       // chairLayer.objects.forEach((chairObj) => {
-    //         const item = this.addObjectFromTiled(chairs, {"gid":2566,
-    //         "height":64,
-    //         "id":1262,
-    //         "name":"",
-    //         "properties":[
-    //               {
-    //               "name":"direction",
-    //               "type":"string",
-    //               "value":"down"
-    //               }],
-    //         "rotation":0,
-    //         "type":"",
-    //         "visible":true,
-    //         "width":32,
-    //         "x":this.game.input.mousePointer.worldX,
-    //         "y":this.game.input.mousePointer.worldY
-    //       }, 'chairs', 'chair') as Chair
-    //         item.itemDirection = "up"
-
-    //         this.physics.add.overlap( // ⭐ 이거 없으면 상호작용 불가
-    //         this.playerSelector,
-    //         [chairs],
-    //         this.handleItemSelectorOverlap,
-    //         undefined,
-    //         this
-    //       )
-    //       console.log(this.map,'맵정보')
-    //       // console.log(data,'데이터')
-    //       // console.log(data.layers[2].objects)
-    //     }
-      }
+  }
 }
 
 
