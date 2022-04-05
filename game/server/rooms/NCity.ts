@@ -2,8 +2,8 @@ import bcrypt from 'bcrypt'
 import { Room, Client, ServerError } from 'colyseus'
 import { Dispatcher } from '@colyseus/command'
 import { Player, OfficeState, Computer, Whiteboard } from './schema/OfficeState'
-import { Message } from '../../../frontend/src/types/Messages';
-import { IRoomData } from '../../../frontend/src/types/Rooms'
+import { Message } from '../types/Messages';
+import { IRoomData } from '../types/Rooms'
 import { whiteboardRoomIds } from './schema/OfficeState'
 import PlayerUpdateCommand from './commands/PlayerUpdateCommand'
 import PlayerUpdateNameCommand from './commands/PlayerUpdateNameCommand'
