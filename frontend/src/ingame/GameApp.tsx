@@ -22,6 +22,7 @@ import { IRoomData } from '../types/Rooms'
 import { UserMapInfo } from "./stores/EditStore";
 // 쿼리
 import { postRoomJoin } from "../store/apis/myRoom";
+import { getUsercollectedInfo } from "../store/apis/user";
 import {useMutation} from "react-query";
 import basicData from './scenes/editmap.json';
 
@@ -69,6 +70,25 @@ const GameApp: Function = () => {
     }
   );
 
+  let myArts = {content:[{productThumbnailUrl:'', productId:0}]}
+  const {
+    mutate: getMyArts,
+    } = useMutation<any, Error>(
+    "getUsercollectedInfo",
+    async () => {
+      return await getUsercollectedInfo(1);
+    },
+    {
+      onSuccess: (res) => {
+        console.log('불러오기 완료')
+        myArts = res
+      },
+      onError: (err: any) => {
+        console.log(err)
+      },
+    }
+  );
+
   const availableRooms = useAppSelector((state) => state.room.availableRooms);
 
   const Setting = useAppSelector((state) => state.edit.EditMode);
@@ -82,10 +102,11 @@ const GameApp: Function = () => {
 
   useEffect(() => {
     RoomInfo();
+    getMyArts();
     (window as any).game = phaserGame;
-    setTimeout(() => ConnectStart(), 2000);
-    setTimeout(() => ConnectBootstrap(), 3000); // Bootstrap 연결
-    setTimeout(() => ConnectGame(), 4000); // 게임 접속
+    setTimeout(() => ConnectStart(), 3000);
+    setTimeout(() => ConnectBootstrap(), 4000); // Bootstrap 연결
+    setTimeout(() => ConnectGame(), 5000); // 게임 접속
     return () => {
       (window as any).game.destroy(true);
     };
@@ -109,6 +130,7 @@ const GameApp: Function = () => {
   const ConnectStart = () => {  // 부트스트랩 시작시키기 
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
     bootstrap.mapInfo = map
+    bootstrap.myArtList = myArts
 
     start = phaserGame.scene.keys.start as Start
     start.launchBootstrap()

@@ -17,7 +17,6 @@ import { ItemType } from '../../types/Items'
 import store from '../stores'
 import { setFocused, setShowChat } from '../stores/ChatStore'
 import stores from "../stores"
-import Generic from '../items/Generic'
 
 enum GameMode {
   GAME,
@@ -77,15 +76,17 @@ export default class Game extends Phaser.Scene {
     if (data.GameMode === GameMode.EDIT) {
       this.cameras.main.zoom = 1
     } else {
-      this.cameras.main.zoom = 1.6
+      this.cameras.main.zoom = 1
     }
 
     createCharacterAnims(this.anims)
 
     this.map = this.make.tilemap({ key: 'tilemap' }) // 맵만들기 ⭐⭐⭐
+    console.log(this.map)
     const FloorAndGround = this.map.addTilesetImage('FloorAndGround', 'tiles_wall')
 
     const groundLayer = this.map.createLayer('Ground', FloorAndGround)
+    console.log(groundLayer)
     groundLayer.setCollisionByProperty({ collides: true })
 
     // debugDraw(groundLayer, this) // 만들어둔 debug 사용해보기
@@ -141,23 +142,6 @@ export default class Game extends Phaser.Scene {
       this.addObjectFromTiled(vendingMachines, obj, 'vendingmachines', 'vendingmachine')
     })
 
-    
-    const test = this.physics.add.staticGroup({
-      classType: Generic,
-    });
-    // const testLayer = this.map.getObjectLayer('Test');
-    // testLayer.objects.forEach((obj, i) => {
-    //   const item = this.addObjectFromTiled(
-    //     test,
-    //     obj,
-    //     'test',
-    //     'Generic'
-    //   ) as Generic;
-
-    // });
-    this.addGroupFromTiled('Test', 'generic2', 'Generic', false)
-
-    // import other objects from Tiled map to Phaser
     this.addGroupFromTiled('Wall', 'tiles_wall', 'FloorAndGround', false)
     this.addGroupFromTiled('Objects', 'office', 'Modern_Office_Black_Shadow', false)
     this.addGroupFromTiled('ObjectsOnCollide', 'office', 'Modern_Office_Black_Shadow', true)
@@ -241,6 +225,9 @@ export default class Game extends Phaser.Scene {
     objectLayer.objects.forEach((object) => {
       const actualX = object.x! + object.width! * 0.5
       const actualY = object.y! - object.height! * 0.5
+      // if (objectLayerName === 'GenericObjects') {
+      //   actualY = 1
+      // }
       group
         .get(actualX, actualY, key, object.gid! - this.map.getTileset(tilesetName).firstgid)
         .setDepth(actualY)
@@ -323,7 +310,5 @@ export default class Game extends Phaser.Scene {
     let marker = this.add.graphics(); 
     marker.x = this.map.tileToWorldX(pointTilex);
     marker.y = this.map.tileToWorldY(pointTileY);
-
- 
-}
+  }
 }

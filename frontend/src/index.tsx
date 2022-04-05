@@ -3,6 +3,9 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import configureStore from './store';
+
+const store = configureStore();
 
 const client = new QueryClient({
   defaultOptions: {

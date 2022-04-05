@@ -23,7 +23,8 @@ enum ItemCategory {
   TABLES,
   WINDOW_DOOR,
   BASEMENT,
-  STRUCTURE
+  STRUCTURE,
+  MYART
 }
 
 class Editmap extends Phaser.Scene {
@@ -210,16 +211,19 @@ class Editmap extends Phaser.Scene {
   }
 
   private setObject(){
-    if (this.isCreateMode) {
+    var pointTileX = this.map.worldToTileX(this.game.input.mousePointer.worldX)
+    var pointTileY = this.map.worldToTileY(this.game.input.mousePointer.worldY);
 
+    if (this.isCreateMode) {
       switch (this.selectedItemC) {
         case ItemCategory.GROUND:
-          // this.map.removeTileAtWorldXY(this.game.input.mousePointer.worldX, this.game.input.mousePointer.worldY)
-          // const tileInfo = this.map.getTileAt(pointTileX, pointTileY)
-          // console.log(tileInfo.index) // 타일 (타일 모양) 
-          // console.log(tileInfo.y*40 + tileInfo.x - 1) // 타일 위치 (인덱스)
+          const tileInfo = this.map.getTileAt(pointTileX, pointTileY)
+          console.log(tileInfo.index) // 타일 (타일 모양) 
+          console.log(tileInfo.y*40 + tileInfo.x - 1) // 타일 위치 (인덱스)
           this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
           console.log(this.marker.x, this.marker.y)
+          this.marker.x = tileInfo.y*40 + tileInfo.x - 1  // 타일 위치 (인덱스)
+          store.dispatch(LocationInfoChange({x:this.marker.x+1, y:0, gid:tileInfo.index}));
           break
         // case ItemCategory.STRUCTURE:
           // this.map.putTileAtWorldXY(this.itemGid+1, mousePointer.x, mousePointer.y)
@@ -238,32 +242,40 @@ class Editmap extends Phaser.Scene {
           } else {
             this.physics.add.staticSprite(this.marker.x+16, this.marker.y, 'whiteboards', this.itemGid-4685).setDepth(this.marker.y).setInteractive()
           }
+          store.dispatch(LocationInfoChange({x:this.marker.x-32, y:this.marker.y+32, gid:this.itemGid}));
           break
         case ItemCategory.CHAIR: 
           this.add.image(this.marker.x+16, this.marker.y, 'chairs', this.itemGid-2561).setDepth(this.marker.y).setInteractive()
+          store.dispatch(LocationInfoChange({x:this.marker.x, y:this.marker.y+32, gid:this.itemGid}));
           break
-        case ItemCategory.GENERIC: case ItemCategory.STAIRS: case ItemCategory.WINDOW_DOOR:
+        case ItemCategory.GENERIC: case ItemCategory.WINDOW_DOOR:
           var w = this.itemWidth/ 32
           var h = this.itemHeight / 32
           for (let i = 0; i< w; i ++){
             for (let j = 0; j< h; j ++){
-            this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(this.marker.y+16+(j*32)).setInteractive()
+              this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(this.marker.y+16+(j*32)).setInteractive()
+              store.dispatch(LocationInfoChange({x:this.marker.x-32+(i*32), y:this.marker.y+64+(j*32), gid:this.itemGid+(i+j*16)+3432}));
           }
           }
           break
-        case ItemCategory.RUGS: 
+        case ItemCategory.RUGS: case ItemCategory.STAIRS:
           var w = this.itemWidth/ 32
           var h = this.itemHeight / 32
             for (let i = 0; i< w; i ++){
               for (let j = 0; j< h; j ++){
-              this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(0).setInteractive()
+                console.log('Editmap', this.itemGid+(i+j*16))
+                this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(0).setInteractive()
+                store.dispatch(LocationInfoChange({x:this.marker.x-32+(i*32), y:this.marker.y+96+(j*32), gid:this.itemGid+(i+j*16)+3432}));
             }
           }
+          break
+        case ItemCategory.MYART:
+          this.add.image(this.marker.x+16, this.marker.y+16, `${this.itemGid}`).setDepth(this.marker.y+16).setInteractive()
           break
         default:
           return null;
       }
-      store.dispatch(LocationInfoChange({x:this.marker.x, y:this.marker.y}));
+      
     }}
 
   private addObjectFromTiled(
@@ -310,7 +322,6 @@ class Editmap extends Phaser.Scene {
   }
 
   update(t: number, dt: number) {  // 매 프레임 update
-
     var pointTileX = this.map.worldToTileX(this.game.input.mousePointer.worldX)
     var pointTileY = this.map.worldToTileY(this.game.input.mousePointer.worldY);
 

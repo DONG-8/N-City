@@ -2,7 +2,8 @@ import Phaser from 'phaser'
 import Network from '../services/Network'
 import store from '../stores'
 import { setRoomJoined } from '../stores/RoomStore'
-
+import stores from '../../store'
+import basicData from './editmap.json';
 
 enum BackgroundMode {
   DAY,
@@ -16,6 +17,8 @@ enum GameMode {
 
 export default class Bootstrap extends Phaser.Scene {
   network!: Network
+  mapInfo = basicData
+  myArtList = {content:[{productThumbnailUrl:'', productId:0}]}
 
   constructor() {
     super('bootstrap')
@@ -35,8 +38,9 @@ export default class Bootstrap extends Phaser.Scene {
     )
     this.load.image('backdrop_night', 'essets/background/backdrop_night.png')
     this.load.image('sun_moon', 'essets/background/sun_moon.png')
-    
-    this.load.tilemapTiledJSON('tilemap', 'essets/map/map.json') // 배경 다 들고오기 
+
+    this.load.tilemapTiledJSON('tilemap', this.mapInfo) // 배경 다 들고오기 
+
     this.load.spritesheet('tiles_wall', 'essets/map/FloorAndGround.png', { // items 사이즈 지정 
       frameWidth: 32,
       frameHeight: 32,
@@ -54,8 +58,8 @@ export default class Bootstrap extends Phaser.Scene {
       frameHeight: 64,
     })
     this.load.spritesheet('vendingmachines', 'essets/items/vendingmachine.png', {
-      frameWidth: 48,
-      frameHeight: 72,
+      frameWidth: 96,
+      frameHeight: 96,
     })
     this.load.spritesheet('office', 'essets/items/Modern_Office_Black_Shadow.png', {
       frameWidth: 32,
@@ -89,6 +93,16 @@ export default class Bootstrap extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 48,
     })
+
+    // 사용자가 가진 이미지 로드 
+    {this.myArtList.content.map((product, idx) => {
+      return (
+        this.load.spritesheet(`${product.productId}`, `https://ncity-bucket-resize.${product.productThumbnailUrl.slice(21)}`, {
+          frameWidth: 120,
+          frameHeight: 120,
+        })
+      )
+    })}
   }
 
   init() { // import Network from '../services/Network'
