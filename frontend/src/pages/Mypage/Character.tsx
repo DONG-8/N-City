@@ -27,6 +27,7 @@ const IntroBox = styled.div`
   margin-top: 10vh;
   display: flex;
   margin-bottom:5vh;
+  overflow-y: hidden;
 
 `
 const Left = styled.div`
@@ -85,6 +86,7 @@ const Cards = styled.div`
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
   border-radius: 30px;
   margin: auto;
+  padding-bottom: 50px;
   .cards{
     margin: auto;
     display: flex;
@@ -95,6 +97,12 @@ const Card = styled.div`
   margin-top: 7vh;
   height: 20vw;
   width: 20vw;
+  .name{
+    margin-top: 10px;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 500;
+  }
   img{
     height: 18vw;
     width: 18vw;
@@ -114,6 +122,7 @@ const Card = styled.div`
   border-radius: 20px;
   cursor: pointer;
   margin-left: 5vw;
+  
 `
 interface Istate{
   item:
@@ -136,9 +145,9 @@ interface Istate{
 }
 const Character = () => {
   const [userId,setUserId] = useState(Number(sessionStorage.getItem('userId')||""))
-  const [characters,setCharacters ] = useState<Istate['item'][]>([])
   const [items,setItems] = useState<Istate['item'][]>([])
-  const [myChar,setMyChar] = useState(1)
+  const [myChar,setMyChar] = useState('')
+
   const getsave = ()=>{
     changeCharacter.mutate()
   }
@@ -154,22 +163,27 @@ const Character = () => {
       onError: (err: any) => {console.log(err, "전체 nft 조회 실패")}
       }
   );
-  const { isLoading:ILC, data:characterId } = useQuery<any>(
+
+  const CharacterGet = useMutation<any, Error>(
     "getCharacter",
-    async () => {return (await (getCharacter(userId)))
-      },
+    async () => {
+      return await getCharacter(userId);
+    },
     {
-      onSuccess:(res)=>{ 
-        console.log('캐릭터 받음')
-        setMyChar(res.myRoomCharacter)
-        if (res.myRoomCharacter===null){
-          changeCharacter.mutate()
-          setMyChar(1) 
+      onSuccess: (res) => {
+        console.log('🎶',res)
+        if(res.myRoomCharacter===null){
+          setMyChar('1')
         }
+        else{setMyChar(res.myRoomCharacter)}
+        console.log('🚗',myChar)
       },
-      onError: (err: any) => {console.log(err, "캐릭터못받음")}
-      }
+      onError: (err: any) => {
+        console.log("❌캐릭터 실패",err);
+      },
+    }
   );
+  
   const changeCharacter = useMutation<any, Error>(
     "putCharacterChange",
     async () => {
@@ -177,14 +191,18 @@ const Character = () => {
     },
     {
       onSuccess: (res) => {
+        console.log(myChar,'로 바꾸기 신청')
         console.log("캐릭터 바꾸기 성공",res);
-
       },
       onError: (err: any) => {
         console.log("❌캐릭터 실패",err);
       },
     }
   );
+  useEffect(()=>{
+    CharacterGet.mutate()
+
+  },[])
   useEffect(()=>{
     console.log('🎨',myChar)
   },[myChar])
@@ -208,17 +226,20 @@ const Character = () => {
       </IntroBox>
       
       <h1 className='title'>내가 소유한 캐릭터 
-      {characterId!==undefined && characterId.userId !== myChar && <Button onClick={()=>{getsave()}} className='save'  variant='contained' >저장하기</Button>}</h1>
+        <Button onClick={()=>{getsave()}} className='save'  variant='contained' >저장하기</Button>
+      </h1>
       <Cards>
         <div className='cards'>
-        <Card onClick={()=>{setMyChar(1)}}>
-          <img className={myChar===1? 'choice':''} alt='캐릭터' src={img1} />
+        <Card onClick={()=>{setMyChar('1')}}>
+          <img className={myChar==='1'? 'choice':''} alt='캐릭터' src={img1} />
+          <div className='name'>못난이</div>
         </Card>
-        {everyitems !== undefined && characterId !==undefined &&
-        items.map((item,idx)=>{
+        {everyitems&&
+        items.map((item)=>{
           return( 
-            <Card key={idx} onClick={()=>{setMyChar(Number(item.productDesc.substring(9)))}}>
-            <img  className={myChar===idx+1? 'choice':''}  alt='캐릭터' src={item.productFileUrl} />
+            <Card key={item.productId} onClick={()=>{setMyChar(item.productDesc.substring(9))}}>
+            <img  className={myChar===item.productDesc.substring(9)? 'choice':''}  alt='캐릭터' src={item.productFileUrl} />
+            <div className='name'>{item.productTitle}</div>
             </Card>
         )})}
         </div>

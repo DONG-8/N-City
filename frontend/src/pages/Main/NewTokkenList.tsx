@@ -5,19 +5,9 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ItemCard2 from "../../components/Card/ItemCard2";
 import { useMutation, useQuery } from "react-query";
-import { getProductAll } from "../../store/apis/product";
-import IsLoading2 from "../NFTStore/IsLoading2";
-// interface Iprops{
-//   items :{
-//     productId: Number,
-//     productTitle: string,
-//     productPrice: Number,
-//     productThumbnailUrl: string,
-//     productFavorite: Number,
-//     productRegDt:Object, 
-//     productCode: Number,
-//   }[]
-// }
+import { getProductAll, getProductNew } from "../../store/apis/product";
+import IsLoading2 from "../NFTStore/IsLoading2" ;
+
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -75,7 +65,7 @@ const settings = {
 };
 
 const MainBannerWrapper = styled.div`
-  width: 85vw;
+  width: 1400px;
   height: 600px;
   color: black;
   margin: 0 auto;
@@ -107,16 +97,12 @@ interface Istate{
 }
 
 const NewTokkenList:React.FC = () => {
-  const [items,setItems] = useState<Istate['item'][]>([])
   const { isLoading:ILC, data:allitems } = useQuery<any>(
-    "getProductAll",
-    async () => {return (await (getProductAll({ page: 1, size: 1000 })))
+    "getProductNew",
+    async () => {return (await (getProductNew()))
       },
     { onSuccess:(res)=>{
-      const tmp:Istate['item'][] = [...res.content].reverse().slice(0,10)
-      console.log(tmp)
-      setItems(tmp)
-      console.log(items)
+      
     },
       onError: (err: any) => {
         console.log(err, "판매중 정보 실패");
@@ -130,7 +116,7 @@ const NewTokkenList:React.FC = () => {
       {ILC &&<IsLoading2/>}
         <Slider {...settings}>
           {allitems && 
-         items.map((item,idx) => {
+         allitems.map((item,idx) => {
             return <ItemCard2 key={idx} item={item} />;
           })}
         </Slider>
