@@ -1,12 +1,13 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import artistpng from './images/artist.png'
+import enterpng from './images/enterprise.png'
+import infpng from './images/influencer.png'
 
 interface Iprops{
-  artist:{
+  user:{
     "authId": Number,
-    "followeeCnt": Number,
-    "followerCnt": Number,
     "userAddress": String,
     "userDescription": String,
     "userEmail": String,
@@ -50,47 +51,60 @@ const ProfileImg = styled.div`
     }
 `
 const CardBottom = styled.div`
-  text-align:center ;
-    .name{
-      font-size:1.5rem;
-      font-weight:1000 ;
-    }
-    .verified{
-      height: 2rem;
-    }
-    .description{
-      margin: auto ;
-      margin-top:1rem ;
-      width: 90% ;
-    }
+  text-align: center;
+  .name {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .verified {
+    height: 2rem;
+  }
+  .description {
+    margin: auto;
+    margin-top: 1rem;
+    width: 90%;
+  }
+`;
+const Badge = styled.div`
+  img{
+    position: absolute;
+    /* height:3vh; */
+  }
 `
-
-const ArtistCard:React.FC<Iprops> = ({artist}) => {
+const ArtistCard:React.FC<Iprops> = ({user}) => {
   const navigate = useNavigate()
   const goMyPage = ()=>{
-    navigate('/mypage')
-    localStorage.setItem("item",JSON.stringify(artist))
+    navigate(`/mypage/${user.userId}`)
+    localStorage.setItem("item",JSON.stringify(user))
   }
   return (<>
     <Cards onClick={()=>{goMyPage()}}>
         <SumnailImg>
-          <img alt="pic" 
-          src={artist.userImgUrl as any}/>
+          {user.userImgUrl ?
+          <img alt="pic" src={user.userImgUrl as any}/>:
+          <img alt="pic" src="https://cdn.pixabay.com/photo/2020/09/09/02/12/smearing-5556288_960_720.jpg"/>
+          }
         </SumnailImg>
         <ProfileImg>
-          <img alt="pic"
-          src={artist.userImgUrl as any} />
+          {user.userImgUrl ?
+          <img alt="pic" src={user.userImgUrl as any} />:
+          <img alt="pic" src="https://search.pstatic.net/sunny/?src=http%3A%2F%2Ftx01-az3199.ktics.co.kr%2F13301240351_t_article.png&type=sc960_832"/>
+        }
         </ProfileImg>
         <CardBottom>
           <div className='name'>
-            {artist.userNick}
-            {artist.userEmailConfirm &&
-            <img alt="verified" style={{"height":'1.5rem'}} src= "/essets/images/verified.png" />}
+            <Badge>
+              <span>{user.userNick} </span>
+              {user.userRole==='ROLE_ENTERPRISE' && <img alt='badge' src="essets/marks/enterprise-mark.png"/>}
+              {user.userRole==='ROLE_ARTIST' && <img alt='badge' src="essets/marks/artist-mark.png"/>}
+              {user.userRole==='ROLE_INFLUENCER' && <img alt='badge' src="essets/marks/influencer-mark.png"/>}
+            </Badge>
           </div>
-          
-
           <div className='description'>
-            {artist.userDescription}
+            {user.userDescription ? 
+            <p>{user.userDescription}</p>:
+            <p>{user.userNick}의 페이지 입니다</p>
+            }
           </div>
         </CardBottom>
         

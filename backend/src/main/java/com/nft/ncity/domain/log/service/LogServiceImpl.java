@@ -28,7 +28,7 @@ public class LogServiceImpl implements LogService{
             User newUser = User.builder()   // 유저 정보 빌드
                     .userAddress(userAddress)
                     .userNick("noname") // 닉네임 초기 설정
-                    .userRole("ROLE_USER") // 유저 역할 초기 설정 (일반 유저)
+                    .userRole("ROLE_NEW") // 유저 역할 초기 설정 (일반 유저)
                     .userEmailConfirm(false)
                     .build();
 
@@ -36,6 +36,7 @@ public class LogServiceImpl implements LogService{
 
             MyRoom newRoom = MyRoom.builder()   // 유저 방 생성
                     .userId(nowOldUser.getUserId())
+                    .myRoomCharacter("1")
                     .myRoomTodayCnt(0)
                     .myRoomTotalCnt(0)
                     .build();
@@ -54,5 +55,4 @@ public class LogServiceImpl implements LogService{
             return null;
         }
     }
-
 }

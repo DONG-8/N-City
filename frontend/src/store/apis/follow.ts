@@ -3,8 +3,8 @@ import * as API from "./types"
 
 const apiClient = axios.create({
   // baseURL: "https://j6e106.p.ssafy.io/api",
-  // baseURL: "http://localhost:8080/api",
   baseURL: "http://localhost:8080/api",
+  // baseURL: "https://j6e106.p.ssafy.io/api",
   headers: {
     "Content-type": "application/json",
   },
@@ -30,17 +30,17 @@ export const deleteFollow = async (follow : number) => {
 }
 
 // 팔로워 조회
-export const getFollowee = async () => {
+export const getFollowee = async (userId?:number) => {
   const response = await apiClient.get<API.TypeFollowGetLookup>(
-  `follow/followee`
+  `follow/followee/${userId}`
   )
   return response.data
 }
 
 // 팔로우 조회
-export const getFollower = async () => {
+export const getFollower = async (userId?:number) => {
   const response = await apiClient.get<API.TypeFollowGetLookup>(
-  `follow/follower`
+  `follow/follower/${userId}`
   )
   return response.data
 }

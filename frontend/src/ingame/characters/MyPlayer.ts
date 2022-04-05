@@ -1,3 +1,4 @@
+import { ItemType } from './../items/Item';
 import Phaser from 'phaser' 
 import PlayerSelector from './PlayerSelector'
 import { sittingShiftData } from './Player'
@@ -10,12 +11,7 @@ import VendingMachine from '../items/VendingMachine'
 import { phaserEvents, Event } from '../components/events/EventCenter'
 import store from '../stores'
 import { pushPlayerJoinedMessage } from '../stores/ChatStore'
-enum ItemType {
-  CHAIR,
-  COMPUTER,
-  WHITEBOARD,
-  VENDINGMACHINE,
-}
+
 
 
 export enum PlayerBehavior {
@@ -72,10 +68,8 @@ export default class MyPlayer extends Player {
           whiteboard.openDialog(network)
           break
         case ItemType.VENDINGMACHINE: // 화면을 띄운다.
-          // window.open('https://www.google.com', '_blank')
           const vendingMachine = item as VendingMachine
-          vendingMachine.openDialog()
-
+          vendingMachine.openDialog(1)
           break
       }
     }

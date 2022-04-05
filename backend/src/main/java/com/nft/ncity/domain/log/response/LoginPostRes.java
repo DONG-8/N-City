@@ -16,12 +16,20 @@ public class LoginPostRes extends BaseResponseBody {
     @ApiModelProperty(name = "유저 구분 id")
     Long userId;
 
-    public static LoginPostRes of(Integer statusCode, String message, String accessToken, Long userId) {
+    @ApiModelProperty(name = "유저 nickName")
+    String userNick;
+
+    @ApiModelProperty(name = "신규 유저인지 확인")
+    boolean isNew;
+
+    public static LoginPostRes of(Integer statusCode, String message, String accessToken, Long userId, String userNick, boolean isNew) {
         LoginPostRes loginRes = new LoginPostRes();
         loginRes.setStatusCode(statusCode);
         loginRes.setMessage(message);
         loginRes.setAccessToken(accessToken);
         loginRes.setUserId(userId);
+        loginRes.setUserNick(userNick);
+        loginRes.setNew(isNew);
         return loginRes;
     }
 }

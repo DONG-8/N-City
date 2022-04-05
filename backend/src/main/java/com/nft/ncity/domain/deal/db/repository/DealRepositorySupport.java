@@ -29,7 +29,6 @@ public class DealRepositorySupport {
 
     QProduct qProduct = QProduct.product;
 
-
     // 즉시구매등록 - 상품table update
     @Transactional
     public long modifyProductForBuyNowRegisterByProductId(BuyNowRegisterPostReq buyNowRegisterPostReq){
@@ -63,28 +62,26 @@ public class DealRepositorySupport {
         return excute;
     }
 
-
-    // 거래내역
-    @Transactional
-    public Page<Deal> findDealListByProductId(Pageable pageable, Long productId){
-        List<Deal> dealListQueryResults = jpaQueryFactory.select(qDeal)
-                .from(qDeal)
-                .where(qDeal.productId.eq(productId))
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .fetch();
-        if(dealListQueryResults.isEmpty()) return Page.empty();
-
-        return new PageImpl<Deal>(dealListQueryResults,pageable,dealListQueryResults.size());
-    }
-
     //즉시구매
     @Transactional
-    public long modifyProductForBuyNowByProductId(Long productId, Principal principal){
+    public long modifyProductForBuyNowByProductId(Long productId, Long userId){
 
         // x,y좌표, product view 초기화 해야하면 여기 추가!
         long excute = jpaQueryFactory.update(qProduct)
-                .set(qProduct.userId,Long.valueOf(principal.getName()))
+                .set(qProduct.userId,userId)
+                .set(qProduct.productState,3)
+                .set(qProduct.productPrice,0.0)
+                .where(qProduct.productId.eq(productId))
+                .execute();
+        return excute;
+    }
+
+    //즉시구매취소
+    @Transactional
+    public long modifyProductForDealCancelByProductId(Long productId, Long userId){
+
+        long excute = jpaQueryFactory.update(qProduct)
+                .set(qProduct.productPrice,0.0)
                 .set(qProduct.productState,3)
                 .where(qProduct.productId.eq(productId))
                 .execute();
@@ -93,18 +90,17 @@ public class DealRepositorySupport {
 
     //경매 입찰
     @Transactional
-    public long modifyProductForBuyAuctionByProductId(Long productId, Principal principal){
+    public long modifyProductForBuyAuctionByProductId(Long productId, Long userId){
 
         // x,y좌표, product view 초기화 해야하면 여기 추가!
         long excute = jpaQueryFactory.update(qProduct)
-                .set(qProduct.userId,Long.valueOf(principal.getName()))
+                .set(qProduct.userId,userId)
                 .set(qProduct.productState,3)
+                .set(qProduct.productPrice,0.0)
                 .where(qProduct.productId.eq(productId))
                 .execute();
         return excute;
     }
-
-
 
     @Transactional
     public long updateTokenByProductId(TokenRegisterPutReq tokenRegisterPutReq){
@@ -115,4 +111,57 @@ public class DealRepositorySupport {
         return execute;
     }
 
+
+    // READ
+    // 거래내역 history
+    @Transactional
+    public Page<Deal> findDealListByProductId(Pageable pageable, Long productId){
+        List<Deal> dealListQueryResults = jpaQueryFactory.select(qDeal)
+                .from(qDeal)
+                .where(qDeal.productId.eq(productId))
+                .orderBy(qDeal.dealCreatedAt.desc())
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+        if(dealListQueryResults.isEmpty()) return Page.empty();
+
+        return new PageImpl<Deal>(dealListQueryResults,pageable,dealListQueryResults.size());
+    }
+
+    public Page<Deal> findDealMintedListByUserId(Long userId, Pageable pageable) {
+        List<Deal> dealList = jpaQueryFactory.select(qDeal)
+                .from(qDeal)
+                .where(qDeal.dealType.eq(6).and(qDeal.dealTo.eq(userId)))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        if(dealList.isEmpty()) return Page.empty();
+
+        return new PageImpl<Deal>(dealList,pageable,dealList.size());
+    }
+
+    public Page<Deal> findDealListByUserId(Long userId, Pageable pageable) {
+        List<Deal> deals = jpaQueryFactory.select(qDeal)
+                .from(qDeal)
+                .where(qDeal.dealTo.eq(userId).or(qDeal.dealFrom.eq(userId)))
+                .orderBy(qDeal.dealCreatedAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        if (deals.isEmpty()) return Page.empty();
+
+        return new PageImpl<Deal>(deals, pageable, deals.size());
+    }
+
+    public Deal findDealByProductIdOrderByCreatedAt(Long productId) {
+        Deal deal = jpaQueryFactory.select(qDeal)
+                .from(qDeal)
+                .where(qDeal.productId.eq(productId))
+                .orderBy(qDeal.dealCreatedAt.desc())
+                .fetchFirst();
+
+        return deal;
+    }
 }

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AuthFileRepository extends JpaRepository<AuthFile, Long> {
+    void deleteAuthFileByAuthId(Long authId);
 }

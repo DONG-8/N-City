@@ -3,8 +3,8 @@ import * as API from "./types"
 
 const apiClient = axios.create({
   // baseURL: "https://j6e106.p.ssafy.io/api",
-  // baseURL: "http://localhost:8080/api",
   baseURL: "http://localhost:8080/api",
+  // baseURL: "https://j6e106.p.ssafy.io/api",
   headers: {
     "Content-type": "application/json",
   },
@@ -18,7 +18,7 @@ export const postLogin = async (userAddress : string)=> {
   const response = await apiClient.post<any>(
     '/users/login',
     {
-      userAddress
+      "userAddress" : userAddress
     }
   ) 
   console.log('로그인진행중')

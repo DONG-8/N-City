@@ -8,8 +8,8 @@ import Apply from "./pages/Apply/Apply";
 import GlobalStyle from "./styles/global";
 import DetailItem from "./pages/NFTStore/DetailItem";
 import ProfileSetting from "./pages/Mypage/ProfileSetting";
-import EventPage from "./pages/FAQ/EventPage";
-import EventDetail from "./pages/FAQ/EventDetail";
+import EventPage from "./pages/Community/EventPage";
+import EventDetail from "./pages/Community/EventDetail";
 import Rank from "./pages/Rank/Rank";
 import Test from "./pages/Rank/Test";
 import Mint from "./pages/Mint/Mint";
@@ -21,16 +21,16 @@ import phaserGame from "./ingame/PhaserGame";
 import YNTest from "./pages/Test/YNTest";
 import SearchPage from "./pages/NFTStore/SearchPage";
 import MapChoice from "./pages/Room/MapChoice";
-
+import Character from "./pages/Mypage/Character";
 
 function App() {
-  useEffect(()=>{
-    if (window.location.pathname==='/ingame'){
-      (window as any).game = phaserGame}
-      else{
-        (window as any).game.destroy(true)
-      }
-  },[])
+  useEffect(() => {
+    if (window.location.pathname === "/ingame") {
+      (window as any).game = phaserGame;
+    } else {
+      (window as any).game.destroy(true);
+    }
+  }, []);
   return (
     <>
       <GlobalStyle />

@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@ApiModel("ProductRegsterPostReq")
+@ApiModel("ProductRegisterPostReq")
 public class ProductRegisterPostReq {
 
     @ApiModelProperty(value="상품명")
@@ -20,5 +20,4 @@ public class ProductRegisterPostReq {
 
     @ApiModelProperty(value="카테고리")
     private int code;
-
 }

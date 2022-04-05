@@ -3,8 +3,8 @@ import * as API from "./types"
 
 const apiClient = axios.create({
   // baseURL: "https://j6e106.p.ssafy.io/api",
-  // baseURL: "http://localhost:8080/api",
   baseURL: "http://localhost:8080/api",
+  // baseURL: "https://j6e106.p.ssafy.io/api",
   headers: {
     "Content-type": "application/json",
   },
@@ -25,13 +25,13 @@ export const putGuestBook = async (guestbookContents : string, guestbookId: numb
 }
 
 // 방명록 작성
-export const postGuestBook = async (guestbookContents : string, guestbookId: number,guestbookWiterId:number) => {
+export const postGuestBook = async (guestbookContents : string, guestbookOwnerId: number,guestbookWriterId:number) => {
   const response = await apiClient.post<any>(
     `guestbooks`,
     {
       guestbookContents,
-      guestbookId,
-      guestbookWiterId
+      guestbookOwnerId,
+      guestbookWriterId
     }
   )
   return response.data
@@ -47,9 +47,9 @@ export const delGuestBook = async (guestbookId: number) => {
 }
 
 // 방명록 조회 
-export const getGuestBook = async (getGuestBookOwnerId : number) => {
+export const getGuestBook = async (getGuestBookOwnerId : number, pagenumber?:number) => {
   const response = await apiClient.get<any>(
-    `guestbooks/get-${getGuestBookOwnerId}`,
+    `guestbooks/get-${getGuestBookOwnerId}?page=${pagenumber}`,
   )
   return response.data
 }

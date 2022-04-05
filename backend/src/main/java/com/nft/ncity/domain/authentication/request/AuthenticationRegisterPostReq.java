@@ -20,7 +20,11 @@ public class AuthenticationRegisterPostReq {
     @ApiModelProperty(value="이메일")
     String authEmail;
 
-//    // 신청일
+    // 인플루언서는 SNS 주소 or 디자이너는 포트폴리오
+    @ApiModelProperty(value="SNS주소 or 포트폴리오 주소")
+    String authExtra;
+
+//    신청일
 //    @CreatedDate
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
 //    @ApiModelProperty(value="신청일")

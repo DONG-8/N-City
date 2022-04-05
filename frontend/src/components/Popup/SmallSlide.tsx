@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForward from "@material-ui/icons/ArrowForward";
-import RankArtistCard from "../../pages/Main/RankArtistCard";
+import RankArtistCard from "./RankArtistCard";
 
 const SubBannerWrraper = styled.div`
   position: relative;
@@ -149,8 +149,7 @@ const SmallSlide = () => {
     <>
       <SubBannerWrraper>
         <SubBanner>
-          {/* {subImages.map((value, idx) => {
-            // style={{transform: `translate(${position}px)`, transition: `transform 0.5s`}}
+          {subImages.map((value, idx) => {
             return (
               <div className="inner">
                 <img
@@ -164,8 +163,8 @@ const SmallSlide = () => {
                 />
               </div>
             );
-          })} */}
-          <RankArtistCard></RankArtistCard>
+          })}
+          {/* <RankArtistCard></RankArtistCard> */}
         </SubBanner>
         <SubPagenationBanner>
           <button

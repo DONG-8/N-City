@@ -1,3 +1,4 @@
+import { ItemType } from './../items/Item';
 import { IPlayer } from './../../types/IOfficeState';
 import Phaser from 'phaser'
 import { createCharacterAnims } from '../anims/CharacterAnims'
@@ -13,7 +14,6 @@ import OtherPlayer from '../characters/OtherPlayer'
 import PlayerSelector from '../characters/PlayerSelector'
 import Network from '../services/Network'
 import { PlayerBehavior } from '../../types/PlayerBehavior'
-import { ItemType } from '../../types/Items'
 import store from '../stores'
 import { setFocused, setShowChat } from '../stores/ChatStore'
 import stores from "../stores"
@@ -58,6 +58,7 @@ export default class Game extends Phaser.Scene {
     })
   }
 
+  
   disableKeys() { // 키보드 사용불가 
     this.input.keyboard.enabled = false
   }
@@ -66,18 +67,16 @@ export default class Game extends Phaser.Scene {
     this.input.keyboard.enabled = true
   }
 
-  create(data: { network: Network, GameMode : GameMode }) {
+  create(data: { network: Network}) {
     if (!data.network) {
       throw new Error('server instance missing')
     } else {
       this.network = data.network
     }
     
-    if (data.GameMode === GameMode.EDIT) {
-      this.cameras.main.zoom = 1
-    } else {
-      this.cameras.main.zoom = 1
-    }
+    this.cameras.main.zoom = 1.6
+    
+    
 
     createCharacterAnims(this.anims)
 
@@ -128,35 +127,35 @@ export default class Game extends Phaser.Scene {
         'whiteboards',
         'whiteboard'
       ) as Whiteboard
-      console.log(item,'아이템 뽑아왔어요')
+      // console.log(item,'아이템 뽑아왔어요')
       const id = `${i}`
       item.id = id
-      console.log(this.whiteboardMap, '화이트보트맵', id)
+      // console.log(this.whiteboardMap, '화이트보트맵', id)
       this.whiteboardMap.set(id, item)
     })
 
     // import vending machine objects from Tiled map to Phaser
     const vendingMachines = this.physics.add.staticGroup({ classType: VendingMachine })
     const vendingMachineLayer = this.map.getObjectLayer('VendingMachine')
+    console.log(vendingMachineLayer)
     vendingMachineLayer.objects.forEach((obj, i) => {
       this.addObjectFromTiled(vendingMachines, obj, 'vendingmachines', 'vendingmachine')
     })
-
+    
     this.addGroupFromTiled('Wall', 'tiles_wall', 'FloorAndGround', false)
     this.addGroupFromTiled('Objects', 'office', 'Modern_Office_Black_Shadow', false)
     this.addGroupFromTiled('ObjectsOnCollide', 'office', 'Modern_Office_Black_Shadow', true)
     this.addGroupFromTiled('GenericObjects', 'generic', 'Generic', false)
     this.addGroupFromTiled('GenericObjectsOnCollide', 'generic', 'Generic', true)
     this.addGroupFromTiled('Basement', 'basement', 'Basement', true)
-
     this.otherPlayers = this.physics.add.group({ classType: OtherPlayer })
 
     
     this.cameras.main.startFollow(this.myPlayer, true) // 인칭
 
     this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], groundLayer) // 충돌나는 물건들 
-    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines) // 자판기 + 충돌
-
+    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines) //  충돌
+   
     this.physics.add.overlap( // ⭐ 이거 없으면 상호작용 불가
       this.playerSelector,
       [chairs, computers, whiteboards, vendingMachines],
@@ -312,3 +311,5 @@ export default class Game extends Phaser.Scene {
     marker.y = this.map.tileToWorldY(pointTileY);
   }
 }
+
+

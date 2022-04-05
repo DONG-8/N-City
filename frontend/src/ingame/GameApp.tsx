@@ -98,7 +98,15 @@ const GameApp: Function = () => {
     description: '혀농이방이야',
     password: null,
     autoDispose: false, // 마지막 사용자가 나오면 자동으로 방 없애기 (화이트보드 때문에 지금은 false)
-  })
+  });
+
+  const availableRooms = useAppSelector((state) => state.room.availableRooms); //가능한 방들 표시 해주기
+  const computerDialogOpen = useAppSelector(
+    (state) => state.computer.computerDialogOpen
+  );
+  const whiteboardDialogOpen = useAppSelector(
+    (state) => state.whiteboard.whiteboardDialogOpen
+  );
 
   useEffect(() => {
     RoomInfo();

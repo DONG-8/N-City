@@ -1,19 +1,13 @@
 package com.nft.ncity.domain.product.response;
 
-import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
-import com.nft.ncity.domain.favorite.service.FavoriteService;
-import com.nft.ncity.domain.product.db.entity.Product;
+import com.nft.ncity.domain.user.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -36,32 +30,18 @@ public class ProductListGetRes {
     @ApiModelProperty(value = "상품 생성일")
     LocalDateTime productRegDt;
 
-    @ApiModelProperty(value = "좋아요 수")
-    Long productFavorite;
-
     @ApiModelProperty(value = "상품 카테고리")
     int productCode;
 
+    @ApiModelProperty(value = "좋아요 수")
+    Long productFavorite;
 
-    public static Page<ProductListGetRes> of(Page<Product> products){
-        List<ProductListGetRes> productListGetRes = new ArrayList<>();
+    @ApiModelProperty(value = "좋아요 누른 사람")
+    List<User> productFavoriteUser;
 
-        Pageable pageable = products.getPageable();
-        long total = products.getTotalElements();
+    @ApiModelProperty(value = "유저 종류")
+    String userRole;
 
-        for(Product p : products.getContent()){
-            ProductListGetRes productList = new ProductListGetRes();
-
-            productList.setProductTitle(p.getProductTitle());
-            productList.setProductPrice(p.getProductPrice());
-            productList.setProductRegDt(p.getProductRegDt());
-            productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
-
-            productListGetRes.add(productList);
-        }
-
-        Page<ProductListGetRes> res = new PageImpl<>(productListGetRes, pageable, total);
-
-        return res;
-    }
+    @ApiModelProperty(value = "상품 거래상태")
+    int productState;
 }

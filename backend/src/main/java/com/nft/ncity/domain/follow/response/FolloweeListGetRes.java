@@ -15,6 +15,10 @@ import java.util.List;
 @ApiModel("EmailAuthConfirmReq")
 public class FolloweeListGetRes {
 
+    @ApiModelProperty(value = "회원 id")
+    // 회원 id
+    Long userId;
+
     @ApiModelProperty(value = "회원 지갑 주소", required = true)
     // 유저 지갑 주소
     String userAddress;
@@ -27,6 +31,7 @@ public class FolloweeListGetRes {
         - ROLE_INFLUENCER : 인플루언서
      */
     @ApiModelProperty(value = "회원 구분 코드 (" +
+            "ROLE_NEW : 신규유저" +
             "ROLE_ADMIN : 사이트 관리자, " +
             "ROLE_USER : 일반회원 (default), " +
             "ROLE_ENTERPRISE : 기업, " +
@@ -61,6 +66,7 @@ public class FolloweeListGetRes {
             User user = follow.getFollowFollower();
 
             FolloweeListGetRes flg = new FolloweeListGetRes();
+            flg.setUserId(user.getUserId());
             // 지갑 주소
             flg.setUserAddress(user.getUserAddress());
             flg.setUserRole(user.getUserRole());

@@ -782,32 +782,6 @@ const SaleAbi: AbiItem[] = [
 	},
 	{
 		"inputs": [],
-		"name": "erc20Contract",
-		"outputs": [
-			{
-				"internalType": "contract IERC20",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "erc721Constract",
-		"outputs": [
-			{
-				"internalType": "contract IERC721",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "highestBid",
 		"outputs": [
 			{
@@ -1453,9 +1427,9 @@ const SSFTokenAbi: AbiItem[] = [
 ];
 
 
-export const NFTcreatorAddress = "0xcEce77d2aE606eC0F96e4f129896b798A8a94c1A";
-export const SaleFactoryAddress = "0xCAc7ddcbeFa9BD1374Ea6258430b7d0128150c44";
-export const SSFTokenAddress = "0xCe7d2E1196327c400f272e54E40ab63936dF92B7";
+export const NFTcreatorAddress = "0x6a2BBCa33ad091b4D95A290D18613D8466F3252d";
+export const SaleFactoryAddress = "0x5A8834A1DFE35bcc8bC8d78644D238ada9d1cab6";
+export const SSFTokenAddress = "0x97da7900b691D525197c607dF1bd97138C814e16";
 
 export const web3 = new Web3(window.ethereum);
 

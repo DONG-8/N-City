@@ -20,5 +20,4 @@ public class BuyNowRegisterPostReq {
 
     @ApiModelProperty(value = "금액")
     private double dealPrice;
-
 }

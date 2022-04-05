@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import { stringify } from 'querystring'
 import Network from '../services/Network'
 import store from '../stores'
 import { setRoomJoined } from '../stores/RoomStore'
@@ -21,10 +22,13 @@ export default class Bootstrap extends Phaser.Scene {
   myArtList = {content:[{productThumbnailUrl:'', productId:0}]}
 
   constructor() {
-    super('bootstrap')
-  }
-
+    super('bootstrap');
+    this.mapInfo = store.getState().edit.userMap
+    }
+  
+  
   preload() { // 시작전 세팅 
+    console.log(this.mapInfo,'맵정보')
     this.load.atlas( // atlas 는 여러개의 스프라이트를 한장의 큰 텍스쳐에 모아놓은 것 
       'cloud_day',
       'essets/background/cloud_day.png',
@@ -111,6 +115,7 @@ export default class Bootstrap extends Phaser.Scene {
 
   create() { // 백그라운드 시작
     this.launchBackground(store.getState().user.backgroundMode)
+    
   }
 
   private launchBackground(backgroundMode: BackgroundMode) { // 위에서 실행 

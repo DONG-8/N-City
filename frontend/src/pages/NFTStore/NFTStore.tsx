@@ -1,54 +1,23 @@
-import React, { useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import styled from 'styled-components'
-import ItemCard from '../../components/Card/ItemCard'
-import { items as itm } from './items'
-import { getProductAll } from '../../store/apis/product'
-import { useQuery } from 'react-query'
+import { getProductAll, getSellProduct } from '../../store/apis/product'
+import { useMutation, useQuery } from 'react-query'
 import ItemCard2 from '../../components/Card/ItemCard2'
+import ItemCard from '../../components/Card/ItemCard'
+import ToggleSwitch from './ToggleSwitch'
+import ToggleSwitch2 from './ToggleSwitch2'
+import IsLoading2 from './IsLoading2'
+import IsLoading from './IsLoading'
+import StoreItemCard from '../../components/Card/StoreItemCard'
 
-const Title = styled.div`
-  display:flex ;
-  justify-content:space-around;
-  h1{
-    font-size: 4rem;
+const Wrapper = styled.div`
+  .loading{
+    text-align: center;
+    font-size: 2.5vh;
+    font-weight: 600;
+    margin-top: -5vh;
   }
-  p{
-    margin-top: 10vh;
-    font-weight: 1000 ;
-    font-size: 1.5rem;
-  }
-  margin-bottom: 0;
-`
-const ColorBar = styled.div`
-  margin: auto;
-    margin-top:0;
-    width: 100vw ;
-  
-  
-  img{
-    margin: auto;
-    width: 100vw ;
-    height: 20vh;
-    object-fit: cover;
-  }
-  .all{
-    object-position:10% 10%;
-  }
-  .art{
-    object-position:70% 70%;
-  }
-  .music{
-    object-position:70% 70%;
-  }
-  .photography{
-    object-position:40% 40%;
-  }
-  .sports{
-    object-position:90% 90%;
-  }
-  .game{
-    object-position:60% 60%;
-  }
+
 `
 
 const CategoryBar = styled.div`
@@ -61,7 +30,7 @@ const CategoryBar = styled.div`
   }
   p{
     font-size:2vh;
-    font-weight:1000;
+    font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
     position: relative;
@@ -71,7 +40,7 @@ const CategoryBar = styled.div`
     content: "";
     height: 5px;
     width: 0px;
-    background-color: #272793;
+    background-color: #6225E6  ;
     border-radius: 10px;
     transition: 0.3s;
     position: absolute;
@@ -79,11 +48,11 @@ const CategoryBar = styled.div`
   }
   p:hover::before{
     width: 100%;
-    background-color: #272793;
+    background-color: #6225E6  ;
   }
   #category::before{
     width: 100%;
-    background-color: #272793;
+    background-color: #6225E6;
   }
 `
 const ItemCards = styled.div`
@@ -91,6 +60,7 @@ const ItemCards = styled.div`
   width: 90vw ;
   display: flex ;
   flex-wrap: wrap ;
+  justify-content: center;
   &:last-child {
     margin-right: auto;
   }
@@ -104,7 +74,7 @@ const IntroBox = styled.div`
   margin: auto;
   margin-top: 10vh;
   display: flex;
-  margin-bottom:10vh;
+  margin-bottom:5vh;
 
 `
 const Left = styled.div`
@@ -153,71 +123,118 @@ const Right = styled.div`
     height: 60%;
     width: 60%;
   }
-`;
+  `;
 
-export interface IState{
+const FilterButton = styled.div`
+display: flex;
+justify-content: end;
+margin-right:10vw;
+.toggle{
+  margin-left: 3vw;
+}
+.name{
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+`
+interface Istate{
   item :{
+    productId: Number,
     productTitle: string,
     productPrice: Number,
     productThumbnailUrl: string,
-    productRegDt:Object,
     productFavorite: Number,
+    productRegDt:Object,
     productCode: Number,
-  }[]
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    }[],
+    userRole: string
+  }
 }
 const NFTStore = () => {
-  const [filter,setFilter] = useState("all")
-  // 상품 정보 모두 가져오기
-  // const [items,setItems] = useState(itm)
-  const { isLoading, data:items } = useQuery<any>(
-    "query-prouductAll",
-    async () => {return (await getProductAll({ page: 1, size: 1000 }))
+  const [filter,setFilter] = useState(0) 
+  const [status,setStatus]  = useState(false)
+  const [order,setOrder]  = useState(false)
+  const [allitems,setAllitems] = useState([])
+  const [saleitems,setSaleitems] = useState([])
+  const [showItems,setShowItems] = useState<any[]>([])
+  const [showSales,setShowSales] = useState<any[]>([])
+    // 상품 정보 모두 가져오기
+  const getAll = useMutation<any,Error>(
+    "prouductAll",
+    async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))},
+    { onSuccess:(res)=>{
+      console.log(res)
+      setAllitems(res.content)
+      setShowItems(res.content)
     },
-    {
-      onSuccess: (res) => {
-        console.log(res, "좋아요 결과");
-        // 여기서 이 result로 하고싶은 추가 작업을 실행시켜준다.
+      onError: (err: any) => {console.log(err, "상품정보 가져오기 오류")},
+    });
+  const getSale = useMutation<any,Error>(
+    "getSellProduct",
+    async () => {return (await (getSellProduct()))
+      },
+    { 
+      onSuccess:(res)=>{
+        setSaleitems(res.content)
+        setShowSales(res.content)
       },
       onError: (err: any) => {
-        console.log(err, "요청 실패");
+        console.log(err, "판매중 정보 실패");
       },
     }
   );
+
+  const getFilter = (num)=>{
+    if (num===0){
+      setShowItems(allitems)
+      setShowSales(saleitems)
+    }
+    else{
+      let items: Istate["item"][] = [];
+      allitems.map((item: Istate["item"]) => {
+        if (item.productCode === num) {
+          items.push(item);
+        }
+      });
+      setShowItems(items);
+
+      let sales: Istate["item"][] = [];
+      saleitems.map((item: Istate["item"]) => {
+        if (item.productCode === num) {
+          sales.push(item);
+        }
+      });
+      setShowSales(sales);
+    }
+  }
+
+  useEffect(()=>{
+    // 좋아요를 하고 status를 바꿔도 그대로인 오류...❌
+    getAll.mutate()
+    getSale.mutate()
+  },[status])
+
+  useEffect(()=>{
+    console.log('필터 함수!!!!!!!!')
+    getFilter(filter)
+  },[filter])
+
+
+
   return (
-    <>
-      {/* <ColorBar>
-        {filter === "all" && (
-          <img className="all" src="essets/images/오로라.jpg" alt="bg" />
-        )}
-        {filter === "art" && (
-          <img className="art" src="essets/images/art.jpg" alt="bg" />
-        )}
-        {filter === "music" && (
-          <img className="music" src="essets/images/music.jpg" alt="bg" />
-        )}
-        {filter === "photography" && (
-          <img className="photography" src="essets/images/photography2.jpg" alt="bg" />
-        )}
-        {filter === "sports" && (
-          <img className="sports" src="essets/images/sports.jpg" alt="bg" />
-        )}
-        {filter === "game" && (
-          <img className="game" src="essets/images/game.jpg" alt="bg" />
-        )}
-      </ColorBar> */}
-      {/* <Title>
-        <h1>Store</h1>
-        <div>
-          <p>
-            소지금 : 356,321
-            <img
-              alt="💎"
-              style={{ height: "2.2vh" }}
-              src="essets/images/ethereum.png"
-            />
-          </p>
-        </div>
-      </Title> */}
+    <Wrapper>
       <IntroBox>
         <Left>
           <div className='text'>
@@ -234,88 +251,99 @@ const NFTStore = () => {
           </div>
         </Right>
       </IntroBox>
+      {showItems.length>0 &&
+      <>
+        <FilterButton>
+          <div className='toggle'>
+            {status?<div className='name'>판매하는</div >:<div className='name'>모든물품</div>}
+            <ToggleSwitch2 status={status} setStatus={setStatus}/>
+          </div>
+          <div className='toggle'>
+            {order?<div className='name'>오래된</div>:<div className='name'>최신순 </div>}
+            <ToggleSwitch order={order} setOrder={setOrder}/>
+          </div>
+        </FilterButton>
       <CategoryBar>
         <li>
-          <p
-            id={filter === "all" ? "category" : ""}
-            onClick={() => {
-              setFilter("all");
-            }}
-          >
+          <p id={filter === 0 ? "category" : ""} onClick={() => {setFilter(0)}}>
             All
           </p>
         </li>
         <li>
-          <p
-            id={filter === "art" ? "category" : ""}
-            onClick={() => {
-              setFilter("art");
-            }}
-          >
-            Art
+          <p id={filter === 1 ? "category" : ""} onClick={() => {  setFilter(1)}}>
+          Music
           </p>
         </li>
         <li>
-          <p
-            id={filter === "music" ? "category" : ""}
-            onClick={() => {
-              setFilter("music");
-            }}
-          >
-            Music
+          <p id={filter === 2 ? "category" : ""} onClick={() => {  setFilter(2)}}>
+          Picture
           </p>
         </li>
         <li>
-          <p
-            id={filter === "photography" ? "category" : ""}
-            onClick={() => {
-              setFilter("photography");
-            }}
-          >
-            Photography
+          <p id={filter === 3 ? "category" : ""} onClick={() => {  setFilter(3)}}>
+          Video
           </p>
         </li>
         <li>
-          <p
-            id={filter === "sports" ? "category" : ""}
-            onClick={() => {
-              setFilter("sports");
-            }}
-          >
-            Sports
+          <p id={filter === 4 ? "category" : ""} onClick={() => {  setFilter(4)}}>
+          Art
           </p>
         </li>
         <li>
-          <p
-            id={filter === "game" ? "category" : ""}
-            onClick={() => {
-              setFilter("game");
-            }}
-          >
-            Game
+          <p id={filter === 5 ? "category" : ""} onClick={() => {  setFilter(5)}}>
+          Celebrity
+          </p>
+        </li>
+        <li>
+          <p id={filter === 6 ? "category" : ""} onClick={() => {  setFilter(6)}}>
+          Sports
+          </p>
+        </li>
+        <li>
+          <p id={filter ===7 ? "category" : ""} onClick={() => {  setFilter(7)}}>
+          Character
+          </p>
+        </li>
+        <li>
+          <p id={filter === 8 ? "category" : ""} onClick={() => {  setFilter(8)}}>
+          Animation
           </p>
         </li>
       </CategoryBar>
-        {/* {isLoading ? <div>로딩중</div>: 
-            <>
-          {items ?
-            <ItemCards>
-            {(items.content).map((item,idx) => {
-              return(
-                <ItemCard key={idx} item={item} />
-                )
-              })}
-            </ItemCards> 
-            :<></>} </>} */}
-            <ItemCards>
-              {items &&
-             (items).map((item,idx) => {
-              return(
-                <ItemCard2 key={idx} item={item} />
-                )
-              })}
-            </ItemCards>
       </>
+      }
+          {showItems.length===0 &&
+          <>
+          <IsLoading2/>
+          <div className='loading'>Loading..</div>
+          </>}
+        <ItemCards>
+          {!status && showItems && !order&&
+          ([...showItems].reverse()).map((item,idx) => {
+          return(
+            <StoreItemCard key={idx} item={item} />
+            )
+          })}
+          {!status && showItems && order&&
+          showItems.map((item,idx) => {
+          return(
+            <StoreItemCard key={idx} item={item} />
+            )
+          })}
+          {status && showSales && !order&&
+          ([...showSales].reverse()).map((item,idx) => {
+          return(
+            <StoreItemCard key={idx} item={item} />
+            )
+          })}
+          {status && showSales && order&&
+          showSales.map((item,idx) => {
+          return(
+            <StoreItemCard key={idx} item={item} />
+            )
+          })}
+        </ItemCards>
+      </Wrapper>
   );
 }
 

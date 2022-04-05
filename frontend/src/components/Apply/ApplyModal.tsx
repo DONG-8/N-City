@@ -1,5 +1,7 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
+import { useMutation, useQuery } from 'react-query';
+import {postAuthentiaction} from '../../store/apis/authentication'
 
 export type ModalBaseProps = {
   /** 모달에 들어갈 컴포넌트 */
@@ -235,9 +237,39 @@ const ModalBase = ({
   const [extra, setExtra] = useState<string>("");
   const [files, setFiles] = useState<any>([]);
   // const [fileNames, setFileNames] = useState<string[]>([]);
+
+  const postAuth = useMutation<any, Error>(
+    "postAuthentiaction",
+    async () => {
+      const formdata = new FormData();
+      formdata.append("authName", name);
+      formdata.append("authEmail", email);
+      formdata.append("authType", convertType());
+      formdata.append("authExtra", formType === "enterprise" ? "" : extra);
+      formdata.append("authFile", files);
+      // formdata 확인
+      for (var key of formdata.keys()) {
+        console.log(key);
+      }
+
+      for (var value of formdata.values()) {
+        console.log(value);
+      }
+
+      return await(postAuthentiaction(formdata));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("요청성공",res)
+      },
+      onError: (err: any) => {
+        console.log(err, "❌APPLY 실패!");
+      },
+    }
+  );
   const handleFileOnChange = (e: React.ChangeEvent) => {
-    setFiles((e.target as HTMLInputElement).files);
-    console.log((e.target as HTMLInputElement).files);
+    setFiles((e.target as HTMLInputElement).files?.item(0));
+    console.log((e.target as HTMLInputElement).files?.item(0));
   };
 
   // 이름 입력
@@ -257,7 +289,32 @@ const ModalBase = ({
   // submit
   const onClickSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // 여기서 나중에 post 요청
+    if (!name) {
+      alert("이름을 적어주세요");
+      return;
+    } 
+    else if (!email) {
+      alert("이메일을 적어주세요");
+      return;
+    } 
+    else if (!files) {
+      alert("파일을 업로드 해주세요");
+      return;
+    } 
+    postAuth.mutate()
+  };
+
+  const convertType = () => {
+    switch (formType) {
+      case "influencer":
+        return "5"
+      case "artist":
+        return "4"
+      case "enterprise":
+        return "3"
+      default:
+        return "알수없는인증타입"
+    }
   };
 
   useEffect(() => {
@@ -289,13 +346,19 @@ const ModalBase = ({
         <FormWrapper visible={visible}>
           {formType === "influencer" && (
             <ExplaneBox>
-              <ExplaneText visible={visible}>인플루언서 뱃지를 획득하여</ExplaneText>
-              <ExplaneText visible={visible}>본인이 가진 영향력을 작품에 부여하세요</ExplaneText>
+              <ExplaneText visible={visible}>
+                인플루언서 뱃지를 획득하여
+              </ExplaneText>
+              <ExplaneText visible={visible}>
+                본인이 가진 영향력을 작품에 부여하세요
+              </ExplaneText>
             </ExplaneBox>
           )}
           {formType === "artist" && (
             <ExplaneBox>
-              <ExplaneText visible={visible}>그래픽, 미디어업계의 전문가 이신가요?</ExplaneText>
+              <ExplaneText visible={visible}>
+                그래픽, 미디어업계의 전문가 이신가요?
+              </ExplaneText>
               <ExplaneText visible={visible}>
                 아티스트 뱃지로 작품의 가치를 더욱 빛내세요
               </ExplaneText>
@@ -303,8 +366,12 @@ const ModalBase = ({
           )}
           {formType === "enterprise" && (
             <ExplaneBox>
-              <ExplaneText visible={visible}>작품에 기업인증 뱃지를 달고</ExplaneText>
-              <ExplaneText visible={visible}>기업 홍보와 함께 작품의 가치를 높이세요</ExplaneText>
+              <ExplaneText visible={visible}>
+                작품에 기업인증 뱃지를 달고
+              </ExplaneText>
+              <ExplaneText visible={visible}>
+                기업 홍보와 함께 작품의 가치를 높이세요
+              </ExplaneText>
             </ExplaneBox>
           )}
           {/* <Content>{children}</Content> */}
@@ -378,7 +445,9 @@ const ModalBase = ({
               </ExplaneText>
             </div>
             <div>
-              <ExplaneText className="second" visible={visible}>허용되는 신분증: </ExplaneText>
+              <ExplaneText className="second" visible={visible}>
+                허용되는 신분증:{" "}
+              </ExplaneText>
               <ExplaneText className="second" visible={visible}>
                 여권, 운전면허증, 국가발급신분증, 군인신분증, 서명된 이민증
               </ExplaneText>
@@ -401,11 +470,7 @@ const ModalBase = ({
               onChange={handleFileOnChange}
             ></input>
             <FileName>
-              {Array.from(files).map((file: any) => (
-                <div key={file.name} className="file-name">
-                  {file.name}
-                </div>
-              ))}
+              <div className="file-name">{files.name}</div>
             </FileName>
           </FileUploadButtonBox>
 

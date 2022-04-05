@@ -1,53 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ArtistCard from '../../components/Card/ArtistCard'
 import styled from 'styled-components'
 import { artists as art } from './items'
-import NewTokkenList from '../Main/NewTokkenList'
-import { items as itm } from './items'
-
-const Title = styled.div`
-  display:flex ;
-  justify-content:space-around;
-  h1{
-    font-size: 4rem;
-  }
-  p{
-    margin-top: 10vh;
-    font-weight: 1000 ;
-    font-size: 1.5rem;
-  }
-  margin-bottom: 0;
-`
-const ColorBar = styled.div`
-    margin: auto;
-    margin-top:0;
-    width: 100vw ;
-  
-  
-  img{
-    margin: auto;
-    width: 100vw ;
-    height: 30vh;
-    object-fit: cover;
-  }
-  .all{
-    object-position:50% 50%;
-  }
-  .follow{
-    object-position:20% 20%;
-  }
-  .influencer{
-    object-position:50% 50%;
-  }
-  .artist{
-    object-position:50% 50%;
-  }
-  .enterprise{
-    object-position:70% 70%;
-  }
-  
-  
-`
+import { useMutation, useQuery } from 'react-query'
+import { getUserAll } from '../../store/apis/user'
 
 const ArtistCards = styled.div`
   margin:auto ;
@@ -56,47 +12,6 @@ const ArtistCards = styled.div`
   flex-wrap: wrap ;
   justify-content: center;
  
-`
-
-const FilterBar = styled.div`
-  margin: auto;
-  margin-top: 3vh;
-  width: 70% ;
-  display: flex;
-  margin-bottom:5vh;
-  div{
-    cursor:pointer;
-    flex: 2.5;
-    height: 6vh ;
-    text-align:center ;
-    &:hover{
-      background-color: whitesmoke ;
-      transition:0.3s ;
-    }
-    p{
-      font-size:2.5vh ;
-      margin-top : 1vh;
-      font-weight: 1000 ;
-    }
-  }
-  div{
-    /* background-color: #F5B6A0; */
-    border-bottom:2px solid #F43B00;
-  }
-  
-  #select{
-    background-color: white ;
-    border-left: 2px solid #F43B00;
-    border-right: 2px solid #F43B00;
-    border-top:2px solid #F43B00;
-    border-bottom: none;
-    color:#FF7248 ;
-    &:hover{
-      background-color: #F9F9F9 ;
-      transition:0.3s ;
-  
-    }
-  }
 `
 const IntroBox = styled.div`
   width: 88vw;
@@ -107,7 +22,7 @@ const IntroBox = styled.div`
   margin-top: 10vh;
   border-radius: 30px;
   display: flex;
-  margin-bottom:15vh;
+  margin-bottom:10vh;
 `
 const Left = styled.div`
   flex: 1;
@@ -125,10 +40,10 @@ const Left = styled.div`
     }
   }
   img {
-    margin-left: 11vw;
+    margin-left: 12vw;
     margin-top: 4vh;
     height: 60%;
-    width: 50%;
+    width: 45%;
   }
   
 `
@@ -157,13 +72,45 @@ const Right = styled.div`
   }
 }
 `;
-
+const CategoryBar = styled.div`
+  margin: auto;
+  margin-top: 5vh;
+  width: 70% ;
+  display: flex;
+  li{
+    margin: auto;
+  }
+  p{
+    font-size:2vh;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    position: relative;
+    text-align: center;
+  }
+  p::before{
+    content: "";
+    height: 5px;
+    width: 0px;
+    background-color: #6225E6  ;
+    border-radius: 10px;
+    transition: 0.3s;
+    position: absolute;
+    bottom: -0.5rem;
+  }
+  p:hover::before{
+    width: 100%;
+    background-color: #6225E6  ;
+  }
+  #category::before{
+    width: 100%;
+    background-color: #6225E6;
+  }
+`
 
 export interface IState{
-  artist:{
+  user:{
     "authId": Number,
-    "followeeCnt": Number,
-    "followerCnt": Number,
     "userAddress": String,
     "userDescription": String,
     "userEmail": String,
@@ -172,15 +119,92 @@ export interface IState{
     "userImgUrl": String,
     "userNick": String,
     "userRole": String
-  }[]
+  }
 }
 
 
 
 const Artists = () => {
-  const [artists,setArtists] = useState<IState["artist"]>(art)
-  const [status,setStatus] = useState("all")
+  const [users,setUsers] = useState<IState["user"][]>([])
+  const [allUsers,setAllUsers] = useState<IState["user"][]>([])
+  const [filter,setFilter] = useState(0) 
 
+  // const { isLoading:ILS, data } = useQuery<any>(
+  //   "getUserAll",
+  //   async () => {return (await (getUserAll()))
+  //     },
+  //   { 
+  //     onSuccess:(res)=>{
+  //       let tmp:IState['user'][] = []
+  //       res.map((data)=>{tmp.push(data.user)})
+  //       setAllUsers(tmp)
+  //       setUsers(tmp)
+  //     },
+  //     onError: (err: any) => {
+  //       console.log(err, "유저 불러오기 실패");
+  //     },
+  //   }
+  // );
+  const getArtist = useMutation<any, Error>(
+    "getUserAll",
+    async () => {
+      return await getUserAll();
+    },
+    {
+      onSuccess: (res) => {
+        console.log(res)
+        let tmp:IState['user'][] = []
+        res.map((data)=>{tmp.push(data.user)})
+        setAllUsers(tmp)
+        setUsers(tmp)
+      },
+      onError: (err: any) => {
+        console.log("❌유저 불러오기 실패!",err);
+      },
+    }
+  );
+
+  const getFilter = (number)=>{
+    let tmp:IState['user'][] = []
+    switch (number){
+      case 0:
+        setUsers(allUsers)
+        break;
+      case 1:
+        allUsers.map(user=>{
+          if(user.userRole==='ROLE_INFLUENCER'){
+            tmp.push(user)
+          }
+        })
+        setUsers(tmp)
+        break;
+      case 2:
+        allUsers.map(user=>{
+          if(user.userRole==='ROLE_ARTIST'){
+            tmp.push(user)
+          }
+        })
+        setUsers(tmp)
+        break;
+      case 3:
+        allUsers.map(user=>{
+          if(user.userRole==='ROLE_ENTERPRISE'){
+            tmp.push(user)
+          }
+        })
+        setUsers(tmp)
+        break;
+    }
+  }
+  useEffect(()=>{
+    console.log('EFFECT')
+    getFilter(filter)
+  },[filter])
+  useEffect(()=>{
+    console.log('🚗🎶',allUsers)
+    console.log('👍',users)
+    getArtist.mutate()
+  },[])
   return (
     <div>
       <IntroBox>
@@ -188,102 +212,52 @@ const Artists = () => {
         <div className='black'>
           {/* <img alt='black' src='https://i.gifer.com/QGA.gif' /> */}
           <img alt='black' src='https://i.gifer.com/BKfh.gif' />
-            <div className='text'><p>N-city Store</p></div>
+            <div className='text'><p>N-city citizen</p></div>
           </div>
         </Left>
         <Right>
         <div className='text'>
             <div className='h3'>NFT Marketplace</div>
-            <div className='h1'>Artists</div>
-            <div className='h4'>N-city는 다양한 <span className='blue'>NFT 작품</span>들을 판매하고 있습니다. </div>
-            <div className='h4'><span className='purple'>NCT 토큰</span>을 이용해 갤러리를 구경하고 거래할 수 있습니다. </div>
-            <div className='h4'>물건을 구입해 <span className='blue'>마이룸</span>을 꾸미세요. </div>
+            <div className='h1'>Citizen</div>
+            <div className='h4'>N-city에는 다양한 <span className='blue'>Citizen</span>이 존재합니다. </div>
+            <div className='h4'><span className='purple'>갤러리</span>를 구경하고 거래할 수 있습니다. </div>
+            <div className='h4'>Citizen의<span className='blue'> 마이룸</span>을 놀러가보세요 </div>
           </div>
           
         </Right>
       </IntroBox>
-      {/* <ColorBar>
-        {status === "all" && (
-          <img className="all" src="essets/images/오로라.jpg" alt="bg" />
-        )}
-        {status === "follow" && (
-          <img className="follow" src="essets/images/오로라2.jpg" alt="bg" />
-        )}
-        {status === "influencer" && (
-          <img className="influencer" src="essets/images/influencer.jpg" alt="bg" />
-        )}
-        {status === "artist" && (
-          <img className="artist" src="essets/images/아티스트.jpg" alt="bg" />
-        )}
-        {status === "enterprise" && (
-          <img
-            className="enterprise"
-            src="essets/images/나이키.jpeg"
-            alt="bg"
-          />
-        )}
-      </ColorBar> */}
-      {/* <Title>
-        <h1>Artists</h1>
-        <div>
-          <p>
-            소지금 : 356,321
-            <img
-              alt="💎"
-              style={{ height: "2.2vh" }}
-              src="essets/images/ethereum.png"
-            />
+      <div>
+      <CategoryBar>
+        <li>
+          <p id={filter === 0 ? "category" : ""} onClick={() => {setFilter(0)}}>
+            All
           </p>
-        </div>
-      </Title> */}
-      {/* <FilterBar>
-        <div
-          id={status === "all" ? "select" : ""}
-          onClick={() => {
-            setStatus("all");
-          }}
-        >
-          <p>전체작가</p>
-        </div>
-        <div
-          id={status === "follow" ? "select" : ""}
-          onClick={() => {
-            setStatus("follow");
-          }}
-        >
-          <p>관심작가</p>
-        </div>
-        <div
-          id={status === "influencer" ? "select" : ""}
-          onClick={() => {
-            setStatus("influencer");
-          }}
-        >
-          <p>인플루언서</p>
-        </div>
-        <div
-          id={status === "artist" ? "select" : ""}
-          onClick={() => {
-            setStatus("artist");
-          }}
-        >
-          <p>아티스트</p>
-        </div>
-        <div
-          id={status === "enterprise" ? "select" : ""}
-          onClick={() => {
-            setStatus("enterprise");
-          }}
-        >
-          <p>기업</p>
-        </div>
-      </FilterBar> */}
-
-      <ArtistCards>
-        {artists.map((artist,idx) => {
-          return <ArtistCard key={idx} artist={artist} />;
-        })}
-      </ArtistCards>
+        </li>
+        <li>
+          <p id={filter === 1 ? "category" : ""} onClick={() => {  setFilter(1)}}>
+          Influencer
+          </p>
+        </li>
+        <li>
+          <p id={filter === 2 ? "category" : ""} onClick={() => {  setFilter(2)}}>
+          Artist
+          </p>
+        </li>
+        <li>
+          <p id={filter === 3 ? "category" : ""} onClick={() => {  setFilter(3)}}>
+          Enterprise
+          </p>
+        </li>
+        
+      </CategoryBar>
+      </div>
+      {users.length>0 && 
+        <ArtistCards>
+          {users.map((user,idx) => {
+            return <ArtistCard key={idx} user={user} />;
+          })}
+        </ArtistCards>
+      }
     </div>
   );
 }

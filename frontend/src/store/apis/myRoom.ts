@@ -3,8 +3,8 @@ import * as API from "./types"
 
 const apiClient = axios.create({
   // baseURL: "https://j6e106.p.ssafy.io/api",
-  // baseURL: "http://localhost:8080/api",
   baseURL: "http://localhost:8080/api",
+  // baseURL: "https://j6e106.p.ssafy.io/api",
   headers: {
     "Content-type": "application/json",
   },
@@ -54,4 +54,11 @@ export const postRandomJoin = async ()=> {
   const response = await apiClient.post<any>(
     `/myroom/random`
   )
+}
+
+export const getCharacter= async (userId:number)=> {
+  const response = await apiClient.get<any>(
+    `/myroom/${userId}`
+  )
+  return response.data
 }

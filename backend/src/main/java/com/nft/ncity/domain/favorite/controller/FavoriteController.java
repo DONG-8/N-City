@@ -17,12 +17,8 @@ import java.security.Principal;
 @RequestMapping("/api/favorites")
 public class FavoriteController {
 
-
-
-
     @Autowired
     FavoriteService favoriteService;
-
 
     // Create
     @PostMapping("/{productId}")
@@ -34,7 +30,7 @@ public class FavoriteController {
     public ResponseEntity<BaseResponseBody> favoriteRegister (Principal principal,
                                                               @ApiParam(value = "상품id") @PathVariable("productId") Long productId){
         log.info("favoriteRegister - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
 
         Favorite favorite = favoriteService.favoriteRegister(userId, productId);
 
@@ -49,7 +45,6 @@ public class FavoriteController {
     // 1. 좋아요 했는지 여부
     // 2. 좋아요한 수
     // 3. 내가 좋아요한 상품 리스트 -> User에 있네??
-
     @GetMapping("/{productId}")
     @ApiOperation(value = "내가 좋아요한 여부")
     @ApiResponses({
@@ -59,7 +54,7 @@ public class FavoriteController {
     public boolean getFavoriteUserUse ( Principal principal,
                                  @ApiParam(value = "상품id") @PathVariable("productId") Long productId){
         log.info("favoriteGet - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
 
         if( favoriteService.getFavoriteUserUse(userId, productId)){
             return true;
@@ -92,7 +87,7 @@ public class FavoriteController {
     public ResponseEntity<BaseResponseBody> favoriteRemove(@ApiParam(value ="상품id") @PathVariable("productId") Long productId,
                                                            Principal principal){
         log.info("favoriteRemove - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Favorite favorite = favoriteService.favoriteRemove(userId,productId);
 
         if(null != favorite){
@@ -100,7 +95,5 @@ public class FavoriteController {
         }else{
             return ResponseEntity.status(404).body(BaseResponseBody.of(404, "신청 실패"));
         }
-
     }
-
 }

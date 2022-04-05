@@ -3,10 +3,14 @@ import styled from "styled-components";
 import axios, { AxiosRequestConfig } from "axios";
 import CategoryModal, { Icategory } from "../../components/Mint/CategoryModal";
 import { NFTcreatorContract } from "../../web3Config";
+import { getUserInfo } from "../../store/apis/user";
 
 // 동준추가
-import { postProduct } from "../../store/apis/product";
+import { postProduct, putTokenID } from "../../store/apis/product";
 import { Mutation, useMutation, useQuery } from "react-query";
+import IsLoading from "../NFTStore/IsLoading";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const Wrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
@@ -20,7 +24,7 @@ const Title = styled.h1`
   margin-bottom: 30px;
   font-size: 50px;
   span {
-    color: #ff7543;
+    color: #6225E6  ;
   }
 `;
 
@@ -30,7 +34,7 @@ const DoUploadText = styled.div`
     font-size: 25px;
     margin: 0;
     span {
-      color: red;
+      color: #6225E6;
     }
   }
 `;
@@ -83,7 +87,7 @@ const UploadBox = styled.div`
     margin-left: 15px;
     font-weight: bold;
     font-size: 18px;
-    color: #de5d30;
+    color: #6225E6;
   }
 `;
 
@@ -102,7 +106,7 @@ const NameInputBox = styled.div`
   p {
     margin: 8px 0;
     span {
-      color: red;
+      color: #6225E6;
     }
   }
   input {
@@ -126,8 +130,8 @@ const Categories = styled.div`
   margin: 0 auto 10px;
   p {
     background-color: white;
-    border: 1px solid #ff865b;
-    color: #ff865b;
+    border: 1px solid #6225E6;
+    color: #6225E6;
     font-weight: bold;
     font-size: 15px;
     display: flex;
@@ -188,7 +192,7 @@ const ButtonBox = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ff865b;
+    background-color: #6225E6;
     color: #fff;
     font-weight: 500;
     font-size: 25px;
@@ -197,8 +201,8 @@ const ButtonBox = styled.div`
     height: 50px;
     border-radius: 15px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
-    &:active {
-      background-color: #de5d30;
+    &:hover {
+      background-color: rgb(86, 43, 177);
       box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
     }
   }
@@ -225,13 +229,18 @@ const ThumbnailExplain = styled.div`
     font-weight: 500;
     margin-bottom: 0;
     span {
-      color: red;
+      color: #6225E6;
     }
   }
 `;
-
+const LoadingBox = styled.div`
+  text-align: center;
+  h1{
+    margin-top: -15vh;
+  }
+`
 const Plus = styled.div`
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z' fill='rgba(255,134,91,1)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z' fill='rgb(86, 36, 195)'/%3E%3C/svg%3E");
   width: 100px;
   height: 100px;
 `;
@@ -256,22 +265,27 @@ const Required = styled.div`
   margin-bottom: 10px;
   color: gray;
   span {
-    color: red;
+    color: #6225E6;
   }
 `;
 
 //// component
 const Mint = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [file, setFile] = useState<any>();
   const [fileSrc, setFileSrc] = useState<string>("");
   const [thumbnail, setThumbnail] = useState<any>();
   const [thumbnailSrc, setThumbnailSrc] = useState<string>("");
   const [tokenName, setTokenName] = useState<string>("");
+  const [tokenId, setTokenId] = useState<string>("");
+  const [productId, setProductId] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
+  const [category, setCategory] = useState<any>(null);
+  const [categoryCode, setCategoryCode] = useState<any>(null);
   const [isVideo, setIsVideo] = useState<boolean>(false);
+  const [userRole, setUserRole] = useState<string>("")
   const { ethereum } = window;
-
+  const navigate = useNavigate()
   // category modal
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -283,18 +297,30 @@ const Mint = () => {
     setIsOpen(false);
   };
 
-  // code: 0,
-  //           productDesc: "이잉",
-  //           productTitle: "오엥",
   const submitFile = useMutation<any, Error>(
     "submitFile",
     async () => {
+      const accounts = await ethereum.request({ method: "eth_accounts" });
+      if (!accounts[0]) {
+        alert("지갑을 연결해주세요")
+        return;
+      }
+
       const formdata = new FormData();
-      formdata.append("code", "3");
-      formdata.append("productDesc", "이잉");
-      formdata.append("productTitle", "이이잉");
-      formdata.append("productFile", file);
-      formdata.append("thumbnailFile", file);
+      if (isVideoAudio()){
+        formdata.append("code", categoryCode);
+        formdata.append("productDesc", description);
+        formdata.append("productTitle", tokenName);
+        formdata.append("productFile", file);
+        formdata.append("thumbnailFile", thumbnail);
+      } else {
+        formdata.append("code", categoryCode);
+        formdata.append("productDesc", description);
+        formdata.append("productTitle", tokenName);
+        formdata.append("productFile", file);
+        formdata.append("thumbnailFile", file);
+      }
+
       // formdata 확인
       for (var key of formdata.keys()) {
         console.log(key);
@@ -307,40 +333,49 @@ const Mint = () => {
     },
     {
       onSuccess: async (res) => {
-        const uri = res.message;
         const accounts = await ethereum.request({ method: "eth_accounts" });
-        if (!accounts[0]) return;
+        setProductId(res.productId)
+        const uri = res.message;
+        await setIsLoading(true);
         const response = await NFTcreatorContract.methods
           .create(accounts[0], uri)
           .send({
             from: accounts[0],
           });
-        console.log(accounts[0]); // owner --> 둘다 넣어야하는거잖아 그치
-        console.log(response.events.createNFT.returnValues._tokenId); // tokenId
-        // 그럼 이 값을 이 컴포넌트에 순간 useState로 저장해도 상관 x 인거잖아 그치
-        // 아니다 여기서 또 useMutate 써서 여기 인자값으로 바로 post 요쳥 보내면
-        // putToken.mutate();
+          console.log(accounts[0]); 
+          console.log(response.events.createNFT.returnValues._tokenId); // tokenId
+          await setTokenId(response.events.createNFT.returnValues._tokenId);
+          
+          putToken.mutate();
+          await setIsLoading(false);
+          navigate(`/mypage/${sessionStorage.getItem("userId")}`)
+          // window.location.reload()
+           
       },
       onError: (err: any) => {
         console.log(err, "에러발생!");
       },
     }
-  );
+  ); 
   // 민팅을 통해 받은 정보를 넣어준다.
-  // const putToken = useMutation<any, Error>(
-  //   "putTokenId",
-  //   async () => {
-  //     return await putTokenID();
-  //   },
-  //   {
-  //     onSuccess: (res) => {
-  //       console.log(res, "정보 수정이 완료되었습니댜");
-  //     },
-  //     onError: (err: any) => {
-  //       console.log(err, "put 에러발생에러발생");
-  //     },
-  //   }
-  // );
+  const putToken = useMutation<any, Error>(
+    "putTokenId",
+    async () => {
+      const body = {
+        "productId": productId,
+        "tokenId": tokenId
+      }
+      return await putTokenID(body);
+    },
+    {
+      onSuccess: (res) => {
+        console.log(res, "정보 수정이 완료되었습니댜");
+      },
+      onError: (err: any) => {
+        console.log(err, "put 에러발생에러발생");
+      },
+    }
+  );
 
   const onClickSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -354,31 +389,7 @@ const Mint = () => {
       alert("작품이름을 입력해주세요");
       return;
     }
-
-    // const formdata = new FormData();
-    // formdata.append("file", file);
-
-    // console.log(formdata, "formdata");
-    // // formdata 확인
-    // for (var key of formdata.keys()) {
-    //   console.log(key);
-    // }
-
-    // for (var value of formdata.values()) {
-    //   console.log(value);
-    // }
-
     submitFile.mutate();
-    // const accounts = await ethereum.request({ method: "eth_accounts" });
-    // if (!accounts[0]) return;
-    // const response = await NFTcreatorContract.methods
-    //   .create(accounts[0], "testURI2")
-    //   .send({
-    //     from: accounts[0],
-    //   });
-    // console.log(accounts[0]);
-    // console.log(response);
-    // console.log(response.events.createNFT.returnValues._tokenId);
   };
 
   const encodeMainFileToBasek64 = (fileBlob: any) => {
@@ -407,7 +418,7 @@ const Mint = () => {
 
   const onChangeTokenName = (e: React.ChangeEvent) => {
     setTokenName((e.target as HTMLInputElement).value);
-    // console.log((e.target as HTMLInputElement).value)
+    console.log((e.target as HTMLInputElement).value)
   };
 
   const onChangeDescription = (e: React.ChangeEvent) => {
@@ -480,9 +491,6 @@ const Mint = () => {
     }
   };
 
-  console.log(file);
-  console.log(thumbnail);
-
   const previewThumbnailImage = () => {
     if (thumbnail) {
       return (
@@ -499,6 +507,33 @@ const Mint = () => {
       );
     }
   };
+
+  const getMyInfo = useMutation<any, Error>(
+    "getUserInfo",
+    async () => {
+      if (sessionStorage.getItem("userId")) {
+        return await getUserInfo(Number(sessionStorage.getItem("userId")));
+      } else {
+        alert("내 정보를 받아올 수 없습니다.");
+        return;
+      }
+    },
+    {
+      onSuccess: async (res) => {
+        console.log("내정보를 받아왔습니다.");
+        console.log(res);
+        setUserRole(res.userRole)
+      },
+      onError: (err: any) => {
+        console.log(err, "에러발생");
+      },
+    }
+  );
+
+  useEffect(() => {
+    getMyInfo.mutate()
+  },[])
+
 
   useEffect(() => {
     if (file?.type.slice(0, 5) === "video") {
@@ -536,7 +571,7 @@ const Mint = () => {
             onChange={handleFileOnChange}
           ></input>
           <ExplaneBox>
-            <p className="secondpart">100MB를 넘지않는</p>
+            <p className="secondpart">10MB를 넘지않는</p>
             <p>JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG</p>
             <p>파일만 가능합니다.</p>
           </ExplaneBox>
@@ -568,7 +603,7 @@ const Mint = () => {
           <input
             type="text"
             onChange={onChangeTokenName}
-            value={tokenName}
+            // value={tokenName}
             spellCheck={false}
           />
         </NameInputBox>
@@ -593,15 +628,29 @@ const Mint = () => {
             <HashtagPlus />
           </HashtagBox>
         )}
-        <ButtonBox>
-          <button onClick={onClickSubmit}>작품등록</button>
-        </ButtonBox>
+
+        {isLoading ? (
+          <LoadingBox>
+            <IsLoading />
+            <h1>작품 등록중.. </h1>
+            <h3>팁) 내가 가진 작품은 마이룸에 전시할 수 있습니다.</h3>
+          </LoadingBox>
+        ) : (
+          <ButtonBox>
+            <Button variant="contained" onClick={onClickSubmit}>
+              작품등록
+            </Button>
+          </ButtonBox>
+        )}
       </FormBox>
+
       <CategoryModal
         visible={isOpen}
         onClose={handleModalClose}
         openStateHandler={setIsOpen}
         setCategory={setCategory}
+        setCategoryCode={setCategoryCode}
+        userRole={userRole}
       ></CategoryModal>
     </Wrapper>
   );

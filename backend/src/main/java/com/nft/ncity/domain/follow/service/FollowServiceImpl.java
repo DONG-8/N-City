@@ -24,7 +24,6 @@ public class FollowServiceImpl implements FollowService{
     public Follow FollowRemove(Long followeeId, Long userId) {
         Follow follow = followRepositorySupport.FollowRemove(followeeId,userId);
         return follow;
-
     }
 
     @Override
