@@ -657,7 +657,6 @@ export default function Main() {
       <HotTokkenWrraper>
         <HotTokken>
           <h1>New Token</h1>
-          {/* <ZigZag /> */}
           <NewTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>

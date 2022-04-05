@@ -146,13 +146,12 @@ const UsersModal = () => {
     }
   );
 
-  console.log(userList, "뮤직리스트");
 
   return (
     <Wrapper>
-      <Head><div className="name">Tracks</div></Head>
+      <Head><div className="name">Users</div></Head>
       <Body>
-        <div className="subtitle">All Tracks</div>
+        <div className="subtitle">All Users</div>
         {Alldata &&
           Alldata.content.map((obj, i) => {
             if (obj.productCode === 1) {
