@@ -49,7 +49,7 @@ export const getUserTradeInfo = async (userId : number ) => {
 // 유저가 가진 작품 조회
 export const getUsercollectedInfo = async (userId : number, size?: number ) => {
   const response = await apiClient.get<any>(
-    `/users/${userId}/collected?size=${size}`
+    `/users/${userId}/collected?size=1000`
   )
   return response.data
 }
@@ -57,7 +57,7 @@ export const getUsercollectedInfo = async (userId : number, size?: number ) => {
 // 유저가 생성한 작품 조회
 export const getUsercreatedInfo = async (userId : number ) => {
   const response = await apiClient.get<any>(
-    `/users/${userId}/created`
+    `/users/${userId}/created?size=1000`
   )
   return response.data
 }
@@ -65,7 +65,7 @@ export const getUsercreatedInfo = async (userId : number ) => {
 // 유저가 좋아요 한 작품 조회
 export const getUserfavoritesInfo = async (userId : number ) => {
   const response = await apiClient.get<any>(
-    `/users/${userId}/favorites`
+    `/users/${userId}/favorites?size=1000`
   )
   return response.data
 }
