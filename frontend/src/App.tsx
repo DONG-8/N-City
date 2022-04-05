@@ -50,7 +50,7 @@ function App() {
             <Route path="/mint" element={<Mint />} />
             <Route path="/profilesetting" element={<ProfileSetting />} />
             <Route path="/event" element={<EventPage />} />
-            <Route path="/event/detail" element={<EventDetail />} />
+            <Route path="/event/:eventId" element={<EventDetail />} />
             <Route path="/rank" element={<Rank />} />
             <Route path="/artists" element={<Artists />} />
             <Route path="/YNTest" element={<YNTest />} />

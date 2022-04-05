@@ -29,25 +29,28 @@ const Title = styled.h1`
   font-size: 45px;
 `
 const Wrapper = styled.div`
-  width: 90%;
-  height: 80vh;
+  width: 1500px;
+  height: 700px;
+  margin: auto;
   display: flex;
   img{
-    width: 35vw;
-    height: 70vh;
+    width: 700px;
+    height: 700px;
     margin: 5vh;
-    margin-left: 20vh;
+    /* margin-left: 20vh; */
     box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
     border-radius: 10px;
   }
 `
 const Description = styled.div`
   margin: 5vh;  
+  height: 700px;
   display: flex;
   flex-direction: column;
   background-color: #F7F8FA ;
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
   border-radius: 30px;
+  overflow-y:auto;
   div{
     margin-left: 2rem;
   }
@@ -66,8 +69,8 @@ const Description = styled.div`
   .content{
     flex:7;
     margin-top: 5vh;  
-    font-size: 2vh;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 400;
     width: 90%;
   }
   .btnbox{
@@ -75,8 +78,8 @@ const Description = styled.div`
     justify-content: space-around;
   }
   button{
-    width: 45%;
-    height: 5vh;
+    width: 300px;
+    height: 40px;
     margin: auto;
     font-size: 1.2rem;
     margin-bottom: 2rem;
@@ -90,7 +93,7 @@ const EventDetail = () => {
     title:'string',
     url:'string',
     date:'string',
-    content:'string'
+    content:'string' 
   })
 
   useEffect(()=>{

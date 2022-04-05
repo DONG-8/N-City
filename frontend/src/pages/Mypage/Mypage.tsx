@@ -23,29 +23,25 @@ import enterprise from "../../essets/images/enterprise-mark.png"
 const MypageWrapper = styled.div`
   box-shadow: 1px 1px 1px;
   font-family: "Noto Sans KR", sans-serif;
+  /* width:100%; */
 `;
 const Background = styled.div`
   width: 100%;
-  height: 50vh;
-  img {
-    height: 50vh;
-    width: 100%;
-    object-fit: cover;
-    overflow: hidden;
-  }
+  height: 500px;
+  background: url("https://media4.giphy.com/media/2tNvsKkc0qFdNhJmKk/giphy.gif");
+  background-size: cover;
 `;
 
 const ProfileWrapper = styled.div`
   box-shadow: 1px 1px 3px;
   background-color: #faf3f3c2;
-  position: absolute;
   display: flex;
   align-items: center;
-  top: 20vh;
-  left: 8vw;
-  width: 85vw;
-  height: 30vh;
+  width: 1400px;
+  height: 380px;
   border-radius: 10px;
+  margin: auto;
+  margin-top: -450px;
 `;
 
 const FollowTextBox = styled.div`
@@ -66,8 +62,8 @@ const FollowTextBox = styled.div`
 const FilterBar = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   margin: auto;
-  margin-top: 3vh;
-  width: 70%;
+  margin-top: 100px;
+  width: 980px;
   display: flex;
   div {
     cursor: pointer;
@@ -104,39 +100,42 @@ const FilterBar = styled.div`
 const ProfileImg = styled.div`
   margin: 3vh;
   img {
-    width: 13vw;
-    height: 25vh;
+    width: 250px;
+    height: 250px;
     border-radius: 100%;
   }
 `;
 
 const Profile = styled.div`
-  position: absolute;
+  /* position: absolute; */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  top: 2vh;
-  left: 18vw;
-  width: 70%;
+  /* top: 0px; */
+  /* left: 300px; */
+  width: 1000px;
   h1 {
-    font-size: 5vh;
+    font-size: 15px;
     margin-bottom: 20px;
   }
   h2 {
-    font-size: 3vh;
+    font-size: 2rem;
   }
   .profilesetting{
     font-family: "Noto Sans KR", sans-serif;
     font-weight: 600;
     background-color: #6225E6  ;
-    width: 14vw;
-    height: 5vh;
-    font-size: 2.2vh;
+    width: 250px;
+    height: 50px;
+    font-size: 22px;
     margin-top: 3vh;
     &:hover {
       transition: 0.2s;
       background-color: #5615e2  ;
     }
+  }
+  .gamestartbutton{
+    /* margin-top: 1vh; */
   }
   .joinRoomBtn {
     font-family: "Noto Sans KR", sans-serif;
@@ -160,14 +159,16 @@ const Profile = styled.div`
 const ProfileName = styled.div`
     margin-top: 20px;
     position: relative;
+    margin-left: 10px;
   span {
-    font-size: 70px;
+    font-size: 2.5rem;
     font-weight: bold;
   }
   img {
     margin-top: 20px;
     position: absolute;
-    width: 40px;
+    margin-left: 10px;
+    width: 30px;
     height: auto;
   }
 `
@@ -549,15 +550,7 @@ export default function Mypage() {
   return (
     <>
       <MypageWrapper>
-        <Background>
-          {/* <img alt="배경" src={bg} /> */}
-          {/* <img alt="배경" src='https://cutewallpaper.org/21/pixel-wallpaper-gif/Vaporwave-Background-Gif-1920x1080-Spicesncurry.com.gif' /> */}
-          <img
-            alt="배경"
-            src="https://i.pinimg.com/originals/9f/92/6c/9f926c8c220127d81c8ba6897aa8d5db.gif"
-            // src="https://i.pinimg.com/originals/0b/32/92/0b3292b81f6edb020142fbf0c92a264b.gif"
-          />
-        </Background>
+        <Background/>
         <ProfileWrapper>
           <ProfileImg>
             <img
@@ -606,7 +599,9 @@ export default function Mypage() {
             </div>
             {/* ⭐ 남의방일 때만 방입장 보이게 ? */}
             {/* <button className="joinRoomBtn">방입장</button> */}
+            <div className="gamestartbutton">
             <GameStartButton2 userNick={userInfo?.userNick} />
+            </div>
           </Profile>
         </ProfileWrapper>
       </MypageWrapper>

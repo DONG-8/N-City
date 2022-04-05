@@ -32,21 +32,22 @@ const Events = styled.div`
 const Event = styled.div`
   background-color: #F7F8FA ;
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
-  border-radius: 30px 30px 10px 10px ;
+  border-radius: 20px 20px 10px 10px ;
   margin: auto;
   margin-top: 10vh;
-  height: 46vh;
-  width: 40%;
+  height: 400px;
+  width: 500px;
   cursor: pointer;
+  overflow-y: auto;
   &:hover{
     &{
       transform:translateY(-5px) ;
     }
   }
   img{
-    border-radius: 30px 30px 0 0 ;
-    width: 100%;
-    height: 37vh;
+    border-radius: 20px 20px 0 0 ;
+    width: 500px;
+    height: 300px;
     object-fit:fill;
   }
   .title{
@@ -93,10 +94,10 @@ const EventPage = () => {
         <Header>
           <Title>이벤트</Title>
         </Header>
-        <CategoryBar>
+        {/* <CategoryBar>
           <div className=''> 최신순 </div>
           <div className=''> 진행중 </div>
-        </CategoryBar>
+        </CategoryBar> */}
         <Events>
           {events.map(event=>{ return(
             <Event key={event.id} onClick={()=>{goDetailPage(event)}}>
