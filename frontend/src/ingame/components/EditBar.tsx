@@ -6,7 +6,7 @@ import phaserGame from "../PhaserGame";
 import Editmap from "../scenes/Editmap";
 
 import itemFileList from './itemFileList.json'
-import firstmap from "./map.json";
+import firstmap from "../scenes/map.json";
 
 import { UserMapInfo } from "../stores/EditStore";
 import { postRoomJoin, putBackGroundChange } from "../../store/apis/myRoom";
@@ -91,6 +91,10 @@ const EditBar = () => {
   const userId = useAppSelector((state) => state.edit.userId);
   // const myArts = useAppSelector((state) => state.edit.arts);
 
+  useEffect(() => {
+    roomInfo.mutate()
+  },[])
+
   const Files = itemFileList.folders;
   const tileset = [198, 458, 586, 706, 842, 1858]
   const wallset = [34, 56, 301, 418, 466, 594]
@@ -108,7 +112,6 @@ const EditBar = () => {
   }
 
   const makeImgTags = (folderName:string, itemsGid:number[]) => {
-  
     return (
       <ItemList>
         {itemsGid.map((item, idx) => {
@@ -183,19 +186,6 @@ const EditBar = () => {
     }
   }
 
-  const { mutate: RoomInfo } = useMutation<any, Error>(
-    "postRoomInfo",
-    async () => {
-      return await postRoomJoin(userId);
-    },
-    {
-      onSuccess: (res) => {
-        setData(res.myRoomBackground);
-        console.log(res.myRoomBackground, "백그라운드정보");
-      },
-    }
-  );
-
   function findLayerIndex() {
     switch (status) {
       case ItemCategory.WALL:
@@ -239,8 +229,10 @@ const EditBar = () => {
     console.log('바뀜')
   }, [location]);
 
+
   const newData = data;
   function ChangeMap() {
+    // console.log(newData)
     if (mode) {
       if (status === ItemCategory.GROUND && newData.layers[0].data){
         newData.layers[0].data[location.x] = location.gid
@@ -302,6 +294,22 @@ const EditBar = () => {
       console.log(DelData, "삭제 이후");
     }
   }
+
+  // let newData = firstmap
+
+  const roomInfo = useMutation<any, Error>(
+    "postRoomInfo",
+    async () => {
+      return await postRoomJoin(userId);
+    },
+    {
+      onSuccess: (res) => {
+        setData(res.myRoomBackground);
+        // newData = res.myRoomBackground
+        console.log(res.myRoomBackground, "백그라운드정보");
+      },
+    }
+  );
 
   const {
     mutate: changeRoom,

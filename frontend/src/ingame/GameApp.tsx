@@ -17,6 +17,7 @@ import Bootstrap from "./scenes/Bootstrap";
 import Game from "./scenes/Game";
 import Start from "./scenes/Start";
 import EditBar from "./components/EditBar";
+import UIBar from "./components/Bar/UIBar";
 import { IRoomData } from '../types/Rooms'
 
 import { UserMapInfo } from "./stores/EditStore";
@@ -24,18 +25,11 @@ import { UserMapInfo } from "./stores/EditStore";
 import { postRoomJoin } from "../store/apis/myRoom";
 import { getUsercollectedInfo } from "../store/apis/user";
 import {useMutation} from "react-query";
-import basicData from './scenes/editmap.json';
+import basicData from './scenes/map.json';
 
 const Backdrop = styled.div`
 
 `;
-
-const avatars = [
-  { name: "adam", img: "/essets/login/Adam_login.png" },
-  { name: "ash", img: "/essets/login/Ash_login.png" },
-  { name: "lucy", img: "/essets/login/Lucy_login.png" },
-  { name: "nancy", img: "/essets/login/Nancy_login.png" },
-];
 
 window.addEventListener(
   "keydown",
@@ -89,8 +83,6 @@ const GameApp: Function = () => {
     }
   );
 
-  const availableRooms = useAppSelector((state) => state.room.availableRooms);
-
   const Setting = useAppSelector((state) => state.edit.EditMode);
   const [values, setValues] = useState<IRoomData>({ // 방이름 방설명 패스워드
     roomId : 'userId',  // userId 넣어주기 
@@ -101,12 +93,6 @@ const GameApp: Function = () => {
   });
 
   const availableRooms = useAppSelector((state) => state.room.availableRooms); //가능한 방들 표시 해주기
-  const computerDialogOpen = useAppSelector(
-    (state) => state.computer.computerDialogOpen
-  );
-  const whiteboardDialogOpen = useAppSelector(
-    (state) => state.whiteboard.whiteboardDialogOpen
-  );
 
   useEffect(() => {
     RoomInfo();
@@ -190,8 +176,8 @@ const GameApp: Function = () => {
     <>
       <Backdrop>
         {ui}
-        {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />}
-        {Setting ? <EditBar></EditBar> : null}
+        {/* {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />} */}
+        {Setting ? <EditBar></EditBar> : <UIBar></UIBar>}
       </Backdrop>
     </>
   );
