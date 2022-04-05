@@ -3,14 +3,26 @@ import * as API from "./types"
 
 const apiClient = axios.create({
   // baseURL: "https://j6e106.p.ssafy.io/api",
-  // baseURL: "http://localhost:8080/api",
   baseURL: "http://localhost:8080/api",
+  // baseURL: "https://j6e106.p.ssafy.io/api",
   headers: {
     "Content-type": "application/json",
   },
 });
-
-
+const fileApiClient = axios.create({
+  // baseURL: "https://j6e106.p.ssafy.io/api",
+  // baseURL: "https://j6e106.p.ssafy.io/api",
+  baseURL: "http://localhost:8080/api",
+  headers: {
+  'Content-Type': 'multipart/form-data'
+  },
+});
+export const getUserAll= async () => {
+  const response = await apiClient.get<any>(
+    `/users/all`
+  )
+  return response.data
+}
 // 유저 정보 조회
 export const getUserInfo = async (userId : number ) => {
   const response = await apiClient.get<any>(
@@ -19,10 +31,17 @@ export const getUserInfo = async (userId : number ) => {
   return response.data
 }
 
+export const getUserfollowTop5 = async () => {
+  const response = await apiClient.get<any>(
+    `/users/follower/top5`
+  )
+  return response.data
+}
+
 // 해당 유저의 거래내역 조회
 export const getUserTradeInfo = async (userId : number ) => {
   const response = await apiClient.get<any>(
-    `/users/${userId}/activities`
+    `/users/${userId}/activities?size=30`
   )
   return response.data
 }
@@ -52,15 +71,14 @@ export const getUserfavoritesInfo = async (userId : number ) => {
 }
 
 // 닉네임 중복 체크
-export const getUserduplicateInfo = async (userId : number ) => {
+export const getUserduplicateInfo = async (userNick : string ) => {
   const response = await apiClient.get<any>(
-    `/users/${userId}/duplicate`
+    `/users/${userNick}/duplicate`
   )
   return response.data
 }
 
 // 해당 유저의 회원정보 변경
-
 
 //{
 //   "userDescription": "string",
@@ -69,20 +87,32 @@ export const getUserduplicateInfo = async (userId : number ) => {
 //   "userImgUrl": "string",
 //   "userNick": "string"
 // } -- 이와같은 key value의 formdata를 생성시켜준다.
-export const patchUserInfoChange = async(formdata : any) => {
+
+export const patchUserInfoChange = async(body : any) => {
   const response = await apiClient.patch<any>(
-    `users/change-info`
+    `users/change-info`,
+    body
   )
   return response.data
 }
 
 // 이메일 인증 요청하기
-export const postConfirmEmail = async (emailAuthEmail : string) => {
+export const postConfirmEmail = async (userId:number,emailAuthEmail : string) => {
   // userid는 자동으로 들어갈 것 같아서 빼놓음
   const response = await apiClient.post<any>(
     `users/confirm`, {
-      emailAuthEmail
+      emailAuthEmail,
+      userId
     }
+  )
+  return response.data
+}
+
+// 이메일 인증여부 조회
+export const getCheckConfirmEmail = async (userId:number,emailAuthEmail : string) => {
+  // userid는 자동으로 들어갈 것 같아서 빼놓음
+  const response = await apiClient.get<any>(
+    `users/email/confirm?userId=${userId}&userEmail=${emailAuthEmail}`, 
   )
   return response.data
 }

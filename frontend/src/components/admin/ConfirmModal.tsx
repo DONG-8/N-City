@@ -1,5 +1,7 @@
 import React, { ReactNode, SetStateAction, useEffect, useState } from "react";
+import { useMutation } from "react-query";
 import styled, { css, keyframes } from "styled-components";
+import { patchAutentication } from "../../store/apis/authentication";
 
 export type ModalBaseProps = {
   /** 모달에 들어갈 컴포넌트 */
@@ -155,13 +157,23 @@ const ConfirmModal = ({
 }: ModalBaseProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleApprove = async () => {
-    if (control === "승인") {
-      //여기서 승인 요청
-      //정보는 selectedItem에 있음
-    } else if (control === "거절") {
-      // 여기서 거절 요청
+  const patchApprove = useMutation<any, Error>(
+    "patchApprove",
+    async () => {
+      return await patchAutentication(selectedItem.authId, selectedItem.authType,  control === "승인" ? 1 : 0 );
+    },
+    {
+      onSuccess: (res) => {
+        console.log("인증 수락/거절 성공!",res);
+      },
+      onError: (err: any) => {
+        console.log("❌인증 수락/거절 실패!",err);
+      },
     }
+  );
+
+  const handleApprove = async () => {
+    patchApprove.mutate()
     removeList(selectedItem);
     setIsOpenProp(false);
   };
@@ -202,12 +214,12 @@ const ConfirmModal = ({
         <Divider />
         {control === "승인" && (
           <ExplaneText>
-            정말로&nbsp; <span>{selectedItem.id}</span>님을 승인하시겠습니까?
+            정말로&nbsp; <span>{selectedItem.authName}</span>님을 승인하시겠습니까?
           </ExplaneText>
         )}
         {control === "거절" && (
           <ExplaneText>
-            정말로&nbsp; <span>{selectedItem.id}</span>님의 승인신청을 거절하시겠습니까?
+            정말로&nbsp; <span>{selectedItem.authName}</span>님의 승인신청을 거절하시겠습니까?
           </ExplaneText>
         )}
         <ButtonBox>

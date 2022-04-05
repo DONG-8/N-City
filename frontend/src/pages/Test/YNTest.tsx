@@ -10,6 +10,7 @@ import {
   SaleFactoryContract,
   SSFTokenAddress,
   SSFTokenContract,
+  web3,
 } from "../../web3Config";
 
 // 동준추가
@@ -620,7 +621,18 @@ const YNTest = () => {
 
   const onClickSendCoin = async (e) => {
     e.preventDefault();
-    await SSFTokenContract.methods.forceToTransfer(account, "0x90625F5d2178762ab068dA30ECbca1810E42A027", 1000).send({ from: account });
+  //   const prkey="a630f5724bbeb3c7ce6c28eef75b51377802c600a309630209ee6720f94cf786"
+  //   const tempAccount = web3.eth.accounts.privateKeyToAccount(prkey).address;
+  //   const transaction = SSFTokenContract.methods.forceToTransfer("0x0B8360BE1DA812ac879e6f38A21ce1CF57511d6e", account, 1000)
+  //   const options = {
+  //     to      : transaction._parent._address,
+  //     data    : transaction.encodeABI(),
+  //     gas     : await transaction.estimateGas({from: tempAccount}),
+  // };
+  //   const signed = await web3.eth.accounts.signTransaction(options, prkey)
+  //   const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction as string);
+  //   return receipt;
+    await SSFTokenContract.methods.forceToTransfer("0x0B8360BE1DA812ac879e6f38A21ce1CF57511d6e", account, 1000).send({ from: "0x0B8360BE1DA812ac879e6f38A21ce1CF57511d6e" });
   }
 
   const onClickTokenOwner = async (e) => {
@@ -855,6 +867,9 @@ const YNTest = () => {
         <CategoryBox>
           <p>카테고리</p>
         </CategoryBox>
+        <div>
+          <video src={"https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/da79a0c6-bd02-42d3-bd17-25ac3540783d.m4a"} controls></video>
+        </div>
         {category ? (
           <Categories>
             <p onClick={handleModalOpen}># {category}</p>
@@ -912,13 +927,7 @@ const YNTest = () => {
           <button onClick={onClickSetApprovedForAllERC20}>setApprovedForAll to SaleFactory ERC20</button>
         </ButtonBox>
       </FormBox>
-      <CategoryModal
-        visible={isOpen}
-        onClose={handleModalClose}
-        openStateHandler={setIsOpen}
-        setCategory={setCategory}
-        setCategoryCode={setCategoryCode}
-      ></CategoryModal>
+
     </Wrapper>
   );
 };

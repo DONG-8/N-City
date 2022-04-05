@@ -6,17 +6,25 @@ import com.nft.ncity.domain.deal.db.entity.Deal;
 import com.nft.ncity.domain.deal.db.repository.DealRepository;
 import com.nft.ncity.domain.deal.db.repository.DealRepositorySupport;
 import com.nft.ncity.domain.favorite.db.entity.Favorite;
+import com.nft.ncity.domain.favorite.db.entity.QFavorite;
 import com.nft.ncity.domain.favorite.db.repository.FavoriteRepositorySupport;
 import com.nft.ncity.domain.product.db.entity.Product;
+import com.nft.ncity.domain.product.db.entity.QProduct;
 import com.nft.ncity.domain.product.db.repository.ProductRepository;
 import com.nft.ncity.domain.product.db.repository.ProductRepositorySupport;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
 import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.response.ProductDealListGetRes;
+import com.nft.ncity.domain.product.response.ProductDetailGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
+import com.nft.ncity.domain.product.response.ProductTop10GetRes;
+import com.nft.ncity.domain.user.db.entity.User;
+import com.nft.ncity.domain.user.db.repository.UserRepository;
+import com.nft.ncity.domain.user.db.repository.UserRepositorySupport;
 import com.nft.ncity.domain.user.response.UserMintProductRes;
 import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +64,19 @@ public class ProductServiceImpl implements ProductService{
     DealRepository dealRepository;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    UserRepositorySupport userRepositorySupport;
+
+    @Autowired
     DealRepositorySupport dealRepositorySupport;
     @Autowired
     AwsS3Service awsS3Service;
+
+    QProduct qProduct = QProduct.product;
+    QFavorite qFavorite = QFavorite.favorite;
+
 
     // CREATE
     @Override
@@ -152,13 +170,19 @@ public class ProductServiceImpl implements ProductService{
         for(Product p : products.getContent()){
             ProductListGetRes productList = new ProductListGetRes();
 
+            User user = userRepositorySupport.findUserByUserId(p.getUserId());
+
+            productList.setUserRole(user.getUserRole());
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
             productList.setProductId(p.getProductId());
+            productList.setProductCode(p.getProductCode());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
-            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
+            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
+            productList.setProductState(p.getProductState());
+
             productListGetRes.add(productList);
         }
         Page<ProductListGetRes> res = new PageImpl<>(productListGetRes, pageable, total);
@@ -175,13 +199,18 @@ public class ProductServiceImpl implements ProductService{
         for(Product p : products.getContent()){
             ProductListGetRes productList = new ProductListGetRes();
 
+            User user = userRepositorySupport.findUserByUserId(p.getUserId());
+
+            productList.setUserRole(user.getUserRole());
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
             productList.setProductId(p.getProductId());
+            productList.setProductCode(p.getProductCode());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
-            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
+            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
+            productList.setProductState(p.getProductState());
 
             productListGetRes.add(productList);
         }
@@ -200,16 +229,18 @@ public class ProductServiceImpl implements ProductService{
 
         for(Product p : products.getContent()){
             ProductDealListGetRes productDealList = new ProductDealListGetRes();
+            User user = userRepositorySupport.findUserByUserId(p.getUserId());
 
+            productDealList.setUserRole(user.getUserRole());
             productDealList.setProductTitle(p.getProductTitle());
             productDealList.setProductPrice(p.getProductPrice());
             productDealList.setProductRegDt(p.getProductRegDt());
             productDealList.setProductId(p.getProductId());
+            productDealList.setProductCode(p.getProductCode());
             productDealList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productDealList.setProductState(p.getProductState());
             productDealList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
-            productDealList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
-
+            productDealList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
 
             productDealListGetRes.add(productDealList);
         }
@@ -228,16 +259,18 @@ public class ProductServiceImpl implements ProductService{
 
         for(Product p : products.getContent()){
             ProductDealListGetRes productDealList = new ProductDealListGetRes();
+            User user = userRepositorySupport.findUserByUserId(p.getUserId());
 
+            productDealList.setUserRole(user.getUserRole());
             productDealList.setProductTitle(p.getProductTitle());
             productDealList.setProductPrice(p.getProductPrice());
             productDealList.setProductRegDt(p.getProductRegDt());
             productDealList.setProductId(p.getProductId());
+            productDealList.setProductCode(p.getProductCode());
             productDealList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productDealList.setProductState(p.getProductState());
             productDealList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
-            productDealList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
-
+            productDealList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
 
             productDealListGetRes.add(productDealList);
         }
@@ -249,7 +282,7 @@ public class ProductServiceImpl implements ProductService{
 
     // 상품명으로 검색
     @Override
-    public Page<ProductListGetRes> getProductListByTitle(Pageable pageable, String productTitle) {
+    public Page<ProductListGetRes> getProductListByTitle(Pageable pageable, String productTitle)  {
         Page<Product> products = productRepositorySupport.findProductListByTitle(pageable, productTitle);
         List<ProductListGetRes> productListGetRes = new ArrayList<>();
 
@@ -257,14 +290,17 @@ public class ProductServiceImpl implements ProductService{
 
         for(Product p : products.getContent()){
             ProductListGetRes productList = new ProductListGetRes();
+            User user = userRepositorySupport.findUserByUserId(p.getUserId());
 
+            productList.setUserRole(user.getUserRole());
             productList.setProductTitle(p.getProductTitle());
             productList.setProductPrice(p.getProductPrice());
             productList.setProductRegDt(p.getProductRegDt());
             productList.setProductId(p.getProductId());
+            productList.setProductCode(p.getProductCode());
             productList.setProductThumbnailUrl(p.getProductThumbnailUrl());
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
-            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavtoriteUser(p.getProductId()));
+            productList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
 
             productListGetRes.add(productList);
         }
@@ -276,12 +312,65 @@ public class ProductServiceImpl implements ProductService{
 
 
     @Override
-    public Product productDetail(Long productId) {
-        Product product = productRepository.findById(productId).get();
-        product.setFavoriteCount(favoriteRepositorySupport.getFavoriteCount(productId));
-        return product;
+    public ProductDetailGetRes productDetail(Long productId) {
+        Product p = productRepository.findById(productId).get();
+
+        ProductDetailGetRes productDetailGetRes = new ProductDetailGetRes();
+
+        productDetailGetRes.setProductId(productId);
+        productDetailGetRes.setUserId(p.getUserId());
+        productDetailGetRes.setUserNick(productRepositorySupport.getUserNickByUserId(p.getUserId()));
+        productDetailGetRes.setTokenId(p.getTokenId());
+        productDetailGetRes.setProductTitle(p.getProductTitle());
+        productDetailGetRes.setProductDesc(p.getProductDesc());
+        productDetailGetRes.setProductCode(p.getProductCode());
+        productDetailGetRes.setProductXCoordinate(p.getProductXCoordinate());
+        productDetailGetRes.setProductYCoordinate(p.getProductYCoordinate());
+        productDetailGetRes.setProductView(p.isProductView());
+        productDetailGetRes.setProductState(p.getProductState());
+        productDetailGetRes.setProductPrice(p.getProductPrice());
+        productDetailGetRes.setProductRegDt(p.getProductRegDt());
+        productDetailGetRes.setProductFileUrl(p.getProductFileUrl());
+        productDetailGetRes.setProductThumbnailUrl(p.getProductThumbnailUrl());
+        productDetailGetRes.setProductAuctionEndTime(p.getProductAuctionEndTime());
+        productDetailGetRes.setMintUserId(productRepositorySupport.getMintUserIdByProductId(productId));
+        productDetailGetRes.setFavoriteCount(favoriteRepositorySupport.getFavoriteCount(productId));
+        return productDetailGetRes;
     }
 
+
+    // 좋아요 높은 10개 상품 가져오기
+    @Override
+    public List<ProductListGetRes> getProductFavoriteRank(){
+
+        List<Tuple> productList = productRepositorySupport.getFavoriteTop10Product();
+
+        List<ProductListGetRes> res = new ArrayList<ProductListGetRes>();
+
+        productList.forEach(product -> {
+
+                ProductListGetRes productListGetRes = new ProductListGetRes();
+
+                User user = userRepositorySupport.findUserByUserId(product.get(qProduct).getUserId());
+
+                productListGetRes.setUserRole(user.getUserRole());
+                productListGetRes.setProductId(product.get(qProduct).getProductId());
+                productListGetRes.setProductTitle(product.get(qProduct).getProductTitle());
+                productListGetRes.setProductPrice(product.get(qProduct).getProductPrice());
+                productListGetRes.setProductThumbnailUrl(product.get(qProduct).getProductThumbnailUrl());
+                productListGetRes.setProductFavorite(product.get(qFavorite.count()).longValue());
+                productListGetRes.setProductRegDt(product.get(qProduct).getProductRegDt());
+                productListGetRes.setProductCode(product.get(qProduct).getProductCode());
+                productListGetRes.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(product.get(qProduct).getProductId()));
+                productListGetRes.setProductState(product.get(qProduct).getProductState());
+
+                res.add(productListGetRes);
+
+                }
+            );
+
+        return res;
+    }
 
 
     // UPDATE
@@ -314,6 +403,7 @@ public class ProductServiceImpl implements ProductService{
 
                     .productId(p.getProductId())
                     .userId(p.getUserId())
+                    .userRole(userRepositorySupport.findUserByUserId(p.getUserId()).getUserRole())
                     .tokenId(p.getTokenId())
                     .productTitle(p.getProductTitle())
                     .productDesc(p.getProductDesc())
@@ -344,6 +434,7 @@ public class ProductServiceImpl implements ProductService{
         for(Product p : productList.getContent()) {
             UserMintProductRes userMintProductRes = UserMintProductRes.builder()
                     .userId(p.getUserId())
+                    .userRole(userRepositorySupport.findUserByUserId(p.getUserId()).getUserRole())
                     .tokenId(p.getTokenId())
                     .productPrice(p.getProductPrice())
                     .productCode(p.getProductCode())

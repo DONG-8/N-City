@@ -4,6 +4,10 @@ import { useMutation, useQuery } from "react-query";
 import { postAuthentiaction } from "../../store/apis/authentication";
 import { getFollowee, getFollower } from "../../store/apis/follow";
 import { useNavigate } from "react-router-dom";
+import influencer from "../../essets/images/influencer-mark.png"
+import artist from "../../essets/images/artist-mark.png"
+import enterprise from "../../essets/images/enterprise-mark.png"
+
 
 export type ModalBaseProps = {
   /** 모달에 들어갈 컴포넌트 */
@@ -42,8 +46,8 @@ const fadeOut = keyframes`
 const modalSettings = (visible: boolean) => css`
   visibility: ${visible ? "visible" : "hidden"};
   z-index: 15;
-  animation: ${visible ? fadeIn : fadeOut} 0.15s ease-out;
-  transition: visibility 0.15s ease-out;
+  animation: ${visible ? fadeIn : fadeOut} 0.3s ease-out;
+  transition: visibility 0.3s ease-out;
 `;
 
 const Background = styled.div<{ visible: boolean }>`
@@ -58,9 +62,10 @@ const Background = styled.div<{ visible: boolean }>`
 
 const ModalSection = styled.div<{ visible: boolean }>`
   font-family: "Noto Sans KR", sans-serif;
-  width: 600px;
-  height: 810px;
-  position: absolute;
+  width: 25vw;
+  height: 70vh;
+  overflow-y: auto;
+  position: fixed;
   display: flex;
   flex-direction: column;
   top: 500px;
@@ -72,6 +77,15 @@ const ModalSection = styled.div<{ visible: boolean }>`
   background-color: rgba(255, 255, 255, 1);
   padding: 16px;
   ${(props) => modalSettings(props.visible)}
+  .name{
+    margin: 8px 0 8px 20px;
+    position: relative;
+    font-size: 2.5vh;
+    cursor: pointer;
+    img {
+      position: absolute;
+    }
+  }
 `;
 
 const Title = styled.h1<{ visible: boolean }>`
@@ -82,7 +96,7 @@ const Title = styled.h1<{ visible: boolean }>`
 `;
 
 const Divider = styled.hr`
-  border: solid 1px #ff865b;
+  border: solid 1px #6225E6  ;
   width: 65%;
   margin-bottom: 30px;
 `;
@@ -98,6 +112,7 @@ const CloseButton = styled.div`
   justify-content: flex-end;
   cursor: pointer;
 `;
+
 interface IUsers {
   userAddress: string;
   userDescription: string;
@@ -134,6 +149,19 @@ const FollowModal = ({
   //   }
   // },[isOpen])
 
+  const getVerifiedMark = (userType: string|undefined) => {
+    switch (userType) {
+      case "ROLE_INFLUENCER":
+        return <img src={influencer} alt="mark" />;
+      case "ROLE_ARTIST":
+        return <img src={artist} alt="mark" />;
+      case "ROLE_ENTERPRISE":
+        return <img src={enterprise} alt="mark" />;
+      default:
+        return;
+    }
+  }
+
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     if (visible) {
@@ -157,27 +185,35 @@ const FollowModal = ({
     <div>
       <Background visible={visible} onClick={onClose} />
       <ModalSection visible={visible}>
-        <CloseButton onClick={onClose}></CloseButton>
+        <CloseButton onClick={onClose}/>
         <Title visible={visible}>{isFollower ? "팔로워" : "팔로우"}</Title>
         <Divider />
         {isFollower
-          ? followers.map((user, idx) => {
+          ? followers.map((user) => {
               return (
                 <div
+                  className="name"
                   key={user.userId}
                   onClick={() => handleOnClickFollower(user.userId)}
                 >
+                  <span>
                   {user.userNick}
+                  </span>
+                  {getVerifiedMark(user.userRole)}
                 </div>
               );
             })
-          : followees.map((user, idx) => {
+          : followees.map((user) => {
               return (
                 <div
+                  className="name"
                   key={user.userId}
                   onClick={() => handleOnClickFollower(user.userId)}
                 >
+                  <span>
                   {user.userNick}
+                  </span>
+                  {getVerifiedMark(user.userRole)}
                 </div>
               );
             })}

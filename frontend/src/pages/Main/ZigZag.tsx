@@ -31,14 +31,25 @@ const NewTokken = styled.div`
 `
 interface Iprops{
   items :{
-    productId:Number,
+    productId: Number,
     productTitle: string,
     productPrice: Number,
     productThumbnailUrl: string,
-    productRegDt:Object,
     productFavorite: Number,
+    productRegDt:Object,
     productCode: Number,
-  }[]
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    }[],
+  }[],
 }
 
 const ZigZag:React.FC<Iprops> = ({items}) => {

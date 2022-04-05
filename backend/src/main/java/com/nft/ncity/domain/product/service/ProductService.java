@@ -7,7 +7,9 @@ import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.ProductRegisterPostReq;
 import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
 import com.nft.ncity.domain.product.response.ProductDealListGetRes;
+import com.nft.ncity.domain.product.response.ProductDetailGetRes;
 import com.nft.ncity.domain.product.response.ProductListGetRes;
+import com.nft.ncity.domain.product.response.ProductTop10GetRes;
 import com.nft.ncity.domain.user.response.UserMintProductRes;
 import com.nft.ncity.domain.user.response.UserProductWithIsFavoriteRes;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 public interface ProductService {
 
@@ -33,7 +36,9 @@ public interface ProductService {
     Page<ProductDealListGetRes> getProductDealListByCode(Pageable pageable, int productCode); // 카테고리별 거래상품 전체조회
     Page<ProductListGetRes> getProductListByTitle(Pageable pageable, String productTitle); // 상품명 검색조회
 
-    Product productDetail(Long productId); // 상품 상세 조회
+    ProductDetailGetRes productDetail(Long productId); // 상품 상세 조회
+
+    List<ProductListGetRes> getProductFavoriteRank(); // 상품 좋아요 높은 top10 받아오기
 
     // update
     long productModify(ProductModifyPutReq productModify);

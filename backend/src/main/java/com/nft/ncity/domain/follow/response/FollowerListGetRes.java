@@ -25,6 +25,7 @@ public class FollowerListGetRes {
 
     /* 회원 코드
         - ROLE_ADMIN : 사이트 관리자
+        - ROLE_NEW : 신규 유저
         - ROLE_USER : 일반 회원
         - ROLE_ENTERPRISE : 기업
         - ROLE_ARTIST : 아티스트
@@ -32,6 +33,7 @@ public class FollowerListGetRes {
      */
     @ApiModelProperty(value = "회원 구분 코드 (" +
             "ROLE_ADMIN : 사이트 관리자, " +
+            "ROLE_NEW : 신규 유저" +
             "ROLE_USER : 일반회원 (default), " +
             "ROLE_ENTERPRISE : 기업, " +
             "ROLE_ARTIST : 아티스트, " +

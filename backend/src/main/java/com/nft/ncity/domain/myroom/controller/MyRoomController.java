@@ -8,6 +8,7 @@ import com.nft.ncity.domain.myroom.db.repository.MyRoomRepositorySupport;
 import com.nft.ncity.domain.myroom.request.MyRoomBackgroundPutReq;
 import com.nft.ncity.domain.myroom.request.MyRoomCharacterPutReq;
 import com.nft.ncity.domain.myroom.response.MyRoomGetRes;
+import com.nft.ncity.domain.myroom.response.MyRoomTop5GetRes;
 import com.nft.ncity.domain.myroom.service.MyRoomService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,24 @@ public class MyRoomController {
 
     @Autowired
     MyRoomRepositorySupport myRoomRepositorySupport;
+
+    @ApiOperation(value = "유저 캐릭터 정보 받기")
+    @GetMapping("/{userId}")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = MyRoom.class),
+            @ApiResponse(code = 404, message = "존재하지 않는 userId 입니다.")
+    })
+    public ResponseEntity<MyRoomGetRes> getUserCharacter(@PathVariable @ApiParam(value = "방 주인의 유저 id", required = true) Long userId){
+        log.info("getUserCharacter - Call");
+
+        MyRoom userRoom = myRoomService.getUserCharacter(userId);
+
+        if(userRoom == null) {  // userId 존재하지 않는 경우
+            return ResponseEntity.status(404).body(null);
+        } else {
+            return ResponseEntity.status(200).body(MyRoomGetRes.of(200, "마이룸 불러오기 성공", userRoom));
+        }
+    }
 
     @ApiOperation(value = "유저 방 입장하기")
     @PostMapping("/{userId}")
@@ -67,7 +86,7 @@ public class MyRoomController {
                                                                              Principal principal) throws IOException {
         log.info("modifyMyRoomBackground - Call");
 
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         // JSON -> String
         ObjectMapper mapper = new ObjectMapper();
         String jsonInString = mapper.writeValueAsString(myRoomBackgroundInfo.getMyRoomBackground());
@@ -89,7 +108,7 @@ public class MyRoomController {
                                                                             Principal principal) {
         log.info("modifyMyRoomCharacter - Call");
 
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
 
         if (myRoomService.modifyMyRoom(2, userId, myRoomCharacterInfo.getMyRoomCharacter()) == true) {
             return ResponseEntity.status(204).body(BaseResponseBody.of(204, "캐릭터 변경 성공"));
@@ -103,10 +122,10 @@ public class MyRoomController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = MyRoom.class),
     })
-    public ResponseEntity<List<MyRoom>> getMyRoomRank() {
+    public ResponseEntity<List<MyRoomTop5GetRes>> getMyRoomRank() {
         log.info("getMyRoomRank - Call");
 
-        List<MyRoom> myRoom = myRoomService.getMyRoomRank();
+        List<MyRoomTop5GetRes> myRoom = myRoomService.getMyRoomRank();
         return ResponseEntity.status(200).body(myRoom);
     }
 

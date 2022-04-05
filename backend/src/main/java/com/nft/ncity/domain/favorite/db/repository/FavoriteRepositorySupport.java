@@ -2,10 +2,13 @@ package com.nft.ncity.domain.favorite.db.repository;
 
 import com.nft.ncity.domain.favorite.db.entity.Favorite;
 import com.nft.ncity.domain.favorite.db.entity.QFavorite;
+import com.nft.ncity.domain.follow.db.entity.Follow;
+import com.nft.ncity.domain.product.db.entity.Product;
+import com.nft.ncity.domain.product.db.repository.ProductRepository;
+import com.nft.ncity.domain.product.response.ProductTop10GetRes;
 import com.nft.ncity.domain.user.db.entity.QUser;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +28,9 @@ public class FavoriteRepositorySupport {
     @Autowired
     FavoriteRepository favoriteRepository;
 
-
-    @Autowired
-    UserRepository userRepository;
-
-    QUser qUser =QUser.user;
-
     QFavorite qFavorite = QFavorite.favorite;
+
+    QUser qUser = QUser.user;
 
     public Favorite favoriteRegister(Long userId, Long productId){
 
@@ -72,15 +71,15 @@ public class FavoriteRepositorySupport {
 
 
 
-    public List<User> getFavtoriteUser(Long productId) {
+    public List<User> getFavoriteUser(Long productId) {
         List<User> favoriteUser = jpaQueryFactory.select(qUser)
                 .from(qUser)
                 .where(qUser.userId.in(
                         JPAExpressions.select(qFavorite.userId)
-                        .from(qFavorite)
-                        .where(qFavorite.productId.eq(productId)))).fetch();
+                                .from(qFavorite)
+                                .where(qFavorite.productId.eq(productId)))).fetch();
         return favoriteUser;
-         }
+    }
 
     public Favorite favoriteRemove(Long userId, Long productId){
 

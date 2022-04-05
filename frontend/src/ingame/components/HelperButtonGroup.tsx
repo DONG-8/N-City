@@ -22,7 +22,7 @@ import { useAppSelector, useAppDispatch } from "../hooks";
 
 // 기타등등
 import { getAvatarString, getColorByString } from "../util";
-import StoreModal from "./StoreModal";
+import StoreModal from "./NFTstore/StoreModal";
 import { Route } from "react-router-dom";
 import Mint from "../../pages/Mint/Mint";
 import { WindowRounded } from "@mui/icons-material";

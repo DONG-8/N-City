@@ -10,6 +10,7 @@ interface AccordionProps {
 
 // style
 const Container = styled.div`
+  border-radius: 10px;
   display: flex;
   width: 70vw;
   position: relative;
@@ -47,7 +48,7 @@ const ContentsWrapper = styled.div`
   padding: 0 8px;
   overflow: hidden;
   transition: height 0.2s ease, background 0.2s ease;
-  border-radius: 10px;
+  border-radius:0 0 10px 10px;
 `;
 
 const Contents = styled.div`
@@ -62,7 +63,7 @@ const Contents = styled.div`
     display: inline;
   }
   a {
-    color: #FF865B;
+    color: #3653b3 ;
   }
 `;
 
@@ -85,7 +86,7 @@ function Accordion(props: AccordionProps) {
         parentRef.current.style.height = `${
           props.contents ? childRef.current.clientHeight : 0
         }px`;
-        parentRef.current.style.backgroundColor = "#FFF6F3";
+        parentRef.current.style.backgroundColor = "#efeff8 ";
       }
       setIsCollapse(!isCollapse);
     },

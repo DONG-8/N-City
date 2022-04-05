@@ -24,7 +24,6 @@ import java.util.ArrayList;
 @ApiModel("DealListGetRes")
 public class DealListGetRes {
 
-
     //User전체 보내고 싶었는데.. 객체 자체를 set 어떻게 하는지 모르겠음...ㅜ
 
     @ApiModelProperty(value = "보내는 사람")
@@ -48,10 +47,6 @@ public class DealListGetRes {
 
     @ApiModelProperty(value = "거래시간")
     LocalDateTime dealCreatedAt;
-
-
-
-
 
     public static Page<DealListGetRes> of(Page<Deal> deal) {
         List<DealListGetRes> dealListGetResList = new ArrayList<>();

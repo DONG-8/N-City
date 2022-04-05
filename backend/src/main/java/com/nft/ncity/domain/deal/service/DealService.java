@@ -15,11 +15,12 @@ public interface DealService {
     Long auctionRegister(AuctionRegisterPostReq auctionRegisterPostReq, Long userId);
     Deal bidRegister(BuyNowRegisterPostReq buyNowRegisterPostReq,Long userId);
     Deal buyNow(Long productId,Long userId);
+    Deal buyNowCancel(Long productId, Long userId);
     Deal buyAuction(Long productId,Long userId);
+    Deal auctionCancel(Long productId, Long userId);
 
     //READ
     Page<DealListGetRes> getDealListByProductId(Pageable pageable,Long productId);
     Page<Deal> getDealMintedListByUserId(Long userId, Pageable pageable);
     Page<Deal> getDealListByUserId(Long userId, Pageable pageable);
-
 }

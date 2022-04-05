@@ -34,7 +34,9 @@ public class User {
 
     /* 회원 코드
             - ROLE_ADMIN : 사이트 관리자
+            - ROLE_NEW : 신규 유저
             - ROLE_USER : 일반 회원
+            - ROLE_REQUEST : 토큰 추가요청 회원
             - ROLE_ENTERPRISE : 기업
             - ROLE_ARTIST : 아티스트
             - ROLE_INFLUENCER : 인플루언서
@@ -43,6 +45,7 @@ public class User {
             "ROLE_ADMIN : 사이트 관리자, " +
             "ROLE_NEW : 신규 유저, " +
             "ROLE_USER : 일반회원 (default), " +
+            "ROLE_REQUEST : 토큰 추가요청 회원, " +
             "ROLE_ENTERPRISE : 기업, " +
             "ROLE_ARTIST : 아티스트, " +
             "ROLE_INFLUENCER : 인플루언서)")
@@ -68,17 +71,24 @@ public class User {
     @ApiModelProperty(value = "회원 프로필 이미지 url")
     String userImgUrl;
 
+    // 토큰 재지급 요청
+    @ApiModelProperty(value = "회원 프로필 이미지 url")
+    Boolean userTokenRequest;
+
     // 이메일 변경시 false로 값 변환해주기
     public void updateEmail(String userEmail) {
         this.userEmail = userEmail;
         this.userEmailConfirm = false;
     }
 
-    public void emailVerifiedSuccess() {
+    public void emailVerifiedSuccess(String userEmail) {
+        this.userEmail = userEmail;
         this.userEmailConfirm = true;
     }
 
     public void authIdRegister(Long authId) {
         this.authId = authId;
     }
+
+    public void authIdDelete(Long authId) {this.authId = null; }
 }

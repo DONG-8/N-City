@@ -62,20 +62,6 @@ public class DealRepositorySupport {
         return excute;
     }
 
-    // 거래내역
-    @Transactional
-    public Page<Deal> findDealListByProductId(Pageable pageable, Long productId){
-        List<Deal> dealListQueryResults = jpaQueryFactory.select(qDeal)
-                .from(qDeal)
-                .where(qDeal.productId.eq(productId))
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .fetch();
-        if(dealListQueryResults.isEmpty()) return Page.empty();
-
-        return new PageImpl<Deal>(dealListQueryResults,pageable,dealListQueryResults.size());
-    }
-
     //즉시구매
     @Transactional
     public long modifyProductForBuyNowByProductId(Long productId, Long userId){
@@ -83,6 +69,19 @@ public class DealRepositorySupport {
         // x,y좌표, product view 초기화 해야하면 여기 추가!
         long excute = jpaQueryFactory.update(qProduct)
                 .set(qProduct.userId,userId)
+                .set(qProduct.productState,3)
+                .set(qProduct.productPrice,0.0)
+                .where(qProduct.productId.eq(productId))
+                .execute();
+        return excute;
+    }
+
+    //즉시구매취소
+    @Transactional
+    public long modifyProductForDealCancelByProductId(Long productId, Long userId){
+
+        long excute = jpaQueryFactory.update(qProduct)
+                .set(qProduct.productPrice,0.0)
                 .set(qProduct.productState,3)
                 .where(qProduct.productId.eq(productId))
                 .execute();
@@ -97,6 +96,7 @@ public class DealRepositorySupport {
         long excute = jpaQueryFactory.update(qProduct)
                 .set(qProduct.userId,userId)
                 .set(qProduct.productState,3)
+                .set(qProduct.productPrice,0.0)
                 .where(qProduct.productId.eq(productId))
                 .execute();
         return excute;
@@ -109,6 +109,23 @@ public class DealRepositorySupport {
                 .where(qDeal.productId.eq(tokenRegisterPutReq.getProductId()))
                 .execute();
         return execute;
+    }
+
+
+    // READ
+    // 거래내역 history
+    @Transactional
+    public Page<Deal> findDealListByProductId(Pageable pageable, Long productId){
+        List<Deal> dealListQueryResults = jpaQueryFactory.select(qDeal)
+                .from(qDeal)
+                .where(qDeal.productId.eq(productId))
+                .orderBy(qDeal.dealCreatedAt.desc())
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+        if(dealListQueryResults.isEmpty()) return Page.empty();
+
+        return new PageImpl<Deal>(dealListQueryResults,pageable,dealListQueryResults.size());
     }
 
     public Page<Deal> findDealMintedListByUserId(Long userId, Pageable pageable) {
@@ -136,5 +153,15 @@ public class DealRepositorySupport {
         if (deals.isEmpty()) return Page.empty();
 
         return new PageImpl<Deal>(deals, pageable, deals.size());
+    }
+
+    public Deal findDealByProductIdOrderByCreatedAt(Long productId) {
+        Deal deal = jpaQueryFactory.select(qDeal)
+                .from(qDeal)
+                .where(qDeal.productId.eq(productId))
+                .orderBy(qDeal.dealCreatedAt.desc())
+                .fetchFirst();
+
+        return deal;
     }
 }

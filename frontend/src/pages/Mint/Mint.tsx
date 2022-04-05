@@ -3,10 +3,14 @@ import styled from "styled-components";
 import axios, { AxiosRequestConfig } from "axios";
 import CategoryModal, { Icategory } from "../../components/Mint/CategoryModal";
 import { NFTcreatorContract } from "../../web3Config";
+import { getUserInfo } from "../../store/apis/user";
 
 // 동준추가
 import { postProduct, putTokenID } from "../../store/apis/product";
 import { Mutation, useMutation, useQuery } from "react-query";
+import IsLoading from "../NFTStore/IsLoading";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const Wrapper = styled.div`
   font-family: "Noto Sans KR", sans-serif;
@@ -20,7 +24,7 @@ const Title = styled.h1`
   margin-bottom: 30px;
   font-size: 50px;
   span {
-    color: #ff7543;
+    color: #6225E6  ;
   }
 `;
 
@@ -30,7 +34,7 @@ const DoUploadText = styled.div`
     font-size: 25px;
     margin: 0;
     span {
-      color: red;
+      color: #6225E6;
     }
   }
 `;
@@ -83,7 +87,7 @@ const UploadBox = styled.div`
     margin-left: 15px;
     font-weight: bold;
     font-size: 18px;
-    color: #de5d30;
+    color: #6225E6;
   }
 `;
 
@@ -102,7 +106,7 @@ const NameInputBox = styled.div`
   p {
     margin: 8px 0;
     span {
-      color: red;
+      color: #6225E6;
     }
   }
   input {
@@ -126,8 +130,8 @@ const Categories = styled.div`
   margin: 0 auto 10px;
   p {
     background-color: white;
-    border: 1px solid #ff865b;
-    color: #ff865b;
+    border: 1px solid #6225E6;
+    color: #6225E6;
     font-weight: bold;
     font-size: 15px;
     display: flex;
@@ -188,7 +192,7 @@ const ButtonBox = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ff865b;
+    background-color: #6225E6;
     color: #fff;
     font-weight: 500;
     font-size: 25px;
@@ -197,8 +201,8 @@ const ButtonBox = styled.div`
     height: 50px;
     border-radius: 15px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
-    &:active {
-      background-color: #de5d30;
+    &:hover {
+      background-color: rgb(86, 43, 177);
       box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
     }
   }
@@ -225,13 +229,18 @@ const ThumbnailExplain = styled.div`
     font-weight: 500;
     margin-bottom: 0;
     span {
-      color: red;
+      color: #6225E6;
     }
   }
 `;
-
+const LoadingBox = styled.div`
+  text-align: center;
+  h1{
+    margin-top: -15vh;
+  }
+`
 const Plus = styled.div`
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z' fill='rgba(255,134,91,1)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z' fill='rgb(86, 36, 195)'/%3E%3C/svg%3E");
   width: 100px;
   height: 100px;
 `;
@@ -256,7 +265,7 @@ const Required = styled.div`
   margin-bottom: 10px;
   color: gray;
   span {
-    color: red;
+    color: #6225E6;
   }
 `;
 
@@ -274,8 +283,9 @@ const Mint = () => {
   const [category, setCategory] = useState<any>(null);
   const [categoryCode, setCategoryCode] = useState<any>(null);
   const [isVideo, setIsVideo] = useState<boolean>(false);
+  const [userRole, setUserRole] = useState<string>("")
   const { ethereum } = window;
-
+  const navigate = useNavigate()
   // category modal
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -287,11 +297,6 @@ const Mint = () => {
     setIsOpen(false);
   };
 
-
-
-  // code: 0,
-  //           productDesc: "이잉",
-  //           productTitle: "오엥",
   const submitFile = useMutation<any, Error>(
     "submitFile",
     async () => {
@@ -337,18 +342,21 @@ const Mint = () => {
           .send({
             from: accounts[0],
           });
-        await setIsLoading(false);
-        console.log(accounts[0]); 
-        console.log(response.events.createNFT.returnValues._tokenId); // tokenId
-        await setTokenId(response.events.createNFT.returnValues._tokenId);
-
-        putToken.mutate();
+          console.log(accounts[0]); 
+          console.log(response.events.createNFT.returnValues._tokenId); // tokenId
+          await setTokenId(response.events.createNFT.returnValues._tokenId);
+          
+          putToken.mutate();
+          await setIsLoading(false);
+          navigate(`/mypage/${sessionStorage.getItem("userId")}`)
+          // window.location.reload()
+           
       },
       onError: (err: any) => {
         console.log(err, "에러발생!");
       },
     }
-  );
+  ); 
   // 민팅을 통해 받은 정보를 넣어준다.
   const putToken = useMutation<any, Error>(
     "putTokenId",
@@ -483,9 +491,6 @@ const Mint = () => {
     }
   };
 
-  console.log(file);
-  console.log(thumbnail);
-
   const previewThumbnailImage = () => {
     if (thumbnail) {
       return (
@@ -502,6 +507,33 @@ const Mint = () => {
       );
     }
   };
+
+  const getMyInfo = useMutation<any, Error>(
+    "getUserInfo",
+    async () => {
+      if (sessionStorage.getItem("userId")) {
+        return await getUserInfo(Number(sessionStorage.getItem("userId")));
+      } else {
+        alert("내 정보를 받아올 수 없습니다.");
+        return;
+      }
+    },
+    {
+      onSuccess: async (res) => {
+        console.log("내정보를 받아왔습니다.");
+        console.log(res);
+        setUserRole(res.userRole)
+      },
+      onError: (err: any) => {
+        console.log(err, "에러발생");
+      },
+    }
+  );
+
+  useEffect(() => {
+    getMyInfo.mutate()
+  },[])
+
 
   useEffect(() => {
     if (file?.type.slice(0, 5) === "video") {
@@ -596,16 +628,29 @@ const Mint = () => {
             <HashtagPlus />
           </HashtagBox>
         )}
-        <ButtonBox>
-          <button onClick={onClickSubmit}>작품등록</button>
-        </ButtonBox>
+
+        {isLoading ? (
+          <LoadingBox>
+            <IsLoading />
+            <h1>작품 등록중.. </h1>
+            <h3>팁) 내가 가진 작품은 마이룸에 전시할 수 있습니다.</h3>
+          </LoadingBox>
+        ) : (
+          <ButtonBox>
+            <Button variant="contained" onClick={onClickSubmit}>
+              작품등록
+            </Button>
+          </ButtonBox>
+        )}
       </FormBox>
+
       <CategoryModal
         visible={isOpen}
         onClose={handleModalClose}
         openStateHandler={setIsOpen}
         setCategory={setCategory}
         setCategoryCode={setCategoryCode}
+        userRole={userRole}
       ></CategoryModal>
     </Wrapper>
   );

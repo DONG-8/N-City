@@ -10,7 +10,6 @@ import lombok.Setter;
 @ApiModel(value = "ProductModifyPutReq",description = "상품정보 수정시  필요한 정보 ")
 public class ProductModifyPutReq {
 
-
     // 초기화가 안된 attribute들은 update가 안되는거 맞나??
     // title , desc , code , x, y, view, state
     @ApiModelProperty(value = "상품 id")

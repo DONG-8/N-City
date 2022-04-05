@@ -58,7 +58,7 @@ const Cattegori = styled.div`
     width: 33.33%;
     height: 100%;
     font-size: 2vh;
-    font-weight: 1000;
+    font-weight: 600;
     /* background-color: red; */
     text-align: center;
     display: flex;

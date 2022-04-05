@@ -3,8 +3,8 @@ import * as API from "./types"
 
 const apiClient = axios.create({
   // baseURL: "https://j6e106.p.ssafy.io/api",
-  // baseURL: "http://localhost:8080/api",
   baseURL: "http://localhost:8080/api",
+  // baseURL: "https://j6e106.p.ssafy.io/api",
   headers: {
     "Content-type": "application/json",
   },
@@ -74,6 +74,14 @@ export const postRegisterAuction = async (dealPrice: number, productId:number, p
   return response.data
 }
 
+// 경매 취소
+export const postCancelAuction = async (productId:number) => {
+  const response = await apiClient.post<any>(
+    `/deals/auction/cancel/${productId}`
+  )
+  return response.data
+}
+
 // 즉시 구매 등록
 export const postRegisterPurchase = async (dealPrice: number, productId:any) => {
   const body = {
@@ -83,6 +91,14 @@ export const postRegisterPurchase = async (dealPrice: number, productId:any) => 
   const response = await apiClient.post<any>(
     `/deals/register/buyNow`,
     body
+  )
+  return response.data
+}
+
+// 즉시 구매 취소
+export const postCancelPurchase = async (productId:number) => {
+  const response = await apiClient.post<any>(
+    `/deals/buy/cancel/${productId}`
   )
   return response.data
 }

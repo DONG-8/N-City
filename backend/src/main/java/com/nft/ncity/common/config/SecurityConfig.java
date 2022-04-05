@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+                .csrf().disable() // csrf 미적용
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 하지않음
                 .and()
                 .httpBasic().authenticationEntryPoint(customAuthenticationEntryPoint)   // 인증 되지 않은 유저가 요청했을때 동작
@@ -68,16 +68,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler) // 액세스 할 수 없는 요청 했을 시 동작
                 .and()
                 .authorizeRequests()// 인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
-                .antMatchers("/api/favorites/(\\d)",
-                        "/api/users/change-info", "/api/users/confirm-email",
-                        "/api/follow/(\\d)",
-                        "/api/products", "/api/products/(\\d)",
-                        "/api/authentication",
-                        "/api/guestbooks", "/api/guestbooks/(\\d)",
-                        "/api/deals", "/api/deals/purchase/**",
-                        "/api/myroom/**").hasAnyRole("NEW", "USER", "ENTERPRISE", "ARTIST", "INFLUENCER", "ADMIN") // 로그인한 유저만 접근 가능 경로
-                .antMatchers("/api/authentication/**").hasRole("ADMIN") // 관리자만 접근 가능 경로
-                .antMatchers("/v3/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/swagger-ui/**").permitAll()
+//                .antMatchers("/api/favorites/{\\d}",
+//                        "/api/users/change-info","/api/users/confirm", "/api/users/confirm-email", "/api/users/{userNick}/duplicate",
+//                        "/api/follow/{\\d}",
+//                        "/api/products", "/api/products/token", "/api/products/{productId}",
+//                        "/api/authentication",
+//                        "/api/guestbooks/**",
+//                        "/api/deals/**",
+//                        "/api/myroom/**").hasAnyRole("NEW", "USER", "REQUEST","ENTERPRISE", "ARTIST", "INFLUENCER", "ADMIN") // 로그인한 유저만 접근 가능 경로
+//                .antMatchers("/api/authentication/**").hasRole("ADMIN") // 관리자만 접근 가능 경로
+//                .antMatchers("/api/deals/{productId}",
+//                        "/api/favorites/{productId}/count",
+//                        "/api/follow/follower/{\\d}","/api/follow/followee/{\\d}",
+//                        // 총 방문수가 높은 방 5개를 위한건데 /붙은거에 **이 위에있기때문에 확실하지 않음
+//                        "/api/myroom",
+//                        "/v3/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/swagger-ui/**").permitAll()
     	        	    .anyRequest().permitAll()
                 .and().cors();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가

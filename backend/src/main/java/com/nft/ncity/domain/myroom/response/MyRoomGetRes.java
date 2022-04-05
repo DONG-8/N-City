@@ -29,6 +29,17 @@ public class MyRoomGetRes extends BaseResponseBody {
     @ApiModelProperty(value = "총 방문자 수 ")
     Integer myRoomTotalCnt;
 
+    public static MyRoomGetRes of(Integer statusCode, String message, MyRoom myRoom) {
+        MyRoomGetRes myRoomGetRes = new MyRoomGetRes();
+        myRoomGetRes.setUserId(myRoom.getUserId());
+        myRoomGetRes.setMyRoomCharacter(myRoom.getMyRoomCharacter());
+        myRoomGetRes.setMyRoomTodayCnt(myRoom.getMyRoomTodayCnt());
+        myRoomGetRes.setMyRoomTotalCnt(myRoom.getMyRoomTotalCnt());
+        myRoomGetRes.setStatusCode(statusCode);
+        myRoomGetRes.setMessage(message);
+        return myRoomGetRes;
+    }
+
     public static MyRoomGetRes of(Integer statusCode, String message, MyRoom myRoom, Map map) {
         MyRoomGetRes myRoomGetRes = new MyRoomGetRes();
         myRoomGetRes.setMyRoomBackground(map);

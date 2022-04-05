@@ -8,8 +8,8 @@ import Apply from "./pages/Apply/Apply";
 import GlobalStyle from "./styles/global";
 import DetailItem from "./pages/NFTStore/DetailItem";
 import ProfileSetting from "./pages/Mypage/ProfileSetting";
-import EventPage from "./pages/FAQ/EventPage";
-import EventDetail from "./pages/FAQ/EventDetail";
+import EventPage from "./pages/Community/EventPage";
+import EventDetail from "./pages/Community/EventDetail";
 import Rank from "./pages/Rank/Rank";
 import Test from "./pages/Rank/Test";
 import Mint from "./pages/Mint/Mint";
@@ -18,10 +18,10 @@ import GameApp from "./ingame/GameApp";
 import { Provider } from "react-redux";
 import gamestore from "./ingame/stores";
 import phaserGame from "./ingame/PhaserGame";
-import Main2 from "./pages/Main/Main2";
 import YNTest from "./pages/Test/YNTest";
 import SearchPage from "./pages/NFTStore/SearchPage";
 import MapChoice from "./pages/Room/MapChoice";
+import Character from "./pages/Mypage/Character";
 
 function App() {
   useEffect(() => {

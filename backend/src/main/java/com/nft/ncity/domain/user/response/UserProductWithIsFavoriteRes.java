@@ -32,7 +32,7 @@ public class UserProductWithIsFavoriteRes {
     // 상품 카테고리 코드
     private int productCode;
 
-    // 상품 판매 상태 1 : 경매 , 2 : 즉시가로 판매, 3 : 판매중 아님
+    // 상품 판매 상태 1 : 경매, 2 : 즉시가로 판매, 3 : 판매중 아님
     private int productState;
 
     // 판매중이라면 상품 가격
@@ -58,4 +58,7 @@ public class UserProductWithIsFavoriteRes {
 
     @ApiModelProperty(value = "상품 좋아요 수")
     private Long productFavoriteCount;
+
+    @ApiModelProperty(value = "유저 종류")
+    private String userRole;
 }

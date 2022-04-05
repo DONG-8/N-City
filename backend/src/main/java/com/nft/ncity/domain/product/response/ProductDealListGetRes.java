@@ -40,8 +40,9 @@ public class ProductDealListGetRes {
     @Column(name = "product_state", columnDefinition = "TINYINT")
     int productState;
 
-
     @ApiModelProperty(value = "좋아요 누른 사람")
     List<User> productFavoriteUser;
 
+    @ApiModelProperty(value = "유저 종류")
+    String userRole;
 }

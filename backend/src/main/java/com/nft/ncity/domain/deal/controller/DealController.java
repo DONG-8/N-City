@@ -6,7 +6,6 @@ import com.nft.ncity.domain.deal.request.AuctionRegisterPostReq;
 import com.nft.ncity.domain.deal.request.BuyNowRegisterPostReq;
 import com.nft.ncity.domain.deal.response.DealListGetRes;
 import com.nft.ncity.domain.deal.service.DealService;
-import com.nft.ncity.domain.product.response.ProductDealListGetRes;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class DealController {
     public ResponseEntity<BaseResponseBody> buyNowRegister(@RequestBody BuyNowRegisterPostReq buyNowRegisterPostReq, Principal principal){
 
         log.info("dealRegister - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Long res = dealService.buyNowRegister(buyNowRegisterPostReq,userId);
         if(!res.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
@@ -48,7 +47,6 @@ public class DealController {
         else {
             return ResponseEntity.status(404).body(BaseResponseBody.of(404, "등록 실패"));
         }
-
     }
 
     @Transactional
@@ -61,7 +59,7 @@ public class DealController {
     public ResponseEntity<BaseResponseBody> auctionRegister(@RequestBody AuctionRegisterPostReq auctionRegisterPostReq, Principal principal){
 
         log.info("dealRegister - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Long res = dealService.auctionRegister(auctionRegisterPostReq,userId);
         if(!res.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
@@ -80,13 +78,33 @@ public class DealController {
     })
     public ResponseEntity<BaseResponseBody> bidRegister(@RequestBody BuyNowRegisterPostReq buyNowRegisterPostReq, Principal principal){
         log.info("bidRegister - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Deal deal = dealService.bidRegister(buyNowRegisterPostReq,userId);
         if(!deal.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
         }
         else {
             return ResponseEntity.status(404).body(BaseResponseBody.of(404, "등록 실패"));
+        }
+    }
+
+    // 경매 취소
+    // 입찰자가 없을 경우에만
+    @PostMapping("/auction/cancel/{productId}")
+    @ApiOperation(value = "경매 취소")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "취소 성공"),
+            @ApiResponse(code = 404, message = "취소 실패")
+    })
+    public ResponseEntity<BaseResponseBody> auctionCancel(@ApiParam(value = "상품id") @PathVariable("productId") Long proudctId, Principal principal){
+        log.info("auctionCancel - 호출");
+        Long userId = Long.valueOf(1L);
+        Deal deal = dealService.auctionCancel(proudctId,userId);
+        if(!deal.equals(null)){
+            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "취소 성공"));
+        }
+        else {
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "취소 실패"));
         }
     }
 
@@ -99,9 +117,28 @@ public class DealController {
     })
     public ResponseEntity<BaseResponseBody> buyNow( @ApiParam(value = "상품id") @PathVariable("productId") Long productId, Principal principal){
         log.info("buyNow - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Deal deal = dealService.buyNow(productId,userId);
         if(!deal.equals(null)) {
+            return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
+        }
+        else {
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404, "등록 실패"));
+        }
+    }
+
+    // 즉시 구매 취소
+    @PostMapping("/buy/cancel/{productId}")
+    @ApiOperation(value = "즉시구매 등록 취소")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "취소 성공"),
+            @ApiResponse(code = 404, message = "취소 실패")
+    })
+    public ResponseEntity<BaseResponseBody> buyNowCancel(@ApiParam(value = "상품id") @PathVariable("productId") Long proudctId, Principal principal){
+        log.info("buyNowCancel - 호출");
+        Long userId = Long.valueOf(1L);
+        Deal deal = dealService.buyNowCancel(proudctId,userId);
+        if(!deal.equals(null)){
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
         }
         else {
@@ -118,7 +155,7 @@ public class DealController {
     })
     public ResponseEntity<BaseResponseBody> buyAuction( @ApiParam(value = "상품id") @PathVariable("productId") Long productId, Principal principal){
         log.info("buyAuction - 호출");
-        Long userId = Long.valueOf(principal.getName());
+        Long userId = Long.valueOf(1L);
         Deal deal = dealService.buyAuction(productId,userId);
         if(!deal.equals(null)) {
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "등록 성공"));
@@ -145,6 +182,7 @@ public class DealController {
             log.error("getDealListByProductId - dealList doesn't exist on this productId");
             return ResponseEntity.status(404).body(null);
         }
+
         return ResponseEntity.status(200).body(dealList);
     }
 }

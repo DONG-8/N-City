@@ -1,17 +1,17 @@
 package com.nft.ncity.domain.authentication.controller;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.nft.ncity.common.model.response.BaseResponseBody;
 import com.nft.ncity.domain.authentication.db.entity.Authentication;
 import com.nft.ncity.domain.authentication.request.AuthenticationConfirmReq;
 import com.nft.ncity.domain.authentication.request.AuthenticationRegisterPostReq;
 import com.nft.ncity.domain.authentication.response.AuthenticationListGetRes;
 import com.nft.ncity.domain.authentication.service.AuthenticationService;
+import com.nft.ncity.domain.authentication.service.AwsS3Service;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.service.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,8 +28,11 @@ import java.security.Principal;
 @Slf4j
 @Api(value = "인증관리 API")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/authentication")
 public class AuthenticationController {
+
+    private final AwsS3Service awsS3Service;
 
     @Autowired
     AuthenticationService authenticationService;
@@ -52,13 +55,13 @@ public class AuthenticationController {
         // 2. 받아온 자료들 res타입으로 변환.
         log.info("getAuthenticationListByType - 호출");
         Page<Authentication> authentications = authenticationService.getAuthenticationListByType(authType, pageable);
-
+        Page<AuthenticationListGetRes> authenticationListGetRes = authenticationService.getAuthenticationList(authentications);
         if(authentications.isEmpty()) {
             log.error("getAuthenticationListByType - This authType doesn't exist.");
             return ResponseEntity.status(404).body(null);
         }
 
-        return ResponseEntity.status(200).body(AuthenticationListGetRes.of(authentications));
+        return ResponseEntity.status(200).body(authenticationListGetRes);
     }
 
     @GetMapping("/detail/{authId}")
@@ -100,8 +103,8 @@ public class AuthenticationController {
         // 0. 인증 등록 정보를 AuthenticationRegisterPostReq에 담고, 파일 정보를 Param으로 MultipartFiles에 담아 온다.
         // 1. 인증 등록 정보를 Authentication 테이블에 저장하고, 해당 인증 ID와 함께 인증 파일들을 AuthFile 테이블에 저장한다.
         // 2. 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
-        Long userId = Long.valueOf(principal.getName());
         log.info("AuthenticationRegister - 호출");
+        Long userId = Long.valueOf(1L);
         Authentication authentication = authenticationService.AuthenticationRegister(authenticationRegisterPostReq,multipartFile, userId);
 
         if(!authentication.equals(null)) {
@@ -112,7 +115,15 @@ public class AuthenticationController {
         }
     }
 
-    @PatchMapping("/{authId}/detail")
+    @GetMapping("/download/file")
+    @ApiOperation(value = "인증 파일 다운로드", notes = "<strong>인증 파일 다운로드</strong>")
+    public ResponseEntity<byte[]> authenticationFileDownload(@RequestParam String authUrl) throws IOException{
+        log.info("authenticationFileDownload - 호출");
+
+        return awsS3Service.downloadOnS3(authUrl);
+    }
+
+    @PatchMapping("/confirm")
     @ApiOperation(value = "인증요청 수락 및 거절", notes = "<strong>인증요청 수락 및 거절 정보</strong>를 넘겨준다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "인증 처리완료", response = Authentication.class),
@@ -121,13 +132,13 @@ public class AuthenticationController {
     public ResponseEntity<BaseResponseBody> authenticationConfirm(@RequestBody AuthenticationConfirmReq authenticationConfirmReq) {
 
         log.info("AuthenticationConfirmByAuthId - 호출");
+
         Long execute = authenticationService.modifyUserRole(authenticationConfirmReq);
 
         if(execute < 1) {
             log.error("AuthenticationConfirmByAuthId - 인증 요청 내역 없음.");
             return ResponseEntity.status(404).body(BaseResponseBody.of(404,"인증 요청 내역 없음."));
         }
-
         return ResponseEntity.status(201).body(BaseResponseBody.of(201,"인증 처리완료."));
     }
 
@@ -156,21 +167,20 @@ public class AuthenticationController {
     }
 
     /**
-     신규유저 정보 조회
+     권한별 유저 정보 조회
      */
-    @GetMapping("/user/new")
-    @ApiOperation(value = "신규유저 정보 조회", notes = "<strong>신규유저 정보</strong>를 넘겨준다.")
+    @GetMapping("/user/{userRole}")
+    @ApiOperation(value = "권한별 유저 정보 조회", notes = "<strong>권한별 유저 정보</strong>를 넘겨준다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "유저 없음.")
     })
-    public ResponseEntity<Page<User>>getNewUserList(@PageableDefault(page = 0, size = 10) Pageable pageable) {
+    public ResponseEntity<Page<User>>getNewUserList(@PageableDefault(page = 0, size = 10) Pageable pageable, @PathVariable("userRole") String userRole) {
 
-        // 0. 받아올 유저 ID를 받음
-        // 1. 해당 유저가 가진 작품 목록을 넘겨준다.
+        // ROLE_NEW : 신규 유저, ROLE_REQUEST : 토큰 재충전 요청 유저
 
         log.info("getNewUserList - 호출");
-        Page<User> users = userService.getNewUserList(pageable);
+        Page<User> users = userService.getNewUserList(pageable, userRole);
 
         if(users == null) {
             log.error("getNewUserList - User doesn't exist.");
@@ -180,10 +190,31 @@ public class AuthenticationController {
     }
 
     /**
-     신규유저 토큰 지급
+     * 유저 토큰 재요청
+     */
+    @PutMapping("/token/request/{userId}")
+    @ApiOperation(value = "유저 토큰 재지급 요청", notes = "<strong>유저 토큰 재지급 요청정보</strong>를 넘겨준다.")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "성공", response = User.class),
+            @ApiResponse(code = 404, message = "유저 없음.")
+    })
+    public ResponseEntity<BaseResponseBody>ModifyUserRoleByUserId(@PathVariable Long userId){
+
+        log.info("ModifyUserRoleByUserId - 호출");
+        Long execute = userService.modifyUserTokenRequest(userId);
+
+        if(execute < 1) {
+            log.error("ModifyUserRoleByUserId - User doesn't exist.");
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404,"유저 없음."));
+        }
+        return ResponseEntity.status(201).body(BaseResponseBody.of(201,"유저 토큰 재지급 완료."));
+    }
+
+    /**
+     유저 토큰 지급
      */
     @PutMapping("/token/{userId}")
-    @ApiOperation(value = "신규 유저 토큰 지급", notes = "<strong>신규 유저 토큰 지급 정보</strong>를 넘겨준다.")
+    @ApiOperation(value = "유저 토큰 지급", notes = "<strong>유저 토큰 지급 정보</strong>를 넘겨준다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "성공", response = User.class),
             @ApiResponse(code = 404, message = "유저 없음.")
@@ -194,9 +225,9 @@ public class AuthenticationController {
         Long execute = userService.modifyUserRole(userId);
 
         if(execute < 1) {
-            log.error("ModifyUserListByUserIdList - New User doesn't exist.");
-            return ResponseEntity.status(404).body(BaseResponseBody.of(404,"신규 유저 목록 없음."));
+            log.error("ModifyUserListByUserIdList - User doesn't exist.");
+            return ResponseEntity.status(404).body(BaseResponseBody.of(404,"유저 없음."));
         }
-        return ResponseEntity.status(201).body(BaseResponseBody.of(201,"신규 유저 토큰 지급 완료."));
+        return ResponseEntity.status(201).body(BaseResponseBody.of(201,"유저 토큰 지급 완료."));
     }
 }
