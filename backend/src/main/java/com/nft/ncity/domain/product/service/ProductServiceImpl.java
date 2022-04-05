@@ -383,6 +383,16 @@ public class ProductServiceImpl implements ProductService{
         }else return 0;
     }
 
+    @Override
+    public long productMyroomModify(ProductModifyPutReq productModifyReq) {
+        // 해당 상품이 존재하면 수정, 존재하지않으면 null 반환
+        if (productRepository.findById(productModifyReq.getProductId()).isPresent()){
+            long  execute = productRepositorySupport.updateProductMyroomByProductId(productModifyReq);
+            return execute;
+        }else return 0;
+    }
+
+
     // DELETE
     @Override
     public boolean productRemove(Long productId) {
