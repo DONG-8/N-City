@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ncity 이메일 인증페이지</title>
+    <script>
+        function auto_close() {
+            setTimeout('closed()',5000);
+        }
+        function closed() {
+            self.close();
+        }
+        // auto_close();
+    </script>
+
+    <style>
+        .inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="inner" style="text-align: center">
+        <h1>NCity 이메일 인증이 완료되었습니다.</h1>
+        <button onclick="closed()">창 닫기</button>
+    </div>
+</body>
+</html>
