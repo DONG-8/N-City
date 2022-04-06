@@ -19,6 +19,15 @@ const Wrapper = styled.div`
   right: 30px;
   border-radius: 10px;
   padding: 10px;
+  .subtitle{
+    font-size: 13px;
+    padding-bottom:10px;
+    /* border-bottom: 0.5px solid white; */
+    border-bottom: 0.5px solid #333;
+    /* color: white; */
+    margin-bottom: 20px;
+    width: 90%;
+  }
 `;
  
 const Head = styled.div`
@@ -27,24 +36,20 @@ const Head = styled.div`
   /* background-color: antiquewhite; */
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
   .name{
     /* color:white; */
     margin-top: 20px;
     font-size: 30px;
     font-weight: 600;
   }
+  
 `;
 
 // 뮤직 리스트
 const Body = styled.div`
-  .subtitle{
-    font-size: 13px;
-    padding-bottom:10px;
-    /* border-bottom: 0.5px solid white; */
-    border-bottom: 0.5px solid #333;
-    /* color: white; */
-    margin-bottom: 20px;
-  }
+
   margin: auto;
   width: 90%;
   height: 60%;
@@ -153,9 +158,11 @@ const MusicModal = () => {
 
   return (
     <Wrapper>
-      <Head><div className="name">Tracks</div></Head>
-      <Body>
+      <Head><div className="name">Tracks</div>
+      
         <div className="subtitle">All Tracks</div>
+      </Head>
+      <Body>
         {Alldata &&
           Alldata.content.map((obj, i) => {
             if (obj.productCode === 1) {
