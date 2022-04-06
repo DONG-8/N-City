@@ -6,7 +6,7 @@ import { events } from './events'
 const Wrapper = styled.div`
   margin: auto;
   margin-bottom: 10vh;
-  
+
 `
 const Header = styled.div`
   display: flex;
@@ -26,7 +26,7 @@ const Title = styled.h1`
 const Events = styled.div`
   display: flex;
   flex-wrap: wrap;
-  width: 80%;
+  width: 1400px;
   margin: auto;
 `
 const Event = styled.div`

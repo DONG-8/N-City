@@ -127,13 +127,16 @@ const NewTokkenList:React.FC = () => {
   return (
     <MainBannerWrapper>
       <div>
-        {ILC &&<IsLoading2/>}
+        {ILC ?<IsLoading2/>:
+        <>
+        <h1>Hot Token</h1>
         <Slider {...settings}>
           {allitems && 
          items.map((item,idx) => {
             return <ItemCard2 key={idx} item={item} />;
           })}
         </Slider>
+        </>}
       </div>
     </MainBannerWrapper>
   );

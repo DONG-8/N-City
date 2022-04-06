@@ -29,13 +29,14 @@ const Title = styled.h1`
   font-size: 45px;
 `
 const Wrapper = styled.div`
-  width: 1500px;
-  height: 700px;
+  width: 1600px;
+  height: 500px;
   margin: auto;
   display: flex;
+  justify-content: space-around;
   img{
     width: 700px;
-    height: 700px;
+    height: 500px;
     margin: 5vh;
     /* margin-left: 20vh; */
     box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
@@ -44,7 +45,8 @@ const Wrapper = styled.div`
 `
 const Description = styled.div`
   margin: 5vh;  
-  height: 700px;
+  height: 500px;
+  width: 600px;
   display: flex;
   flex-direction: column;
   background-color: #F7F8FA ;
@@ -78,7 +80,7 @@ const Description = styled.div`
     justify-content: space-around;
   }
   button{
-    width: 300px;
+    width: 200px;
     height: 40px;
     margin: auto;
     font-size: 1.2rem;
@@ -113,13 +115,15 @@ const EventDetail = () => {
         <div className='title'>{event.title}</div>
         <div className='date'>이벤트 기간 : {event.date}</div>
         {/* <div className='content'> 설명: {event.content}</div> */}
-        <div className='content'>  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+        <div className='content'>  {event.content}</div>
         <span className='btnbox'>
-          <Button variant="contained" color='info' onClick={()=>{navigate(`/event`)}} >뒤로</Button>
+          <Button variant="contained" color='info' onClick={()=>{navigate(`/event`)}} >목록으로</Button>
+          {event.id!==6&&
           <Button variant="contained" color='primary' onClick={()=>{
             navigate(`/event/${eventId+1}`);
             setEventId(eventId+1)
             }} >다음</Button>
+            }
         </span>
       </Description>
     </Wrapper>

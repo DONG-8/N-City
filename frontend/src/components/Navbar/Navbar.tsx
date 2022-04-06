@@ -4,7 +4,6 @@ import styled from "styled-components";
 import PersonIcon from "@material-ui/icons/Person";
 import SearchBar from "./SearchBar";
 import CoinChargeModal from "../Mint/CoinChargeModal";
-import logo from './logo.png'
 import { useMutation } from "react-query";
 import { getLogout } from "../../store/apis/log";
 import GameStartButton from "./GameStartButton";
