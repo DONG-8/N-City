@@ -151,7 +151,7 @@ const Login = () => {
         if(res.new) { // 신규 유저면 방 만들기
           const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
           const value = { 
-            roomId : res.userId,
+            roomId : String(res.userId),
             name: res.userNick,
             description: '',
             password: null,

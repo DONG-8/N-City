@@ -132,7 +132,7 @@ const GameApp: Function = () => {
 
   const ConnectBootstrap = async () => {    // ⭐ bootstrap 연결하기
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
-
+    
     await bootstrap.network
       .joinRoom("30")
       .then(() => bootstrap.launchGame(Setting))
@@ -140,9 +140,10 @@ const GameApp: Function = () => {
   };
 
   const ConnectGame = () => {    // 게임 접속
+    const userNickname = sessionStorage.getItem("userNickname")
     game = phaserGame.scene.keys.game as Game;
     game.registerKeys(); // 키 설정
-    game.myPlayer.setPlayerName("임현홍"); // ❗ 내이름 설정해주기
+    game.myPlayer.setPlayerName(userNickname?userNickname:"이름없음"); // ❗ 내이름 설정해주기
     game.myPlayer.setPlayerTexture("adam"); // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
     game.network.readyToConnect(); // 네트워크 연결
   };
