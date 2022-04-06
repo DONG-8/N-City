@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import img1 from './image/character/1.png'
-import img2 from './image/character/2.png'
-import img3 from './image/character/3.png'
-import img4 from './image/character/3.png'
-import img5 from './image/character/3.png'
-const charimg = {
+import img1 from './image/characters/character1.png'
+import img2 from './image/characters/character2.png'
+import img3 from './image/characters/character3.png'
+import img4 from './image/characters/character4.png'
+import img5 from './image/characters/character4.png'
+const charimg = {// 캐릭터 사진 바꾸는 곳 ⭐⭐
   '1':img1,'2':img2,'3':img3,'4':img4,'5':img5
 }
 
