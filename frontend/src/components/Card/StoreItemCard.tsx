@@ -16,7 +16,7 @@ import enterprise from "../../essets/images/enterprise-mark.png"
 
 const Wrapper = styled.div`
   #character{
-    border:2px solid orangered;
+    border:2px solid #636dffcd ;
   }
   #normal{
   border:0.5px solid #E9E4E4;

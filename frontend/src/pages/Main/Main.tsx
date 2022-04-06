@@ -59,6 +59,7 @@ const MainBanner = styled.div`
 `;
 
 const MainPagenationBanner = styled.div`
+  cursor: pointer;
   position: absolute;
   width: 890px;
   height: 70px;

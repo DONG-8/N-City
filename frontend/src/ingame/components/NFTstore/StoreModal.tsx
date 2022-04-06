@@ -1,46 +1,36 @@
 import styled from "styled-components";
-import GameItemCard from "./GameItemCard";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
-import GameDetailItem from "./GameDetailItem";
 import { Button } from "@mui/material";
-import CharacterPage from "./CharacterPage";
 import React, { useEffect, useState } from "react";
 import { getProductAll, getSellProduct } from "../../../store/apis/product";
-import { useMutation, useQuery } from "react-query";
-import ItemCard2 from "../../../components/Card/ItemCard2";
-import ItemCard from "../../../components/Card/ItemCard";
+import { useMutation } from "react-query";
 import ToggleSwitch from "../../../pages/NFTStore/ToggleSwitch";
 import ToggleSwitch2 from "../../../pages/NFTStore/ToggleSwitch2";
 import IsLoading2 from "../../../pages/NFTStore/IsLoading2";
-import IsLoading from "../../../pages/NFTStore/IsLoading";
-import StoreItemCard from "../../../components/Card/StoreItemCard";
+import SmallItemCard from "../../../components/Card/SmallItemCard";
+import GameDetailItem from "../../../pages/NFTStore/GameDetailItem";
+import { randomwords } from "../../../pages/NFTStore/words";
 
-interface Istate {
+interface Istate{
   item: {
-    productId: Number;
+    productFavoriteUser: Array<any>;
+    productId: number;
     productTitle: string;
-    productPrice: Number;
+    productPrice: number;
     productThumbnailUrl: string;
-    productFavorite: Number;
+    productFavorite: number;
     productRegDt: Object;
-    productCode: Number;
-    productFavoriteUser: {
-      authId: Number;
-      userAddress: string;
-      userDescription: string;
-      userEmail: string;
-      userEmailConfirm: boolean;
-      userId: number;
-      userImgUrl: string;
-      userNick: string;
-      userRole: string;
-    }[];
+    productCode: number;
+    productState: number;
+    productFavoriteCount: number;
+    favorite: boolean;
+    tokenId?: number;
     userRole: string;
-  };
+  }; 
 }
 
 const Wrapper = styled.div`
-  text-align: center;
+  /* text-align: center; */
   position: absolute;
   right: 100px;
   width: 1000px;
@@ -61,17 +51,24 @@ const Wrapper = styled.div`
     padding-top: 3vh;
   }
 `;
-
+const ISL = styled.div`
+  text-align: center;
+  .loading{
+    font-size: 40px;
+    font-weight: 600;
+  }
+  
+`
 const CategoryBar = styled.div`
   margin: auto;
   margin-top: 5vh;
-  width: 100%;
+  width: 90%;
   display: flex;
   li {
     margin: auto;
   }
   p {
-    font-size: 2vh;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
@@ -124,7 +121,7 @@ const FilterButton = styled.div`
     font-size: 1.1rem;
     font-weight: 700;
   }
-`;
+`; 
 
 const StoreModal = () => {
   const [filter, setFilter] = useState(0);
@@ -134,6 +131,8 @@ const StoreModal = () => {
   const [saleitems, setSaleitems] = useState([]);
   const [showItems, setShowItems] = useState<any[]>([]);
   const [showSales, setShowSales] = useState<any[]>([]);
+  const [mode,setMode]   = useState('index') // index,detail
+
   // 상품 정보 모두 가져오기
   const getAll = useMutation<any, Error>(
     "prouductAll",
@@ -203,6 +202,7 @@ const StoreModal = () => {
 
   return (
     <Wrapper>
+      {mode==='index'?<>
       {allitems.length > 0 && (
         <>
           <FilterButton>
@@ -318,37 +318,42 @@ const StoreModal = () => {
         </>
       )}
       {allitems.length === 0 && (
-        <>
+        <ISL>
           <IsLoading2 />
-          <div className="loading">Loading..</div>
-        </>
+          <div className="loading">{randomwords}</div>
+        </ISL>
       )}
       <ItemCards>
         {!status &&
           showItems &&
           !order &&
           [...showItems].reverse().map((item, idx) => {
-            return <StoreItemCard key={idx} item={item} />;
+            return <SmallItemCard setMode={setMode} key={idx} item={item} />;
           })}
         {!status &&
           showItems &&
           order &&
           showItems.map((item, idx) => {
-            return <StoreItemCard key={idx} item={item} />;
+            return  <SmallItemCard setMode={setMode} key={idx} item={item} />;
           })}
         {status &&
           showSales &&
           !order &&
           [...showSales].reverse().map((item, idx) => {
-            return <StoreItemCard key={idx} item={item} />;
+            return  <SmallItemCard setMode={setMode} key={idx} item={item} />;
           })}
         {status &&
           showSales &&
           order &&
           showSales.map((item, idx) => {
-            return <StoreItemCard key={idx} item={item} />;
+            return  <SmallItemCard setMode={setMode} key={idx} item={item} />;
           })}
       </ItemCards>
+    </>:
+    <div className='Detail'>
+      <KeyboardReturnIcon style={{  cursor: 'pointer'}} onClick={()=>{setMode('index')}} />
+      <GameDetailItem setMode={setMode}/>
+    </div>}
     </Wrapper>
   );
 };
