@@ -30,7 +30,7 @@ const TitleCardDiv = styled.div`
   height: 200px;
   margin: 5px auto;
   font-size: 15px;
-  background-color: #eefeff;
+  background-color: #eaeafd;
   display: flex;
   border-radius: 10px;
   flex-direction: column;
@@ -108,14 +108,15 @@ const TitleCardDiv = styled.div`
 const TodayInformationDiv = styled.div`
   width: 400px;
   height: 65px;
-  background-color: #23afde;
+  /* background-color: #23afde; */
+  background-color: #9191e8;
   margin: 0 auto;
   margin-top: 10px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   &:hover{
-    background-color: #129fce;
+    background-color: #9d9dee;
       transition: 0.1s;
   }
   p {
