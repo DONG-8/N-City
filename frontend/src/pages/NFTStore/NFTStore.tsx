@@ -84,7 +84,7 @@ const Left = styled.div`
   .text{
     margin-left: 5vw;
     margin-top: 8vh;
-  
+    
   .h1{
     font-size: 8vh;
     margin-bottom: 5vh;
@@ -116,7 +116,7 @@ const Right = styled.div`
       font-size: 3rem;
       text-align: center;
       margin-left: 1vw;
-      margin-bottom: 10vh;
+      margin-top : -30px;
     }
   }
   img {

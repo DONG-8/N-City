@@ -52,7 +52,7 @@ const Left = styled.div`
       font-size: 3rem;
       text-align: center;
       margin-left: 1vw;
-      margin-bottom: 10vh;
+      margin-top : -50px;
     }
   }
   img {

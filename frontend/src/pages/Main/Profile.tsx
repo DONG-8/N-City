@@ -243,6 +243,9 @@ const LoginDiv = styled.div`
     color: white;
     margin-left: 50px;
   }
+  &:hover{
+    background-color: #8181e8 ;
+  }
 `;
 
 const NextIcon = styled.div`
