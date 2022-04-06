@@ -35,10 +35,10 @@ export default class Network {
     const endpoint =
       // process.env.NODE_ENV === 'production'
       //   ? `wss://sky-office.herokuapp.com`
-      // : `${protocol}//${window.location.hostname}:2567`        
-      // `${protocol}://${window.location.hostname}:2567`
+      // : `${protocol}//${window.location.hostname}:2567`
+      // `${protocol}//${window.location.hostname}:2567`
       `wss://j6e106.p.ssafy.io/colyseus`
-        
+    
     console.log(endpoint, "엔드포인트으으으")
     this.client = new Client(endpoint)
     this.joinLobbyRoom().then(() => {
