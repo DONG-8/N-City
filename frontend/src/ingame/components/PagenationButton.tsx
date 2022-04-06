@@ -5,12 +5,20 @@ interface Ibuttonnumber {
   number: number;
   setValue: React.Dispatch<React.SetStateAction<number>>;
 }
-
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 1000px;
+  /* background-color: #e9bbbb; */
+`
 const Button = styled.div`
-  background-color: black;
-  color: white;
-  width: 50px;
+  
+  color: black;
   height: 20px;
+  margin: 20px;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
 `;
 
 const PagenationButton: React.FC<Ibuttonnumber> = ({ number, setValue }) => {
@@ -25,7 +33,7 @@ const PagenationButton: React.FC<Ibuttonnumber> = ({ number, setValue }) => {
   }
 
   return (
-    <>
+    <Wrapper>
       {arr.map((ob, i) => {
         return (
           <Button key={i + 1} onClick={() => pageChange(i + 1)}>
@@ -33,7 +41,7 @@ const PagenationButton: React.FC<Ibuttonnumber> = ({ number, setValue }) => {
           </Button>
         );
       })}
-    </>
+    </Wrapper>
   );
 };
 

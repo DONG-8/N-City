@@ -9,7 +9,7 @@ import { delProductLike,postProductLike } from '../../store/apis/favorite';
 
 const Wrapper = styled.div`
   #character{
-    border:0.5px solid orangered;
+    border:2px solid #636dffcd ;
 
   }
   #normal{

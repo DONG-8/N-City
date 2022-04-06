@@ -6,13 +6,17 @@ import ToggleSwitch from './ToggleSwitch'
 import ToggleSwitch2 from './ToggleSwitch2'
 import IsLoading2 from './IsLoading2'
 import StoreItemCard from '../../components/Card/StoreItemCard' 
-
+import { randomwords, words } from './words'
 const Wrapper = styled.div`
+  .ISL{
+    margin-top: -5vh;
+
+  }
   .loading{
     text-align: center;
     font-size: 2.5vh;
     font-weight: 600;
-    margin-top: -5vh;
+    margin-top: -7vh;
   }
 
 `
@@ -311,10 +315,12 @@ const NFTStore = () => {
       </>
       }
           {allitems.length===0 &&
-          <>
+          <div className='ISL'>
           <IsLoading2/>
-          <div className='loading'>Loading..</div>
-          </>}
+          <div className='loading'>
+            {randomwords}
+          </div>
+          </div>}
         <ItemCards>
           {!status && showItems && !order&&
           ([...showItems].reverse()).map((item,idx) => {

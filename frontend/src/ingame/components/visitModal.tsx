@@ -16,20 +16,25 @@ import { useAppSelector, useAppDispatch } from "../hooks";
 // 방명록 개별 콘텐츠
 import Visitbook from "./Visitbook";
 import { Book } from "@mui/icons-material";
-import { dividerClasses } from "@mui/material";
+import { Button, dividerClasses, Input } from "@mui/material";
 
 // 버튼
 import PagenationButton from "./PagenationButton";
 import { queryByTitle } from "@testing-library/react";
 
 const Wrapper = styled.div`
+  background-color: #f0f0f0;
+  border-radius: 10px;
   position: absolute;
   width: 1000px;
   right: 100px;
-  height: 70vh;
+  height: 620px;
   overflow-y: scroll;
   overflow-x: hidden;
   transition: all 0.3s ease;
+  .pagenation{
+    /* background-color: yellowgreen; */
+  }
 `;
 
 const ColorBar = styled.div`
@@ -49,29 +54,42 @@ const Head = styled.div`
   width: 100%;
   height: 200px;
   display: flex;
-  background-color: red;
+  /* background-color: red; */
 `;
-
+const Header = styled.div`
+  text-align: center;
+`
 const Body = styled.div`
   width: 100%;
-  height: 520px;
+  height: 390px;
   color: black;
-  background-color: yellow;
   overflow-y: scroll;
   margin-bottom: 10px;
+  
 `;
 
 const InputLine = styled.div`
+  .subtitle{
+    font-weight:500 ;
+    font-size: 18px;
+  }
   width: 100%;
   height: 80px;
-  background-color: green;
+  /* background-color: green; */
   position: relative;
   bottom: 10px;
+  margin-left: 50px;
+  input{
+    width: 700px;
+  }
+  button{
+    margin-left: 50px;
+  }
 `;
 
 const VisitModal = () => {
   // 스토어에서 받아온 유저정보
-  const userId = useAppSelector((state) => state.edit.userId);
+  const userId = useAppSelector((state) => state.edit.userId );
   const dispatch = useAppDispatch();
   const [pagenumber, setPagenumber] = useState(1);
   const [pageArr, setPageArr] = useState<number[]>([]);
@@ -115,7 +133,7 @@ const VisitModal = () => {
   } = useQuery<any>(
     ["guestbook"],
     async () => {
-      return await getGuestBook(userId, pagenumber);
+      return await getGuestBook(userId, pagenumber );
     },
     {
       onSuccess: (res) => {
@@ -154,7 +172,11 @@ const VisitModal = () => {
   if (userInfoLoading === true) {
     return <div>로딩중</div>;
   }
-
+  const handleEnter = async (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.code === "Enter") {
+      InputBook()
+    }
+  };
   return (
     <Wrapper>
       {/* <ColorBar>
@@ -165,36 +187,45 @@ const VisitModal = () => {
           <div>팔로잉 수 : {userInfo.followeeCnt}</div>
         </Head>
       </ColorBar> */}
+      <Header>
+        <h2>{userInfo.userNick}님의 방명록</h2>
+      </Header>
       <Body ref={refscroll}>
+        {guestbookdata &&
+        <>
         <div>
           {guestbookdata.content.map((obj, i) => {
             return <Visitbook key={i} book={obj}></Visitbook>;
-          })}
+          })} 
         </div>
-        <div>
+        </>
+      }
+      </Body>
+        <div className="pagenation">
           <PagenationButton
             number={guestbookdata.totalPages}
             setValue={setPagenumber}
           />
         </div>
-      </Body>
       <InputLine>
-        <div>방명록을 입력하세용</div>
-        <input
+        <div className="subtitle">방명록을 입력하세요</div>
+        <Input
           type="text"
           onChange={(e) => {
             ChangeInputValue(e);
           }}
+          onKeyPress={(e) => handleEnter(e)}
           ref={inputRef}
-          // value={input}
+          value={inputValue}
         />
-        <button
+        <Button
           onClick={() => {
             InputBook();
           }}
+          variant='contained'
         >
-          입력하기
-        </button>
+          방명록 추가하기
+        </Button>
       </InputLine>
     </Wrapper>
   );

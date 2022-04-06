@@ -14,7 +14,7 @@ const RankCardWrapper = styled.div`
   position: relative;
   width: 410px;
   height: 300px;
-  background-color: #f6f6f7;
+  /* background-color: #f6f6f7; */
   border-radius: 10px;
 `;
 
@@ -80,8 +80,8 @@ const TitleCardDiv = styled.div`
     width: 135px;
     height: 135px;
     object-fit: fill;
-    border-radius: 10px;
-    border: #12abdc   solid 1px;
+    border-radius: 10px 0 10px 0;
+    border: #a9a9f2    solid 2px;
   }
 
   #explain {

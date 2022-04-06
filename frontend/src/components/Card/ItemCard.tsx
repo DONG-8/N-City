@@ -35,7 +35,7 @@ const CardWrapper = styled.div`
     }
   }
   &#character{
-    border:0.5px solid orangered;
+    border:2px solid #636dffcd ;
 
   }
   &#normal{
