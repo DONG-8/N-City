@@ -118,7 +118,7 @@ const CoinChargeModal:React.FC<Iprops> = ({open,setOpen}) => {
         <Contents>
             <div className="content">
               <p> 토큰이 부족하세요?</p>
-              <p> 운영자에게 달라고 쫄라보세요.</p>
+              <p> 운영자에게 부탁해 보세요ㅎ</p>
             </div>
             <Button color='inherit' variant="contained" onClick={onClickApplyToken}>
               NCT 토큰충전 신청하기
