@@ -110,7 +110,7 @@ export default class Network {
           // when a new player finished setting up player name
           if (field === 'name' && value !== '') {
             phaserEvents.emit(Event.PLAYER_JOINED, player, key)
-            store.dispatch(setPlayerNameMap({ id: key, name: value }))
+            store.dispatch(setPlayerNameMap({ id: String(sessionStorage.getItem("userId")), name: value }))
             store.dispatch(pushPlayerJoinedMessage(value))
           }
         })
