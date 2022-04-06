@@ -134,7 +134,7 @@ const GameApp: Function = () => {
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
     
     await bootstrap.network
-      .joinRoom("30")
+      .createRoom(values)
       .then(() => bootstrap.launchGame(Setting))
       .catch((error) => console.error(error));
   };

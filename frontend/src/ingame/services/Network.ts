@@ -39,7 +39,7 @@ export default class Network {
       // `${protocol}//${window.location.hostname}:2567`
       `wss://j6e106.p.ssafy.io/colyseus`
     
-    console.log(endpoint, "엔드포인트으으으")
+    // console.log(endpoint, "엔드포인트으으으")
     this.client = new Client(endpoint)
     this.joinLobbyRoom().then(() => {
       store.dispatch(setLobbyJoined(true))
