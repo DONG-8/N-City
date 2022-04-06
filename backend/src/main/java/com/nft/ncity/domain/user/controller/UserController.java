@@ -21,6 +21,7 @@ import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
 import com.nft.ncity.domain.user.response.*;
 import com.nft.ncity.domain.user.service.UserService;
 import io.swagger.annotations.*;
+import io.swagger.models.Model;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
@@ -386,13 +388,13 @@ public class UserController {
             @ApiResponse(code = 201, message = "이메일 인증 수락."),
             @ApiResponse(code = 404, message = "이메일 인증 수락 불가능.")
     })
-    public ResponseEntity<BaseResponseBody> EmailAuthConfirm(@RequestParam(name = "email") String emailAuthEmail,
-                                                             @RequestParam(name = "authToken") String authToken) {
+    public void EmailAuthConfirm(@RequestParam(name = "email") String emailAuthEmail,
+                                 @RequestParam(name = "authToken") String authToken,
+                                 HttpServletResponse response) throws IOException {
         // 이메일 인증 처리.
         log.info("EmailAuthConfirm - 호출");
         userService.confirmEmail(emailAuthEmail, authToken);
-
-        return ResponseEntity.status(201).body(BaseResponseBody.of(201,"닉네임 변경 가능."));
+        response.sendRedirect("/EmailConfirmGetRes.html");
     }
 
     /**

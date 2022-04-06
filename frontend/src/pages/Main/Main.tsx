@@ -7,7 +7,8 @@ import HotTokkenList from "./HotTokkenList";
 import NewTokkenList from "./NewTokkenList";
 import VideoGuide from "./VideoGuide";
 import Profile from "./Profile";
-import { events as images } from "./events";
+import { events } from "../Community/events";
+import { useNavigate } from "react-router-dom";
 
 const MainBackGround = styled.div`
   /* margin-top: 80px; */
@@ -345,28 +346,28 @@ export default function Main() {
   // 나중에 DB 기반의 데이터 형성시켜주고 이미지 받아오기 아니면 그냥 여기서 사용
   
 
-  const subImages = [
-    {
-      pic: "https://cdn.discordapp.com/attachments/945484206677557248/960902387139244043/Mainpage.png",
-      ID: 1,
-      name: "구찌",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg",
-      ID: 2,
-      name: "로아 프레딧 룩",
-    },
-    {
-      pic: "https://cdn-lostark.game.onstove.com/uploadfiles/banner/93964914d8904123a71323313b1a95ba.jpg",
-      ID: 3,
-      name: "로아 도화가",
-    },
-  ];
+  // const subImages = [
+  //   {
+  //     pic: "https://cdn.discordapp.com/attachments/945484206677557248/960902387139244043/Mainpage.png",
+  //     ID: 1,
+  //     name: "구찌",
+  //   },
+  //   {
+  //     pic: "https://cdn-lostark.game.onstove.com/2022/event/220223_package_j54QvSXfeG3n/images/pc/@img_index.jpg",
+  //     ID: 2,
+  //     name: "로아 프레딧 룩",
+  //   },
+  //   {
+  //     pic: "https://cdn-lostark.game.onstove.com/uploadfiles/banner/93964914d8904123a71323313b1a95ba.jpg",
+  //     ID: 3,
+  //     name: "로아 도화가",
+  //   },
+  // ];
 
   const moveRight = () => {
     // console.log(e)
     // clearTimeout(1000)
-    const len = images.length;
+    const len = events.length;
     const idx = Math.floor((eventNumber + 1) % len);
     if ((len - 1) * -890 === position) {
       setPosition(0);
@@ -384,7 +385,7 @@ export default function Main() {
   };
 
   const moveLeft = () => {
-    const len = images.length;
+    const len = events.length;
     const idx = Math.floor((eventNumber - 1) % len);
     if (0 === position) {
       setPosition((len - 1) * -890);
@@ -415,7 +416,7 @@ export default function Main() {
   const clickToMove = (e: React.MouseEvent<HTMLDivElement>) => {
     clearTimeout();
     // setCheck(true)
-    const len = images.length;
+    const len = events.length;
     const num = parseInt(e.currentTarget.id);
     const dif = num - eventNumber;
     if (dif < 0) {
@@ -472,7 +473,7 @@ export default function Main() {
   };
 
   const moveAuto = () => {
-    const len = images.length;
+    const len = events.length;
     const idx = Math.floor((eventNumber + 1) % len);
     if ((len - 1) * -890 === position) {
       setPosition(0);
@@ -509,7 +510,7 @@ export default function Main() {
   }, [subCheck]);
 
   const moveSubAuto = () => {
-    const len = subImages.length;
+    const len = events.length;
     const idx = Math.floor((subEventNumber + 1) % len);
     setSubEventNumber(idx);
     if (idx === 0) {
@@ -529,7 +530,7 @@ export default function Main() {
   };
 
   const moveSubRight = () => {
-    const len = subImages.length;
+    const len = events.length;
     const idx = Math.floor((subEventNumber + 1) % len);
     setSubEventNumber(idx);
     if (idx === 0) {
@@ -540,7 +541,7 @@ export default function Main() {
   };
 
   const moveSubLeft = () => {
-    const len = subImages.length;
+    const len = events.length;
     const idx = Math.floor((subEventNumber - 1) % len);
     if (0 === subPosition) {
       setSubPosition((len - 1) * -448);
@@ -555,7 +556,7 @@ export default function Main() {
   };
 
   // const [items, setItems] = useState<IState["items"]>([]);
-
+  const navigate = useNavigate()
   return (
     <MainH>
       {/* <Popup/> */}
@@ -565,7 +566,7 @@ export default function Main() {
       <MainWrapper>
         <MainBannerWrapper>
           <MainBanner>
-            {images.map((value, idx) => {
+            {events.map((event, idx) => {
               return (
                 <div
                   key={idx}
@@ -573,9 +574,11 @@ export default function Main() {
                   style={{
                     transform: `translate(${position}px)`,
                     transition: `transform 0.5s`,
+                    cursor:'pointer'
                   }}
+                  onClick = {()=>{navigate(`/event/${event.id}`)}}
                 >
-                  <img src={value.pic} key={idx + value.name} alt="사진없노" />
+                  <img src={event.url}  alt="사진없노" />
                 </div>
               );
             })}
@@ -589,7 +592,7 @@ export default function Main() {
               <ArrowBackIcon></ArrowBackIcon>
             </button>
             <div className="container">
-              {images.map((value, idx) => {
+              {events.map((event, idx) => {
                 const id = String(idx);
                 //transform: `translate(${sub}px)`, transition: `transform 0.5s`
                 if (idx === eventNumber) {
@@ -607,7 +610,7 @@ export default function Main() {
                         transition: `transform 0.5s`,
                       }}
                     >
-                      {value.name}
+                      {event.title}
                     </div>
                   );
                 } else {
@@ -624,7 +627,7 @@ export default function Main() {
                         transition: `transform 0.5s`,
                       }}
                     >
-                      {value.name}
+                      {event.title}
                     </div>
                   );
                 }
@@ -638,7 +641,7 @@ export default function Main() {
               <ArrowForward></ArrowForward>
             </button>
             <button>
-              {eventNumber + 1}/{images.length}
+              {eventNumber + 1}/{events.length}
             </button>
             <button>
             </button>
@@ -654,13 +657,11 @@ export default function Main() {
       
       <HotTokkenWrraper>
         <HotTokken>
-          <h1>Hot Token</h1>
           <HotTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>
       <HotTokkenWrraper>
         <HotTokken>
-          <h1>New Token</h1>
           <NewTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>

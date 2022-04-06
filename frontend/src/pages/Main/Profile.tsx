@@ -38,7 +38,8 @@ const SubBanner = styled.div`
 const TodayInformationDiv = styled.div`
   width: 400px;
   height: 65px;
-  background-color: #129fce;
+  /* background-color: #129fce; */
+  background-color: #9191e8 ;
   margin: 0 auto;
   margin-top: 15px;
   border-radius: 10px;
@@ -215,7 +216,8 @@ const LoginDiv = styled.div`
   height: 65px;
   margin: 5px auto;
   font-size: 16px;
-  background-color: #23afde;
+  /* background-color: #23afde; */
+  background-color: #a9a9f2 ;
   display: flex;
   border-radius: 10px;
   align-items: center;

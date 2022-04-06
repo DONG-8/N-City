@@ -1,30 +1,51 @@
+import e1 from './image/e1.jpg'
+import e2 from './image/e2.jpg'
+import e3 from './image/e3.jpg'
+import e4 from './image/e4.jpg'
+import e5 from './image/e5.jpg'
+import e6 from './image/e6.jpg'
+
 export const events = [
   {
     id:1,
-    title:"서울브랜드파트너스가 선물을 드려요",
-    url:"https://www.fetv.co.kr/data/photos/20210938/art_16324402689008_18ca02.jpg",
+    title:"N-city Realease",
+    url:e1,
     date:"2021.12.22 06:00 ~ 03.16 06:00",
-    content:""
-  },
-  {
-    id:2,
-    title:"복지로는 ???이다",
-    url:"https://asia.playstation.com/content/dam/pscom/kr/latest-news/FY19/12/20191220-holiday-luckydraw-16x9-2.jpg",
-    date:"2021.12.22 06:00 ~ 03.16 06:00",
-    content:""
-  },
-  {
-    id:3,
-    title:"서울브랜드파트너스가 선물을 드려요",
-    url:"https://www.culture.go.kr/assets/images/content/borad_event_img7.jpg",
-    date:"2021.12.22 06:00 ~ 03.16 06:00",
-    content:""
+    content:"N-city 가 4월8일 출시되었습니다. 많은 이용 부탁드립니다~"
   },
   {
     id:4,
-    title:"복지로는 ???이다",
-    url:"https://s3.ap-northeast-2.amazonaws.com/coinone-talk-share/20211101/notice_thread_1635760564981.8904.png",
+    title:"4월 신규 캐릭터 출시",
+    url:e4,
     date:"2021.12.22 06:00 ~ 03.16 06:00",
-    content:""
+    content:"4월 신규 캐릭터 출시. 별의 커비와 함께 동글동글한 마이룸을 꾸며보세요 "
+  },
+  {
+    id:2,
+    title:"N-city와 시작하는 봄",
+    url:e2,
+    date:"2021.12.22 06:00 ~ 03.16 06:00",
+    content:"이번 봄은 N-city와 함께 해보는게 어떤가요"
+  },
+  {
+    id:3,
+    title:"N-city와 시작하는 봄",
+    url:e3,
+    date:"2021.12.22 06:00 ~ 03.16 06:00",
+    content:"N-city가 있는 봄은 설레는 계절입니다."
+  },
+  {
+    id:5,
+    title:"Jewerly Dongtak",
+    url:e5,
+    date:"2021.12.22 06:00 ~ 03.16 06:00",
+    content:"Jwerly DongTak에서 만든 NFT를 구입해보세요. 그 어떤 작품보다 고급질 것입니다. "
+  },
+  {
+    id:6,
+    title:"Jewerly Dongtak",
+    url:e6,
+    date:"2021.12.22 06:00 ~ 03.16 06:00",
+    content:"최고의 액세사리 만을 고집하던 Jewerly Dongtak이 nft를 만들면 어떻게 될까요? 유저에 Jewelry을 검색하시고 작품을 구경하세요 "
   },
 ]

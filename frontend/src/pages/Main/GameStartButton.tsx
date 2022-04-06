@@ -14,11 +14,13 @@ const Wrapper = styled.div`
     font-size: 30px;
     font-weight: 600;
     color: white;
-    background: #129fce;
+    /* background: #129fce; */
+    background-color: #9191e8 ;
     transition: 1s;
     border-radius: 10px;
     :hover{
       background: #36a3c7;
+      background-color: #a9a9f2 ;
       transition: 0.2s;
     }
 }
