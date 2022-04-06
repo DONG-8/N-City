@@ -3,8 +3,8 @@ import styled from "styled-components";
 import AudioPlayer from "./AudioPlayer";
 // api 요청
 import { useMutation, useQuery } from "react-query";
-import { getUsercollectedInfo } from "../../../../src/store/apis/user"; //  유저정보 가져오기
-import { client } from "../../../../src/index"; // query data refresh 용도
+import { getUsercollectedInfo } from "../../../store/apis/user"; //  유저정보 가져오기
+import { client } from "../../../index"; // query data refresh 용도
 
 //스토어
 import { useAppSelector, useAppDispatch } from "../../hooks";
@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   position: absolute;
   width: 340px;
   height: 460px;
-  background-color: #f0f0f0e9;
+  background-color: #e4e4e4d7;
   /* background-color: #656565a5; */
   right: 30px;
   border-radius: 10px;
@@ -31,7 +31,6 @@ const Head = styled.div`
     /* color:white; */
     margin-top: 20px;
     font-size: 30px;
-    font-weight: 600;
   }
 `;
 
@@ -62,17 +61,15 @@ const Foot = styled.div`
   /* background-color: #f5cbd4; */
 `;
 
-const MusicItem = styled.div`
+const UserItem = styled.div`
   width: 100%;
   height: 50px;
-  border-bottom: 0.1px solid #d6d6d6bc;
   /* background-color: #e381ba; */
   display: flex;
   flex-direction: row;
   margin-bottom: 5px;
   align-items: center;
   margin-top: 2px;
-  margin-bottom: 2px;
   img {
     width: 45px;
     height: 45px;
@@ -102,14 +99,14 @@ const MusicItem = styled.div`
   }
 `;
 
-const MusicModal = () => {
+const UsersModal = () => {
   const [playList, setPlayList] = useState<Array<object>>([]);
   // 임시 userid params 의 데이터를 넘겨주는걸 생각해봐야할듯
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.edit.userId);
   console.log(userId, "유저아이디");
   const tracks = useAppSelector((state) => state.room.roomMusicList);
-  const [musicList, setMusic] = useState();
+  const [userList, setUser] = useState();
   // 작품 조회
   // productcode === 1 : 음악코드
 
@@ -128,7 +125,7 @@ const MusicModal = () => {
         // 성공하면 db에 뮤직 string List를 만들어서 넘겨준다.
         let arr;
         console.log(res, "앱창에서 불러온 정보");
-        const MusicArray = res.content.map((obj, i) => {
+        const UserArray = res.content.map((obj, i) => {
           if (obj.productCode === 1) {
             return {
               title: obj.productTitle,
@@ -141,32 +138,32 @@ const MusicModal = () => {
             return null;
           }
         });
-        const result = MusicArray.filter((obj, i) => obj !== null);
+        const result = UserArray.filter((obj, i) => obj !== null);
         console.log(result, "새 결과");
         dispatch(setMusicList(result));
-        setMusic(result);
+        setUser(result);
       },
     }
   );
 
-  console.log(musicList, "뮤직리스트");
 
   return (
     <Wrapper>
-      <Head><div className="name">Tracks</div></Head>
+      <Head><div className="name">Users</div></Head>
       <Body>
-        <div className="subtitle">All Tracks</div>
+        <div className="subtitle">All Users</div>
         {Alldata &&
           Alldata.content.map((obj, i) => {
             if (obj.productCode === 1) {
+              console.log('🎶',obj)
               return (
-                <MusicItem>
+                <UserItem>
                   <img src={obj.productThumbnailUrl} alt="사진없노~" />
                   <div className="subTitle">{obj.productTitle}</div>
                   {/* <audio controls src={obj.productFileUrl}></audio> */}
                   {(obj.productState===1 || obj.productState===2 )&& (userId!==obj.productUserId)&& // 내가 이 작품의 주인이 아닐경우,
                   <button className="buyBtn">구매하기</button>}
-                </MusicItem>
+                </UserItem>
               );
             }
           })}
@@ -178,4 +175,4 @@ const MusicModal = () => {
   );
 };
 
-export default MusicModal;
+export default UsersModal;

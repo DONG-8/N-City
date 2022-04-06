@@ -176,22 +176,17 @@ const UserBox = styled.div`
   .nextprofileimg {
     display: flex;
     position: relative;
+    align-items: center;
     img {
       width: 20px;
       height: 20px;
-      position: absolute;
-      right: -20px;
-      top: 40%;
+      margin: 5px
     }
   }
   .name {
     color: #272793;
     font-size: 4vh;
     font-weight: 800;
-    margin-bottom: 20px;
-  }
-  button{
-
   }
 `;
 
@@ -231,7 +226,7 @@ const TopR = styled.div`
     overflow-y: hidden;
   }
   .top-left {
-    width: 30vw;
+    width: 25vw;
     .title {
       font-size: 2.5rem;
       font-weight: 600;
@@ -253,6 +248,16 @@ const TopR = styled.div`
     margin-right: 1vw;
     border-radius: 30px;
     border: 1px solid #e0dede;
+  }
+  .mediaBox {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+   
+    video {
+      width: 45vh;
+      margin: 4vh 5vw 0 0;
+    }
   }
 `;
 
@@ -291,7 +296,7 @@ const Bottom = styled.div`
     flex: 1;
     border-top: 0.5px solid #e0dede;
     .content {
-      margin: 2vh;
+      margin: 2vw;
       font-weight: 500;
       font-size: 20px;
     }
@@ -838,12 +843,17 @@ function leadingZeros(n, digits) {
   useEffect(() => {
     getLiked.mutate();
   }, [likes]);
+
   const convertDate = (dateArray) => {
     const year = String(dateArray[0]);
     const month = String(dateArray[1]);
     const day = String(dateArray[2]);
-    return year + "-" + leadingZeros(month, 2) + "-" + leadingZeros(day, 2)
+    const hour = String(dateArray[3])
+    const minute = String(dateArray[4])
+    const second = String(dateArray[5] ? dateArray[5] : "00")
+    return year + "-" + leadingZeros(month, 2) + "-" + leadingZeros(day, 2) + " " + leadingZeros(hour, 2) + ":" + leadingZeros(minute, 2)+ ":" + leadingZeros(second, 2)
   }
+
   useEffect(() => {
   }, [user]);
 
@@ -875,24 +885,25 @@ function leadingZeros(n, digits) {
                         alt="profile"
                       />
                     )}
-                    {Number(sessionStorage.getItem("userId")) ===
-                    Number(item.mintUserId) ? null : followBtnState ? (
-                      <Button
-                        color="info"
-                        variant="contained"
-                        onClick={onClickFollow}
-                      >
-                        Follow
-                      </Button>
-                    ) : (
-                      <Button
-                        color="info"
-                        variant="contained"
-                        onClick={onClickUnFollow}
-                      >
-                        Unfollow
-                      </Button>
-                    )}
+                    {sessionStorage.getItem("userId") &&
+                      (Number(sessionStorage.getItem("userId")) ===
+                      Number(item.mintUserId) ? null : followBtnState ? (
+                        <Button
+                          color="info"
+                          variant="contained"
+                          onClick={onClickFollow}
+                        >
+                          Follow
+                        </Button>
+                      ) : (
+                        <Button
+                          color="info"
+                          variant="contained"
+                          onClick={onClickUnFollow}
+                        >
+                          Unfollow
+                        </Button>
+                      ))}
                   </div>
                   <div className="nextprofileimg">
                     <p className="name">{user.userNick}</p>
@@ -977,43 +988,15 @@ function leadingZeros(n, digits) {
                     src={item.productThumbnailUrl}
                   />
                 ) : (
-                  <video src={item.productFileUrl} controls></video>
+                  <div className="mediaBox">
+                    <video src={item.productFileUrl} controls></video>
+                  </div>
                 )}
               </div>
 
               <Bottom>
                 <div className="right">
-                  {status === "bid" && <BidBox setOpen={setOpen} item={item} />}
-                  {status === "sell" && (
-                    <>
-                      <div className="content">
-                        즉시구매가 : {item.productPrice}{" "}
-                      </div>
-                      {Number(sessionStorage.getItem("userId")) ===
-                      item.userId ? (
-                        <Button
-                          variant="contained"
-                          onClick={() => onclickCancelSale()}
-                        >
-                          판매취소
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="contained"
-                          onClick={() => {
-                            setOpen(true);
-                          }}
-                        >
-                          구매하기
-                        </Button>
-                      )}
-                    </>
-                  )}
-                  {status === "normal" && (
-                    <>
-                      <div className="content">작품이 판매중이 아닙니다.</div>
-                    </>
-                  )}
+                  <BidBox setOpen={setOpen} item={item} />
                 </div>
               </Bottom>
             </div>
@@ -1038,7 +1021,7 @@ function leadingZeros(n, digits) {
               <div className="price">{his.dealPrice}</div>
               <div className="from">{his.dealFromNickName}</div>
               <div className="to">{his.dealToNickName}</div>
-              <div className="date">{his.dealCreatedAt}</div>
+              <div className="date">{convertDate(his.dealCreatedAt)}</div>
               {/* <div className="id">{dealTypeConvert(history.dealType)}</div> */}
             </ListItem>
           );

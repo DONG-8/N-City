@@ -14,6 +14,15 @@ import influencer from "../../essets/images/influencer-mark.png"
 import artist from "../../essets/images/artist-mark.png"
 import enterprise from "../../essets/images/enterprise-mark.png"
 
+const Wrapper = styled.div`
+  #character{
+    border:2px solid orangered;
+  }
+  #normal{
+  border:0.5px solid #E9E4E4;
+  }
+`
+
 const CardWrapper = styled.div`
   cursor: pointer;
   height: 361px;
@@ -53,7 +62,7 @@ const CardCenter = styled.div`
 const CardBottom = styled.div`
   margin-top: -14px;
   height: 35px;
-  border-radius: 0 0 5px 5px;
+  border-radius: 0 0 10px 10px;
   background-color: whitesmoke;
   display: flex;
   justify-content: space-between;
@@ -203,8 +212,8 @@ const StoreItemCard:React.FC<Iprops>= ({item}) => {
   }
 
   return (
-    <>
-      <CardWrapper>
+    <Wrapper>
+      <CardWrapper id={item.productCode===7?'character':'normal'}>
         <Image
           onClick={() => {
             goDetailPage(item.productId);
@@ -261,7 +270,7 @@ const StoreItemCard:React.FC<Iprops>= ({item}) => {
           </div>
         </CardBottom>
       </CardWrapper>
-    </>
+    </Wrapper>
   );
 }
 

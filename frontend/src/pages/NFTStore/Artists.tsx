@@ -23,6 +23,7 @@ const IntroBox = styled.div`
   border-radius: 30px;
   display: flex;
   margin-bottom:10vh;
+  overflow: hidden;
 `
 const Left = styled.div`
   flex: 1;

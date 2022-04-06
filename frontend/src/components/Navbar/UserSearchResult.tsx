@@ -32,7 +32,7 @@ position: relative;
   img{
     width: 3vw;
     height: 3vw;
-    margin: 3px 1vw;
+    margin: 3px;
   }
   display: flex;
   justify-content: space-between;
@@ -51,7 +51,7 @@ const InnerContent = styled.div`
   align-items: center;
   img {
     width: 20px;
-    height: auto;
+    height: 20px;
     position:absolute;
     right: 10px;
   }

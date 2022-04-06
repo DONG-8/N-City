@@ -2,6 +2,7 @@ package com.nft.ncity.domain.user.db.repository;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.nft.ncity.domain.authentication.service.AwsS3Service;
+import com.nft.ncity.domain.deal.db.entity.QDeal;
 import com.nft.ncity.domain.user.db.entity.QUser;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
@@ -40,6 +41,7 @@ public class UserRepositorySupport {
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
     QUser qUser = QUser.user;
+    QDeal qDeal = QDeal.deal;
 
 
     public Optional<User> findByEmail(String userEmail) {
@@ -147,5 +149,19 @@ public class UserRepositorySupport {
                 .execute();
 
         return execute;
+    }
+
+    public User findMintingUserByProductId(Long productId) {
+
+        User user = jpaQueryFactory.select(qUser)
+                .from(qUser)
+                .where(qUser.userId.eq(
+                        jpaQueryFactory.select(qDeal.dealTo)
+                                .from(qDeal)
+                                .where(qDeal.dealType.eq(6).and(qDeal.productId.eq(productId)))
+                                .fetchOne()
+                ))
+                .fetchFirst();
+        return user;
     }
 }

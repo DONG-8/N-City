@@ -34,12 +34,19 @@ const CardWrapper = styled.div`
       transition: 0.1s ;
     }
   }
+  &#character{
+    border:0.5px solid orangered;
+
+  }
+  &#normal{
+  border:0.5px solid #E9E4E4;
+  }
 `
 const Image = styled.div`
   img{
     width:350px;
     height:300px ;
-    border-radius: 5px 5px 0 0 ;
+    border-radius: 10px 10px 0 0 ;
     object-fit: cover;    
     }
 `
@@ -50,7 +57,7 @@ const CardCenter = styled.div`
 
 const CardBottom = styled.div`
     height:40px;
-    border-radius:0 0 5px 5px ;
+    border-radius:0 0 10px 10px ;
     background-color: whitesmoke ;
     display: flex;
     justify-content: space-between ;
@@ -194,7 +201,7 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
 
   return (
     <>
-      <CardWrapper>
+      <CardWrapper  id={item.productCode===7?'character':'normal'}>
         <Image
           onClick={() => {
             goDetailPage(item.productId);

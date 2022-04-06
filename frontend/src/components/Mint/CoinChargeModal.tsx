@@ -16,8 +16,8 @@ font-family: "Noto Sans KR", sans-serif;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #3f3f8d  ;
-  width: 40%;
-  height: 45vh;
+  width: 600px;
+  height: 400px;
   border-radius: 5px;
   border: none;
   display: flex;
@@ -64,6 +64,7 @@ const Contents= styled.div`
     font-size: 2vh;
     font-weight: 500;
     color: black;
+    overflow: hidden;
   }
   .gray{
     color: gray;

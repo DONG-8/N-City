@@ -24,7 +24,7 @@ const MainBackImg = styled.img`
 `;
 
 const MainWrapper = styled.div`
-  width: 80%;
+  width: 1500px;
   display: flex;
   margin: 0 auto;
 `;
@@ -193,9 +193,12 @@ const SubBottomItem = styled.div`
 `;
 
 const HotTokkenWrraper = styled.div`
-  width: 100%;
-  height: 60vh;
+  width: 1600px;
+  height: 500px;
   min-width: 1236px;
+  margin: auto;
+  margin-top: 200px;
+  margin-bottom: 100px;
   
 `;
 
@@ -269,6 +272,7 @@ const MainWord = styled.div`
 const GuideWrapper = styled.div`
   width: 100%;
   margin: 0 auto;
+  margin-top: 15vh;
 `;
 
 const Cash = styled.div`
@@ -343,7 +347,7 @@ export default function Main() {
 
   const subImages = [
     {
-      pic: "https://nimage.g-enews.com/phpwas/restmb_allidxmake.php?idx=5&simg=2020121617202605478e0eaf3841f218144160198.jpg",
+      pic: "https://cdn.discordapp.com/attachments/945484206677557248/960902387139244043/Mainpage.png",
       ID: 1,
       name: "구찌",
     },
@@ -657,7 +661,6 @@ export default function Main() {
       <HotTokkenWrraper>
         <HotTokken>
           <h1>New Token</h1>
-          {/* <ZigZag /> */}
           <NewTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>

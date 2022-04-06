@@ -2,13 +2,10 @@ import React, {  useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { getProductAll, getSellProduct } from '../../store/apis/product'
 import { useMutation, useQuery } from 'react-query'
-import ItemCard2 from '../../components/Card/ItemCard2'
-import ItemCard from '../../components/Card/ItemCard'
 import ToggleSwitch from './ToggleSwitch'
 import ToggleSwitch2 from './ToggleSwitch2'
 import IsLoading2 from './IsLoading2'
-import IsLoading from './IsLoading'
-import StoreItemCard from '../../components/Card/StoreItemCard'
+import StoreItemCard from '../../components/Card/StoreItemCard' 
 
 const Wrapper = styled.div`
   .loading{
@@ -75,6 +72,7 @@ const IntroBox = styled.div`
   margin-top: 10vh;
   display: flex;
   margin-bottom:5vh;
+  overflow-y: hidden;
 
 `
 const Left = styled.div`
