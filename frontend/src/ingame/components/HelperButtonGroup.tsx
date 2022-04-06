@@ -358,6 +358,9 @@ export default function HelperButtonGroup() {
             D
           </StyledFab>
         </Tooltip>
+        <Tooltip title="Map Editing">
+          <StyledFab size="small" onClick={() => ClickModeChange()}></StyledFab>
+        </Tooltip>
       </ButtonGroup>
     </Backdrop>
   );

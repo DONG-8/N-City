@@ -1,20 +1,13 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import Slider from "react-slick";
 import styled from "styled-components";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ItemCard2 from "../../components/Card/ItemCard2";
-// interface Iprops{
-//   items :{
-//     productId: Number,
-//     productTitle: string,
-//     productPrice: Number,
-//     productThumbnailUrl: string,
-//     productFavorite: Number,
-//     productRegDt:Object, 
-//     productCode: Number,
-//   }[]
-// }
+import { useMutation, useQuery } from "react-query";
+import { getProductAll, getProductNew } from "../../store/apis/product";
+import IsLoading2 from "../NFTStore/IsLoading2" ;
+
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -30,7 +23,6 @@ const RCricle = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 30px;
-  /* background-color: red; */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' %3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z'/%3E%3C/svg%3E");
   position: absolute;
   top: 200px;
@@ -73,13 +65,13 @@ const settings = {
 };
 
 const MainBannerWrapper = styled.div`
-  width: 85vw;
+  width: 1400px;
   height: 600px;
   color: black;
   margin: 0 auto;
 `;
-interface Iprops{
-  items :{
+interface Istate{
+  item :{
     productId: Number,
     productTitle: string,
     productPrice: Number,
@@ -97,19 +89,40 @@ interface Iprops{
       userImgUrl: string,
       userNick: string,
       userRole: string,
+      userTokenRequest?:boolean|null,
     }[],
-  }[],
+    userRole: string,
+    productState:number
+  }
 }
 
-const NewTokkenList:React.FC<Iprops>= ({items}) => {
+const NewTokkenList:React.FC = () => {
+  const { isLoading:ILC, data:allitems } = useQuery<any>(
+    "getProductNew",
+    async () => {return (await (getProductNew()))
+      },
+    { onSuccess:(res)=>{
+      
+    },
+      onError: (err: any) => {
+        console.log(err, "판매중 정보 실패");
+      },
+    }
+  );
+
   return (
     <MainBannerWrapper>
       <div>
+      {ILC ?<IsLoading2/>:
+        <>
+        <h1>Hot Token</h1>
         <Slider {...settings}>
-          {items.map((item,idx) => {
+          {allitems && 
+         allitems.map((item,idx) => {
             return <ItemCard2 key={idx} item={item} />;
           })}
-        </Slider>
+         </Slider>
+        </>}
       </div>
     </MainBannerWrapper>
   );

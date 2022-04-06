@@ -3,8 +3,11 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import configureStore from './store';
 
-const client = new QueryClient({
+const store = configureStore();
+
+export const client = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,

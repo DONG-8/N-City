@@ -13,12 +13,15 @@ import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.service.ProductService;
 import com.nft.ncity.domain.user.db.entity.EmailAuth;
 import com.nft.ncity.domain.user.db.entity.User;
+import com.nft.ncity.domain.user.db.repository.EmailAuthRepositorySupport;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
+import com.nft.ncity.domain.user.request.EmailAuthConfirmReq;
 import com.nft.ncity.domain.user.request.EmailAuthRegisterReq;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
 import com.nft.ncity.domain.user.response.*;
 import com.nft.ncity.domain.user.service.UserService;
 import io.swagger.annotations.*;
+import io.swagger.models.Model;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +30,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.Cookie;
@@ -65,6 +69,9 @@ public class UserController {
 
     @Autowired
     JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    EmailAuthRepositorySupport emailAuthRepositorySupport;
 
     @ApiOperation(value = "로그인")
     @PostMapping("/login")
@@ -290,22 +297,23 @@ public class UserController {
             @ApiResponse(code = 404, message = "해당 유저 없음."),
             @ApiResponse(code = 404, message = "해당 유저 없음.")
     })
-    public ResponseEntity<BaseResponseBody> modifyUserInfoByUserId(@RequestPart(value = "body") UserModifyUpdateReq userInfo) throws IOException {
+    public ResponseEntity<BaseResponseBody> modifyUserInfoByUserId(@RequestBody UserModifyUpdateReq userInfo) throws IOException {
 
         // 0. 유저 ID를 받음.
         // 1. 해당 유저의 거래 내역 DB에서 받아와서 보내주기.
 
         log.info("modifyUserInfoByUserId - 호출");
 
-        Long execute = userService.userUpdateWithProfileImg(userInfo);
-
         // 이메일 인증 확인
-        User user = userRepository.getById(userInfo.getUserId());
+        EmailAuth emailAuth = emailAuthRepositorySupport.findEmailAuthByUserid(userInfo.getUserId());
+//        User user = userRepository.getById(userInfo.getUserId());
         // 인증이 안되었으면
-        if(!user.getUserEmailConfirm()){
+        if(!emailAuth.getIsEmailConfirm()){
             log.error("modifyUserInfoByUserId - 이메일 인증을 해주세요.");
             return ResponseEntity.status(404).body(BaseResponseBody.of(404,"이메일 인증 필요."));
         }
+
+        Long execute = userService.userUpdateWithProfileImg(userInfo, emailAuth.getEmailAuthEmail());
 
         // 수정한게 없다.
         if(execute < 1) {
@@ -358,15 +366,18 @@ public class UserController {
             return ResponseEntity.status(403).body(BaseResponseBody.of(403,"이미 존재하는 이메일."));
         }
 
-        // 그렇다면 이미 인증을 완료한 상태에서 이메일을 변경한다면?
-        User user = userRepository.findUserByUserId(emailAuthRegisterReq.getUserId()).get();
-        // 다시 인증상태 false로 변경
-        user.updateEmail(emailAuthRegisterReq.getEmailAuthEmail());
-        // 변경한거 DB에 저장.
-        userRepository.save(user);
+//        // 그렇다면 이미 인증을 완료한 상태에서 이메일을 변경한다면?
+//        User user = userRepository.findUserByUserId(emailAuthRegisterReq.getUserId()).orElse(null);
+//
+//        if(null != user) {
+//            // 다시 인증상태 false로 변경
+//            user.updateEmail("");
+//            // 변경한거 DB에 저장.
+//            userRepository.save(user);
+//        }
 
         // 이메일 인증 테이블에 해당 이메일 등록하고 인증 확인 메일 보내기.
-        EmailAuth emailAuth = userService.EmailAuthRegister(emailAuthRegisterReq.getEmailAuthEmail());
+        EmailAuth emailAuth = userService.emailAuthRegister(emailAuthRegisterReq.getUserId(),emailAuthRegisterReq.getEmailAuthEmail());
 
         return ResponseEntity.status(201).body(BaseResponseBody.of(201,"이메일 인증 등록 및 확인 메일 보내기 완료."));
     }
@@ -377,13 +388,13 @@ public class UserController {
             @ApiResponse(code = 201, message = "이메일 인증 수락."),
             @ApiResponse(code = 404, message = "이메일 인증 수락 불가능.")
     })
-    public ResponseEntity<BaseResponseBody> EmailAuthConfirm(@RequestParam(name = "email") String emailAuthEmail,
-                                                             @RequestParam(name = "authToken") String authToken) {
+    public void EmailAuthConfirm(@RequestParam(name = "email") String emailAuthEmail,
+                                 @RequestParam(name = "authToken") String authToken,
+                                 HttpServletResponse response) throws IOException {
         // 이메일 인증 처리.
         log.info("EmailAuthConfirm - 호출");
         userService.confirmEmail(emailAuthEmail, authToken);
-
-        return ResponseEntity.status(201).body(BaseResponseBody.of(201,"닉네임 변경 가능."));
+        response.sendRedirect("/EmailConfirmGetRes.html");
     }
 
     /**
@@ -420,5 +431,38 @@ public class UserController {
         List<UserAllRes> users = userService.getUserAll();
 
         return ResponseEntity.status(200).body(users);
+    }
+
+    /**
+     * 유저 팔로우 기준 상위 5명 불러오기
+     */
+    @GetMapping("/follower/top5")
+    @ApiOperation(value = "유저 팔로우수 상위 5명 조회", notes = "<strong>유저 팔로우수 상위 5명 조회</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "검색 완료", response = User.class),
+    })
+    public ResponseEntity<List<UserFollowerTop5GetRes>> getUserTop5OrderByFollowCnt() {
+
+        log.info("getUserTop5OrderByFollowCnt - 호출");
+        List<UserFollowerTop5GetRes> users = userService.getUserTop5OrderByFollowCnt();
+
+        return ResponseEntity.status(200).body(users);
+    }
+
+    /**
+     * 이메일 인증여부 확인
+     */
+    @GetMapping("/email/confirm")
+    @ApiOperation(value = "이메일 인증여부 조회", notes = "<strong>이메일 인증여부 조회</strong>")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "검색 완료", response = User.class),
+    })
+    public ResponseEntity<Boolean> getEmailConfirm(@RequestParam(name = "userId") Long userId,
+                                                   @RequestParam(name = "userEmail") String userEmail) {
+
+        log.info("getEmailConfirm - 호출");
+        EmailAuth emailAuth = emailAuthRepositorySupport.findEmailAuthByUseridAndEmail(userId, userEmail);
+        boolean isConfirm = emailAuth.isEmailConfirm;
+        return ResponseEntity.status(201).body(isConfirm);
     }
 }

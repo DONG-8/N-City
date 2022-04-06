@@ -2,6 +2,7 @@ package com.nft.ncity.domain.user.db.repository;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.nft.ncity.domain.authentication.service.AwsS3Service;
+import com.nft.ncity.domain.deal.db.entity.QDeal;
 import com.nft.ncity.domain.user.db.entity.QUser;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.request.UserModifyUpdateReq;
@@ -40,6 +41,7 @@ public class UserRepositorySupport {
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
     QUser qUser = QUser.user;
+    QDeal qDeal = QDeal.deal;
 
 
     public Optional<User> findByEmail(String userEmail) {
@@ -58,27 +60,10 @@ public class UserRepositorySupport {
      * @param userInfo
      * @return
      */
-    public Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo) throws IOException {
+    public Long userUpdateWithProfileImg(UserModifyUpdateReq userInfo, String userEmail) throws IOException {
 
         long execute = jpaQueryFactory.update(qUser)
-                .set(qUser.userEmail, userInfo.getUserEmail())
-                .set(qUser.userNick, userInfo.getUserNick())
-                .set(qUser.userDescription, userInfo.getUserDescription())
-                .set(qUser.userImgUrl, userInfo.getUserImgUrl())
-                .where(qUser.userId.eq(userInfo.getUserId()))
-                .execute();
-        return execute;
-    }
-
-    /**
-     * 프로필 이미지 빼고 변경
-     * @param userInfo
-     * @return
-     */
-    public Long userUpdateNoProfileImg(UserModifyUpdateReq userInfo) {
-
-        long execute = jpaQueryFactory.update(qUser)
-                .set(qUser.userEmail, userInfo.getUserEmail())
+                .set(qUser.userEmail, userEmail)
                 .set(qUser.userNick, userInfo.getUserNick())
                 .set(qUser.userDescription, userInfo.getUserDescription())
                 .set(qUser.userImgUrl, userInfo.getUserImgUrl())
@@ -100,12 +85,25 @@ public class UserRepositorySupport {
     }
 
     public Page<User> findNewUserList(Pageable pageable,String userRole) {
-        List<User> userList = jpaQueryFactory.select(qUser)
-                .from(qUser)
-                .where(qUser.userRole.eq(userRole))
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .fetch();
+
+        List<User> userList;
+
+        if(userRole.equals("ROLE_REQUEST")) {
+            userList = jpaQueryFactory.select(qUser)
+                    .from(qUser)
+                    .where(qUser.userTokenRequest.eq(true))
+                    .limit(pageable.getPageSize())
+                    .offset(pageable.getOffset())
+                    .fetch();
+        }
+        else {
+            userList = jpaQueryFactory.select(qUser)
+                    .from(qUser)
+                    .where(qUser.userRole.eq(userRole))
+                    .limit(pageable.getPageSize())
+                    .offset(pageable.getOffset())
+                    .fetch();
+        }
 
         if(userList == null) return Page.empty();
 
@@ -114,11 +112,23 @@ public class UserRepositorySupport {
 
     public Long updateUserRole(Long userId) {
 
-        Long execute = jpaQueryFactory.update(qUser)
-                .where(qUser.userId.eq(userId))
-                .set(qUser.userRole,"ROLE_USER")
-                .execute();
+        User user = jpaQueryFactory.select(qUser).from(qUser).where(qUser.userId.eq(userId)).fetchOne();
 
+        Long execute = 0L;
+        // 신규 유저이면 일반 등급으로 변경
+        if(user.getUserRole().equals("ROLE_NEW")) {
+            execute = jpaQueryFactory.update(qUser)
+                    .where(qUser.userId.eq(userId))
+                    .set(qUser.userRole,"ROLE_USER")
+                    .execute();
+        }
+        // 그 외 일반등급 유저가 토큰 재요청한거면 해당유저 토큰 지급처리
+        else if (user.getUserTokenRequest()){
+            execute = jpaQueryFactory.update(qUser)
+                    .where(qUser.userId.eq(userId))
+                    .set(qUser.userTokenRequest,false)
+                    .execute();
+        }
         return execute;
     }
 
@@ -131,12 +141,26 @@ public class UserRepositorySupport {
         return user;
     }
 
-    public Long updateUserRoleAsRequest(Long userId) {
+    public Long updateUserTokenRequest(Long userId) {
         Long execute = jpaQueryFactory.update(qUser)
                 .where(qUser.userId.eq(userId))
-                .set(qUser.userRole,"ROLE_REQUEST")
+                .set(qUser.userTokenRequest,true)
                 .execute();
 
         return execute;
+    }
+
+    public User findMintingUserByProductId(Long productId) {
+
+        User user = jpaQueryFactory.select(qUser)
+                .from(qUser)
+                .where(qUser.userId.eq(
+                        jpaQueryFactory.select(qDeal.dealTo)
+                                .from(qDeal)
+                                .where(qDeal.dealType.eq(6).and(qDeal.productId.eq(productId)))
+                                .fetchOne()
+                ))
+                .fetchFirst();
+        return user;
     }
 }

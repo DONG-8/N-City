@@ -10,6 +10,9 @@ import IconButton from "@mui/material/IconButton";
 import { Button } from "@mui/material";
 import SellIcon from "@mui/icons-material/Sell";
 import Tooltip from "@mui/material/Tooltip";
+import influencer from "../../essets/images/influencer-mark.png"
+import artist from "../../essets/images/artist-mark.png"
+import enterprise from "../../essets/images/enterprise-mark.png"
 
 const CardWrapper = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
@@ -31,12 +34,19 @@ const CardWrapper = styled.div`
       transition: 0.1s ;
     }
   }
+  &#character{
+    border:2px solid #636dffcd ;
+
+  }
+  &#normal{
+  border:0.5px solid #E9E4E4;
+  }
 `
 const Image = styled.div`
   img{
     width:350px;
     height:300px ;
-    border-radius: 5px 5px 0 0 ;
+    border-radius: 10px 10px 0 0 ;
     object-fit: cover;    
     }
 `
@@ -47,14 +57,14 @@ const CardCenter = styled.div`
 
 const CardBottom = styled.div`
     height:40px;
-    border-radius:0 0 5px 5px ;
+    border-radius:0 0 10px 10px ;
     background-color: whitesmoke ;
     display: flex;
     justify-content: space-between ;
     align-items: center;
     .buy{
       visibility: hidden ;
-      font-weight: 1000 ;
+      font-weight: 600;
       color:#FF865B ;
       font-size:1.2rem ;
       margin:5px ;
@@ -62,7 +72,7 @@ const CardBottom = styled.div`
     }
     .like{
       font-size:1.2rem ;
-      font-weight:1000;
+      font-weight: 600;
       margin: 7px ;
       display: flex;
     }
@@ -83,7 +93,7 @@ const DesLeft = styled.div`
 `;
 const Artist = styled.div`
   margin: 0.2rem;
-  font-weight: 1000;
+  font-weight: 600;
   margin-left: 0.5rem;
 `;
 const DesRight = styled.div`
@@ -166,12 +176,12 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
 
   const getVerifiedMark = (userType: string) => {
     switch (userType) {
-      case "USER_INFLUENCER":
-        return <img src="essets/marks/influencer-mark.png" alt="mark" />;
-      case "USER_ARTIST":
-        return <img src="essets/marks/artist-mark.png" alt="mark" />;
-      case "USER_ENTERPRISE":
-        return <img src="essets/marks/enterprise-mark.png" alt="mark" />;
+      case "ROLE_INFLUENCER":
+        return <img src={influencer} alt="mark" />;
+      case "ROLE_ARTIST":
+        return <img src={artist} alt="mark" />;
+      case "ROLE_ENTERPRISE":
+        return <img src={enterprise} alt="mark" />;
       default:
         return;
     }
@@ -191,7 +201,7 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
 
   return (
     <>
-      <CardWrapper>
+      <CardWrapper  id={item.productCode===7?'character':'normal'}>
         <Image
           onClick={() => {
             goDetailPage(item.productId);
@@ -203,27 +213,12 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
             src={item.productThumbnailUrl}
           />
         </Image>
-        <CardCenter
-        // onClick={() => {
-        //   goDetailPage(item.productId);
-        // }}
-        >
+        <CardCenter>
           <DesLeft>
-            {/* <Artist>
-              {item.name}
-            </Artist> */}
             <Title><span>{item.productTitle}</span>{getVerifiedMark(item.userRole)}</Title>
           </DesLeft>
         </CardCenter>
         <CardBottom>
-          {/* <div className='buy'> */}
-          {/* <div>Buy Now</div> */}
-          {/* <div>Sell</div>
-            <div>판매수정</div> */}
-          {/* 가격이 붙어 있고, 소유주가 아니면 buy now */}
-          {/* 가격이 붙어 있고, 소유주라면 판매수정  */}
-          {/* 가격이 붙어 있지 않고, 소유주라면 판매수정  */}
-          {/* </div> */}
           <div className="like">
             <div
               onClick={() => {

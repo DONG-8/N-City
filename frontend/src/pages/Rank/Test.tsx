@@ -16,96 +16,45 @@ import {
   getUserduplicateInfo,
 } from "../../store/apis/Main";
 
+import { postRoomJoin } from "../../store/apis/myRoom";
+import { useAppSelector, useAppDispatch } from "../../ingame/hooks";
+import { UserMapInfo } from "../../ingame/stores/EditStore";
+
 import * as API from "../../store/apis/types";
 
 const Test = () => {
-  const [getResult, setGetResult] = useState<string | null>(null);
-  const [postResult, setPostResult] = useState<string | null>(null);
-  const fortmatResponse = (res: any) => {
-    return JSON.stringify(res, null, 2);
-  };
-
-  // 요청 성공 시 다른 api 요청 보내기 test
-  const PrLike = useMutation<any, Error>(
-    "productLike",
-    async () => {
-      return await postProductLike(9);
-    },
-    {
-      onSuccess: (res) => {
-        const result = fortmatResponse(res);
-        console.log(result, "좋아요 결과");
-        // 여기서 이 result로 하고싶은 추가 작업을 실행시켜준다.
-      },
-      onError: (err: any) => {
-        console.log(err, "요청 실패");
-      },
-    }
-  );
+  const userId = useAppSelector((state) => state.edit.userId);
+  const dispatch = useAppDispatch();
+  console.log(userId);
 
   const {
-    isLoading,
     data,
-    mutate: Login,
+    isLoading,
+    mutate: RoomInfo,
   } = useMutation<any, Error>(
-    "query-Login",
+    "postRoomInfo",
     async () => {
-      return await postLogin("0x462c2D22e9AF266AB1F235D3cEa7902D8BbdEC6A");
+      return await postRoomJoin(1);
     },
     {
       onSuccess: (res) => {
-        const result = fortmatResponse(res);
-        console.log(result, "로그인 성공");
-        // sessionStorage.setItem("userToken", res.accessToken);
+        // console.log(res, "성공해쪄염");
+        console.log(res.myRoomBackground, "백그라운드 데이터");
+        // dispatch(UserMapInfo(res.myRoomBackground));
       },
-      onError: (err: any) => {
-        console.log(err, "로그인 요청 실패");
-      },
+      onError: (err: any) => {},
     }
   );
 
-  const { isLoading: getLikeLoading, data: getLikeData } = useQuery<any, Error>(
-    "getLike",
-    async () => {
-      return await getProductLike(9);
-    },
-    {
-      onSuccess: (res) => {
-        fortmatResponse(res);
-        console.log(res, "좋아요 한 상품 조회");
-        console.log("조회 이후 좋아요 요청 시작");
-        PrLike.mutate();
-        console.log();
-      },
-      onError: (err: any) => {
-        console.log(err, "좋아요한작품불러오기에러");
-        console.log("조회 이후 좋아요 요청 시작");
-        PrLike.mutate();
-      },
-    }
-  );
-
-  function loginAccess() {
-    try {
-      Login();
-    } catch (err) {
-      setPostResult(fortmatResponse(err));
-    }
-  }
-
-  function postData() {
-    try {
-      // postTutorial();
-    } catch (err) {
-      setPostResult(fortmatResponse(err));
-      console.log("에러에러에러에러에러ㅔㅓ");
-    }
-  }
+  const GameStart = () => {
+    RoomInfo();
+  };
 
   return (
     <>
-      <button onClick={postData}> 버튼</button>
-      <button onClick={loginAccess}>로그인요청</button>
+      {/* <button onClick={postData}> 버튼</button> */}
+      {/* <button onClick={loginAccess}>로그인요청</button> */}
+      <button onClick={() => GameStart}>게임스타토</button>
       <div>하이하이</div>
     </>
   );
@@ -342,3 +291,88 @@ export default Test;
 //     },
 //   }
 // );
+
+//---------------------------원본
+
+//   const [getResult, setGetResult] = useState<string | null>(null);
+//   const [postResult, setPostResult] = useState<string | null>(null);
+//   const fortmatResponse = (res: any) => {
+//     return JSON.stringify(res, null, 2);
+//   };
+
+//   // 요청 성공 시 다른 api 요청 보내기 test
+//   const PrLike = useMutation<any, Error>(
+//     "productLike",
+//     async () => {
+//       return await postProductLike(9);
+//     },
+//     {
+//       onSuccess: (res) => {
+//         const result = fortmatResponse(res);
+//         console.log(result, "좋아요 결과");
+//         // 여기서 이 result로 하고싶은 추가 작업을 실행시켜준다.
+//       },
+//       onError: (err: any) => {
+//         console.log(err, "요청 실패");
+//       },
+//     }
+//   );
+
+//   const {
+//     isLoading,
+//     data,
+//     mutate: Login,
+//   } = useMutation<any, Error>(
+//     "query-Login",
+//     async () => {
+//       return await postLogin("0x462c2D22e9AF266AB1F235D3cEa7902D8BbdEC6A");
+//     },
+//     {
+//       onSuccess: (res) => {
+//         const result = fortmatResponse(res);
+//         console.log(result, "로그인 성공");
+//         // sessionStorage.setItem("userToken", res.accessToken);
+//       },
+//       onError: (err: any) => {
+//         console.log(err, "로그인 요청 실패");
+//       },
+//     }
+//   );
+
+//   const { isLoading: getLikeLoading, data: getLikeData } = useQuery<any, Error>(
+//     "getLike",
+//     async () => {
+//       return await getProductLike(9);
+//     },
+//     {
+//       onSuccess: (res) => {
+//         fortmatResponse(res);
+//         console.log(res, "좋아요 한 상품 조회");
+//         console.log("조회 이후 좋아요 요청 시작");
+//         PrLike.mutate();
+//         console.log();
+//       },
+//       onError: (err: any) => {
+//         console.log(err, "좋아요한작품불러오기에러");
+//         console.log("조회 이후 좋아요 요청 시작");
+//         PrLike.mutate();
+//       },
+//     }
+//   );
+
+//   function loginAccess() {
+//     try {
+//       Login();
+//     } catch (err) {
+//       setPostResult(fortmatResponse(err));
+//     }
+//   }
+
+//   function postData() {
+//     try {
+//       // postTutorial();
+//     } catch (err) {
+//       setPostResult(fortmatResponse(err));
+//       console.log("에러에러에러에러에러ㅔㅓ");
+//     }
+//   }

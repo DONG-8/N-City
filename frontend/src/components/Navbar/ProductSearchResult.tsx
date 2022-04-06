@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import influencer from "../../essets/images/influencer-mark.png"
+import artist from "../../essets/images/artist-mark.png"
+import enterprise from "../../essets/images/enterprise-mark.png"
 
 
 const ResultDiv = styled.div`
@@ -37,12 +40,23 @@ const InnerContentContainer = styled.div`
   :hover {
     font-weight: bold;
   }
+  span {
+    position: relative;
+    display: flex;
+    align-items: center;
+    img{
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      margin-left: 5px;
+    }
+  }
 `;
 
 const InnerContent = styled.div`
-display: flex;
-align-items: center;
-  margin-right: 4vw;
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
   svg {
     width: 12px;
   }
@@ -81,16 +95,17 @@ interface Iitem {
   
   const getVerifiedMark = (userType: string) => {
     switch (userType) {
-      case "USER_INFLUENCER":
-        return <img src="essets/marks/influencer-mark.png" alt="mark" />;
-      case "USER_ARTIST":
-        return <img src="essets/marks/artist-mark.png" alt="mark" />;
-      case "USER_ENTERPRISE":
-        return <img src="essets/marks/enterprise-mark.png" alt="mark" />;
+      case "ROLE_INFLUENCER":
+        return <img src={influencer} alt="mark" />;
+      case "ROLE_ARTIST":
+        return <img src={artist} alt="mark" />;
+      case "ROLE_ENTERPRISE":
+        return <img src={enterprise} alt="mark" />;
       default:
         return;
     }
   }
+
 
   useEffect(()=>{
     setItems(item)

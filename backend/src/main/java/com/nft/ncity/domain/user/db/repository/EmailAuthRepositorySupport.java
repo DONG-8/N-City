@@ -44,15 +44,35 @@ public class EmailAuthRepositorySupport {
         return Optional.ofNullable(emailAuth);
     }
 
-    public EmailAuth emailAuthRegister(String emailAuthEmail) {
+    public EmailAuth emailAuthRegister(Long userId, String emailAuthEmail) {
 
         EmailAuth emailAuth = EmailAuth.builder()
+                .userId(userId)
                 .emailAuthEmail(emailAuthEmail)
                 .emailAuthToken(UUID.randomUUID().toString())
                 .emailAuthExpired(false)
                 .build();
 
         emailAuthRepository.save(emailAuth);
+
+        return emailAuth;
+    }
+
+    public EmailAuth findEmailAuthByUserid(Long userId) {
+        EmailAuth emailAuth = jpaQueryFactory.select(qEmailAuth)
+                .from(qEmailAuth)
+                .where(qEmailAuth.userId.eq(userId))
+                .orderBy(qEmailAuth.emailAuthExpireDate.desc())
+                .fetchFirst();
+        return emailAuth;
+    }
+
+    public EmailAuth findEmailAuthByUseridAndEmail(Long userId, String email) {
+        EmailAuth emailAuth = jpaQueryFactory.select(qEmailAuth)
+                .from(qEmailAuth)
+                .where(qEmailAuth.userId.eq(userId).and(qEmailAuth.emailAuthEmail.eq(email)))
+                .orderBy(qEmailAuth.emailAuthExpireDate.desc())
+                .fetchFirst();
 
         return emailAuth;
     }

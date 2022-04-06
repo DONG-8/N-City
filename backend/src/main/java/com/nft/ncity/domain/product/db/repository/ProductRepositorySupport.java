@@ -1,11 +1,14 @@
 package com.nft.ncity.domain.product.db.repository;
 
 import com.nft.ncity.domain.deal.db.entity.QDeal;
+import com.nft.ncity.domain.favorite.db.entity.QFavorite;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.entity.QProduct;
 import com.nft.ncity.domain.product.request.ProductModifyPutReq;
 import com.nft.ncity.domain.product.request.TokenRegisterPutReq;
+import com.nft.ncity.domain.product.response.ProductTop10GetRes;
 import com.nft.ncity.domain.user.db.entity.QUser;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,9 @@ public class ProductRepositorySupport {
     QDeal qDeal = QDeal.deal;
 
     QUser qUser = QUser.user;
+
+    QFavorite qFavorite = QFavorite.favorite;
+
     //CREATE
     @Transactional
     public long updateTokenByProductId(TokenRegisterPutReq tokenRegisterPutReq){
@@ -121,6 +127,19 @@ public class ProductRepositorySupport {
         return execute;
     }
 
+
+    @Transactional
+    public long updateProductMyroomByProductId(ProductModifyPutReq productModifyPutReq){
+        long execute = jpaQueryFactory.update(qProduct)
+                .set(qProduct.productXCoordinate, productModifyPutReq.getProductXCoordinate())
+                .set(qProduct.productYCoordinate, productModifyPutReq.getProductYCoordinate())
+                .set(qProduct.productView,productModifyPutReq.isProductView())
+                .where(qProduct.productId.eq(productModifyPutReq.getProductId()))
+                .execute();
+        return execute;
+    }
+
+
     public Page<Product> findProductListByUserId(Long userId, Pageable pageable) {
 
         List<Product> productList = jpaQueryFactory.select(qProduct)
@@ -154,6 +173,20 @@ public class ProductRepositorySupport {
     }
 
 
+    public List<Tuple> getFavoriteTop10Product(){
+
+        List<Tuple> res = jpaQueryFactory.select(qProduct,qFavorite.count())
+                .from(qProduct)
+                .join(qFavorite)
+                .on(qProduct.productId.eq(qFavorite.productId))
+                .groupBy(qFavorite.productId)
+                .orderBy(qFavorite.count().desc())
+                .limit(10)
+                .fetch();
+        return res;
+    }
+
+
     // 밑으로는 상세페이지 표시용
     public Product findProductByProductId(Long productId) {
 
@@ -180,5 +213,21 @@ public class ProductRepositorySupport {
                 .limit(1)
                 .fetchOne();
         return mintUserId;
+    }
+
+    public List<Product> findProductNew10List() {
+        List<Product> productList = jpaQueryFactory.select(qProduct)
+                .from(qProduct)
+                .where(qProduct.productId.in(
+                        jpaQueryFactory.select(qDeal.productId)
+                                .from(qDeal)
+                                .where(qDeal.dealType.eq(6))
+                                .orderBy(qDeal.dealCreatedAt.desc())
+                                .limit(10)
+                                .fetch()
+                ))
+                .fetch();
+
+        return productList;
     }
 }

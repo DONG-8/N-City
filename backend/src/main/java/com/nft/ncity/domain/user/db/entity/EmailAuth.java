@@ -30,16 +30,24 @@ public class EmailAuth {
     private Boolean emailAuthExpired;
     // 만료 시간
     private LocalDateTime emailAuthExpireDate;
+    // 유저 아이디
+    private Long userId;
+    // 이메일 인증여부
+    public Boolean isEmailConfirm;
 
     @Builder
-    public EmailAuth(String emailAuthEmail, String emailAuthToken, Boolean emailAuthExpired) {
+    public EmailAuth(Long userId, String emailAuthEmail, String emailAuthToken, Boolean emailAuthExpired) {
+        this.userId = userId;
         this.emailAuthEmail = emailAuthEmail;
         this.emailAuthToken = emailAuthToken;
         this.emailAuthExpired = emailAuthExpired;
         this.emailAuthExpireDate = LocalDateTime.now().plusMinutes(MAX_EXPIRE_TIME);
+        this.isEmailConfirm = false;
     }
 
     public void useToken() {
         this.emailAuthExpired = true;
     }
+
+    public void confirmEmail() { this.isEmailConfirm = true;}
 }

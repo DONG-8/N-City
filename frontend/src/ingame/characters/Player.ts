@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import stores from "../../ingame/stores"
 /**
  * shifting distance for sitting animation
  * format: direction: [xShift, yShift, depthShift]
@@ -15,6 +16,8 @@ export const sittingShiftData = {
   right: [0, -8, 10],
 }
 
+
+
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   playerId: string
   playerTexture: string
@@ -25,7 +28,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   playerContainer: Phaser.GameObjects.Container// 말풍선
   private playerDialogBubble: Phaser.GameObjects.Container  // 대화상자 (의자)
   private timeoutID?: number
-
+ 
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -53,7 +56,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       .setColor('#000000')
       .setOrigin(0.5)
     this.playerContainer.add(this.playerName)
-
     this.scene.physics.world.enable(this.playerContainer)
     const playContainerBody = this.playerContainer.body as Phaser.Physics.Arcade.Body
     const collisionScale = [0.5, 0.2]

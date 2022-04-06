@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import influencer from "../../essets/images/influencer-mark.png"
+import artist from "../../essets/images/artist-mark.png"
+import enterprise from "../../essets/images/enterprise-mark.png"
 
 
 const ResultDiv = styled.div`
@@ -24,11 +27,12 @@ font-family: 'Noto Sans KR', sans-serif;
 `;
 
 const InnerContentContainer = styled.div`
+position: relative;
   border-bottom: 0.3px solid #e1dddd;
   img{
     width: 3vw;
     height: 3vw;
-    margin: 3px 1vw;
+    margin: 3px;
   }
   display: flex;
   justify-content: space-between;
@@ -42,8 +46,15 @@ const InnerContentContainer = styled.div`
 
 
 const InnerContent = styled.div`
-display: flex;
+  display: flex;
   margin: auto 20px;
+  align-items: center;
+  img {
+    width: 20px;
+    height: 20px;
+    position:absolute;
+    right: 10px;
+  }
 `;
 const Noresult = styled.div`
   margin-left: 2vw;
@@ -66,7 +77,6 @@ interface IUser {
   }[]
   onclose: () => void;
   searchValue:string;
-
 }
 
 
@@ -81,12 +91,12 @@ const UserSearchResult:React.FC<IUser> = ({searchValue,item, onclose}) => {
 
   const getVerifiedMark = (userType: string) => {
     switch (userType) {
-      case "USER_INFLUENCER":
-        return <img src="essets/marks/influencer-mark.png" alt="mark" />;
-      case "USER_ARTIST":
-        return <img src="essets/marks/artist-mark.png" alt="mark" />;
-      case "USER_ENTERPRISE":
-        return <img src="essets/marks/enterprise-mark.png" alt="mark" />;
+      case "ROLE_INFLUENCER":
+        return <img src={influencer} alt="mark" />;
+      case "ROLE_ARTIST":
+        return <img src={artist} alt="mark" />;
+      case "ROLE_ENTERPRISE":
+        return <img src={enterprise} alt="mark" />;
       default:
         return <div></div>;
     }

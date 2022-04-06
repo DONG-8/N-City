@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { useAppSelector } from "./hooks";
+import { useAppSelector, useAppDispatch } from "./hooks";
 // typescript에서 useSelector 사용 하려면 hooks를 만들어서 불러와야한다.
 
 import MainDialog from "./components/MainDialog"; // 캐릭터 고르는 화면
@@ -15,63 +15,68 @@ import VendingMachineDialog from "./components/VendingMachineDialog";
 
 import Bootstrap from "./scenes/Bootstrap";
 import Game from "./scenes/Game";
+import Start from "./scenes/Start";
 import EditBar from "./components/EditBar";
-import Background from "./scenes/Background";
-import store from "./stores";
+import UIBar from "./components/Bar/UIBar";
+import { IRoomData } from "../types/Rooms";
 
-enum GameMode {
-  GAME,
-  EDIT,
-}
+import { UserMapInfo } from "./stores/EditStore";
+// 쿼리
+import { postRoomJoin } from "../store/apis/myRoom";
+import { getUsercollectedInfo } from "../store/apis/user";
+import { useMutation } from "react-query";
+import basicData from "./scenes/map.json";
 
-enum MakingMode {
-  CREATE,
-  DELETE,
-}
-
-const Backdrop = styled.div`
-  position: absolute;
-  height: 100%;
-  width: 100%;
-`;
-const avatars = [
-  { name: "adam", img: "/essets/login/Adam_login.png" },
-  { name: "ash", img: "/essets/login/Ash_login.png" },
-  { name: "lucy", img: "/essets/login/Lucy_login.png" },
-  { name: "nancy", img: "/essets/login/Nancy_login.png" },
-];
-
-export interface IRoomData {
-  roomId: string;
-  name: string;
-  description: string;
-  password: null;
-  autoDispose: boolean;
-}
+const Backdrop = styled.div``;
 
 window.addEventListener(
   "keydown",
   function (e) {
     if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-      e.preventDefault();
+      // e.preventDefault();
     }
   },
   false
 );
 
 const GameApp: Function = () => {
+  const userId = useAppSelector((state) => state.edit.userId);
+  let map = basicData;
+  const dispatch = useAppDispatch();
+  // 유저 아이디를 통한 방 정보 요청 --> 로딩시간중 안불러와지면? 로딩이 필요하겠다.
+  // 쿼리를 사용해야겠음
+  const { mutate: RoomInfo } = useMutation<any, Error>(
+    "postRoomInfo",
+    async () => {
+      return await postRoomJoin(userId);
+    },
+    {
+      onSuccess: (res) => {
+        map = res.myRoomBackground;
+        dispatch(UserMapInfo(res.myRoomBackground));
+      },
+      onError: (err: any) => {},
+    }
+  );
+
+  let myArts = { content: [{ productThumbnailUrl: "", productId: 0 }] };
+  const { mutate: getMyArts } = useMutation<any, Error>(
+    "getUsercollectedInfo",
+    async () => {
+      return await getUsercollectedInfo(1);
+    },
+    {
+      onSuccess: (res) => {
+        console.log("불러오기 완료");
+        myArts = res;
+      },
+      onError: (err: any) => {
+        console.log(err);
+      },
+    }
+  );
+
   const Setting = useAppSelector((state) => state.edit.EditMode);
-
-  useEffect(() => {
-    (window as any).game = phaserGame;
-    setTimeout(() => ConnectBootstrap(), 1000); // Bootstrap 연결
-    setTimeout(() => ConnectGame(), 1500); // 게임 접속
-    console.log(availableRooms, "로드중?!");
-    return () => {
-      (window as any).game.destroy(true);
-    };
-  }, []);
-
   const [values, setValues] = useState<IRoomData>({
     // 방이름 방설명 패스워드
     roomId: "userId", // userId 넣어주기
@@ -82,59 +87,52 @@ const GameApp: Function = () => {
   });
 
   const availableRooms = useAppSelector((state) => state.room.availableRooms); //가능한 방들 표시 해주기
+
+  useEffect(() => {
+    RoomInfo();
+    getMyArts();
+    (window as any).game = phaserGame;
+    setTimeout(() => ConnectStart(), 3000);
+    setTimeout(() => ConnectBootstrap(), 4000); // Bootstrap 연결
+    setTimeout(() => ConnectGame(), 5000); // 게임 접속
+    return () => {
+      (window as any).game.destroy(true);
+    };
+  }, []);
+
   const computerDialogOpen = useAppSelector(
     (state) => state.computer.computerDialogOpen
   );
   const whiteboardDialogOpen = useAppSelector(
     (state) => state.whiteboard.whiteboardDialogOpen
   );
-
   // const videoConnected = useAppSelector((state) => state.user.videoConnected)
   const VendingMachineDialogOpen = useAppSelector(
     (state) => state.vendingMachine.vendingMachineDialogOpen
   );
 
-  const gameMode = useAppSelector((state) => state.edit.EditMode);
-  // const makingMode = useAppSelector((state) => state.edit.makingMode)
-
   let game = phaserGame.scene.keys.game as Game;
   let bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
-  let isAvaliable = false;
+  let start = phaserGame.scene.keys.start as Start;
 
-  const checkRoomIsAvaliable = () => {
-    console.log(availableRooms);
-    for (var roomId in availableRooms) {
-      console.log(roomId, "roomID");
-      if (roomId === "test") {
-        return true;
-      }
-    }
-    return false;
+  const ConnectStart = () => {
+    // 부트스트랩 시작시키기
+    bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
+    bootstrap.mapInfo = map;
+    bootstrap.myArtList = myArts;
+
+    start = phaserGame.scene.keys.start as Start;
+    start.launchBootstrap();
   };
 
   const ConnectBootstrap = async () => {
     // ⭐ bootstrap 연결하기
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
-    console.log(checkRoomIsAvaliable());
 
-    // if(isAvaliable) { // 방이 이미 존재한다면 참가
     await bootstrap.network
       .createRoom(values)
-      .then(() => bootstrap.launchGame(GameMode.GAME))
+      .then(() => bootstrap.launchGame(Setting))
       .catch((error) => console.error(error));
-    // } else {  // 방 없었다면 만들기
-    //   // setValues({ ...values, ['roomId']: 'useasrId'}) // 방 아이디 => 유저 아이디
-    //   // setValues({ ...values, ['name']: 'asdfasdfasdf'}) // 방 이름
-    //   // setValues({ ...values, ['description']: '혀농이 방이얌'}) // 방 설명
-
-    //   await bootstrap.network
-    //     .createRoom(values)
-    //     .then(() => bootstrap.launchGame())
-    //     .catch((error) => console.error(error))
-    //   isAvaliable = true
-
-    // }
-    setTimeout(() => console.log(availableRooms), 10000);
   };
 
   const ConnectGame = () => {
@@ -142,14 +140,16 @@ const GameApp: Function = () => {
     game = phaserGame.scene.keys.game as Game;
     game.registerKeys(); // 키 설정
     game.myPlayer.setPlayerName("임현홍"); // ❗ 내이름 설정해주기
-    game.myPlayer.setPlayerTexture(avatars[1].name); // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
+    game.myPlayer.setPlayerTexture("adam"); // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
     game.network.readyToConnect(); // 네트워크 연결
-
-    console.log(availableRooms);
   };
 
-  let ui: JSX.Element;
+  useEffect(() => {
+    console.log(availableRooms, "있는방인가염?!");
+  }, [availableRooms]);
 
+  let ui: JSX.Element;
+  ui = <MainDialog />;
   if (computerDialogOpen) {
     // 화면 공유
     ui = <ComputerDialog />;
@@ -173,8 +173,8 @@ const GameApp: Function = () => {
     <>
       <Backdrop>
         {ui}
-        <MainDialog></MainDialog>
-        {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />}
+        {/* {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />} */}
+        {Setting ? <EditBar></EditBar> : <UIBar></UIBar>}
       </Backdrop>
     </>
   );

@@ -31,6 +31,13 @@ export const getUserInfo = async (userId : number ) => {
   return response.data
 }
 
+export const getUserfollowTop5 = async () => {
+  const response = await apiClient.get<any>(
+    `/users/follower/top5`
+  )
+  return response.data
+}
+
 // 해당 유저의 거래내역 조회
 export const getUserTradeInfo = async (userId : number ) => {
   const response = await apiClient.get<any>(
@@ -40,9 +47,9 @@ export const getUserTradeInfo = async (userId : number ) => {
 }
 
 // 유저가 가진 작품 조회
-export const getUsercollectedInfo = async (userId : number ) => {
+export const getUsercollectedInfo = async (userId : number, size?: number ) => {
   const response = await apiClient.get<any>(
-    `/users/${userId}/collected?size=50`
+    `/users/${userId}/collected?size=1000`
   )
   return response.data
 }
@@ -50,7 +57,7 @@ export const getUsercollectedInfo = async (userId : number ) => {
 // 유저가 생성한 작품 조회
 export const getUsercreatedInfo = async (userId : number ) => {
   const response = await apiClient.get<any>(
-    `/users/${userId}/created?size=50`
+    `/users/${userId}/created?size=1000`
   )
   return response.data
 }
@@ -58,7 +65,7 @@ export const getUsercreatedInfo = async (userId : number ) => {
 // 유저가 좋아요 한 작품 조회
 export const getUserfavoritesInfo = async (userId : number ) => {
   const response = await apiClient.get<any>(
-    `/users/${userId}/favorites?size=50`
+    `/users/${userId}/favorites?size=1000`
   )
   return response.data
 }
@@ -81,9 +88,10 @@ export const getUserduplicateInfo = async (userNick : string ) => {
 //   "userNick": "string"
 // } -- 이와같은 key value의 formdata를 생성시켜준다.
 
-export const patchUserInfoChange = async(formdata : any) => {
-  const response = await fileApiClient.patch<any>(
-    `users/change-info`
+export const patchUserInfoChange = async(body : any) => {
+  const response = await apiClient.patch<any>(
+    `users/change-info`,
+    body
   )
   return response.data
 }
@@ -96,6 +104,15 @@ export const postConfirmEmail = async (userId:number,emailAuthEmail : string) =>
       emailAuthEmail,
       userId
     }
+  )
+  return response.data
+}
+
+// 이메일 인증여부 조회
+export const getCheckConfirmEmail = async (userId:number,emailAuthEmail : string) => {
+  // userid는 자동으로 들어갈 것 같아서 빼놓음
+  const response = await apiClient.get<any>(
+    `users/email/confirm?userId=${userId}&userEmail=${emailAuthEmail}`, 
   )
   return response.data
 }

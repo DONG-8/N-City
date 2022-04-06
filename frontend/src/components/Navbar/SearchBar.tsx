@@ -15,7 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 const SearchBarWrapper = styled.div`
   position: relative;
   width: 900px;
-  min-width: 500px;
+  min-width: 200px;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -32,7 +32,7 @@ const SearchBarWrapper = styled.div`
 
 const SearchBarDiv = styled.div`
   width: 90%;
-  min-width: 500px;
+  min-width: 200px;
   height: 50px;
   border-radius: 10px;
   border: solid 1px rgba(100, 100, 111, 0.2);
@@ -59,7 +59,7 @@ const SearchBarDiv = styled.div`
 `;
 
 const SearchInput = styled.input`
-  width: 500px;
+  width: 750px;
   height: 40px;
   border: none;
   :focus {
@@ -71,14 +71,14 @@ const SearchResultWrapper = styled.div`
   position: absolute;
   top: 70px;
   width: 100%;
-  min-width: 500px;
+  min-width: 200px;
   /* display: none; */
 `;
 
 const SearchResultDiv = styled.div`
   width: 90%;
   height: 100%;
-  min-width: 500px;
+  min-width: 200px;
   background-color: white;
   border-color: red;
   border: solid 1px rgba(100, 100, 111, 0.2);
@@ -101,6 +101,7 @@ const DivideContent = styled.div`
 `;
 
 const MenuBox = styled.div`
+  position: relative;
   button{
     margin-left: 1vw;
     margin-top: 1vh;
@@ -114,7 +115,7 @@ const MenuBox = styled.div`
   .x{
     position: absolute;
     top:10px;
-    right:4.5vw;
+    right:10px;
     cursor: pointer;
   }
 `

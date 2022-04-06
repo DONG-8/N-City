@@ -5,6 +5,7 @@ import com.nft.ncity.domain.favorite.db.entity.QFavorite;
 import com.nft.ncity.domain.follow.db.entity.Follow;
 import com.nft.ncity.domain.product.db.entity.Product;
 import com.nft.ncity.domain.product.db.repository.ProductRepository;
+import com.nft.ncity.domain.product.response.ProductTop10GetRes;
 import com.nft.ncity.domain.user.db.entity.QUser;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
@@ -67,6 +68,8 @@ public class FavoriteRepositorySupport {
     public Long getFavoriteCount(Long productId){
         return favoriteRepository.countByProductId(productId);
     }
+
+
 
     public List<User> getFavoriteUser(Long productId) {
         List<User> favoriteUser = jpaQueryFactory.select(qUser)

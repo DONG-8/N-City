@@ -16,33 +16,33 @@ import { deleteFollow, getFollowee, getFollower, postFollow } from "../../store/
 import { getUsercollectedInfo, getUsercreatedInfo, getUserfavoritesInfo, getUserTradeInfo, getUserInfo } from "../../store/apis/user";
 import bg from "../../essets/images/login_background.png"
 import GameStartButton2 from "./GameStartButton2";
-
+import influencer from "../../essets/images/influencer-mark.png"
+import artist from "../../essets/images/artist-mark.png"
+import enterprise from "../../essets/images/enterprise-mark.png"
+import IsLoading2 from "../NFTStore/IsLoading2";
+import { randomwords, words } from "../NFTStore/words";
 const MypageWrapper = styled.div`
   box-shadow: 1px 1px 1px;
   font-family: "Noto Sans KR", sans-serif;
+  /* width:100%; */
 `;
 const Background = styled.div`
   width: 100%;
-  height: 50vh;
-  img {
-    height: 50vh;
-    width: 100%;
-    object-fit: cover;
-    overflow: hidden;
-  }
+  height: 500px;
+  background: url("https://media4.giphy.com/media/2tNvsKkc0qFdNhJmKk/giphy.gif");
+  background-size: cover;
 `;
 
 const ProfileWrapper = styled.div`
   box-shadow: 1px 1px 3px;
-  background-color: #faf3f399;
-  position: absolute;
+  background-color: #faf3f3b1;
   display: flex;
   align-items: center;
-  top: 20vh;
-  left: 8vw;
-  width: 85vw;
-  height: 30vh;
+  width: 1300px;
+  height: 350px;
   border-radius: 10px;
+  margin: auto;
+  margin-top: -450px;
 `;
 
 const FollowTextBox = styled.div`
@@ -50,6 +50,7 @@ const FollowTextBox = styled.div`
   margin-bottom: 10px;
   span {
     cursor: pointer;
+    font-size: 22px;
     font-weight: 500;
     div {
       display: inline;
@@ -57,13 +58,16 @@ const FollowTextBox = styled.div`
       margin-right: 15px;
     }
   }
+  .blue{
+    color:#4d4df8;
+  }
 `
 
 const FilterBar = styled.div`
   font-family: "Noto Sans KR", sans-serif;
   margin: auto;
-  margin-top: 3vh;
-  width: 70%;
+  margin-top: 150px;
+  width: 70vw;
   display: flex;
   div {
     cursor: pointer;
@@ -96,46 +100,53 @@ const FilterBar = styled.div`
     }
   }
 `;
+
 const ProfileImg = styled.div`
   margin: 3vh;
+  margin-left: 5vh;
   img {
-    width: 13vw;
-    height: 25vh;
+    width: 200px;
+    height: 200px;
     border-radius: 100%;
   }
 `;
+
 const Profile = styled.div`
-  position: absolute;
+  /* position: absolute; */
+  margin-left: 5vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  top: 2vh;
-  left: 18vw;
-  width: 70%;
+  /* top: 0px; */
+  /* left: 300px; */
+  width: 1000px;
   h1 {
-    font-size: 5vh;
+    font-size: 14px;
     margin-bottom: 20px;
   }
   h2 {
-    font-size: 3vh;
+    font-size: 12px;
   }
   .profilesetting{
     font-family: "Noto Sans KR", sans-serif;
     font-weight: 600;
-    background-color: #6225E6  ;
-    width: 14vw;
-    height: 5vh;
-    font-size: 2.2vh;
-    margin-top: 5vh;
+    background-color: #7272fe  ;
+    width: 200px;
+    height: 40px;
+    font-size: 18px;
+    margin-top: 3vh;
     &:hover {
       transition: 0.2s;
-      background-color: #5615e2  ;
+      background-color: #7e7ef8  ;
     }
+  }
+  .gamestartbutton{
+    /* margin-top: 1vh; */
   }
   .joinRoomBtn {
     font-family: "Noto Sans KR", sans-serif;
     font-weight: 600;
-    background-color: #6225E6  ;
+    background-color: #7272fe  ;
     border-radius:15px;
     color: white;
     width: 14vw;
@@ -150,10 +161,28 @@ const Profile = styled.div`
     font-size: 35px;
   }
 `;
+
+const ProfileName = styled.div`
+    margin-top: 20px;
+    position: relative;
+    margin-left: 10px;
+  span {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+  img {
+    margin-top: 20px;
+    position: absolute;
+    margin-left: 10px;
+    width: 25px;
+    height: auto;
+  }
+`
+
 const ItemCards = styled.div`
   margin: auto;
   margin-top: 10vh;
-  width: 100%;
+  width: 85vw;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -204,6 +233,24 @@ const ListItem = styled.div`
 
   }
 `;
+const ISL = styled.div`.ISL{
+  margin-top: -5vh;
+
+}
+.loading{
+  text-align: center;
+  font-size: 2.5vh;
+  font-weight: 600;
+  margin-top: -7vh;
+}
+  text-align: center;
+  margin-top: -20px;
+  .loading{
+    font-size: 30px;
+    margin-top: -50px;
+    font-weight: 700;
+  }
+`
 
 const ListCategory = styled.div`
   border: 1px solid #333;
@@ -256,26 +303,6 @@ interface IUsers {
   userRole: string,
   userId: number,
 }
-interface Iitem{
-  productId: Number,
-    productTitle: string,
-    productPrice: Number,
-    productThumbnailUrl: string,
-    productFavorite: Number,
-    productRegDt:Object,
-    productCode: Number,
-    productFavoriteUser:{
-      authId: Number,
-      userAddress: string,
-      userDescription: string,
-      userEmail: string,
-      userEmailConfirm: boolean,
-      userId: number,
-      userImgUrl: string,
-      userNick: string,
-      userRole: string,
-    }[]
-}
 
 export default function Mypage() {
   const navigate = useNavigate();
@@ -290,6 +317,7 @@ export default function Mypage() {
   const [myLikes, setMyLikes] = useState<any[]>([]);
   const [myHistory, setMyHistory] = useState<any[]>([]);
   const [item, setItem] = useState<any>();
+  const [isLoading,setIsLoading]  = useState(false)
   //모달창
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
@@ -335,7 +363,7 @@ export default function Mypage() {
         console.log("팔로워들", res);
         const userIds = res.map((user) => user.userId);
         console.log(userIds);
-        if (userIds.includes(Number(localStorage.getItem("userId")))) {
+        if (userIds.includes(Number(sessionStorage.getItem("userId")))) {
           setFollowBtnState(false);
         } else {
           setFollowBtnState(true);
@@ -372,6 +400,7 @@ export default function Mypage() {
       onSuccess: async (res) => {
         console.log("팔로우요청 성공", res);
         await getMyInfo.mutate();
+        getUserFollower.mutate()
       },
       onError: (err: any) => {
         console.log("에러발생", err);
@@ -388,6 +417,7 @@ export default function Mypage() {
       onSuccess: async (res) => {
         console.log("언팔로우요청 성공", res);
         await getMyInfo.mutate();
+        getUserFollower.mutate()
       },
       onError: (err: any) => {
         console.log("에러발생", err);
@@ -404,15 +434,18 @@ export default function Mypage() {
   const getMyNFT = useMutation<any, Error>(
     "getMyNFT",
     async () => {
+      setIsLoading(true)
       return await getUsercollectedInfo(Number(userId));
     },
     {
       onSuccess: async (res) => {
         console.log("내가가진 NFT들", res);
         setMyTokens(res.content.reverse())
+        setIsLoading(false)
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
+        setIsLoading(false)
       },
     }
   ); 
@@ -420,15 +453,20 @@ export default function Mypage() {
   const getMyMint = useMutation<any, Error>(
     "getMyMint",
     async () => {
+      setIsLoading(true)
       return await getUsercreatedInfo(Number(userId));
     },
     {
       onSuccess: async (res) => {
         console.log("내가민팅한 NFT들", res);
         setMyMint(res.content.reverse())
+        setIsLoading(false)
+
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
+        setIsLoading(false)
+
       },
     }
   ); 
@@ -436,15 +474,20 @@ export default function Mypage() {
   const getMyLikes = useMutation<any, Error>(
     "getMyLikes",
     async () => {
+      setIsLoading(true)
       return await getUserfavoritesInfo(Number(userId));
     },
     {
       onSuccess: async (res) => {
         console.log("내가좋아요한 NFT들", res);
         setMyLikes(res.content.reverse())
+        setIsLoading(false)
+
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
+        setIsLoading(false)
+
       },
     }
   ); 
@@ -452,15 +495,20 @@ export default function Mypage() {
   const getMyHistory = useMutation<any, Error>(
     "getMyHistory",
     async () => {
+      setIsLoading(true)
       return await getUserTradeInfo(Number(userId));
     },
     {
       onSuccess: async (res) => {
         console.log("나의 활동내역", res);
         setMyHistory(res.content)
+        setIsLoading(false)
+
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
+        setIsLoading(false)
+
       },
     }
   ); 
@@ -497,6 +545,19 @@ export default function Mypage() {
     }
   };
 
+  const getVerifiedMark = (userType: string|undefined) => {
+    switch (userType) {
+      case "ROLE_INFLUENCER":
+        return <img src={influencer} alt="mark" />;
+      case "ROLE_ARTIST":
+        return <img src={artist} alt="mark" />;
+      case "ROLE_ENTERPRISE":
+        return <img src={enterprise} alt="mark" />;
+      default:
+        return;
+    }
+  }
+  
   useEffect(() => {
     window.scrollTo(0, 0);
     getMyInfo.mutate();
@@ -508,15 +569,11 @@ export default function Mypage() {
   // useEffect(() => {
   //   isFollowThisUser();
   // }, [followers])
-
+  
   return (
     <>
       <MypageWrapper>
-        <Background>
-          {/* <img alt="배경" src={bg} /> */}
-          {/* <img alt="배경" src='https://cutewallpaper.org/21/pixel-wallpaper-gif/Vaporwave-Background-Gif-1920x1080-Spicesncurry.com.gif' /> */}
-          <img alt="배경" src='https://i.pinimg.com/originals/0b/32/92/0b3292b81f6edb020142fbf0c92a264b.gif' />
-        </Background>
+        <Background/>
         <ProfileWrapper>
           <ProfileImg>
             <img
@@ -530,35 +587,44 @@ export default function Mypage() {
           </ProfileImg>
           <Profile>
             <div>
+              <ProfileName>
+                <span>{userInfo?.userNick}</span>
+                {getVerifiedMark(userInfo?.userRole)}
+              </ProfileName>
 
-            <h1>{userInfo?.userNick}</h1>
-            <FollowTextBox>
-              <span onClick={() => handleModalOpen("follower")}>
-                팔로워 <div>{userInfo?.followerCnt}</div>{" "}
-              </span>
-              <span onClick={() => handleModalOpen("followee")}>
-                팔로우 <div>{userInfo?.followeeCnt}</div>{" "}
-              </span>
-            </FollowTextBox>
-            {Number(localStorage.getItem("userId")) === userInfo?.userId ? (
-              <Button
-                className="profilesetting"
-                onClick={() => {
-                  navigate("/profilesetting");
-                }}
-                variant="contained"
-              >
-                프로필 수정
-              </Button>
-            ) : (
-              <Button className="profilesetting" variant="contained" onClick={onClickFollow}>
-                {followBtnState ? "팔로우" : "언팔로우"}
-              </Button>
-            )}
+              <FollowTextBox>
+                <span onClick={() => handleModalOpen("follower")}>
+                  팔로워 <div className="blue">{userInfo?.followerCnt}</div>{" "}
+                </span>
+                <span onClick={() => handleModalOpen("followee")}>
+                  팔로우 <div className="blue">{userInfo?.followeeCnt}</div>{" "}
+                </span>
+              </FollowTextBox>
+              {Number(sessionStorage.getItem("userId")) === userInfo?.userId ? (
+                <Button
+                  className="profilesetting"
+                  onClick={() => {
+                    navigate("/profilesetting");
+                  }}
+                  variant="contained"
+                >
+                  프로필 수정
+                </Button>
+              ) : (
+                <Button
+                  className="profilesetting"
+                  variant="contained"
+                  onClick={onClickFollow}
+                >
+                  {followBtnState ? "Follow" : "Unfollow"}
+                </Button>
+              )}
             </div>
             {/* ⭐ 남의방일 때만 방입장 보이게 ? */}
             {/* <button className="joinRoomBtn">방입장</button> */}
-            <GameStartButton2 userNick={userInfo?.userNick}/>
+            <div className="gamestartbutton">
+            <GameStartButton2 userNick={userInfo?.userNick} />
+            </div>
           </Profile>
         </ProfileWrapper>
       </MypageWrapper>
@@ -604,12 +670,21 @@ export default function Mypage() {
           <p>활동내역</p>
         </div>
       </FilterBar>
+      {isLoading && 
+      <ISL>
+        <IsLoading2/>
+        <div className="loading">
+          {randomwords}
+        </div>
+      </ISL>}
+      {!isLoading &&
+      <>
       {status === "myNFT" && (
         <ItemCards>
           {myTokens.map((item, idx) => {
             return (
-              <Card>
-                <ItemCard key={idx} item={item} handleOpen={handleOpen} />
+              <Card  key={idx}>
+                <ItemCard item={item} handleOpen={handleOpen} />
               </Card>
             );
           })}
@@ -619,8 +694,8 @@ export default function Mypage() {
         <ItemCards>
           {myMint.map((item, idx) => {
             return (
-              <Card>
-                <ItemCard key={idx} item={item} handleOpen={handleOpen}  />
+              <Card key={idx}>
+                <ItemCard  item={item} handleOpen={handleOpen} />
               </Card>
             );
           })}
@@ -630,13 +705,13 @@ export default function Mypage() {
         <ItemCards>
           {myLikes.map((item, idx) => {
             return (
-              <Card>
-                <ItemCard key={idx} item={item} handleOpen={handleOpen} />
+              <Card key={idx}>
+                <ItemCard  item={item} handleOpen={handleOpen} />
               </Card>
             );
           })}
         </ItemCards>
-      )}
+      )} </>}
       {status === "history" && (
         <List>
           <ListCategory>

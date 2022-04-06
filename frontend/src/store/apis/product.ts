@@ -27,7 +27,12 @@ export const getProductAll =async ({page,size}:API.TypeProductGetAll) => {
   );
   return response.data
 }
-
+export const getProductNew =async () => {
+  const response = await apiClient.get<any>(
+    '/products/all/new', 
+  );
+  return response.data
+}
 
 
 // 상품등록
@@ -58,7 +63,12 @@ export const getProductCategori = async (productCode : number) => {
   )
   return response.data
 }
-
+export const getliketop10 = async () => {
+  const response = await fileApiClient.get<any>(
+    `/products/rank`, 
+  )
+  return response.data
+}
 // 상품삭제 --> 이거 상품 삭제를 못하지않나? 페이지 등록 삭제라고하는게 더 맞지않을까
 export const deleteProduct = async (productId : number) => {
   const response = await fileApiClient.delete<any>(

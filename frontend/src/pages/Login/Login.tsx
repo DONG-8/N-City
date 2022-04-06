@@ -5,6 +5,9 @@ import { useMutation } from 'react-query';
 import { postLogin } from "../../store/apis/log";
 import { useNavigate } from "react-router-dom";
 
+import phaserGame from "../../ingame/PhaserGame";
+import Bootstrap from "../../ingame/scenes/Bootstrap";
+
 
 //// style
 const Wrapper = styled.div`
@@ -140,10 +143,23 @@ const Login = () => {
     {
       onSuccess: (res) => {
         console.log("로그인요청 성공", res);
-        localStorage.setItem("userId", res.userId)
-        localStorage.setItem("userNickname", res.userNick)
+        sessionStorage.setItem("userId", res.userId)
+        sessionStorage.setItem("userNickname", res.userNick)
         navigate("/")
         window.location.reload();
+
+        if(res.new) { // 신규 유저면 방 만들기
+          const bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
+          const value = { 
+            roomId : res.userId,
+            name: res.userNick,
+            description: '',
+            password: null,
+            autoDispose: false, // 마지막 사용자가 나오면 자동으로 방 없애기 (화이트보드 때문에 지금은 false)
+          }
+          bootstrap.network
+            .createRoom(value)
+        }  
       },
       onError: (err: any) => {
         console.log("로그인요청 실패", err);

@@ -4,6 +4,7 @@ import com.nft.ncity.domain.follow.db.entity.Follow;
 import com.nft.ncity.domain.follow.db.entity.QFollow;
 import com.nft.ncity.domain.user.db.entity.User;
 import com.nft.ncity.domain.user.db.repository.UserRepository;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanOperation;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -109,5 +110,16 @@ public class FollowRepositorySupport {
                 .where(qFollow.followFollower.userId.eq(userId));
 
         return followeeCnt.fetchFirst();
+    }
+
+    public List<Tuple> getUserTop5FollowerCnt() {
+        List<Tuple> list = jpaQueryFactory.select(qFollow.followFollowee, qFollow.count())
+                .from(qFollow)
+                .groupBy(qFollow.followFollowee.userId)
+                .orderBy(qFollow.count().desc())
+                .limit(5)
+                .fetch();
+
+        return list;
     }
 }

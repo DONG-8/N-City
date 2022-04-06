@@ -8,7 +8,6 @@ import { Button } from '@mui/material'
 import GameItemCard from './NFTstore/GameDetailItem'
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import GameDetailItem from './NFTstore/GameDetailItem'
-import { TOKENS } from '../scenes/Bootstrap'
 
 const Wrapper = styled.div`
   border-radius: 5px;
@@ -68,7 +67,7 @@ const Title = styled.div`
   }
   p{
     margin-top: 10vh;
-    font-weight: 1000 ;
+    font-weight: 600;
     font-size: 1.5rem;
   }
   margin-bottom: 0;
@@ -83,7 +82,7 @@ const CategoryBar = styled.div`
   }
   p{
     font-size:3vh;
-    font-weight:1000;
+    font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
     position: relative;
@@ -196,7 +195,7 @@ interface Istate{
 
 const VendingMachineDialog = () => {
   const [nftnumber,setNftnumber] = useState(useAppSelector((state)=>state.vendingMachine.nftnumber))
-  const [imgurl,setImgurl] = useState(TOKENS[Number(nftnumber)])
+  // const [imgurl,setImgurl] = useState(TOKENS[Number(nftnumber)])
   const dispatch = useAppDispatch()
   const [mode,setMode]  = useState('display')
   const [filter,setFilter] = useState("all")
@@ -209,7 +208,7 @@ const VendingMachineDialog = () => {
               <CloseIcon />
             </IconButton>
             <div className='display'>
-              <img className='img' src={imgurl} alt='작품'/>
+              {/* <img className='img' src={imgurl} alt='작품'/> */}
               <div className='btnbox'>
                 <Button variant="contained" className='btn'
                 onClick={()=>{setMode('detail')}}

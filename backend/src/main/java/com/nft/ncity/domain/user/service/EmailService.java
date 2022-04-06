@@ -18,12 +18,6 @@ class EmailService {
     // 비동기 처리 -> 메일을 보내는동안 블럭상태 방지
     @Async
     public void send(String email, String authToken) {
-//        SimpleMailMessage smm = new SimpleMailMessage();
-//        smm.setTo(email);
-//        smm.setSubject("N-CITY 회원가입 이메일 인증 메일 입니다.");
-//        smm.setText("http://localhost:8080/api/users/confirm-email?email="+email+"&authToken="+authToken);
-
-//        javaMailSender.send(smm);
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");

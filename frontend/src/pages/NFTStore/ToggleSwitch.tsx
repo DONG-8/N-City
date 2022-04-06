@@ -11,8 +11,8 @@ const Wrapper = styled.div`
 }
 
 .input_wrapper input[type="checkbox"]{
-  width: 4.3vw;
-  height: 4.2vh;
+  width: 64px;
+  height: 32px;
   cursor: pointer;
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -28,12 +28,12 @@ const Wrapper = styled.div`
 .input_wrapper input[type="checkbox"]:after{
   position: absolute;
   content: "";
-  top: 3px;
-  left: 3px;
-  width: 1.8vw;
-  height: 3.5vh;
+  top: 2px;
+  left: 2px;
+  width: 28px;
+  height: 28px;
   background: #dfeaec;
-  z-index: 2;
+  z-index: 1;
   border-radius: 100%;
   -webkit-transition: all .35s;
   transition: all .35s;
@@ -56,7 +56,7 @@ const Wrapper = styled.div`
 }
 
 .input_wrapper input[type="checkbox"]:checked:after{
-  left: calc(100% - 37px);
+  left: calc(100% - 30px);
 }
 
 .input_wrapper input[type="checkbox"]:checked + .is_checked{

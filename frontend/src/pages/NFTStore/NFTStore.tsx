@@ -2,12 +2,24 @@ import React, {  useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { getProductAll, getSellProduct } from '../../store/apis/product'
 import { useMutation, useQuery } from 'react-query'
-import ItemCard2 from '../../components/Card/ItemCard2'
 import ToggleSwitch from './ToggleSwitch'
 import ToggleSwitch2 from './ToggleSwitch2'
 import IsLoading2 from './IsLoading2'
-import IsLoading from './IsLoading'
+import StoreItemCard from '../../components/Card/StoreItemCard' 
+import { randomwords, words } from './words'
+const Wrapper = styled.div`
+  .ISL{
+    margin-top: -5vh;
 
+  }
+  .loading{
+    text-align: center;
+    font-size: 2.5vh;
+    font-weight: 600;
+    margin-top: -7vh;
+  }
+
+`
 
 const CategoryBar = styled.div`
   margin: auto;
@@ -19,7 +31,7 @@ const CategoryBar = styled.div`
   }
   p{
     font-size:2vh;
-    font-weight:1000;
+    font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
     position: relative;
@@ -49,6 +61,7 @@ const ItemCards = styled.div`
   width: 90vw ;
   display: flex ;
   flex-wrap: wrap ;
+  justify-content: center;
   &:last-child {
     margin-right: auto;
   }
@@ -63,6 +76,7 @@ const IntroBox = styled.div`
   margin-top: 10vh;
   display: flex;
   margin-bottom:5vh;
+  overflow-y: hidden;
 
 `
 const Left = styled.div`
@@ -70,7 +84,7 @@ const Left = styled.div`
   .text{
     margin-left: 5vw;
     margin-top: 8vh;
-  
+    
   .h1{
     font-size: 8vh;
     margin-bottom: 5vh;
@@ -102,7 +116,7 @@ const Right = styled.div`
       font-size: 3rem;
       text-align: center;
       margin-left: 1vw;
-      margin-bottom: 10vh;
+      margin-top : -30px;
     }
   }
   img {
@@ -147,6 +161,7 @@ interface Istate{
       userNick: string,
       userRole: string,
     }[],
+    userRole: string
   }
 }
 const NFTStore = () => {
@@ -155,13 +170,14 @@ const NFTStore = () => {
   const [order,setOrder]  = useState(false)
   const [allitems,setAllitems] = useState([])
   const [saleitems,setSaleitems] = useState([])
-  const [showItems,setShowItems] = useState<Istate['item'][]>([])
-  const [showSales,setShowSales] = useState<Istate['item'][]>([])
+  const [showItems,setShowItems] = useState<any[]>([])
+  const [showSales,setShowSales] = useState<any[]>([])
     // 상품 정보 모두 가져오기
   const getAll = useMutation<any,Error>(
     "prouductAll",
     async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))},
     { onSuccess:(res)=>{
+      console.log(res)
       setAllitems(res.content)
       setShowItems(res.content)
     },
@@ -220,7 +236,7 @@ const NFTStore = () => {
 
 
   return (
-    <>
+    <Wrapper>
       <IntroBox>
         <Left>
           <div className='text'>
@@ -237,7 +253,7 @@ const NFTStore = () => {
           </div>
         </Right>
       </IntroBox>
-      {showItems.length>0 &&
+      {allitems.length>0 &&
       <>
         <FilterButton>
           <div className='toggle'>
@@ -298,34 +314,40 @@ const NFTStore = () => {
       </CategoryBar>
       </>
       }
+          {allitems.length===0 &&
+          <div className='ISL'>
+          <IsLoading2/>
+          <div className='loading'>
+            {randomwords}
+          </div>
+          </div>}
         <ItemCards>
-          {showItems.length===0 &&<IsLoading2/>}
           {!status && showItems && !order&&
           ([...showItems].reverse()).map((item,idx) => {
           return(
-            <ItemCard2 key={idx} item={item} />
+            <StoreItemCard key={idx} item={item} />
             )
           })}
           {!status && showItems && order&&
           showItems.map((item,idx) => {
           return(
-            <ItemCard2 key={idx} item={item} />
+            <StoreItemCard key={idx} item={item} />
             )
           })}
           {status && showSales && !order&&
           ([...showSales].reverse()).map((item,idx) => {
           return(
-            <ItemCard2 key={idx} item={item} />
+            <StoreItemCard key={idx} item={item} />
             )
           })}
           {status && showSales && order&&
           showSales.map((item,idx) => {
           return(
-            <ItemCard2 key={idx} item={item} />
+            <StoreItemCard key={idx} item={item} />
             )
           })}
         </ItemCards>
-      </>
+      </Wrapper>
   );
 }
 

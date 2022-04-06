@@ -9,18 +9,18 @@ import { delProductLike,postProductLike } from '../../../store/apis/favorite';
 
 const Wrapper = styled.div`
   #character{
-    border:1px solid orangered;
+    border:3px solid #a9a9f2 ;
   }
 `
 
 const CardWrapper = styled.div`
   cursor: pointer;
-  height: 320px;
-  width: 280px;
+  height: 240px;
+  width: 210px;
   background-color: #F7F8FA ;
-  border-radius: 10px;
+  border-radius: 5px;
   border:0.5px solid #E9E4E4;
-  margin: 30px ;
+  margin: 25px ;
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
   &:hover{
     transform: translateY(-5px);
@@ -36,35 +36,33 @@ const CardWrapper = styled.div`
 `
 const Image = styled.div`
   img{
-    width:280px;
-    height:280px ;
-    border-radius: 10px 10px 0 0 ;
+    width:210px;
+    height:210px ;
+    border-radius: 5px 5px 0 0 ;
     object-fit: cover;    
   }
 `
 // 5/7
 const CardCenter = styled.div`
   display: flex;
-  height: 55px;
-  display: flex;
-  border-radius: 0 0 2px 2px ;
-  
+  height: 30px;
+  margin-top: -5px;
+  border-radius: 0 0 5px 5px ;
+  background-color  : #ececfa ;
 `;
 
 const DesLeft = styled.div`
-  margin-left: 0.5rem;
+  margin-left: 0.3rem;
   flex: 6;
-  
 `;
 
 const DesRight = styled.div`
   flex: 4;
-  font-weight: 1000;
+  font-weight: 600;
   font-size: 1rem;
   display: flex;
   margin-left: 1rem;
   .like{
-    margin-top: 0.3rem;
     font-size: 1rem ;
     font-weight:600;
     display: flex;
@@ -101,7 +99,7 @@ const DesRight = styled.div`
 const Title = styled.div`
   font-size: 1rem;
   margin-left: 0.5rem;
-  font-weight: 1000;
+  font-weight: 600;
   margin-top: 0.2rem;
 `;
 const DesCenter = styled.div`
@@ -133,7 +131,7 @@ interface Iprops{
 
 const GameItemCard:React.FC<Iprops>= ({item,setMode}) => {
   const [liked,setLiked] = useState(false) // 내가 좋아요 했나
-  const [MyAddress,setMyAddress] = useState(localStorage.getItem('userId'))
+  const [MyAddress,setMyAddress] = useState(sessionStorage.getItem('userId'))
   const [category,setCategory] = useState('normal') 
   // const [category,setCategory] = useState('character') 
   //⭐ normal로 바꾸기
@@ -194,8 +192,6 @@ const GameItemCard:React.FC<Iprops>= ({item,setMode}) => {
               {item.productTitle}
             </Title>
           </DesLeft>
-          <DesCenter>
-          </DesCenter>
           <DesRight>
             <div className='like'>
               <div onClick={()=>{setLiked(!liked)}} className='icon'>

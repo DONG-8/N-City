@@ -1,9 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import SmallSlide from "./SmallSlide";
+import GuideSlide from "./GuideSlide";
+import HotArtistSlide from "./HotArtistSlide";
+import HotRoomSlide from "./HotRoomSlide";
 
 const InnreContent = styled.div`
-  width: 1370px;
+  width: 1450px;
   height: 500px;
   /* background-color: pink; */
   display: flex;
@@ -16,8 +19,17 @@ const FlexBox = styled.div`
   display: flex;
   flex-direction: row;
   margin: 0px;
-  justify-content: center;
+  justify-content: space-between;
   margin-left: 10px;
+`;
+const FlexBox2 = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin: 0px;
+  justify-content: space-between;
+  margin-left: 10px;
+  margin-top: 40px;
 `;
 
 const InnerFlexBox = styled.div`
@@ -29,12 +41,23 @@ const InnerFlexBox = styled.div`
 const ShopIcon = styled.div`
   width: 350px;
   height: 100px;
-  /* background-color: yellow; */
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   flex-direction: row;
   cursor: pointer;
+  h4{
+    margin-left: 20px;
+    margin-top: 20px;
+  }
+  .one{
+    margin-top: -10px;
+  }
+  &#end{
+    margin-right: 5vw;
+  }
+  .color{
+    color: #6225E6  ;
+  }
 `;
 
 const SubText = styled.div`
@@ -51,60 +74,64 @@ const SubText = styled.div`
 `;
 
 const Guide = () => {
+  const navigate = useNavigate()
   return (
     <InnreContent>
       <FlexBox>
         <InnerFlexBox>
           <SubText>
             <h3>Hot Room</h3>
-            <h1>+</h1>
           </SubText>
-
-          <SmallSlide></SmallSlide>
+          <HotRoomSlide/>
         </InnerFlexBox>
+
         <InnerFlexBox>
           <SubText>
-            <h3>Hot Artist</h3>
-            <h1>+</h1>
+            <h3>Hot Citizen</h3>
           </SubText>
-          <SmallSlide></SmallSlide>
+          <HotArtistSlide/>
         </InnerFlexBox>
+
         <InnerFlexBox>
           <SubText>
             <h3>Guide</h3>
             <h1>+</h1>
           </SubText>
-          <SmallSlide></SmallSlide>
+          <GuideSlide/>
         </InnerFlexBox>
       </FlexBox>
-      <FlexBox>
-        <ShopIcon>
-          <img src="essets/images/경매장.png" alt="" />
-          <h4>
-            더 다양한 물품들을 만나보세요
-            <br />
-            <br />
-            경매장
-          </h4>
-        </ShopIcon>
-        <ShopIcon>
+      <FlexBox2>
+          <ShopIcon  onClick={()=>{navigate('/artists')}}>
+            <img className="one" src="essets/images/방문.png" alt="" />
+            <h4>
+              다른 사람의 방이 궁금하다면?
+              <br />
+              <br />
+              <span className="color">방 구경하러 가기</span>
+            </h4>
+          </ShopIcon>
+
+          <ShopIcon  onClick={()=>{navigate('/store')}}>
           <img src="essets/images/거래소.png" alt="" />
           <h4>
-            구매하고싶은 작품이 있다면?
+            더 다양한 물품들을 만나보세요!
             <br />
             <br />
-            거래소
+            <span className="color">Store 가기</span>
           </h4>
         </ShopIcon>
-        <ShopIcon>
-          <img src="essets/images/방문.png" alt="" />
+        <ShopIcon id="end"  onClick={()=>{navigate('/mint')}} >
+          <img src="essets/images/경매장.png" alt="" />
           <h4>
-            다른 사람의 방이 궁금하다면?
+            작품을 등록하고 싶으신가요?
             <br />
-            <br />방 구경하러 가기
+            <br />
+            <span className="color">민팅하러 가기</span>
           </h4>
         </ShopIcon>
-      </FlexBox>
+        
+        
+      </FlexBox2>
     </InnreContent>
   );
 };
