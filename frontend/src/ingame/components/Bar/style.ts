@@ -123,7 +123,7 @@ export const Body = styled.div`
   flex-direction: column;
   position: relative;
 
-  .img {
+  .Mimg {
     width: 30px;
     height: 30px;
     margin: auto;
