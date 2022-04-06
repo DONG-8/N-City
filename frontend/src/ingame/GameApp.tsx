@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { useAppSelector, useAppDispatch  } from "./hooks";
+import { useAppSelector, useAppDispatch } from "./hooks";
 // typescript에서 useSelector 사용 하려면 hooks를 만들어서 불러와야한다.
 
 import MainDialog from "./components/MainDialog"; // 캐릭터 고르는 화면
@@ -18,24 +18,22 @@ import Game from "./scenes/Game";
 import Start from "./scenes/Start";
 import EditBar from "./components/EditBar";
 import UIBar from "./components/Bar/UIBar";
-import { IRoomData } from '../types/Rooms'
+import { IRoomData } from "../types/Rooms";
 
 import { UserMapInfo } from "./stores/EditStore";
 // 쿼리
 import { postRoomJoin } from "../store/apis/myRoom";
 import { getUsercollectedInfo } from "../store/apis/user";
-import {useMutation} from "react-query";
-import basicData from './scenes/map.json';
+import { useMutation } from "react-query";
+import basicData from "./scenes/map.json";
 
-const Backdrop = styled.div`
-
-`;
+const Backdrop = styled.div``;
 
 window.addEventListener(
   "keydown",
   function (e) {
     if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-      e.preventDefault();
+      // e.preventDefault();
     }
   },
   false
@@ -43,51 +41,47 @@ window.addEventListener(
 
 const GameApp: Function = () => {
   const userId = useAppSelector((state) => state.edit.userId);
-  let map = basicData
+  let map = basicData;
   const dispatch = useAppDispatch();
   // 유저 아이디를 통한 방 정보 요청 --> 로딩시간중 안불러와지면? 로딩이 필요하겠다.
   // 쿼리를 사용해야겠음
-  const {
-    mutate: RoomInfo,
-  } = useMutation<any, Error>(
+  const { mutate: RoomInfo } = useMutation<any, Error>(
     "postRoomInfo",
     async () => {
       return await postRoomJoin(userId);
     },
     {
       onSuccess: (res) => {
-        map = res.myRoomBackground
+        map = res.myRoomBackground;
         dispatch(UserMapInfo(res.myRoomBackground));
       },
-      onError: (err: any) => {
-      },
+      onError: (err: any) => {},
     }
   );
 
-  let myArts = {content:[{productThumbnailUrl:'', productId:0}]}
-  const {
-    mutate: getMyArts,
-    } = useMutation<any, Error>(
+  let myArts = { content: [{ productThumbnailUrl: "", productId: 0 }] };
+  const { mutate: getMyArts } = useMutation<any, Error>(
     "getUsercollectedInfo",
     async () => {
       return await getUsercollectedInfo(1);
     },
     {
       onSuccess: (res) => {
-        console.log('불러오기 완료')
-        myArts = res
+        console.log("불러오기 완료");
+        myArts = res;
       },
       onError: (err: any) => {
-        console.log(err)
+        console.log(err);
       },
     }
   );
 
   const Setting = useAppSelector((state) => state.edit.EditMode);
-  const [values, setValues] = useState<IRoomData>({ // 방이름 방설명 패스워드
-    roomId : 'userId',  // userId 넣어주기 
-    name: '혀농이방',
-    description: '혀농이방이야',
+  const [values, setValues] = useState<IRoomData>({
+    // 방이름 방설명 패스워드
+    roomId: "userId", // userId 넣어주기
+    name: "혀농이방",
+    description: "혀농이방이야",
     password: null,
     autoDispose: false, // 마지막 사용자가 나오면 자동으로 방 없애기 (화이트보드 때문에 지금은 false)
   });
@@ -119,18 +113,20 @@ const GameApp: Function = () => {
 
   let game = phaserGame.scene.keys.game as Game;
   let bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
-  let start = phaserGame.scene.keys.start as Start
+  let start = phaserGame.scene.keys.start as Start;
 
-  const ConnectStart = () => {  // 부트스트랩 시작시키기 
+  const ConnectStart = () => {
+    // 부트스트랩 시작시키기
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
-    bootstrap.mapInfo = map
-    bootstrap.myArtList = myArts
+    bootstrap.mapInfo = map;
+    bootstrap.myArtList = myArts;
 
-    start = phaserGame.scene.keys.start as Start
-    start.launchBootstrap()
-  }
+    start = phaserGame.scene.keys.start as Start;
+    start.launchBootstrap();
+  };
 
-  const ConnectBootstrap = async () => {    // ⭐ bootstrap 연결하기
+  const ConnectBootstrap = async () => {
+    // ⭐ bootstrap 연결하기
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
     
     await bootstrap.network

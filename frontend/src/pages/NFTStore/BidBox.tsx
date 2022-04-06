@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Button } from '@mui/material';
 import 'moment/locale/ko';
 import { useMutation } from 'react-query';
-import { getPastHistory, postAuctionConfirm, postCancelAuction } from '../../store/apis/deal';
+import { getPastHistory, postAuctionConfirm, postCancelAuction, postCancelPurchase } from '../../store/apis/deal';
 import { createSaleContract, SaleFactoryContract } from '../../web3Config';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -49,25 +49,41 @@ const Wrapper = styled.div`
     font-size: 20px;
     font-weight: 500;
   }
+  .loading {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    img {
+      width: 160px;
+      height: 160px;
+      margin-left: 2vw;
+    }
+    p {
+      font-size: 24px;
+      font-weight: 500;
+    }
+  }
 `
 
 const ING = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 2vh;
+  font-size: 22px;
   h3 {
     margin-left: 2vw;
+    margin-bottom: 1vh;
     color: #6225e6;
-    margin-bottom: 0;
   }
   .contentBox {
     display: flex;
     align-items: center;
-  }
-  .boxleft {
+    justify-content: space-between;
     .content{
       margin-left: 2vw;
+      font-size: 18px;
     }
+  }
+  .boxleft {
     .sellprice {
       font-size: 24px;
     }
@@ -75,13 +91,14 @@ const ING = styled.div`
   .boxcenter {
   }
   .boxright {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 2vw;
     button {
-      height: 8vh;
+      height: 6vh;
       width: 10vw;
-      background-color: #e3daf7;
-      color: #333;
-      font-size: 2.5vh;
-      font-weight: 600;
+      font-size: 24px;
     }
     .sellBtn {
       margin-left: 30px;
@@ -99,20 +116,48 @@ const END = styled.div`
     margin-left: 2vw;
     color: #6225e6;
   }
+  span {
+    color: #6225e6;
+  }
+  .confirmbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 2vw;
+  }
   .boxleft {
     .content {
       margin: 1vh 0 1vh 2vw;
     }
   }
   button {
-      height: 8vh;
-      width: 10vw;
-      background-color: #e3daf7;
-      color: #333;
-      font-size: 2.5vh;
-      font-weight: 600;
+      height: 6vh;
+      width: 200px;
+      font-size: 24px;
     }
 `
+const ButtonBox = styled.div`
+  display: flex;
+  justify-content: center;
+  button {
+    font-family: "Noto Sans KR", sans-serif;
+    /* position: absolute; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #6225E6;
+    color: #fff;
+    font-weight: 500;
+    font-size: 25px;
+    padding: 10px 0;
+    border-radius: 15px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
+    &:hover {
+      background-color: rgb(86, 43, 177);
+      box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+    }
+  }
+`;
 
 const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
   // console.log(item)
@@ -122,6 +167,7 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
   const [lastBidder, setLastBidder] = useState("")
   const [lastBidderId, setLastBidderId] = useState(0)
   const [isBidderExist, setIsBidderExist] = useState(false)
+  const [isLoading, setIsloading] = useState(false)
   const navigate = useNavigate();
   const {ethereum} = window;
 
@@ -162,9 +208,13 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
     {
       onSuccess: (res) => {
         console.log("confirm 성공", res);
-        navigate(`/mypage/${sessionStorage.getItem("userId")}`)
+        setIsloading(false);
+        navigate(`/mypage/${sessionStorage.getItem("userId")}`);
       },
-      onError: (err) => console.log("confirm 실패", err)
+      onError: (err) => {
+        setIsloading(false);
+        console.log("confirm 실패", err)
+      },
     }
   );
 
@@ -176,16 +226,63 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
     {
       onSuccess: (res) => {
         console.log("경매취소 성공", res);
-        navigate(-1)
+        setIsloading(false)
+        window.location.reload()
       },
-      onError: (err) => console.log("경매취소 실패", err)
+      onError: (err) => {
+        setIsloading(false)
+        console.log("경매취소 실패", err)
+      }
     }
   );
+
+  const cancelSale = useMutation<any, Error>(
+    "postCancelPurchase",
+    async () => {
+      if (!item.productId) return;
+      return await postCancelPurchase(Number(item.productId));
+    },
+    {
+      onSuccess: async (res) => {
+        console.log("구매등록 취소 성공", res);
+        setIsloading(false)
+        window.location.reload()
+      },
+      onError: (err: any) => {
+        console.log("구매등록 취소 실패", err);
+        setIsloading(false)
+      },
+    }
+  );
+
+  const onclickCancelSale = async () => {
+    try {
+      const accounts = await ethereum.request({ method: "eth_accounts" })
+      if (!accounts) {
+        alert("지갑을 연결해주세요")
+        return
+      }
+      setIsloading(true)
+      // sale컨트랙트 주소 받아서 생성
+      const saleContractAddress = await SaleFactoryContract.methods
+      .getSaleContractAddress(item.tokenId)
+      .call();
+
+      const saleContract = await createSaleContract(saleContractAddress)
+
+      // 판매 취소
+      await saleContract.methods.cancelSales().send({ from: accounts[0] });
+      cancelSale.mutate()
+    } catch (error) {
+      console.log("판매취소실패", error);
+      setIsloading(false)
+    }
+  };
   
   const onClickConfirm = async () => {
     try {
       const accounts = await ethereum.request({ method: "eth_accounts" })
-
+      setIsloading(true)
       //salecontract address
       const saleContractAddress = await SaleFactoryContract.methods.getSaleContractAddress(item.tokenId).call()
       const saleContract = await createSaleContract(saleContractAddress)
@@ -202,6 +299,7 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
       }
     } catch (error) {
       console.log("confirm (경매닫기) 실패", error)
+      setIsloading(false)
     }
   }
 
@@ -222,101 +320,153 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
     getHistory.mutate()
   }, [item])
 
-
+  
   return (
     <Wrapper>
-      {item.productState === 1 && moment(item.productAuctionEndTime).isBefore(moment())  && (
-        <END>
-          <h3>경매 종료</h3>
-          {lastBidder ? (
-            <div className="boxleft">
-              <div className="content">최종 입찰가 : {item.productPrice} </div>
-              <div className="content">최종 입찰자 : {lastBidder} </div>
-            </div>
-          ) : (
-            <div className="boxleft">
-              <div className="content">입찰자가 없습니다</div>
-            </div>
-          )}
-          {
-            // 경매끝, 내가 최종구매자거나 경매등록한 사람이면 confirm버튼 보이기
-            (sessionStorage.getItem("userId") && (Number(sessionStorage.getItem("userId")) === item.userId ||
-              Number(sessionStorage.getItem("userId")) === lastBidderId)) && ( /// 나중에 담겨져오는 하이스트비더아이디로 바꾸기
-              <Button onClick={onClickConfirm}>
-                {isBidderExist ? "Confirm" : "경매닫기"}
-              </Button>
-            )
-          }
-        </END>
-      )}
-      {item.productState === 1 && !moment(item.productAuctionEndTime).isBefore(moment()) && (
-        <ING>
-          <h3>경매 진행중</h3>
-          <div className="contentBox">
-            <div className="boxleft">
-              <div className="content">경매 종료 시간 : {moment(item.productAuctionEndTime).calendar()} </div>
-              <div className="content">
-                현재가 : <span className="color">{item.productPrice}</span> nct{" "}
-              </div>
-            </div>
-            <span className="color"></span>
-            <div className="boxcenter">
-              {lastBidder ? (
-                <div className="content">
-                  현재 최종 입찰자 :<span className="color"> {lastBidder}</span>{" "}
+      {isLoading ? (
+        <div className="loading">
+          <img alt="dk" src="https://i.gifer.com/Xqg8.gif" />
+          <p>진행중입니다...</p>
+        </div>
+      ) : (
+        <>
+          {item.productState === 1 &&
+            moment(item.productAuctionEndTime).isBefore(moment()) && (
+              <END>
+                <h3>경매 종료</h3>
+                <div className="confirmbox">
+                  <div>
+                    {isBidderExist ? (
+                      <div className="boxleft">
+                        <div className="content">
+                          최종 입찰가 : {item.productPrice}{" "}
+                        </div>
+                        <div className="content">
+                          최종 입찰자 : <span>{lastBidder}</span>{" "}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="boxleft">
+                        <div className="content">입찰자가 없습니다</div>
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    {
+                      // 경매끝, 내가 최종구매자거나 경매등록한 사람이면 confirm버튼 보이기
+                      sessionStorage.getItem("userId") &&
+                        (Number(sessionStorage.getItem("userId")) ===
+                          item.userId ||
+                          Number(sessionStorage.getItem("userId")) ===
+                            lastBidderId) && ( /// 나중에 담겨져오는 하이스트비더아이디로 바꾸기
+                          <ButtonBox>
+                            <Button onClick={onClickConfirm}>
+                              {isBidderExist ? "Confirm" : "경매닫기"}
+                            </Button>
+                          </ButtonBox>
+                        )
+                    }
+                  </div>
                 </div>
-              ) : (
-                <div className="content">현재 입찰자가 없습니다.</div>
-              )}
-              <div className="content">
-                {RESTTIME.days}일 {RESTTIME.hours}시간 {RESTTIME.minutes}분{" "}
-                {RESTTIME.seconds}초 남았습니다
+              </END>
+            )}
+          {item.productState === 1 &&
+            !moment(item.productAuctionEndTime).isBefore(moment()) && (
+              <ING>
+                <h3>경매 진행중</h3>
+                <div className="contentBox">
+                  <div className="boxleft">
+                    <div className="content">
+                      경매 종료 시간 :{" "}
+                      {moment(item.productAuctionEndTime).calendar()}{" "}
+                    </div>
+                    <div className="content">
+                      현재가 :{" "}
+                      <span className="color">{item.productPrice}</span> nct{" "}
+                    </div>
+                  </div>
+                  <div className="boxcenter">
+                    {isBidderExist ? (
+                      <div className="content">
+                        현재 최종 입찰자 :
+                        <span className="color"> {lastBidder}</span>{" "}
+                      </div>
+                    ) : (
+                      <div className="content">현재 입찰자가 없습니다</div>
+                    )}
+                    <div className="content">
+                      {RESTTIME.days}일 {RESTTIME.hours}시간 {RESTTIME.minutes}
+                      분 {RESTTIME.seconds}초 남았습니다
+                    </div>
+                  </div>
+                  <div className="boxright">
+                    {Number(sessionStorage.getItem("userId")) !==
+                      item.userId && (
+                      <ButtonBox>
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={() => {
+                            setOpen(true);
+                          }}
+                        >
+                          입찰하기
+                        </Button>
+                      </ButtonBox>
+                    )}
+                  </div>
+                </div>
+              </ING>
+            )}
+          {item.productState === 2 && (
+            <ING>
+              <h3>판매 진행중</h3>
+              <div className="contentBox">
+                <div className="boxleft">
+                  <div className="content sellprice">
+                    현재가 : <span className="color">{item.productPrice}</span>{" "}
+                    NCT{" "}
+                  </div>
+                </div>
+                <div className="boxright">
+                  {sessionStorage.getItem("userId") &&
+                    (Number(sessionStorage.getItem("userId")) !==
+                    item.userId ? (
+                      <ButtonBox>
+                        <Button
+                          className="sellBtn"
+                          color="primary"
+                          variant="contained"
+                          onClick={() => {
+                            setOpen(true);
+                          }}
+                        >
+                          구매하기
+                        </Button>
+                      </ButtonBox>
+                    ) : (
+                      <ButtonBox>
+                        <Button
+                          className="sellBtn"
+                          color="primary"
+                          variant="contained"
+                          onClick={() => {
+                            onclickCancelSale();
+                          }}
+                        >
+                          판매취소
+                        </Button>
+                      </ButtonBox>
+                    ))}
+                </div>
               </div>
-            </div>
-            <div className="boxright">
-              {Number(sessionStorage.getItem("userId")) !== item.userId && (
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={() => {
-                    setOpen(true);
-                  }}
-                >
-                  제안하기
-                </Button>
-              )}
-            </div>
-          </div>
-        </ING>
+            </ING>
+          )}
+          {item.productState === 3 && (
+            <p className="notsale">작품이 판매중이 아닙니다.</p>
+          )}
+        </>
       )}
-      {item.productState === 2 && (
-        <ING>
-          <h3>판매 진행중</h3>
-          <div className="contentBox">
-            <div className="boxleft">
-              <div className="content sellprice">
-                현재가 : <span className="color">{item.productPrice}</span> nct{" "}
-              </div>
-            </div>
-            <div className="boxright">
-              {sessionStorage.getItem("userId") &&
-                Number(sessionStorage.getItem("userId")) !== item.userId && (
-                  <Button
-                    className="sellBtn"
-                    color="primary"
-                    variant="contained"
-                    onClick={() => {
-                      setOpen(true);
-                    }}
-                  >
-                    구매하기
-                  </Button>
-                )}
-            </div>
-          </div>
-        </ING>
-      )}
-      {item.productState === 3 && <p className="notsale">작품이 판매중이 아닙니다.</p>}
     </Wrapper>
   );
 }

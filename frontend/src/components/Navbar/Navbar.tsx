@@ -191,7 +191,7 @@ const SearchBarContainer = styled.div`
   `;
 
 export default function Navbar() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
   const [openCoin, setOpenCoin] = useState(false);
   const [nickName,setNickName] = useState<string|null>(null)
@@ -201,6 +201,7 @@ export default function Navbar() {
     if (event.key !== "userNickname") return;
     console.log("스토리지변경감지")
     const newNick = sessionStorage.getItem("userNickname")
+    console.log(newNick)
     if (newNick) {
       setNickName(newNick);
       setIsLogin(true)
@@ -216,12 +217,15 @@ export default function Navbar() {
 
 
   useEffect(()=>{
-    setUserId(sessionStorage.getItem('userId'))
-    if (userId){} // userId가 있다면 로그인 되어있음
-    else{
+    console.log(sessionStorage.getItem('userId'))
+    if (sessionStorage.getItem('userId')){
+      setIsLogin(true)
       setNickName(sessionStorage.getItem('userNickname'))
+    } // userId가 있다면 로그인 되어있음
+    else{
+      setIsLogin(false)
     }
-  },[isLogin])
+  },[])
   
   const login = ()=>{ // 위에 세줄 지우기 ⭐ 
     navigate("/login");
