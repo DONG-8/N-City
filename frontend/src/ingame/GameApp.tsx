@@ -44,30 +44,17 @@ window.addEventListener(
   false
 );
 
-const ISL = styled.div`
-  position: absolute;
-  top: 25vh;
-  left: 27vw;
-  z-index: 0;
-  text-align: center;
-  h1 {
-    color: white;
-    margin-top: -10vh;
-  }
-`;
-
 const GameApp: Function = () => {
   const [loading, setLoading] = useState(true);
   const { userId } = useParams();
   const roomuserId = Number(userId);
   const stringId = String(roomuserId);
-  // const userId = 1; // 임시
   let map = basicData;
   let characterIdx = "1";
   const dispatch = useAppDispatch();
   // 유저 아이디를 통한 방 정보 요청 --> 로딩시간중 안불러와지면? 로딩이 필요하겠다.
   // 쿼리를 사용해야겠음
-  const userNick = sessionStorage.getItem("userNickname") || "";
+  const userNick = sessionStorage.getItem("userNickname") || "noname";
   const myId = sessionStorage.getItem("userId")?  sessionStorage.getItem("userId") : "0";
  
 
@@ -103,7 +90,10 @@ const GameApp: Function = () => {
         console.log(res)
         console.log(characterIdx)
       },
-      onError: (err: any) => {console.log('userId를 받아오지 못했습니다.',err)},
+      onError: (err: any) => {
+        characterIdx = "1"
+        console.log('userId를 받아오지 못했습니다.',err)
+      },
     }
   );
 
@@ -136,14 +126,14 @@ const GameApp: Function = () => {
   );
 
   const Setting = useAppSelector((state) => state.edit.EditMode);
-  const [values, setValues] = useState<IRoomData>({
-    // 방이름 방설명 패스워드
-    roomId: stringId, // userId 넣어주기
-    name: "",
-    description: "",
-    password: null,
-    autoDispose: true, // 마지막 사용자가 나오면 자동으로 방 없애기 (화이트보드 때문에 지금은 false)
-  });
+  // const [values, setValues] = useState<IRoomData>({
+  //   // 방이름 방설명 패스워드
+  //   roomId: stringId, // userId 넣어주기
+  //   name: "",
+  //   description: "",
+  //   password: null,
+  //   autoDispose: true, // 마지막 사용자가 나오면 자동으로 방 없애기 (화이트보드 때문에 지금은 false)
+  // });
 
   useEffect(() => {
     (window as any).game = phaserGame;
@@ -152,12 +142,11 @@ const GameApp: Function = () => {
     RoomInfo();
     getCharacterIndex();
     setTimeout(() => ConnectStart(), 3000);
-    setTimeout(() => checkAvailableRoom(), 4000);
-    setTimeout(() => ConnectBootstrap(), 5000); // Bootstrap 연결
+    setTimeout(() => ConnectBootstrap(), 4000); // Bootstrap 연결
     setTimeout(() => {
       ConnectGame();
       setLoading(false);
-    }, 6000); // 게임 접속
+    },5000); // 게임 접속
     return () => {
       (window as any).game.destroy(true);
     };
@@ -176,20 +165,6 @@ const GameApp: Function = () => {
   let game = phaserGame.scene.keys.game as Game;
   let bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
   let start = phaserGame.scene.keys.start as Start;
-
-  let ok = false;
-
-  async function checkAvailableRoom() {
-    // 방 체크
-    const activeRoom = await bootstrap.network.getActiveRoom();
-    console.log('activeRoom', activeRoom)
-    activeRoom.map((room, idx) => {
-      if (room.roomId === values.roomId) {
-        ok = true;
-        return;
-      }
-    });
-  }
 
   async function ConnectStart() {
     // 부트스트랩 시작시키기
@@ -210,21 +185,11 @@ const GameApp: Function = () => {
   async function ConnectBootstrap() {
     // ⭐ bootstrap 연결하기
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
-    console.log('ok', ok)
-    console.log('stringId', stringId)
-    if (ok) {
-      console.log('방 참여')
-      await bootstrap.network
-        .joinRoom(stringId)
-        .then(() => bootstrap.launchGame(Setting))
-        .catch((error) => console.error(error));
-    } else {
-      console.log('방 생성')
-      await bootstrap.network
-        .createRoom(values)
-        .then(() => bootstrap.launchGame(Setting))
-        .catch((error) => console.error(error));
-    }
+
+    await bootstrap.network
+      .joinRoom(stringId)
+      .then(() => bootstrap.launchGame(Setting))
+      .catch((error) => console.error(error));
   }
 
   async function ConnectGame() {
@@ -248,11 +213,10 @@ const GameApp: Function = () => {
   } else if (VendingMachineDialogOpen) {
     ui = <VendingMachineDialog />; // 작품
   } else {
-    // 그 외의 모든 상황에서는 채팅 과 비디오 화면을 띄워준다.
+    // 그 외의 모든 상황에서는 채팅을 띄워준다.
     ui = (
       <div>
         <Chat />
-        {/* {!videoConnected && <VideoConnectionDialog />} */}
       </div>
     );
   }

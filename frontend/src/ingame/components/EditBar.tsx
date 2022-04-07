@@ -400,6 +400,7 @@ const EditBar = () => {
       } else if (status === ItemCategory.MYART) {
         // 작품 데이터 넣기
         for (var key of newArtList.content) {
+          console.log(key.productId, location.gid)
           if (key.productId === location.gid) {
             key.productXCoordinate = location.x;
             key.productYCoordinate = location.y;
@@ -434,23 +435,24 @@ const EditBar = () => {
         // putArts.push({id:location.x, x:0, y:0, view:false})
         // makeImgTagsByMyArt(location.x, false)
         for (var key of newArtList.content) {
-          if (key.productId === location.gid) {
-            key.productXCoordinate = location.x;
-            key.productYCoordinate = location.y;
-            key.productView = false;
-            break;
+          if (key.productId === location.x) {
+            key.productXCoordinate = 0
+            key.productYCoordinate = 0
+            key.productView = false
+            break
           }
         }
-        setMyArts(newArtList);
-        console.log(newArtList);
+        setMyArts(newArtList)
       } else {
-        const DelData = newData.layers[location.gid].objects?.filter(
-          (obj, i) => {
-            return obj.x !== location.x && obj.y !== location.y;
-          }
-        );
-        newData.layers[location.gid].objects = DelData;
-        setData(newData);
+        console.log('이전 데이터',newData.layers[location.gid].objects )
+        console.log(location.x, location.y)
+        const DelData = newData.layers[location.gid].objects?.filter((obj, i) => {
+          console.log(obj.x, obj.y)
+          return (obj.x !== location.x || obj.y !== location.y)
+        });
+        newData.layers[location.gid].objects = DelData
+        console.log('새 데이터', DelData)
+        setData(newData)
       }
     }
   }
@@ -479,18 +481,9 @@ const EditBar = () => {
         dispatch(UserMapInfo(data));
         console.log(putArts);
         myArts.content.map((product, idx) => {
-          if (idx > 0) {
-            console.log(product);
-            putProductXY({
-              id: product.productId,
-              view: product.productView,
-              x: product.productXCoordinate,
-              y: product.productYCoordinate,
-            });
-          }
-        });
-        setPutArts([{ id: 0, x: 0, y: 0, view: true }]);
-        console.log("저장 완료");
+          putProductXY({id: product.productId, view: product.productView, x: product.productXCoordinate, y: product.productYCoordinate})
+        })
+        console.log('저장 완료')
         window.location.reload();
       },
       onError: (err: any) => {
