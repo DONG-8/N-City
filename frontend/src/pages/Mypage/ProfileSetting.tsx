@@ -287,7 +287,7 @@ const ProfileSetting = () => {
         console.log("요청성공", res);
         sessionStorage.setItem("userNickname", nameInput)
         navigate("/mypage/" + String(userId))
-        // window.location.reload()
+        window.location.reload()
       },
       onError: (err: any) => {
         console.log("프로필 저장 에러");
