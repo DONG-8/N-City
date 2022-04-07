@@ -7,8 +7,8 @@ import CoinChargeModal from "../Mint/CoinChargeModal";
 import { useMutation } from "react-query";
 import { getLogout } from "../../store/apis/log";
 import GameStartButton from "./GameStartButton";
-import Logo from "../../essets/images/logo2.png"
-import Logotext from "../../essets/images/logo2_text.png"
+import Logo from "../../essets/images/logo2.png";
+import Logotext from "../../essets/images/logo2_text.png";
 
 const NavbarWrrap = styled.div`
   /* display: block; */
@@ -79,14 +79,14 @@ const NavbarBox = styled.div`
       min-width: 200px;
       height: 80px;
       background: linear-gradient(-45deg, #ffaa98, #fef0d3, #fddfd2, #ff9788);
-      background: linear-gradient(-45deg, #f3f3ff, #63638b , #7373f8 , #9d9dc5 );
+      background: linear-gradient(-45deg, #f3f3ff, #63638b, #7373f8, #9d9dc5);
       color: white;
       background-size: 400% 400%;
       font-size: 35px;
       cursor: pointer;
     }
 
-    .community{
+    .community {
       position: relative;
       width: 5.5vw;
       min-width: 80px;
@@ -122,9 +122,9 @@ const NavbarBox = styled.div`
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      .name{
+      .name {
         margin-left: 10px;
-        color:#6225E6; //🎨메인색🎨
+        color: #6225e6; //🎨메인색🎨
         font-weight: 600;
       }
       .hide {
@@ -142,9 +142,9 @@ const NavbarBox = styled.div`
           margin-top: 10px;
           margin-bottom: 10px;
         }
-      }  
+      }
     }
-    .community:hover{
+    .community:hover {
       .hide2 {
         display: block;
         @keyframes fadein {
@@ -188,55 +188,55 @@ const SearchBarContainer = styled.div`
   height: 80px;
   display: flex;
   justify-content: center;
-  `;
+`;
 
 export default function Navbar() {
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
   const [openCoin, setOpenCoin] = useState(false);
-  const [nickName,setNickName] = useState<string|null>(null)
-  const [userId,setUserId] = useState<string|null>(null)
-  
+  const [nickName, setNickName] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+
   window.onstorage = (event) => {
     if (event.key !== "userNickname") return;
-    console.log("스토리지변경감지")
-    const newNick = sessionStorage.getItem("userNickname")
-    console.log(newNick)
+    console.log("스토리지변경감지");
+    const newNick = sessionStorage.getItem("userNickname");
+    console.log(newNick);
     if (newNick) {
       setNickName(newNick);
-      setIsLogin(true)
+      setIsLogin(true);
     } else {
-      setIsLogin(false)
+      setIsLogin(false);
     }
-  }
+  };
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-
-  useEffect(()=>{
-    console.log(sessionStorage.getItem('userId'))
-    if (sessionStorage.getItem('userId')){
-      setIsLogin(true)
-      setNickName(sessionStorage.getItem('userNickname'))
+  useEffect(() => {
+    console.log(sessionStorage.getItem("userId"));
+    if (sessionStorage.getItem("userId")) {
+      setIsLogin(true);
+      setNickName(sessionStorage.getItem("userNickname"));
     } // userId가 있다면 로그인 되어있음
-    else{
-      setIsLogin(false)
+    else {
+      setIsLogin(false);
     }
-  },[])
-  
-  const login = ()=>{ // 위에 세줄 지우기 ⭐ 
-    navigate("/login");
-  }
+  }, []);
 
-  const logout = ()=>{
-    setIsLogin(false)
-    get_logout.mutate()
+  const login = () => {
+    // 위에 세줄 지우기 ⭐
+    navigate("/login");
+  };
+
+  const logout = () => {
+    setIsLogin(false);
+    get_logout.mutate();
     navigate("/");
     // window.location.reload();
-  }
+  };
 
   const get_logout = useMutation<any, Error>(
     "get_logout",
@@ -245,7 +245,7 @@ export default function Navbar() {
     },
     {
       onSuccess: (res) => {
-        console.log("로그아웃성공", res)
+        console.log("로그아웃성공", res);
         sessionStorage.removeItem("userId");
         sessionStorage.removeItem("userNickname");
       },
@@ -259,14 +259,13 @@ export default function Navbar() {
 
   const goToGame = () => {
     if (isLogin === true) {
-      navigate("/ingame");
+      navigate("/ingame/" + sessionStorage.getItem("userId"));
     } else {
       navigate("/ingame");
     }
   };
 
-  
-  if (window.location.pathname === '/ingame') return null;
+  if (window.location.pathname.slice(0, 7) === "/ingame") return null;
 
   return (
     <>

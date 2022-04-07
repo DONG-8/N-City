@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch  } from "./hooks";
 // typescript에서 useSelector 사용 하려면 hooks를 만들어서 불러와야한다.
@@ -24,9 +25,10 @@ import { UserMapInfo } from "./stores/EditStore";
 // 쿼리
 import { postRoomJoin } from "../store/apis/myRoom";
 import { getUsercollectedInfo } from "../store/apis/user";
-import {useMutation} from "react-query";
-import basicData from './scenes/map.json';
+import { useMutation } from "react-query";
+import basicData from "./scenes/map.json";
 import Editmap from "./scenes/Editmap";
+import GameLoading from "../components/Popup/GameLoading";
 
 const Backdrop = styled.div`
 
@@ -42,26 +44,40 @@ window.addEventListener(
   false
 );
 
+const ISL = styled.div`
+  position: absolute;
+  top: 25vh;
+  left: 27vw;
+  z-index: 0;
+  text-align: center;
+  h1 {
+    color: white;
+    margin-top: -10vh;
+  }
+`;
 
-const GameApp: Function = () => {
-  const userId = useAppSelector((state) => state.edit.userId);
+const GameApp: Function = () => {  
   const availableRooms = useAppSelector((state) => state.room.availableRooms); //가능한 방들 표시 해주기
   const lobbyJoined = useAppSelector((state) => state.room.lobbyJoined)
   let map = basicData
+  const [loading, setLoading] = useState(true);
+  const { userId } = useParams();
+  const roomuserId = Number(userId);
+  const stringId = String(roomuserId);
+  // const userId = 1; // 임시  
   const dispatch = useAppDispatch();
   // 유저 아이디를 통한 방 정보 요청 --> 로딩시간중 안불러와지면? 로딩이 필요하겠다.
   // 쿼리를 사용해야겠음
+  const userNick = sessionStorage.getItem("userNickname") || "";
 
-  const {
-    mutate: RoomInfo,
-  } = useMutation<any, Error>(
+  const { mutate: RoomInfo } = useMutation<any, Error>(
     "postRoomInfo",
     async () => {
-      return await postRoomJoin(userId);
+      return await postRoomJoin(roomuserId);
     },
     {
       onSuccess: async (res) => {
-        map = res.myRoomBackground
+        map = res.myRoomBackground;
         dispatch(UserMapInfo(res.myRoomBackground));
 
       },
@@ -70,18 +86,26 @@ const GameApp: Function = () => {
     }
   );
 
-  let myArts = {content:[{productThumbnailUrl:'', productId:0, productView: true, productXCoordinate:0, productYCoordinate: 0}]}
-  const {
-    mutate: getMyArts,
-    } = useMutation<any, Error>(
+  let myArts = {
+    content: [
+      {
+        productThumbnailUrl: "",
+        productId: 0,
+        productView: true,
+        productXCoordinate: 0,
+        productYCoordinate: 0,
+      },
+    ],
+  };
+  const { mutate: getMyArts } = useMutation<any, Error>(
     "getUsercollectedInfo",
     async () => {
-      return await getUsercollectedInfo(1);
+      return await getUsercollectedInfo(roomuserId);
     },
     {
       onSuccess: async (res) => {
-        console.log('불러오기 완료')
-        myArts = res
+        console.log("불러오기 완료");
+        myArts = res;
       },
       onError: (err: any) => {
         console.log(err)
@@ -90,23 +114,27 @@ const GameApp: Function = () => {
   );
 
   const Setting = useAppSelector((state) => state.edit.EditMode);
-  const [values, setValues] = useState<IRoomData>({ // 방이름 방설명 패스워드
-    roomId : 'userId',  // userId 넣어주기 
-    name: '혀농이방',
-    description: '혀농이방이야',
+  const [values, setValues] = useState<IRoomData>({
+    // 방이름 방설명 패스워드
+    roomId: stringId, // userId 넣어주기
+    name: "",
+    description: "",
     password: null,
     autoDispose: true, // 마지막 사용자가 나오면 자동으로 방 없애기 (화이트보드 때문에 지금은 false)
   });
 
   useEffect(() => {
     (window as any).game = phaserGame;
-    getMyArts()
-    RoomInfo()
-
+    setLoading(true); //😎
+    getMyArts();
+    RoomInfo();
     setTimeout(() => ConnectStart(), 2000);
-    setTimeout(() => checkAvailableRoom(), 2500)
+    setTimeout(() => checkAvailableRoom(), 2500);
     setTimeout(() => ConnectBootstrap(), 3000); // Bootstrap 연결
-    setTimeout(() => ConnectGame(), 3500); // 게임 접속
+    setTimeout(() => {
+      ConnectGame();
+      setLoading(false);
+    }, 3500); // 게임 접속
     return () => {
       (window as any).game.destroy(true);
     };
@@ -127,59 +155,63 @@ const GameApp: Function = () => {
   let bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
   let start = phaserGame.scene.keys.start as Start
 
-  let ok = false
+  let ok = false;
 
-  async function checkAvailableRoom() { // 방 체크 
-    const activeRoom = await bootstrap.network.getActiveRoom()
+  async function checkAvailableRoom() {
+    // 방 체크
+    const activeRoom = await bootstrap.network.getActiveRoom();
 
     activeRoom.map((room, idx) => {
       if (room.roomId === values.roomId) {
-        ok = true
-        return 
+        ok = true;
+        return;
       }
-    })
+    });
   }
 
-  async function ConnectStart ()  {  // 부트스트랩 시작시키기 
+  async function ConnectStart() {
+    // 부트스트랩 시작시키기
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
     bootstrap.mapInfo = map
     bootstrap.myArtList = myArts
 
-    start = phaserGame.scene.keys.start as Start
-    start.launchBootstrap()
+    start = phaserGame.scene.keys.start as Start;
+    start.launchBootstrap();
 
     game = phaserGame.scene.keys.game as Game;
-    game.myArtList = myArts
+    game.myArtList = myArts;
 
-    const editmap = phaserGame.scene.keys.Editmap as Editmap
-    editmap.myArtList = myArts
+    const editmap = phaserGame.scene.keys.Editmap as Editmap;
+    editmap.myArtList = myArts;
   }
 
-  async function ConnectBootstrap ()  {    // ⭐ bootstrap 연결하기
+  async function ConnectBootstrap() {
+    // ⭐ bootstrap 연결하기
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
 
     if (ok === true) {
       await bootstrap.network
-      .joinRoom("userId")
-      .then(() => bootstrap.launchGame(Setting))
-      .catch((error) => console.error(error))
+        .joinRoom(stringId)
+        .then(() => bootstrap.launchGame(Setting))
+        .catch((error) => console.error(error));
     } else {
       await bootstrap.network
-      .createRoom(values)
-      .then(() => bootstrap.launchGame(Setting))
-      .catch((error) => console.error(error))
+        .createRoom(values)
+        .then(() => bootstrap.launchGame(Setting))
+        .catch((error) => console.error(error));
     }
-  };
+  }
 
-  async function ConnectGame() {    // 게임 접속
+  async function ConnectGame() {
+    // 게임 접속
     game = phaserGame.scene.keys.game as Game;
 
     game.registerKeys(); // 키 설정
-    game.myPlayer.setPlayerName("임현홍"); // ❗ 내이름 설정해주기
+    game.myPlayer.setPlayerName(userNick); // ❗ 내이름 설정해주기
     game.myPlayer.setPlayerTexture("adam"); // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
     game.network.readyToConnect(); // 네트워크 연결
-  };
-  
+  }
+
   let ui: JSX.Element;
   ui = <MainDialog />;
   if (computerDialogOpen) {
