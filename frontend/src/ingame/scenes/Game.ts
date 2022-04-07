@@ -16,6 +16,7 @@ import Network from '../services/Network'
 import { PlayerBehavior } from '../../types/PlayerBehavior'
 import store from '../stores'
 import { setFocused, setShowChat } from '../stores/ChatStore'
+import { closeVendingMachineDialogOpen } from '../stores/VendingMachineStore'
 import stores from "../stores"
 
 enum GameMode {
@@ -53,6 +54,7 @@ export default class Game extends Phaser.Scene {
     })
     this.input.keyboard.on('keydown-ESC', (event) => {
       store.dispatch(setShowChat(false))
+      store.dispatch(closeVendingMachineDialogOpen())
     })
     this.input.keyboard.on('keydown-CTRL', (event) => {
       console.log('캐릭터 x 좌표 : ',this.myPlayer.x)
@@ -81,16 +83,14 @@ export default class Game extends Phaser.Scene {
     createCharacterAnims(this.anims)
 
     this.map = this.make.tilemap({ key: 'tilemap' }) // 맵만들기 ⭐⭐⭐
-    console.log(this.map)
     const FloorAndGround = this.map.addTilesetImage('FloorAndGround', 'tiles_wall')
     
     const groundLayer = this.map.createLayer('Ground', FloorAndGround)
-    console.log(groundLayer)
     groundLayer.setCollisionByProperty({ collides: true })
 
     // debugDraw(groundLayer, this) // 만들어둔 debug 사용해보기
 
-    this.myPlayer = this.add.myPlayer(705, 500, 'adam', this.network.mySessionId) // 시작 할때 캐릭터 위치 설정
+    this.myPlayer = this.add.myPlayer(705, 500, 'character', this.network.mySessionId) // 시작 할때 캐릭터 위치 설정
     this.playerSelector = new PlayerSelector(this, 0, 0, 16, 16) // ⭐player selector가 뭘까
 
     // 의자 위치 잡기
@@ -247,7 +247,7 @@ export default class Game extends Phaser.Scene {
 
   // 새로운 player가 들어왔을 때  추가해주기
   private handlePlayerJoined(newPlayer: IPlayer, id: string) {
-    const otherPlayer = this.add.otherPlayer(newPlayer.x, newPlayer.y, 'adam', id, newPlayer.name)
+    const otherPlayer = this.add.otherPlayer(newPlayer.x, newPlayer.y, 'character', id, newPlayer.name)
     this.otherPlayers.add(otherPlayer)
     this.otherPlayerMap.set(id, otherPlayer)
   }

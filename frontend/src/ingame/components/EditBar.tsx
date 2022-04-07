@@ -78,7 +78,8 @@ enum ItemCategory {
   WINDOW_DOOR,
   BASEMENT,
   STRUCTURE,
-  MYART
+  MYART,
+  NONE
 }
 
 interface Ibody {
@@ -107,7 +108,20 @@ const EditBar = () => {
 
   useEffect(() => {
     roomInfo.mutate()
+    getMyArts()
   },[])
+
+  useEffect(() => {
+    // setStatus(ItemCategory.MYART)
+    returnItemList(true)
+    console.log('klasfdjalsdjl')
+  },[myArts])
+
+  useEffect(() => {
+    if(location.x < 1249 && location.y >= 0) {
+      ChangeMap()
+    }
+  }, [location]);
 
   const Files = itemFileList.folders;
   const tileset = [198, 458, 586, 706, 842, 1858]
@@ -147,26 +161,24 @@ const EditBar = () => {
     )
   }
 
-  const makeImgTagsByMyArt = (id: number, view:boolean) => {
+  const makeImgTagsByMyArt = () => {
     // true => editbar 없음, myroom에 있음
     // false => ,,   있음,   ,, 없음 
     return (
       <ItemList>
         {myArts.content.map((product, idx) => {
-          if (product.productView === false || (product.productId === id && !view) ) {
-            if (product.productId === id && view) {
-              return null
-            }
-            else {
-              return <img src={`${product.productThumbnailUrl}`}  onClick={()=>{choiceCatogory(product.productId, 120, 80)}} width="120px" key={idx}/>
-            }
+          if (product.productView === false) {
+            return <img src={`${product.productThumbnailUrl}`}  onClick={()=>{choiceCatogory(product.productId, 120, 80)}} width="120px" key={idx}/>
           } 
       })}
       </ItemList>
     )
   }
 
-  const returnItemList = () => {
+  const returnItemList = (isMyArt=false) => {
+    if (isMyArt){
+      return makeImgTagsByMyArt()
+    }
     switch (status) {
       case ItemCategory.GROUND:
         return makeImgTags('grounds', tileset)
@@ -202,7 +214,7 @@ const EditBar = () => {
         return makeImgTagsForOb(8)
         break
       case ItemCategory.MYART:
-        return makeImgTagsByMyArt(0, true)
+        return makeImgTagsByMyArt()
         break
       default:
         return null;
@@ -250,14 +262,6 @@ const EditBar = () => {
     }
   };
 
-  useEffect(() => {
-    if(location.x < 1249 && location.y >= 0) {
-      console.log(location.x, location.y)
-      ChangeMap()
-      console.log('바뀜')
-    }
-  }, [location]);
-
   const newData = data;
   const newArtList = myArts;
   function ChangeMap() {
@@ -298,11 +302,15 @@ const EditBar = () => {
       } else if (status === ItemCategory.MYART) { // 작품 데이터 넣기 
         for (var key of newArtList.content) {
           if (key.productId === location.gid) {
-            // key.productXCoordinate = /
+            key.productXCoordinate = location.x
+            key.productYCoordinate = location.y
+            key.productView = true
+            break
           }
         }
-        putArts.push({id: location.gid, x: location.x, y: location.y, view: true})
-        makeImgTagsByMyArt(location.gid, true)
+        // putArts.push({id: location.gid, x: location.x, y: location.y, view: true})
+        // makeImgTagsByMyArt(location.gid, true)
+        setMyArts(newArtList)
       } else {
         const item = {
           gid: location.gid,
@@ -323,8 +331,18 @@ const EditBar = () => {
       // 저장이 눌려지면 newData를 업데이트 시켜줍니다.
     } else {
       if (location.gid === 10) { // 작품일 경우 삭제 
-        putArts.push({id:location.x, x:0, y:0, view:false})
-        makeImgTagsByMyArt(location.x, false)
+        // putArts.push({id:location.x, x:0, y:0, view:false})
+        // makeImgTagsByMyArt(location.x, false)
+        for (var key of newArtList.content) {
+          if (key.productId === location.gid) {
+            key.productXCoordinate = location.x
+            key.productYCoordinate = location.y
+            key.productView = false
+            break
+          }
+        }
+        setMyArts(newArtList)
+        console.log(newArtList)
       } else {
         const DelData = newData.layers[location.gid].objects?.filter((obj, i) => {
           return obj.x !== location.x && obj.y !== location.y;
@@ -339,7 +357,7 @@ const EditBar = () => {
   const roomInfo = useMutation<any, Error>(
     "postRoomInfo",
     async () => {
-      return await postRoomJoin(userId);
+      return await postRoomJoin(15);
     },
     {
       onSuccess: (res) => {
@@ -361,9 +379,10 @@ const EditBar = () => {
       onSuccess: (res) => {
         dispatch(UserMapInfo(data))
         console.log(putArts)
-        putArts.map((product, idx) => {
+        myArts.content.map((product, idx) => {
           if (idx > 0) {
-            putProductXY({id: product.id, view: product.view, x: product.x, y: product.y})
+            console.log(product)
+            putProductXY({id: product.productId, view: product.productView, x: product.productXCoordinate, y: product.productYCoordinate})
           }
         })
         setPutArts([{id:0, x:0, y:0, view:true}])
@@ -381,7 +400,7 @@ const EditBar = () => {
     } = useMutation<any, Error>(
     "getUsercollectedInfo",
     async () => {
-      return await getUsercollectedInfo(1);
+      return await getUsercollectedInfo(15);
     },
     {
       onSuccess: (res) => {
@@ -439,7 +458,7 @@ const EditBar = () => {
           <div onClick={()=>{setStatus(ItemCategory.STAIRS); ModeChange(true)}} className="Stairs">Stairs</div>
           <div onClick={()=>{setStatus(ItemCategory.STRUCTURE); ModeChange(true)}} className="Structure">Structure</div>
           <div onClick={()=>{setStatus(ItemCategory.BASEMENT); ModeChange(true)}} className="Basement">Basement</div>
-          <div onClick={()=>{setStatus(ItemCategory.MYART); getMyArts(); ModeChange(true)}} className="MyArt">MyArt</div>
+          <div onClick={()=>{setStatus(ItemCategory.MYART); ModeChange(true)}} className="MyArt">MyArt</div>
         </CategoriBar>
       </CategoriWrapper>
       {returnItemList()}

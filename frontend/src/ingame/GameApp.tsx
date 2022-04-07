@@ -21,6 +21,8 @@ import UIBar from "./components/Bar/UIBar";
 import { IRoomData } from "../types/Rooms";
 
 import { UserMapInfo } from "./stores/EditStore";
+import { setUserProducts } from "./stores/UserStore";
+
 // 쿼리
 import { postRoomJoin } from "../store/apis/myRoom";
 import { getUsercollectedInfo } from "../store/apis/user";
@@ -44,6 +46,7 @@ window.addEventListener(
 const GameApp: Function = () => {
   const userId = useAppSelector((state) => state.edit.userId);
   let map = basicData;
+  let characterIdx = '1'
   const dispatch = useAppDispatch();
   // 유저 아이디를 통한 방 정보 요청 --> 로딩시간중 안불러와지면? 로딩이 필요하겠다.
   // 쿼리를 사용해야겠음
@@ -53,11 +56,12 @@ const GameApp: Function = () => {
   } = useMutation<any, Error>(
     "postRoomInfo",
     async () => {
-      return await postRoomJoin(userId);
+      return await postRoomJoin(15);
     },
     {
       onSuccess: async (res) => {
-        map = res.myRoomBackground
+        map = res.myRoomBackground;
+        characterIdx = res.myRoomCharacter;
         dispatch(UserMapInfo(res.myRoomBackground));
       },
       onError: (err: any) => {},
@@ -70,12 +74,12 @@ const GameApp: Function = () => {
     } = useMutation<any, Error>(
     "getUsercollectedInfo",
     async () => {
-      return await getUsercollectedInfo(1);
+      return await getUsercollectedInfo(15);
     },
     {
       onSuccess: async (res) => {
-        console.log('불러오기 완료')
         myArts = res
+        dispatch(setUserProducts(res))
       },
       onError: (err: any) => {
         console.log(err);
@@ -94,14 +98,14 @@ const GameApp: Function = () => {
   });
 
   useEffect(() => {
-    (window as any).game = phaserGame;
-    getMyArts()
-    RoomInfo()
+    getMyArts();
+    RoomInfo();
 
-    setTimeout(() => ConnectStart(), 2000);
-    setTimeout(() => checkAvailableRoom(), 2500)
-    setTimeout(() => ConnectBootstrap(), 3000); // Bootstrap 연결
-    setTimeout(() => ConnectGame(), 3500); // 게임 접속
+    (window as any).game = phaserGame;
+    setTimeout(() => ConnectStart(), 3000);
+    setTimeout(() => checkAvailableRoom(), 4000);
+    setTimeout(() => ConnectBootstrap(), 5000); // Bootstrap 연결
+    setTimeout(() => ConnectGame(), 6000); // 게임 접속
     return () => {
       (window as any).game.destroy(true);
     };
@@ -138,6 +142,7 @@ const GameApp: Function = () => {
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
     bootstrap.mapInfo = map;
     bootstrap.myArtList = myArts;
+    bootstrap.characterIdx = characterIdx;
 
     start = phaserGame.scene.keys.start as Start
     start.launchBootstrap()
@@ -170,7 +175,7 @@ const GameApp: Function = () => {
 
     game.registerKeys(); // 키 설정
     game.myPlayer.setPlayerName("임현홍"); // ❗ 내이름 설정해주기
-    game.myPlayer.setPlayerTexture("adam"); // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
+    game.myPlayer.setPlayerTexture("character"); // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
     game.network.readyToConnect(); // 네트워크 연결
   };
   
@@ -199,7 +204,7 @@ const GameApp: Function = () => {
     <>
       <Backdrop>
         {ui}
-        {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />}
+        {/* {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />} */}
         {Setting ? <EditBar></EditBar> : <UIBar></UIBar>}
       </Backdrop>
     </>

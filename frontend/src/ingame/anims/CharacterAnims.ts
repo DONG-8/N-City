@@ -364,8 +364,8 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   })
 
   anims.create({
-    key: 'adam_idle_right',
-    frames: anims.generateFrameNames('adam', {
+    key: 'character_idle_right',
+    frames: anims.generateFrameNames('character', {
       start: 0,
       end: 5,
     }),
@@ -374,8 +374,8 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   })
 
   anims.create({
-    key: 'adam_idle_up',
-    frames: anims.generateFrameNames('adam', {
+    key: 'character_idle_up',
+    frames: anims.generateFrameNames('character', {
       start: 6,
       end: 11,
     }),
@@ -384,8 +384,8 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   })
 
   anims.create({
-    key: 'adam_idle_left',
-    frames: anims.generateFrameNames('adam', {
+    key: 'character_idle_left',
+    frames: anims.generateFrameNames('character', {
       start: 12,
       end: 17,
     }),
@@ -394,8 +394,8 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   })
 
   anims.create({
-    key: 'adam_idle_down',
-    frames: anims.generateFrameNames('adam', {
+    key: 'character_idle_down',
+    frames: anims.generateFrameNames('character', {
       start: 18,
       end: 23,
     }),
@@ -404,8 +404,8 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   })
 
   anims.create({
-    key: 'adam_run_right',
-    frames: anims.generateFrameNames('adam', {
+    key: 'character_run_right',
+    frames: anims.generateFrameNames('character', {
       start: 24,
       end: 29,
     }),
@@ -414,8 +414,8 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   })
 
   anims.create({
-    key: 'adam_run_up',
-    frames: anims.generateFrameNames('adam', {
+    key: 'character_run_up',
+    frames: anims.generateFrameNames('character', {
       start: 30,
       end: 35,
     }),
@@ -424,8 +424,8 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   })
 
   anims.create({
-    key: 'adam_run_left',
-    frames: anims.generateFrameNames('adam', {
+    key: 'character_run_left',
+    frames: anims.generateFrameNames('character', {
       start: 36,
       end: 41,
     }),
@@ -434,8 +434,8 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   })
 
   anims.create({
-    key: 'adam_run_down',
-    frames: anims.generateFrameNames('adam', {
+    key: 'character_run_down',
+    frames: anims.generateFrameNames('character', {
       start: 42,
       end: 47,
     }),
@@ -444,8 +444,8 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   })
 
   anims.create({
-    key: 'adam_sit_down',
-    frames: anims.generateFrameNames('adam', {
+    key: 'character_sit_down',
+    frames: anims.generateFrameNames('character', {
       start: 48,
       end: 48,
     }),
@@ -454,8 +454,8 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   })
 
   anims.create({
-    key: 'adam_sit_left',
-    frames: anims.generateFrameNames('adam', {
+    key: 'character_sit_left',
+    frames: anims.generateFrameNames('character', {
       start: 49,
       end: 49,
     }),
@@ -464,8 +464,8 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   })
 
   anims.create({
-    key: 'adam_sit_right',
-    frames: anims.generateFrameNames('adam', {
+    key: 'character_sit_right',
+    frames: anims.generateFrameNames('character', {
       start: 50,
       end: 50,
     }),
@@ -474,8 +474,8 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   })
 
   anims.create({
-    key: 'adam_sit_up',
-    frames: anims.generateFrameNames('adam', {
+    key: 'character_sit_up',
+    frames: anims.generateFrameNames('character', {
       start: 51,
       end: 51,
     }),
