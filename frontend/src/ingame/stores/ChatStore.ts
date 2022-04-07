@@ -20,7 +20,7 @@ export const chatSlice = createSlice({ // 본격적 store 만들기
   initialState: { // state 초기값
     chatMessages: new Array<{ messageType: MessageType; chatMessage: IChatMessage }>(),
     focused: false,
-    showChat: true,
+    showChat: false,
   },
   reducers: { // 함수들 
     pushChatMessage: (state, action: PayloadAction<IChatMessage>) => { // 새 메세지 추가
