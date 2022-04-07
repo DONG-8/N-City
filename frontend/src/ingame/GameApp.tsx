@@ -63,7 +63,7 @@ const GameApp: Function = () => {
   const stringId = String(roomuserId);
   // const userId = 1; // 임시
   let map = basicData;
-  let characterIdx = '1'
+  let characterIdx = "1";
   const dispatch = useAppDispatch();
   // 유저 아이디를 통한 방 정보 요청 --> 로딩시간중 안불러와지면? 로딩이 필요하겠다.
   // 쿼리를 사용해야겠음
@@ -76,14 +76,14 @@ const GameApp: Function = () => {
     },
     {
       onSuccess: async (res) => {
-        if(res.myRoomBackground === null) {
-          map = basicData
-        } else{
+        if (res.myRoomBackground === null) {
+          map = basicData;
+        } else {
           map = res.myRoomBackground;
         }
         characterIdx = res.myRoomCharacter;
         dispatch(UserMapInfo(res.myRoomBackground));
-        console.log('방 정보 불러오기', res)
+        console.log("방 정보 불러오기", res);
       },
       onError: (err: any) => {},
     }
@@ -108,7 +108,7 @@ const GameApp: Function = () => {
     {
       onSuccess: async (res) => {
         myArts = res;
-        dispatch(setUserProducts(res))
+        dispatch(setUserProducts(res));
       },
       onError: (err: any) => {
         console.log(err);
@@ -239,9 +239,9 @@ const GameApp: Function = () => {
     // ui 는 상황별로 다르게 열리고 , 컴퓨터/화이트 보드가 안열린 이상 우측아래 버튼들 활성화
     <>
       <Backdrop>
-        {ui}
         {/* {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />} */}
         {Setting ? <EditBar></EditBar> : <UIBar></UIBar>}
+        {Setting ? null : <>{ui}</>}
       </Backdrop>
     </>
   );
