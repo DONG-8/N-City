@@ -487,7 +487,7 @@ interface Istate {
 }
 const DetailItem = () => {
   const [localitem, setLocalitem] = useState<Istate["item"]>(
-    JSON.parse(localStorage.getItem("item") || "")
+    JSON.parse(sessionStorage.getItem("item") || "")
   );
   const [likes, setLikes] = useState(Number(0));
   const [followers, setFollowers] = useState(0);

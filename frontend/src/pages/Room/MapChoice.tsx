@@ -30,7 +30,7 @@ const Map = styled.div`
 const MapChoice = () => {
   const [map,setMap] = useState('1')
   useEffect(()=>{
-    localStorage.setItem('roomNum',map);
+    sessionStorage.setItem('roomNum',map);
   },[map])
   return (
     <div>
