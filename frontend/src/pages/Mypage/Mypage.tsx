@@ -674,7 +674,7 @@ export default function Mypage() {
       <ISL>
         <IsLoading2/>
         <div className="loading">
-          {randomwords}
+          {randomwords()}
         </div>
       </ISL>}
       {!isLoading &&

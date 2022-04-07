@@ -226,7 +226,7 @@ const GameBidBox:React.FC<Iprops> = ({item,setOpen}) => {
       onSuccess: (res) => {
         console.log("경매취소 성공", res);
         setIsloading(false)
-        window.location.reload()
+        setOpen(false)
       },
       onError: (err) => {
         setIsloading(false)
@@ -245,7 +245,7 @@ const GameBidBox:React.FC<Iprops> = ({item,setOpen}) => {
       onSuccess: async (res) => {
         console.log("구매등록 취소 성공", res);
         setIsloading(false)
-        window.location.reload()
+        setOpen(false)
       },
       onError: (err: any) => {
         console.log("구매등록 취소 실패", err);

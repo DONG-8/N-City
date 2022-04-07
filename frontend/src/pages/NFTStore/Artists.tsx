@@ -261,7 +261,7 @@ const Artists = () => {
         <div className='ISL'>
           <IsLoading2/>
         <div className='loading'>
-          {randomwords}
+          {randomwords()}
         </div>
         </div>
       }
