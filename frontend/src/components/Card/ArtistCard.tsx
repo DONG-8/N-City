@@ -75,7 +75,7 @@ const ArtistCard:React.FC<Iprops> = ({user}) => {
   const navigate = useNavigate()
   const goMyPage = ()=>{
     navigate(`/mypage/${user.userId}`)
-    localStorage.setItem("item",JSON.stringify(user))
+    sessionStorage.setItem("item",JSON.stringify(user))
   }
   return (<>
     <Cards onClick={()=>{goMyPage()}}>

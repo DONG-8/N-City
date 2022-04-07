@@ -146,7 +146,7 @@ const GameItemCard:React.FC<Iprops>= ({item,setMode}) => {
 
   const navigate = useNavigate()
   const goDetailPage = ()=>{
-    localStorage.setItem("item",JSON.stringify(item))
+    sessionStorage.setItem("item",JSON.stringify(item))
     setMode('detail')
   }
   const [likes,setLikes] = useState(item.productFavoriteUser.length)
