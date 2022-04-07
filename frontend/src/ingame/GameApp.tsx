@@ -95,7 +95,7 @@ const GameApp: Function = () => {
     } = useMutation<any, Error>(
     "getCharacter",
     async () => {
-      return await getCharacter(Number(1));
+      return await getCharacter(Number(myId));
     },
     {
       onSuccess: (res) => {
