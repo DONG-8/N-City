@@ -339,10 +339,16 @@ export default function Navbar() {
                     </Link>
                   </div>
                   <div>
+                    <Link className="inner" to="apply">
+                      <p>인증신청</p>
+                    </Link>
+                  </div>
+                  <div>
                     <p
                       onClick={() => {
                         logout();
                       }}
+                      style={{color:"rebeccapurple"}}
                     >
                       로그 아웃
                     </p>
