@@ -66,7 +66,7 @@ const UIBar = () => {
           });
           console.log(music, "음악 정보만 받아옴");
           let MusicArray;
-          if (music) {
+          if (music.length !== 0) {
             MusicArray = music.map((obj, i) => {
               return {
                 title: obj.productTitle,
