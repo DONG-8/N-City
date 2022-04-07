@@ -1,6 +1,7 @@
 import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { getCharacter, putCharacterChange } from '../../store/apis/myRoom';
 import { getUsercollectedInfo } from '../../store/apis/user';
@@ -147,7 +148,7 @@ const Character = () => {
   const [userId,setUserId] = useState(Number(sessionStorage.getItem('userId')||""))
   const [items,setItems] = useState<Istate['item'][]>([])
   const [myChar,setMyChar] = useState('')
-
+  const navigate = useNavigate()
   const getsave = ()=>{
     changeCharacter.mutate()
   }
@@ -193,6 +194,8 @@ const Character = () => {
       onSuccess: (res) => {
         console.log(myChar,'로 바꾸기 신청')
         console.log("캐릭터 바꾸기 성공",res);
+        alert('캐릭터를 변경했습니다. '+ myChar )
+        navigate('/')
       },
       onError: (err: any) => {
         console.log("❌캐릭터 실패",err);

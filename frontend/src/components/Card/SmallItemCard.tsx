@@ -171,11 +171,11 @@ const SmallItemCard:React.FC<Iprops>= ({item,setMode}) => {
   const getVerifiedMark = (userType: string) => {
     switch (userType) {
       case "ROLE_INFLUENCER":
-        return <img src={influencer} alt="mark" />;
+        return <img src={influencer} title='influencer' alt="mark" />;
       case "ROLE_ARTIST":
-        return <img src={artist} alt="mark" />;
+        return <img src={artist}  title='artist' alt="mark" />;
       case "ROLE_ENTERPRISE":
-        return <img src={enterprise} alt="mark" />;
+        return <img src={enterprise} title='enterprise' alt="mark" />;
       default:
         return;
     }

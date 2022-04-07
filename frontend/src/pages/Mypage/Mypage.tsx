@@ -25,7 +25,7 @@ const MypageWrapper = styled.div`
   box-shadow: 1px 1px 1px;
   font-family: "Noto Sans KR", sans-serif;
   /* width:100%; */
-`;
+`; 
 const Background = styled.div`
   width: 100%;
   height: 500px;
@@ -548,11 +548,11 @@ export default function Mypage() {
   const getVerifiedMark = (userType: string|undefined) => {
     switch (userType) {
       case "ROLE_INFLUENCER":
-        return <img src={influencer} alt="mark" />;
+        return <img src={influencer} title='influencer' alt="mark" />;
       case "ROLE_ARTIST":
-        return <img src={artist} alt="mark" />;
+        return <img src={artist}  title='artist' alt="mark" />;
       case "ROLE_ENTERPRISE":
-        return <img src={enterprise} alt="mark" />;
+        return <img src={enterprise} title='enterprise' alt="mark" />;
       default:
         return;
     }
