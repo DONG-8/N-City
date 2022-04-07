@@ -134,21 +134,41 @@ const UIBar = () => {
 
   const openMusic = () => {
     setMusicTog(!musicTog);
+    setShopTog(true);
+    setVisitTog(true);
+    setUserTog(true);
+    setSearchTog(true)
   };
 
   const openShop = () => {
+    setMusicTog(true);
     setShopTog(!shopTog);
+    setVisitTog(true);
+    setUserTog(true);
+    setSearchTog(true)
   };
 
   const openVisit = () => {
+    setMusicTog(true);
+    setShopTog(true);
     setVisitTog(!visitTog);
+    setUserTog(true);
+    setSearchTog(true)
   };
 
   const openUser = () => {
+    setMusicTog(true);
+    setShopTog(true);
+    setVisitTog(true);
     setUserTog(!userTog);
+    setSearchTog(true)
   };
 
   const openSearch = () => {
+    setMusicTog(true);
+    setShopTog(true);
+    setVisitTog(true);
+    setUserTog(true);
     setSearchTog(!searchTog)
   }
   return (
@@ -157,6 +177,7 @@ const UIBar = () => {
       <Head className={tog ? "close" : "open"}>
         <ToggleBtn onClick={() => toggle()}>
           <img
+            alt=''
             className={tog ? "changeButton" : "button"}
             src="/essets/room/arrow-left-circle.png"
           ></img>
@@ -181,13 +202,14 @@ const UIBar = () => {
       </Head>
       <BodyWrapper>
         <Body className={tog ? "close" : "open"}>
-          <Absol>{shopTog ? null : <StoreModal></StoreModal>}</Absol>
-          <Absol>{visitTog ? null : <VisitModal></VisitModal>}</Absol>
-          <Absol>{musicTog ? null : <MusicModal></MusicModal>}</Absol>
-          <Absol>{userTog ? null : <UserModal></UserModal>}</Absol>
-          <Absol>{searchTog ? null : <SearchModal></SearchModal>}</Absol>
+          <Absol>{shopTog ? null : <StoreModal setOpen={setShopTog} ></StoreModal>}</Absol>
+          <Absol>{visitTog ? null : <VisitModal setOpen={setVisitTog}></VisitModal>}</Absol>
+          <Absol>{musicTog ? null : <MusicModal setOpen={setMusicTog}></MusicModal>}</Absol>
+          <Absol>{userTog ? null : <UserModal setOpen={setUserTog}></UserModal>}</Absol>
+          <Absol>{searchTog ? null : <SearchModal setOpen={setSearchTog}></SearchModal>}</Absol>
           <div className="Icon">
             <img
+              alt=''
               onClick={() => {
                 openMusic();
               }}
@@ -209,13 +231,6 @@ const UIBar = () => {
                   </p>
                 </NonMusicDiv>
               )}
-            </div>
-          </div>
-
-          <div className="Icon" onClick={() => gotoHome()}>
-            <img className="Mimg" src="/essets/room/home.png" alt="사진없노" />
-            <div className={tog ? "hidden" : "content"}>
-              <p>Home</p>
             </div>
           </div>
           <div
@@ -263,6 +278,12 @@ const UIBar = () => {
               </div>
             </div>
           ) : null}
+          <div className="Icon" onClick={() => gotoHome()}>
+            <img className="Mimg" src="/essets/room/home.png" alt="사진없노" />
+            <div className={tog ? "hidden" : "content"}>
+              <p>Home</p>
+            </div>
+          </div>
         </Body>
         <BottomItem className={tog ? "close" : "open"}>
           <div className="Bottom">

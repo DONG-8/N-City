@@ -623,7 +623,7 @@ export default function Mypage() {
             {/* ⭐ 남의방일 때만 방입장 보이게 ? */}
             {/* <button className="joinRoomBtn">방입장</button> */}
             <div className="gamestartbutton">
-            <GameStartButton2 userNick={userInfo?.userNick} />
+            <GameStartButton2 userId={userInfo?.userId} userNick={userInfo?.userNick} />
             </div>
           </Profile>
         </ProfileWrapper>

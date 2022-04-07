@@ -7,6 +7,8 @@ export const ToggleBtn = styled.div`
   /* background-color: yellow; */
   width: 10px;
   height: 10px;
+  cursor: pointer;
+
   .button {
     position: fixed;
     width: 30px;

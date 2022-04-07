@@ -222,7 +222,7 @@ const CloseButton = styled.div`
   display: flex;
   justify-content: flex-end;
   cursor: pointer;
-`;
+`; 
 
 const InputBox = styled.div`
   margin: 15px 0;
