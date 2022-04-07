@@ -8,6 +8,7 @@ import {
   Body,
   Absol,
   BottomItem,
+  NonMusicDiv,
 } from "./style";
 
 import { useMutation, useQuery } from "react-query";
@@ -24,6 +25,7 @@ import StoreModal from "../NFTstore/StoreModal";
 import VisitModal from "../visitModal";
 import UserModal from "../user/UserModal";
 import { EditModeChange, MakingModeChange } from "../../stores/EditStore";
+import { postRandomJoin } from "../../../store/apis/myRoom";
 
 const UIBar = () => {
   const [musicList, setMusic] = useState();
@@ -35,7 +37,7 @@ const UIBar = () => {
   const [userTog, setUserTog] = useState(true);
   const { userId } = useParams();
   const numId = Number(userId);
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const myId = sessionStorage.getItem("userId");
 
   let itsMe;
@@ -44,6 +46,21 @@ const UIBar = () => {
   } else {
     itsMe = false;
   }
+
+  const goRandom = useMutation<any, Error>(
+    "Randomgogo",
+    async () => {
+      return await postRandomJoin();
+    },
+    {
+      onSuccess: (res) => {
+        console.log(res, "랜덤입장~");
+        console.log(res.userId, "유저아이디");
+        navigate(`/ingame/${res.userId}`);
+        window.location.reload();
+      },
+    }
+  );
 
   const {
     data: Alldata,
@@ -103,7 +120,7 @@ const UIBar = () => {
 
   const gotoHome = () => {
     // return <Navigate to="/" />;
-    navigation("/");
+    navigate("/");
     (window as any).game.destroy(true);
   };
 
@@ -182,7 +199,16 @@ const UIBar = () => {
               {musicList ? (
                 <AudioPlayer tracks={musicList} />
               ) : (
-                <div>음악이 없어요 사러 가볼까요?</div>
+                <NonMusicDiv
+                  onClick={() => {
+                    openShop();
+                  }}
+                >
+                  <p>
+                    음악이 없어요
+                    <br /> 사러 가볼까요?
+                  </p>
+                </NonMusicDiv>
               )}
             </div>
           </div>
@@ -244,7 +270,7 @@ const UIBar = () => {
             <img src="/essets/room/move.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <Tooltip title="Random User">
-                <button>
+                <button onClick={() => goRandom.mutate()}>
                   <img className="user" src="/essets/room/random.png" alt="" />
                 </button>
               </Tooltip>

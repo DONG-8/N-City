@@ -67,7 +67,7 @@ export const Wrapper = styled.div`
    
       p {
         text-align: center;
-        font-size: 24px;
+        font-size: 18px;
         /* margin-top: 30px; */
       }
     }
@@ -212,3 +212,9 @@ export const Absol = styled.div`
 const ButtonTop = styled.div``;
 
 const ButtonBottom = styled.div``;
+
+export const NonMusicDiv = styled.div`
+  width : 100%;
+  height: 100%;
+  text-align: center;
+`
