@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Repository
 @Transactional
 public class GuestbookRepositorySupport {
@@ -19,6 +21,7 @@ public class GuestbookRepositorySupport {
         Long execute = 0L;
         execute =  jpaQueryFactory.update(qGuestbook)
                 .set(qGuestbook.guestbookContents, guestbookContents)
+                .set(qGuestbook.guestbookCreatedAt, LocalDateTime.now())
                 .where(qGuestbook.guestbookId.eq(guestbookId))
                 .execute();
         return execute;
