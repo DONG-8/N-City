@@ -15,6 +15,8 @@ import {
 } from "../../web3Config";
 import etherimg from './ethereum.png'
 import IsLoading2 from '../../pages/NFTStore/IsLoading2';
+import { randomwords } from '../../pages/NFTStore/words';
+import { useNavigate } from 'react-router-dom';
 interface Iprops{
   open:boolean,
   setOpen:React.Dispatch<React.SetStateAction<boolean>>
@@ -36,6 +38,8 @@ const Wrapper = styled.div`
     border-bottom: 2px solid #35357a;
     margin: auto;
   }
+  overflow-y: hidden;
+
 `;
   const Session1 = styled.div`
     .choiceBox {
@@ -106,6 +110,10 @@ const IsLoading = styled.div`
   img{
     margin-left: 180px;
   }
+  h2{
+    margin-top: -40px;
+    text-align: center;
+  }
 `
 const Session2 = styled.div`
   .box {
@@ -119,6 +127,10 @@ const Session2 = styled.div`
     height: 340px;
 
     .inputs {
+      text-align: center;
+      display: flex;  
+    }
+    .inputs2{
       text-align: center;
       display: flex;
     }
@@ -149,15 +161,53 @@ const Session2 = styled.div`
   }
   .price {
     display: flex;
-    margin-left: 50px;
-    font-size: 2.2vh;
-    margin-top: 3vh;
+    margin: auto;
+    font-size: 23px;
+    p{
+      padding-right: 10px;
+      margin-left: 10px;
+    }
     input {
-      font-size: 2vh;
-      width: 50px;
-      text-align: right;
-      margin-right: 30px;
-      margin-left: 30px;
+      left: 120px;
+      margin-top: 27px;
+      border: 1px solid lightgray;
+      background-color: lightgray;
+      height: 30px;
+      width: 100px;
+      border-radius: 10px;
+      /* padding: 10px; */
+      outline: none;
+      font-size: 15px;
+      :focus {
+        outline: none;
+      }
+      padding-left: 20px;
+
+    }
+  }
+  .price2{
+    display: flex;
+    margin: auto;
+    p{
+      padding-right: 10px;
+      margin-left: 10px;
+      font-size: 23px;
+    }
+    input {
+      left: 120px;
+      margin-top: 26px;
+      border: 1px solid lightgray;
+      background-color: lightgray;
+      height: 30px;
+      width: 80px;
+      border-radius: 10px;
+      /* padding: 10px; */
+      outline: none;
+      font-size: 15px;
+      :focus {
+        outline: none;
+      }
+      padding-left: 20px;
     }
   }
   .back {
@@ -170,11 +220,15 @@ const Session2 = styled.div`
     width: 300px;
     font-size: 20px;
     background-color: #3f3f8d;
+    :hover{
+      background-color: #4c4c91;
+
+    }
   }
   .buttons {
     height: 50px;
     display: flex;
-    margin-top: 30px;
+    margin-top: 10px;
     font-weight: 600;
     justify-content: space-around;
   }
@@ -212,6 +266,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
   const [session1,setSession1] = useState("")
   const [value,setValue]  = useState(0)
   const [period, setPeriod] = useState(0);
+  const navigate = useNavigate();
   const { ethereum } = window;
   const [isLoading,setIsLoading] = useState(false)
   useEffect(()=>{
@@ -220,7 +275,6 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
   const resistSell = useMutation<any, Error>(
     "resistSell",
     async () => {
-      setIsLoading(true)
       return await postRegisterPurchase(value, item.productId);
     },
     {
@@ -232,13 +286,15 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
       onError: (err: any) => {
         setIsLoading(false)
         console.log(err, "에러발생");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
   const resistAuction = useMutation<any, Error>(
     "resistAuction",
     async () => {
-      setIsLoading(true)
       return await postRegisterAuction(value, item.productId, period);
     },
     {
@@ -250,6 +306,9 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
       onError: (err: any) => {
         setIsLoading(false)
         console.log(err, "에러발생");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -264,6 +323,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
     }
     try {
       // 토큰 권한 승인시키기
+      setIsLoading(true)
       await NFTcreatorContract.methods
       .setApprovalForAll(SaleFactoryAddress, true)
       .send({ from: accounts[0] });
@@ -285,6 +345,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
       console.log(item.productId, value)
       await resistSell.mutate();
     } catch (error) {
+      setIsLoading(false)
       handleClose();
       console.log(error);
     }
@@ -303,6 +364,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
       return;
     }
     try {
+      setIsLoading(true)
       // 토큰 권한 승인시키기
       await NFTcreatorContract.methods
       .setApprovalForAll(SaleFactoryAddress, true)
@@ -324,6 +386,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
       console.log(response);
       await resistAuction.mutate();
     } catch (error) {
+      setIsLoading(false)
       console.log(error);
       handleClose();
     }
@@ -361,18 +424,18 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
             {isLoading ? 
             <IsLoading>
               <img alt='dk' src='https://i.gifer.com/Xqg8.gif'/>
+              <h2>{randomwords()}</h2>
             </IsLoading>:
             <>
               <div className='tmp'/>
               <p className='intro'> NFT 작품들을 즉시 판매할 수 있습니다</p>
               <p className='intro'> 희망 가격을 적어 판매를 시작하세요 </p>
               <div className='inputs'>
-            <div className='price'>
-                희망 가격 : <Input onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
-                setValue(Number(e.target.value))
-                console.log(value)
-              }}/> <span>NCT</span>
-            </div>
+                <div className='price'>
+                    <p>희망 가격:</p>  <input onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
+                    setValue(Number(e.target.value))
+                  }}/> <p>NCT</p>
+                </div>
               </div>
             <div className='buttons'>
               <Button onClick={()=>setSession1("")} className='back' variant="contained" color='inherit'><ArrowBackIcon/></Button>
@@ -391,22 +454,24 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
             {isLoading ? 
             <IsLoading>
               <img alt='dk' src='https://i.gifer.com/Xqg8.gif'/>
+              <h2>{randomwords()}</h2>
             </IsLoading>:
             <>
               <div className='tmp'/>
               <p className='intro'> NFT 작품들을 경매에 등록할 수 있습니다</p>
               <p className='intro'> 희망 가격을 적어 판매를 시작하세요 </p>
               <div className='inputs'>
-              <div className='price'>
-                시작가격 : <Input onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
-                  setValue(Number(e.target.value))
-                  console.log(value)
-                }}/> NCT
+                <div className='price2'>
+                <p>시작가격: </p> <input onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
+                    setValue(Number(e.target.value))
+                    console.log(value)
+                  }}/><p> NCT</p>
+                </div>
+                <div className="price2"><p>경매기간 :{" "}</p><input onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setPeriod(Number(e.target.value)); console.log(period);}}/><p>일</p>
               </div>
-              <div className="price">경매기간 :{" "}<Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setPeriod(Number(e.target.value)); console.log(period);}}/>일
               </div>
-              </div>
+              
               <div className='buttons'>
                 <Button onClick={()=>setSession1("")} className='back' variant="contained" color='inherit'><ArrowBackIcon/></Button>
                 <Button className='sell' onClick={onClickAuction} variant="contained" color='primary' >경매 시작</Button>

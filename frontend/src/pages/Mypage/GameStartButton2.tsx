@@ -100,17 +100,19 @@ const Wrapper2 = styled.div`
 `;
 interface Iprops {
   userNick: string | undefined;
-}
+  userId : number | undefined;
+} 
 
-const GameStartButton2: React.FC<Iprops> = ({ userNick }) => {
+const GameStartButton2: React.FC<Iprops> = ({ userNick,userId }) => {
   const navigate = useNavigate();
-
-  const { userId } = useParams();
   console.log(userId, "유저아이디확인");
-
+  const gamestart = () => {    
+    navigate("/ingame/" + userId);
+    window.location.reload();
+  };
   return (
     <Wrapper2>
-      <a className="cta" href="/ingame">
+      <a className="cta" href="#" onClick={()=>{gamestart()}}>
         <span>{userNick} Room</span>
         <span>
           <svg

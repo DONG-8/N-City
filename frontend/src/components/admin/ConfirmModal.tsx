@@ -1,5 +1,6 @@
 import React, { ReactNode, SetStateAction, useEffect, useState } from "react";
 import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 import { patchAutentication } from "../../store/apis/authentication";
 
@@ -156,7 +157,8 @@ const ConfirmModal = ({
   setIsOpenProp,
 }: ModalBaseProps) => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const navigate = useNavigate();
+  
   const patchApprove = useMutation<any, Error>(
     "patchApprove",
     async () => {
@@ -167,6 +169,9 @@ const ConfirmModal = ({
         console.log("인증 수락/거절 성공!",res);
       },
       onError: (err: any) => {
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
         console.log("❌인증 수락/거절 실패!",err);
       },
     }

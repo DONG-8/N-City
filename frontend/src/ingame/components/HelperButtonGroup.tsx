@@ -269,9 +269,9 @@ export default function HelperButtonGroup() {
               <CloseIcon />
             </IconButton>
             <StoreWapper className="StoreWapper">
-              <div className="nftstore">
-                <StoreModal />
-              </div>
+              {/* <div className="nftstore">
+                <StoreModal setOpen={setShowModal} />
+              </div> */}
             </StoreWapper>
           </ModalWrapper>
         )}

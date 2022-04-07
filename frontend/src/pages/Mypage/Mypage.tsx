@@ -404,6 +404,9 @@ export default function Mypage() {
       },
       onError: (err: any) => {
         console.log("에러발생", err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   )
@@ -421,6 +424,9 @@ export default function Mypage() {
       },
       onError: (err: any) => {
         console.log("에러발생", err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   )
@@ -623,7 +629,7 @@ export default function Mypage() {
             {/* ⭐ 남의방일 때만 방입장 보이게 ? */}
             {/* <button className="joinRoomBtn">방입장</button> */}
             <div className="gamestartbutton">
-            <GameStartButton2 userNick={userInfo?.userNick} />
+            <GameStartButton2 userId={userInfo?.userId} userNick={userInfo?.userNick} />
             </div>
           </Profile>
         </ProfileWrapper>
@@ -674,7 +680,7 @@ export default function Mypage() {
       <ISL>
         <IsLoading2/>
         <div className="loading">
-          {randomwords}
+          {randomwords()}
         </div>
       </ISL>}
       {!isLoading &&

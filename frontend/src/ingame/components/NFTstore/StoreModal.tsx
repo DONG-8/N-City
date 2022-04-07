@@ -50,6 +50,7 @@ const Wrapper = styled.div`
     color: white;
     padding-top: 3vh;
   }
+  overflow-x: hidden;
 `;
 const ISL = styled.div`
   text-align: center;
@@ -122,8 +123,19 @@ const FilterButton = styled.div`
     font-weight: 700;
   }
 `; 
-
-const StoreModal = () => {
+const CloseButton = styled.div`
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z'/%3E%3C/svg%3E");
+  width: 35px;
+  height: 35px;
+  position: sticky;
+  top: 10px;
+  left: 950px;
+  cursor: pointer;
+`; 
+interface Iprops{
+  setOpen : React.Dispatch<React.SetStateAction<boolean>>
+}
+const StoreModal:React.FC<Iprops> = ({setOpen}) => {
   const [filter, setFilter] = useState(0);
   const [status, setStatus] = useState(false);
   const [order, setOrder] = useState(false);
@@ -202,6 +214,7 @@ const StoreModal = () => {
 
   return (
     <Wrapper>
+      <CloseButton onClick={()=>{setOpen(true)}}/>
       {mode==='index'?<>
       {allitems.length > 0 && (
         <>
@@ -320,7 +333,7 @@ const StoreModal = () => {
       {allitems.length === 0 && (
         <ISL>
           <IsLoading2 />
-          <div className="loading">{randomwords}</div>
+          <div className="loading">{randomwords()}</div>
         </ISL>
       )}
       <ItemCards>

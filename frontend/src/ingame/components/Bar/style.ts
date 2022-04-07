@@ -7,6 +7,8 @@ export const ToggleBtn = styled.div`
   /* background-color: yellow; */
   width: 10px;
   height: 10px;
+  cursor: pointer;
+
   .button {
     position: fixed;
     width: 30px;
@@ -93,6 +95,8 @@ export const Head = styled.div`
   display: flex;
   flex-direction: row;
   z-index: 2;
+  align-items: center;
+
   img {
     width: 88px;
     height: 88px;
@@ -101,6 +105,22 @@ export const Head = styled.div`
   }
   div {
     margin-left: 10px;
+  }
+  .profileBox {
+    display: flex;
+    align-items: center;
+    button {
+      font-family: "Noto Sans KR", sans-serif;
+      font-weight: 600;
+      background-color: #7272fe;
+      width: 100px;
+      height: 40px;
+      font-size: 16px;
+      &:hover {
+        transition: 0.2s;
+        background-color: #7e7ef8;
+      }
+    }
   }
 `;
 

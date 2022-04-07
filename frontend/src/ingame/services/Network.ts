@@ -35,8 +35,7 @@ export default class Network {
     const endpoint =
       // process.env.NODE_ENV === 'production'
       //   ? `wss://sky-office.herokuapp.com`
-      // : `${protocol}//${window.location.hostname}:2567`
-      // `${protocol}//${window.location.hostname}:2567`
+      // : `${protocol}//${window.location.hostname}:2567`      
       `wss://j6e106.p.ssafy.io/colyseus`
     
     // console.log(endpoint, "엔드포인트으으으")
@@ -116,6 +115,8 @@ export default class Network {
 
     // 유저가 들어오면 처리해줘야 할 값
     this.room.state.players.onAdd = (player: IPlayer, key: string) => {
+      console.log(player)
+      console.log(key)
       if (key === this.mySessionId) return
 
       // track changes on every child object inside the players MapSchema
@@ -127,7 +128,7 @@ export default class Network {
           // when a new player finished setting up player name
           if (field === 'name' && value !== '') {
             phaserEvents.emit(Event.PLAYER_JOINED, player, key)
-            store.dispatch(setPlayerNameMap({ id: String(sessionStorage.getItem("userId")), name: value }))
+            store.dispatch(setPlayerNameMap({ id: 'changes', name: value }))
             store.dispatch(pushPlayerJoinedMessage(value))
           }
         })
@@ -141,6 +142,7 @@ export default class Network {
       this.webRTC?.deleteOnCalledVideoStream(key)
       store.dispatch(pushPlayerLeftMessage(player.name))
       store.dispatch(removePlayerNameMap(key))
+      // store.dispatch(removeJoinUser())
     }
 
     // 컴퓨터 사용 🎮
@@ -253,8 +255,8 @@ export default class Network {
   }
 
   // method to send player name to Colyseus server
-  updatePlayerName(currentName: string) {
-    this.room?.send(Message.UPDATE_PLAYER_NAME, { name: currentName })
+  updatePlayerName(currentName: string, currentId: string) {
+    this.room?.send(Message.UPDATE_PLAYER_NAME, { name: currentName, userId: currentId })
   }
 
   // method to send ready-to-connect signal to Colyseus server

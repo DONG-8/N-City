@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import CloseIcon from '@mui/icons-material/Close';
 import { useMutation } from 'react-query';
 import { putAuthApplyToken } from '../../store/apis/authentication';
+import { useNavigate } from 'react-router-dom';
 
 interface Iprops{
   open:boolean,
@@ -76,7 +77,8 @@ const Contents= styled.div`
 
 const CoinChargeModal:React.FC<Iprops> = ({open,setOpen}) => {
   const handleClose = () => setOpen(false);
-
+  const navigate = useNavigate();
+  
   const applyToken = useMutation<any, Error>(
     "applyToken",
     async () => {
@@ -89,7 +91,9 @@ const CoinChargeModal:React.FC<Iprops> = ({open,setOpen}) => {
         handleClose();
       },
       onError: (err: any) => {
-        alert("신청오류")
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
         console.log("❌토큰신청 실패!",err);
       },
     }

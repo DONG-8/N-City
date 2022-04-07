@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch  } from "./hooks";
 // typescript에서 useSelector 사용 하려면 hooks를 만들어서 불러와야한다.
@@ -51,6 +51,7 @@ const GameApp: Function = () => {
   const { userId } = useParams();
   const roomuserId = Number(userId);
   const stringId = String(roomuserId);
+  const navigate = useNavigate();
   let map = basicData;
   let characterIdx = "1";
   const dispatch = useAppDispatch();
@@ -75,7 +76,10 @@ const GameApp: Function = () => {
         dispatch(UserMapInfo(res.myRoomBackground));
         console.log("방 정보 불러오기", res);
       },
-      onError: (err: any) => {        
+      onError: (err: any) => {
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -94,6 +98,9 @@ const GameApp: Function = () => {
         console.log(characterIdx)
       },
       onError: (err: any) => {
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
         characterIdx = "1"
         console.log('userId를 받아오지 못했습니다.',err)
       },
