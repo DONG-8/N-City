@@ -27,7 +27,12 @@ export const getProductAll =async ({page,size}:API.TypeProductGetAll) => {
   );
   return response.data
 }
-
+export const getProductNew =async () => {
+  const response = await apiClient.get<any>(
+    '/products/all/new', 
+  );
+  return response.data
+}
 
 
 // 상품등록

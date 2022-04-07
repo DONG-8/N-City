@@ -235,8 +235,16 @@ const ThumbnailExplain = styled.div`
 `;
 const LoadingBox = styled.div`
   text-align: center;
+  margin-top: 10vh;
   h1{
     margin-top: -15vh;
+    color: white;
+    font-weight: 500;
+  }
+  h3{
+    color: white;
+    font-weight: 500;
+
   }
 `
 const Plus = styled.div`
@@ -548,6 +556,13 @@ const Mint = () => {
       <Title>
         <span>NFT </span>작품 등록하기
       </Title>
+      {isLoading ? (
+          <LoadingBox>
+            <IsLoading />
+            <h1>작품 등록중.. </h1>
+            <h3>팁) 내가 가진 작품은 마이룸에 전시할 수 있습니다.</h3>
+          </LoadingBox>
+        ) :<>
       <Required>
         <span>*</span>필수
       </Required>
@@ -628,20 +643,11 @@ const Mint = () => {
             <HashtagPlus />
           </HashtagBox>
         )}
-
-        {isLoading ? (
-          <LoadingBox>
-            <IsLoading />
-            <h1>작품 등록중.. </h1>
-            <h3>팁) 내가 가진 작품은 마이룸에 전시할 수 있습니다.</h3>
-          </LoadingBox>
-        ) : (
           <ButtonBox>
             <Button variant="contained" onClick={onClickSubmit}>
               작품등록
             </Button>
-          </ButtonBox>
-        )}
+          </ButtonBox>       
       </FormBox>
 
       <CategoryModal
@@ -652,6 +658,7 @@ const Mint = () => {
         setCategoryCode={setCategoryCode}
         userRole={userRole}
       ></CategoryModal>
+      </>}
     </Wrapper>
   );
 };

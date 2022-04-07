@@ -76,7 +76,7 @@ const settings = {
 };
 
 const MainBannerWrapper = styled.div`
-  width: 85vw;
+  width: 1400px;
   height: 600px;
   color: black;
   margin: 0 auto;
@@ -127,13 +127,16 @@ const NewTokkenList:React.FC = () => {
   return (
     <MainBannerWrapper>
       <div>
-        {ILC &&<IsLoading2/>}
+        {ILC ?<IsLoading2/>:
+        <>
+        <h1>Hot Token</h1>
         <Slider {...settings}>
           {allitems && 
          items.map((item,idx) => {
             return <ItemCard2 key={idx} item={item} />;
           })}
         </Slider>
+        </>}
       </div>
     </MainBannerWrapper>
   );

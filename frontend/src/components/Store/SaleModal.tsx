@@ -14,6 +14,7 @@ import {
   SSFTokenContract,
 } from "../../web3Config";
 import etherimg from './ethereum.png'
+import IsLoading2 from '../../pages/NFTStore/IsLoading2';
 interface Iprops{
   open:boolean,
   setOpen:React.Dispatch<React.SetStateAction<boolean>>
@@ -24,30 +25,30 @@ const Wrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
-  width: 50%;
-  height: 65%;
+  width: 1000px;
+  height: 600px;
   border-radius: 5px;
   .title {
     color: #35357a;
     text-align: center;
     font-size:2.5vh;
-    width: 80%;
+    width: 800px;
     border-bottom: 2px solid #35357a;
     margin: auto;
   }
 `;
   const Session1 = styled.div`
     .choiceBox {
-      width: 35vw;
-      height: 20vh;
+      width: 500px;
+      height: 200px;
       margin: auto;
       display: flex;
       align-items: center;
-      margin-top: 10vh;
+      margin-top: 100px;
       .choice1 {
         flex: 5;
         cursor: pointer;
-        font-size: 2rem;
+        font-size: 28px;
         text-align: center;
         background-color: #35357a;
         font-weight: 600;
@@ -63,11 +64,9 @@ const Wrapper = styled.div`
       .choice2 {
         flex: 5;
         border-radius: 0 10px 10px 0;
-
         cursor: pointer;
-        font-size: 2rem;
+        font-size: 28px;
         color: white;
-
         text-align: center;
         background-color: #35357a;
         font-weight: 600;
@@ -83,10 +82,9 @@ const Wrapper = styled.div`
       background-color: #35357a;
       color: white;
       border-radius: 5px;
-
         font-size: 1.5rem;
-        width: 35vw;
-        height: 7vh;
+        width: 700px;
+        height: 500px;
         margin: auto;  
         text-align: center;
         p{
@@ -103,6 +101,12 @@ const Wrapper = styled.div`
       transition: all 0.3s;  
     }
   `;
+const IsLoading = styled.div`
+  width: 100%;
+  img{
+    margin-left: 180px;
+  }
+`
 const Session2 = styled.div`
   .box {
     margin: auto;
@@ -111,9 +115,11 @@ const Session2 = styled.div`
     box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee,
       inset 1px 1px 0 rgb(233 235 242 / 10%);
     border-radius: 10px;
-    width: 35vw;
-    height: 30vh;
+    width: 600px;
+    height: 340px;
+
     .inputs {
+      text-align: center;
       display: flex;
     }
     .title {
@@ -124,8 +130,8 @@ const Session2 = styled.div`
       color: white;
       border-radius: 10px 10px 0 0;
       width: 100%;
-      font-size: 2.5rem;
-      height: 7vh;
+      font-size: 25px;
+      height:50px;
       margin: auto;
       text-align: center;
       p {
@@ -143,31 +149,34 @@ const Session2 = styled.div`
   }
   .price {
     display: flex;
-    margin-left: 3vw;
+    margin-left: 50px;
     font-size: 2.2vh;
     margin-top: 3vh;
     input {
       font-size: 2vh;
-      width: 5vw;
+      width: 50px;
       text-align: right;
+      margin-right: 30px;
+      margin-left: 30px;
     }
   }
   .back {
-    width: 3vw;
+    width: 30px;
     font-weight: 600;
     font-size: 2rem;
   }
   .sell {
     margin-left: 1vw;
-    width: 31vw;
-    font-size: 2rem;
+    width: 300px;
+    font-size: 20px;
     background-color: #3f3f8d;
   }
   .buttons {
-    height: 7vh;
+    height: 50px;
     display: flex;
-    margin-top: 5vh;
+    margin-top: 50px;
     font-weight: 600;
+    justify-content: space-around;
   }
 `;
 const Exit = styled.div`
@@ -204,21 +213,24 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
   const [value,setValue]  = useState(0)
   const [period, setPeriod] = useState(0);
   const { ethereum } = window;
-
+  const [isLoading,setIsLoading] = useState(false)
   useEffect(()=>{
     setSession1("")
   },[open])
   const resistSell = useMutation<any, Error>(
     "resistSell",
     async () => {
+      setIsLoading(true)
       return await postRegisterPurchase(value, item.productId);
     },
     {
       onSuccess: async (res) => {
         console.log("구매등록성공", res);
+        setIsLoading(false)
         window.location.reload();
       },
       onError: (err: any) => {
+        setIsLoading(false)
         console.log(err, "에러발생");
       },
     }
@@ -226,14 +238,17 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
   const resistAuction = useMutation<any, Error>(
     "resistAuction",
     async () => {
+      setIsLoading(true)
       return await postRegisterAuction(value, item.productId, period);
     },
     {
       onSuccess: async (res) => {
+        setIsLoading(false)
         console.log("경매등록성공", res);
         window.location.reload();
       },
       onError: (err: any) => {
+        setIsLoading(false)
         console.log(err, "에러발생");
       },
     }
@@ -343,7 +358,12 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
             <div className='title'>
               <p> 즉시 판매</p>
             </div>
-              <div className='tmp'></div>
+            {isLoading ? 
+            <IsLoading>
+              <img alt='dk' src='https://i.gifer.com/Xqg8.gif'/>
+            </IsLoading>:
+            <>
+              <div className='tmp'/>
               <p className='intro'> NFT 작품들을 즉시 판매할 수 있습니다</p>
               <p className='intro'> 희망 가격을 적어 판매를 시작하세요 </p>
               <div className='inputs'>
@@ -354,10 +374,11 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
               }}/> <span>NCT</span>
             </div>
               </div>
-          <div className='buttons'>
-            <Button onClick={()=>setSession1("")} className='back' variant="contained" color='inherit'><ArrowBackIcon/></Button>
-            <Button className='sell' onClick={onClickSell} variant="contained" >판매 시작</Button>
-          </div>
+            <div className='buttons'>
+              <Button onClick={()=>setSession1("")} className='back' variant="contained" color='inherit'><ArrowBackIcon/></Button>
+              <Button className='sell' onClick={onClickSell} variant="contained" >판매 시작</Button>
+            </div>
+            </>}
           </div>
         </Session2>
         }
@@ -367,24 +388,31 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
             <div className='title'>
               <p>경매 등록</p>
             </div>
-            <div className='tmp'/>
-            <p className='intro'> NFT 작품들을 경매에 등록할 수 있습니다</p>
-            <p className='intro'> 희망 가격을 적어 판매를 시작하세요 </p>
-            <div className='inputs'>
-            <div className='price'>
-              시작가격 : <Input onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
-                setValue(Number(e.target.value))
-                console.log(value)
-              }}/> NCT
-            </div>
-            <div className="price">경매기간 :{" "}<Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setPeriod(Number(e.target.value)); console.log(period);}}/>일
-            </div>
-            </div>
-            <div className='buttons'>
-              <Button onClick={()=>setSession1("")} className='back' variant="contained" color='inherit'><ArrowBackIcon/></Button>
-              <Button className='sell' onClick={onClickAuction} variant="contained" color='primary' >경매 시작</Button>
-            </div>
+            {isLoading ? 
+            <IsLoading>
+              <img alt='dk' src='https://i.gifer.com/Xqg8.gif'/>
+            </IsLoading>:
+            <>
+              <div className='tmp'/>
+              <p className='intro'> NFT 작품들을 경매에 등록할 수 있습니다</p>
+              <p className='intro'> 희망 가격을 적어 판매를 시작하세요 </p>
+              <div className='inputs'>
+              <div className='price'>
+                시작가격 : <Input onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
+                  setValue(Number(e.target.value))
+                  console.log(value)
+                }}/> NCT
+              </div>
+              <div className="price">경매기간 :{" "}<Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setPeriod(Number(e.target.value)); console.log(period);}}/>일
+              </div>
+              </div>
+              <div className='buttons'>
+                <Button onClick={()=>setSession1("")} className='back' variant="contained" color='inherit'><ArrowBackIcon/></Button>
+                <Button className='sell' onClick={onClickAuction} variant="contained" color='primary' >경매 시작</Button>
+              </div>
+            </>
+            }
           </div>
         </Session2>
         }

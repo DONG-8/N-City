@@ -9,53 +9,93 @@ import { client } from "../../../../src/index"; // query data refresh 용도
 //스토어
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { setMusicList } from "../../stores/RoomStore";
+
 const Wrapper = styled.div`
   position: absolute;
-  width: 360px;
+  width: 340px;
   height: 460px;
-  background-color: white;
+  background-color: #f0f0f0e9;
+  /* background-color: #656565a5; */
   right: 30px;
   border-radius: 10px;
-  padding: 20px;
+  padding: 10px;
+  .subtitle{
+    font-size: 13px;
+    padding-bottom:10px;
+    /* border-bottom: 0.5px solid white; */
+    border-bottom: 0.5px solid #333;
+    /* color: white; */
+    margin-bottom: 20px;
+    width: 90%;
+  }
 `;
-
+ 
 const Head = styled.div`
   width: 100%;
   height: 20%;
-  background-color: antiquewhite;
+  /* background-color: antiquewhite; */
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  .name{
+    /* color:white; */
+    margin-top: 20px;
+    font-size: 30px;
+    font-weight: 600;
+  }
+  
 `;
 
 // 뮤직 리스트
 const Body = styled.div`
-  width: 100%;
+
+  margin: auto;
+  width: 90%;
   height: 60%;
-  background-color: #b9aef1;
+  /* background-color: #6b6a72; */
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  overflow-y: scroll;
 `;
 
 // pagenation & 설명?
 const Foot = styled.div`
   width: 100%;
   height: 20%;
-  background-color: #f5cbd4;
+  /* background-color: #f5cbd4; */
 `;
 
 const MusicItem = styled.div`
   width: 100%;
   height: 50px;
-  background-color: #e381ba;
+  border-bottom: 0.1px solid #d6d6d6bc;
+  /* background-color: #e381ba; */
   display: flex;
   flex-direction: row;
   margin-bottom: 5px;
   align-items: center;
+  margin-top: 2px;
+  margin-bottom: 2px;
   img {
     width: 45px;
     height: 45px;
     border-radius: 25px;
   }
+  .subTitle{
+    width: 190px ; 
+    /* color: white; */
+    font-weight: 400;
+    margin-left: 10px;
+  }
+  .buyBtn{
+    color: #6262f1 ;
+    :hover{
+      color: #3838e9 ;
 
+    }
+  }
   audio {
     width: 50%;
     height: 30px;
@@ -118,18 +158,21 @@ const MusicModal = () => {
 
   return (
     <Wrapper>
-      <Head>Play List</Head>
+      <Head><div className="name">Tracks</div>
+      
+        <div className="subtitle">All Tracks</div>
+      </Head>
       <Body>
         {Alldata &&
           Alldata.content.map((obj, i) => {
             if (obj.productCode === 1) {
-              console.log(obj, i);
               return (
                 <MusicItem>
                   <img src={obj.productThumbnailUrl} alt="사진없노~" />
-                  <div>{obj.productTitle}</div>
+                  <div className="subTitle">{obj.productTitle}</div>
                   {/* <audio controls src={obj.productFileUrl}></audio> */}
-                  <button>구매하기</button>
+                  {(obj.productState===1 || obj.productState===2 )&& (userId!==obj.productUserId)&& // 내가 이 작품의 주인이 아닐경우,
+                  <button className="buyBtn">구매하기</button>}
                 </MusicItem>
               );
             }

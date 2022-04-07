@@ -2,20 +2,21 @@ import React, {  useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { getProductAll, getSellProduct } from '../../store/apis/product'
 import { useMutation, useQuery } from 'react-query'
-import ItemCard2 from '../../components/Card/ItemCard2'
-import ItemCard from '../../components/Card/ItemCard'
 import ToggleSwitch from './ToggleSwitch'
 import ToggleSwitch2 from './ToggleSwitch2'
 import IsLoading2 from './IsLoading2'
-import IsLoading from './IsLoading'
-import StoreItemCard from '../../components/Card/StoreItemCard'
-
+import StoreItemCard from '../../components/Card/StoreItemCard' 
+import { randomwords, words } from './words'
 const Wrapper = styled.div`
+  .ISL{
+    margin-top: -5vh;
+
+  }
   .loading{
     text-align: center;
     font-size: 2.5vh;
     font-weight: 600;
-    margin-top: -5vh;
+    margin-top: -7vh;
   }
 
 `
@@ -75,6 +76,7 @@ const IntroBox = styled.div`
   margin-top: 10vh;
   display: flex;
   margin-bottom:5vh;
+  overflow-y: hidden;
 
 `
 const Left = styled.div`
@@ -82,7 +84,7 @@ const Left = styled.div`
   .text{
     margin-left: 5vw;
     margin-top: 8vh;
-  
+    
   .h1{
     font-size: 8vh;
     margin-bottom: 5vh;
@@ -114,7 +116,7 @@ const Right = styled.div`
       font-size: 3rem;
       text-align: center;
       margin-left: 1vw;
-      margin-bottom: 10vh;
+      margin-top : -30px;
     }
   }
   img {
@@ -313,10 +315,12 @@ const NFTStore = () => {
       </>
       }
           {allitems.length===0 &&
-          <>
+          <div className='ISL'>
           <IsLoading2/>
-          <div className='loading'>Loading..</div>
-          </>}
+          <div className='loading'>
+            {randomwords}
+          </div>
+          </div>}
         <ItemCards>
           {!status && showItems && !order&&
           ([...showItems].reverse()).map((item,idx) => {

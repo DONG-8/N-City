@@ -103,6 +103,23 @@ const MainBannerWrapper = styled.div`
 
 const Wrapper = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
+  .loadingbox {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    p {
+      margin-top: -60px;
+      font-size: 38px;
+      font-weight: 600;
+    }
+    img {
+      width: 300px;
+      height: 300px;
+    }
+  }
   .title2{
     margin-left: 5vw;
   }
@@ -176,22 +193,17 @@ const UserBox = styled.div`
   .nextprofileimg {
     display: flex;
     position: relative;
+    align-items: center;
     img {
       width: 20px;
       height: 20px;
-      position: absolute;
-      right: -20px;
-      top: 40%;
+      margin: 5px
     }
   }
   .name {
     color: #272793;
     font-size: 4vh;
     font-weight: 800;
-    margin-bottom: 20px;
-  }
-  button{
-
   }
 `;
 
@@ -231,7 +243,7 @@ const TopR = styled.div`
     overflow-y: hidden;
   }
   .top-left {
-    width: 30vw;
+    width: 25vw;
     .title {
       font-size: 2.5rem;
       font-weight: 600;
@@ -246,13 +258,28 @@ const TopR = styled.div`
       font-weight: 500;
     }
   }
+  .preview {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .img {
-    height: 45vh;
-    width: 45vh;
-    margin-top: 2vh;
-    margin-right: 1vw;
+    height: 300px;
+    width: 300px;
+    margin: 2vh 1vw;
     border-radius: 30px;
     border: 1px solid #e0dede;
+  }
+  .mediaBox {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+   
+    video {
+      width: 45vh;
+      margin: 4vh 5vw 0 0;
+    }
   }
 `;
 
@@ -291,16 +318,7 @@ const Bottom = styled.div`
     flex: 1;
     border-top: 0.5px solid #e0dede;
     .content {
-      margin: 2vh;
       font-weight: 500;
-      font-size: 20px;
-    }
-    button {
-      margin-left: 10vw;
-      border-radius: 15px;
-      /* background-color: #272793; */
-      background-color: #e0dede;
-      color: #333;
     }
   }
 `;
@@ -523,6 +541,7 @@ const DetailItem = () => {
   });
   const [history, setHistory] = useState<Istate["history"][]>([])
   const [isImg, setIsImg] = useState(true)
+  const [isLoading, setIsloading] = useState(true)
   const { ethereum } = window
 
   const dealTypeConvert = (dealType) => {
@@ -633,6 +652,7 @@ function leadingZeros(n, digits) {
         setItem(res);
         setLikes(res.favoriteCount);
         getUser.mutate()
+        setIsloading(false)
       },
       onError: (err: any) => {
         console.log(err, "❌디테일 페이지 실패!");
@@ -739,45 +759,6 @@ function leadingZeros(n, digits) {
     }
   );
 
-  const cancelSale = useMutation<any, Error>(
-    "postCancelPurchase",
-    async () => {
-      if (!productId) return;
-      return await postCancelPurchase(Number(productId));
-    },
-    {
-      onSuccess: async (res) => {
-        console.log("구매등록 취소 성공", res);
-      },
-      onError: (err: any) => {
-        console.log("구매등록 취소 실패", err);
-      },
-    }
-  );
-
-  const onclickCancelSale = async () => {
-    try {
-      const accounts = await ethereum.request({ method: "eth_accounts" })
-      if (!accounts) {
-        alert("지갑을 연결해주세요")
-        return
-      }
-
-      // sale컨트랙트 주소 받아서 생성
-      const saleContractAddress = await SaleFactoryContract.methods
-      .getSaleContractAddress(item.tokenId)
-      .call();
-
-      const saleContract = await createSaleContract(saleContractAddress)
-
-      // 판매 취소
-      await saleContract.methods.cancelSales().send({ from: accounts[0] });
-      cancelSale.mutate()
-    } catch (error) {
-      console.log("판매취소실패", error);
-    }
-  };
-
   const Like = () => {
     setLikes(likes + 1);
     LikeIt.mutate();
@@ -838,12 +819,17 @@ function leadingZeros(n, digits) {
   useEffect(() => {
     getLiked.mutate();
   }, [likes]);
+
   const convertDate = (dateArray) => {
     const year = String(dateArray[0]);
     const month = String(dateArray[1]);
     const day = String(dateArray[2]);
-    return year + "-" + leadingZeros(month, 2) + "-" + leadingZeros(day, 2)
+    const hour = String(dateArray[3])
+    const minute = String(dateArray[4])
+    const second = String(dateArray[5] ? dateArray[5] : "00")
+    return year + "-" + leadingZeros(month, 2) + "-" + leadingZeros(day, 2) + " " + leadingZeros(hour, 2) + ":" + leadingZeros(minute, 2)+ ":" + leadingZeros(second, 2)
   }
+
   useEffect(() => {
   }, [user]);
 
@@ -855,240 +841,224 @@ function leadingZeros(n, digits) {
   }
   return (
     <Wrapper>
-      <Top>
-        <TopL>
-          {user !== undefined && (
-            <>
-              <UserBox>
-                <div className="top">
-                  <div className="nextpofileimg2">
-                    {user.userImgUrl ? (
-                      <img
-                        className="profile"
-                        src={user.userImgUrl as any}
-                        alt="profile"
-                      />
-                    ) : (
-                      <img
-                        className="profile"
-                        src="https://www.taggers.io/common/img/default_profile.png"
-                        alt="profile"
-                      />
-                    )}
-                    {Number(sessionStorage.getItem("userId")) ===
-                    Number(item.mintUserId) ? null : followBtnState ? (
-                      <Button
-                        color="info"
-                        variant="contained"
-                        onClick={onClickFollow}
-                      >
-                        Follow
-                      </Button>
-                    ) : (
-                      <Button
-                        color="info"
-                        variant="contained"
-                        onClick={onClickUnFollow}
-                      >
-                        Unfollow
-                      </Button>
-                    )}
-                  </div>
-                  <div className="nextprofileimg">
-                    <p className="name">{user.userNick}</p>
-                    {getVerifiedMark(String(user.userRole))}
-                  </div>
-                </div>
-                <div className="mid">
-                  <div className="mid-l">
-                    <div>
-                      <div className="left">
-                        <div className="email"> email:{user.userEmail}</div>
-                        {/* <div>userId:{item.mintUserId}</div> */}
-                        {/* <div>직업:{user.userRole}</div> */}
-                        <div className="followtext">
-                          팔로워: <span>{followers}</span>
-                        </div>
-                        <div className="followtext">
-                          팔로잉: <span>{followees}</span>
-                        </div>
-                      </div>
-                      <div className="right"></div>
-                    </div>
-                  </div>
-                </div>
-              </UserBox>
-              <UserDescription>
-                <div className="title">User description</div>
-                {user.userDescription ? (
-                  <div className="content">{user.userDescription}</div>
-                ) : (
-                  <div className="content">아직 소개 글이 없어요~ 😀</div>
-                )}
-              </UserDescription>
-            </>
-          )}
-        </TopL>
-        {item !== undefined && (
-          <TopR>
-            <div className="ITEM">
-              <div className="top">
-                <div className="top-left">
-                  <div className="title">{item.productTitle}</div>
-                  <div className="content">
-                    <div className="left">
-                      <div>카테고리 : {CATEGORY[item.productCode]}</div>
-                      <div>등록일자 : {item.productRegDt}</div>
-                      <div>NFT 소유자 : {item.userNick}</div>
-                      <div className="right">
-                        {/* <div>상품상태 : {status}</div> */}
-                        <FavoriteBox className="icon">
-                          {liked ? (
-                            <FavoriteIcon
-                              onClick={() => {
-                                cancelLike();
-                              }}
-                              color="error"
-                            />
+      {isLoading ? (
+        <div className="loadingbox">
+            <img alt="dk" src="https://i.gifer.com/Xqg8.gif" />
+            <p className="text">작품 불러오는중...</p>{" "}
+        </div>
+      ) : (
+        <>
+          <Top>
+            <TopL>
+              {user !== undefined && (
+                <>
+                  <UserBox>
+                    <div className="top">
+                      <div className="nextpofileimg2">
+                        {user.userImgUrl ? (
+                          <img
+                            className="profile"
+                            src={user.userImgUrl as any}
+                            alt="profile"
+                          />
+                        ) : (
+                          <img
+                            className="profile"
+                            src="https://www.taggers.io/common/img/default_profile.png"
+                            alt="profile"
+                          />
+                        )}
+                        {sessionStorage.getItem("userId") &&
+                          (Number(sessionStorage.getItem("userId")) ===
+                          Number(item.mintUserId) ? null : followBtnState ? (
+                            <Button
+                              color="info"
+                              variant="contained"
+                              onClick={onClickFollow}
+                            >
+                              Follow
+                            </Button>
                           ) : (
-                            <FavoriteBorderIcon
-                              onClick={() => {
-                                Like();
-                              }}
-                              color="error"
-                            />
-                          )}
-                          {likes}
-                        </FavoriteBox>
+                            <Button
+                              color="info"
+                              variant="contained"
+                              onClick={onClickUnFollow}
+                            >
+                              Unfollow
+                            </Button>
+                          ))}
                       </div>
+                      <div className="nextprofileimg">
+                        <p className="name">{user.userNick}</p>
+                        {getVerifiedMark(String(user.userRole))}
+                      </div>
+                    </div>
+                    <div className="mid">
+                      <div className="mid-l">
+                        <div>
+                          <div className="left">
+                            <div className="email"> email:{user.userEmail}</div>
+                            {/* <div>userId:{item.mintUserId}</div> */}
+                            {/* <div>직업:{user.userRole}</div> */}
+                            <div className="followtext">
+                              팔로워: <span>{followers}</span>
+                            </div>
+                            <div className="followtext">
+                              팔로잉: <span>{followees}</span>
+                            </div>
+                          </div>
+                          <div className="right"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </UserBox>
+                  <UserDescription>
+                    <div className="title">User description</div>
+                    {user.userDescription ? (
+                      <div className="content">{user.userDescription}</div>
+                    ) : (
+                      <div className="content">아직 소개 글이 없어요~ 😀</div>
+                    )}
+                  </UserDescription>
+                </>
+              )}
+            </TopL>
+            {item !== undefined && (
+              <TopR>
+                <div className="ITEM">
+                  <div className="top">
+                    <div className="top-left">
+                      <div className="title">{item.productTitle}</div>
+                      <div className="content">
+                        <div className="left">
+                          <div>카테고리 : {CATEGORY[item.productCode]}</div>
+                          <div>등록일자 : {item.productRegDt.replaceAll("-", "/")}</div>
+                          <div>NFT 소유자 : {item.userNick}</div>
+                          <div className="right">
+                            {/* <div>상품상태 : {status}</div> */}
+                            <FavoriteBox className="icon">
+                              {liked ? (
+                                <FavoriteIcon
+                                  onClick={() => {
+                                    cancelLike();
+                                  }}
+                                  color="error"
+                                />
+                              ) : (
+                                <FavoriteBorderIcon
+                                  onClick={() => {
+                                    Like();
+                                  }}
+                                  color="error"
+                                />
+                              )}
+                              {likes}
+                            </FavoriteBox>
+                          </div>
+                        </div>
+                      </div>
+                      <Description>
+                        <h3>작품설명</h3>
+                        <div className="box">
+                          <p>{item.productDesc}</p>
+                        </div>
+                      </Description>
+                    </div>
+                    <div className="preview">
+                      {isImg ? (
+                        <img
+                          className="img"
+                          alt="작품"
+                          src={item.productThumbnailUrl}
+                        />
+                      ) : (
+                        <div className="mediaBox">
+                          <video src={item.productFileUrl} controls></video>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <Description>
-                    <h3>작품설명</h3>
-                    <div className="box">
-                      <p>{item.productDesc}</p>
+
+                  <Bottom>
+                    <div className="right">
+                      <BidBox setOpen={setOpen} item={item} />
                     </div>
-                  </Description>
+                  </Bottom>
                 </div>
-                {isImg ? (
-                  <img
-                    className="img"
-                    alt="작품"
-                    src={item.productThumbnailUrl}
+              </TopR>
+            )}
+          </Top>
+          <h1 className="title2">
+            <span className="color">{item.productTitle}</span>의 거래내역
+          </h1>
+          <List>
+            <ListCategory>
+              <div>Event</div>
+              <div>Price</div>
+              <div>From</div>
+              <div>To</div>
+              <div>Date</div>
+            </ListCategory>
+            {history.map((his, idx) => {
+              return (
+                <ListItem key={idx}>
+                  <div className="event">{dealTypeConvert(his.dealType)}</div>
+                  <div className="price">{his.dealPrice}</div>
+                  <div className="from">{his.dealFromNickName}</div>
+                  <div className="to">{his.dealToNickName}</div>
+                  <div className="date">{convertDate(his.dealCreatedAt)}</div>
+                  {/* <div className="id">{dealTypeConvert(history.dealType)}</div> */}
+                </ListItem>
+              );
+            })}
+          </List>
+
+          <Mid>
+            {items.length > 0 && (
+              <>
+                <h1>이 작가의 다른 작품 & 새로나온 작품</h1>
+                <MainBannerWrapper onClick={() => {}}>
+                  <Slider {...settings}>
+                    {items.length > 0 &&
+                      items.map((item, idx) => {
+                        return (
+                          <div
+                            key={idx}
+                            onClick={() => {
+                              setProductId(item.productId as any);
+                            }}
+                          >
+                            <ItemCard2 key={idx} item={item} />{" "}
+                          </div>
+                        );
+                      })}
+                  </Slider>
+                </MainBannerWrapper>
+              </>
+            )}
+          </Mid>
+          {open && (
+            <ModalWrapper>
+              <IconButton
+                className="close"
+                onClick={() => setOpen(false)}
+                size="small"
+              >
+                <CloseIcon />
+              </IconButton>
+              <StoreWapper className="StoreWapper">
+                <div className="nftstore">
+                  <DealModal
+                    item={item}
+                    status={status}
+                    open={open}
+                    setOpen={setOpen}
                   />
-                ) : (
-                  <video src={item.productFileUrl} controls></video>
-                )}
-              </div>
-
-              <Bottom>
-                <div className="right">
-                  {status === "bid" && <BidBox setOpen={setOpen} item={item} />}
-                  {status === "sell" && (
-                    <>
-                      <div className="content">
-                        즉시구매가 : {item.productPrice}{" "}
-                      </div>
-                      {Number(sessionStorage.getItem("userId")) ===
-                      item.userId ? (
-                        <Button
-                          variant="contained"
-                          onClick={() => onclickCancelSale()}
-                        >
-                          판매취소
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="contained"
-                          onClick={() => {
-                            setOpen(true);
-                          }}
-                        >
-                          구매하기
-                        </Button>
-                      )}
-                    </>
-                  )}
-                  {status === "normal" && (
-                    <>
-                      <div className="content">작품이 판매중이 아닙니다.</div>
-                    </>
-                  )}
                 </div>
-              </Bottom>
-            </div>
-          </TopR>
-        )}
-      </Top>
-      <h1 className="title2">
-        <span className="color">{item.productTitle}</span>의 거래내역
-      </h1>
-      <List>
-        <ListCategory>
-          <div>Event</div>
-          <div>Price</div>
-          <div>From</div>
-          <div>To</div>
-          <div>Date</div>
-        </ListCategory>
-        {history.map((his, idx) => {
-          return (
-            <ListItem key={idx}>
-              <div className="event">{dealTypeConvert(his.dealType)}</div>
-              <div className="price">{his.dealPrice}</div>
-              <div className="from">{his.dealFromNickName}</div>
-              <div className="to">{his.dealToNickName}</div>
-              <div className="date">{his.dealCreatedAt}</div>
-              {/* <div className="id">{dealTypeConvert(history.dealType)}</div> */}
-            </ListItem>
-          );
-        })}
-      </List>
-
-      <Mid>
-        {items.length > 0 && (
-          <>
-            <h1>이 작가의 다른 작품 & 새로나온 작품</h1>
-            <MainBannerWrapper onClick={() => {}}>
-              <Slider {...settings}>
-                {items.length > 0 &&
-                  items.map((item, idx) => {
-                    return (
-                      <div
-                        key={idx}
-                        onClick={() => {
-                          setProductId(item.productId as any);
-                        }}
-                      >
-                        <ItemCard2 key={idx} item={item} />{" "}
-                      </div>
-                    );
-                  })}
-              </Slider>
-            </MainBannerWrapper>
-          </>
-        )}
-      </Mid>
-      {open && (
-        <ModalWrapper>
-          <IconButton
-            className="close"
-            onClick={() => setOpen(false)}
-            size="small"
-          >
-            <CloseIcon />
-          </IconButton>
-          <StoreWapper className="StoreWapper">
-            <div className="nftstore">
-              <DealModal
-                item={item}
-                status={status}
-                open={open}
-                setOpen={setOpen}
-              />
-            </div>
-          </StoreWapper>
-        </ModalWrapper>
+              </StoreWapper>
+            </ModalWrapper>
+          )}
+        </>
       )}
     </Wrapper>
   );

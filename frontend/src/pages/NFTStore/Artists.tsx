@@ -4,6 +4,21 @@ import styled from 'styled-components'
 import { artists as art } from './items'
 import { useMutation, useQuery } from 'react-query'
 import { getUserAll } from '../../store/apis/user'
+import IsLoading2 from './IsLoading2'
+import { randomwords, words } from './words'
+
+const Wrapper = styled.div`
+  .ISL{
+    margin-top: -5vh;
+
+  }
+  .loading{
+    text-align: center;
+    font-size: 2.5vh;
+    font-weight: 600;
+    margin-top: -7vh;
+  }
+`
 
 const ArtistCards = styled.div`
   margin:auto ;
@@ -19,10 +34,11 @@ const IntroBox = styled.div`
   background-color: #F7F8FA ;
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
   margin: auto;
-  margin-top: 10vh;
+  margin-top: 5vh;
   border-radius: 30px;
   display: flex;
   margin-bottom:10vh;
+  overflow: hidden;
 `
 const Left = styled.div`
   flex: 1;
@@ -36,7 +52,7 @@ const Left = styled.div`
       font-size: 3rem;
       text-align: center;
       margin-left: 1vw;
-      margin-bottom: 10vh;
+      margin-top : -50px;
     }
   }
   img {
@@ -129,22 +145,6 @@ const Artists = () => {
   const [allUsers,setAllUsers] = useState<IState["user"][]>([])
   const [filter,setFilter] = useState(0) 
 
-  // const { isLoading:ILS, data } = useQuery<any>(
-  //   "getUserAll",
-  //   async () => {return (await (getUserAll()))
-  //     },
-  //   { 
-  //     onSuccess:(res)=>{
-  //       let tmp:IState['user'][] = []
-  //       res.map((data)=>{tmp.push(data.user)})
-  //       setAllUsers(tmp)
-  //       setUsers(tmp)
-  //     },
-  //     onError: (err: any) => {
-  //       console.log(err, "유저 불러오기 실패");
-  //     },
-  //   }
-  // );
   const getArtist = useMutation<any, Error>(
     "getUserAll",
     async () => {
@@ -206,7 +206,7 @@ const Artists = () => {
     getArtist.mutate()
   },[])
   return (
-    <div>
+    <Wrapper>
       <IntroBox>
         <Left>
         <div className='black'>
@@ -226,39 +226,46 @@ const Artists = () => {
           
         </Right>
       </IntroBox>
-      <div>
-      <CategoryBar>
-        <li>
-          <p id={filter === 0 ? "category" : ""} onClick={() => {setFilter(0)}}>
-            All
-          </p>
-        </li>
-        <li>
-          <p id={filter === 1 ? "category" : ""} onClick={() => {  setFilter(1)}}>
-          Influencer
-          </p>
-        </li>
-        <li>
-          <p id={filter === 2 ? "category" : ""} onClick={() => {  setFilter(2)}}>
-          Artist
-          </p>
-        </li>
-        <li>
-          <p id={filter === 3 ? "category" : ""} onClick={() => {  setFilter(3)}}>
-          Enterprise
-          </p>
-        </li>
-        
-      </CategoryBar>
-      </div>
-      {users.length>0 && 
+      {users.length>0 ? <>
+        <div>
+          <CategoryBar>
+            <li>
+              <p id={filter === 0 ? "category" : ""} onClick={() => {setFilter(0)}}>
+                All
+              </p>
+            </li>
+            <li>
+              <p id={filter === 1 ? "category" : ""} onClick={() => {  setFilter(1)}}>
+              Influencer
+              </p>
+            </li>
+            <li>
+              <p id={filter === 2 ? "category" : ""} onClick={() => {  setFilter(2)}}>
+              Artist
+              </p>
+            </li>
+            <li>
+              <p id={filter === 3 ? "category" : ""} onClick={() => {  setFilter(3)}}>
+              Enterprise
+              </p>
+            </li>
+            
+          </CategoryBar>
+        </div>
         <ArtistCards>
           {users.map((user,idx) => {
             return <ArtistCard key={idx} user={user} />;
           })}
         </ArtistCards>
+        </>:
+        <div className='ISL'>
+          <IsLoading2/>
+        <div className='loading'>
+          {randomwords}
+        </div>
+        </div>
       }
-    </div>
+    </Wrapper>
   );
 }
 

@@ -1,6 +1,7 @@
 import { Input, Button } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-query';
+import { Link } from 'react-router-dom';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components'
 import { getCheckConfirmEmail, getUserduplicateInfo, getUserInfo, patchUserInfoChange, postConfirmEmail } from '../../store/apis/user';
@@ -407,7 +408,9 @@ const ProfileSetting = () => {
                   <p>{user.userRole}</p>
                 </div>
               }
-              <Button variant="contained">인증마크 신청 페이지</Button>
+              <Link to="/apply">
+                <Button variant="contained">인증마크 신청 페이지</Button>
+              </Link>
             </Right>
           </Up>
           <BTN>

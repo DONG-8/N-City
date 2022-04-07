@@ -21,6 +21,7 @@ import YNTest from "./pages/Test/YNTest";
 import SearchPage from "./pages/NFTStore/SearchPage";
 import MapChoice from "./pages/Room/MapChoice";
 import Character from "./pages/Mypage/Character";
+import Guide from "./pages/Guide/Guide";
 
 function App() {
   useEffect(() => {
@@ -50,11 +51,12 @@ function App() {
             <Route path="/mint" element={<Mint />} />
             <Route path="/profilesetting" element={<ProfileSetting />} />
             <Route path="/event" element={<EventPage />} />
-            <Route path="/event/detail" element={<EventDetail />} />
+            <Route path="/event/:eventId" element={<EventDetail />} />
             <Route path="/rank" element={<Rank />} />
             <Route path="/artists" element={<Artists />} />
             <Route path="/YNTest" element={<YNTest />} />
             <Route path="/search/:data" element={<SearchPage />} />
+            <Route path="/guide" element={<Guide />} />
             <Route path="/ingame" element={<GameApp />} />
             <Route path="/character" element={<Character />} />
           </Routes>

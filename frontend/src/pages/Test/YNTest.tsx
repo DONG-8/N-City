@@ -926,6 +926,9 @@ const YNTest = () => {
         <ButtonBox>
           <button onClick={onClickSetApprovedForAllERC20}>setApprovedForAll to SaleFactory ERC20</button>
         </ButtonBox>
+        <ButtonBox>
+          <button onClick={() => {document.location.reload()}}>리로드테스트</button>
+        </ButtonBox>
       </FormBox>
 
     </Wrapper>

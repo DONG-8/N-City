@@ -4,10 +4,9 @@ import styled from "styled-components";
 import GuideSlide from "./GuideSlide";
 import HotArtistSlide from "./HotArtistSlide";
 import HotRoomSlide from "./HotRoomSlide";
-import SmallSlide from "./SmallSlide";
 
 const InnreContent = styled.div`
-  width: 1500px;
+  width: 1450px;
   height: 500px;
   /* background-color: pink; */
   display: flex;
@@ -48,13 +47,16 @@ const ShopIcon = styled.div`
   cursor: pointer;
   h4{
     margin-left: 20px;
-    margin-top: 40px;
+    margin-top: 20px;
   }
   .one{
     margin-top: -10px;
   }
   &#end{
     margin-right: 5vw;
+  }
+  .color{
+    color: #6225E6  ;
   }
 `;
 
@@ -105,17 +107,17 @@ const Guide = () => {
               다른 사람의 방이 궁금하다면?
               <br />
               <br />
-              방 구경하러 가기
+              <span className="color">방 구경하러 가기</span>
             </h4>
           </ShopIcon>
 
-          <ShopIcon  onClick={()=>{navigate('/nftstore')}}>
+          <ShopIcon  onClick={()=>{navigate('/store')}}>
           <img src="essets/images/거래소.png" alt="" />
           <h4>
             더 다양한 물품들을 만나보세요!
             <br />
             <br />
-            거래소
+            <span className="color">Store 가기</span>
           </h4>
         </ShopIcon>
         <ShopIcon id="end"  onClick={()=>{navigate('/mint')}} >
@@ -124,7 +126,7 @@ const Guide = () => {
             작품을 등록하고 싶으신가요?
             <br />
             <br />
-            민팅
+            <span className="color">민팅하러 가기</span>
           </h4>
         </ShopIcon>
         
