@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
 import { Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { getProductAll, getSellProduct } from "../../../store/apis/product";
 import { useMutation } from "react-query";
 import ToggleSwitch from "../../../pages/NFTStore/ToggleSwitch";
@@ -136,6 +136,7 @@ interface Iprops{
   setOpen : React.Dispatch<React.SetStateAction<boolean>>
 }
 const StoreModal:React.FC<Iprops> = ({setOpen}) => {
+
   const [filter, setFilter] = useState(0);
   const [status, setStatus] = useState(false);
   const [order, setOrder] = useState(false);
@@ -144,7 +145,20 @@ const StoreModal:React.FC<Iprops> = ({setOpen}) => {
   const [showItems, setShowItems] = useState<any[]>([]);
   const [showSales, setShowSales] = useState<any[]>([]);
   const [mode,setMode]   = useState('index') // index,detail
+  
+  const escFunction = useCallback((event) => {
+    if (event.keyCode === 27) {
+      setOpen(true)
+    }
+  }, []);
+  useEffect(() => {
+    document.addEventListener("keydown", escFunction);
 
+    return () => {
+      document.removeEventListener("keydown", escFunction);
+    };
+  }, [escFunction]);
+  
   // 상품 정보 모두 가져오기
   const getAll = useMutation<any, Error>(
     "prouductAll",

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 // x 아이콘 넣기
@@ -102,7 +102,18 @@ interface Iprops{
 }
 
 const VisitModal:React.FC<Iprops> = ({setOpen}) => {
+  const escFunction = useCallback((event) => {
+    if (event.keyCode === 27) {
+      setOpen(true)
+    }
+  }, []);
+  useEffect(() => {
+    document.addEventListener("keydown", escFunction);
 
+    return () => {
+      document.removeEventListener("keydown", escFunction);
+    };
+  }, [escFunction]);
   // 스토어에서 받아온 유저정보
   // const userId = useAppSelector((state) => state.edit.userId);
   const { userId } = useParams();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import AudioPlayer from "./AudioPlayer";
 // api 요청
@@ -121,6 +121,18 @@ interface Iprops{
   setOpen : React.Dispatch<React.SetStateAction<boolean>>
 }
 const MusicModal:React.FC<Iprops> = ({setOpen}) => {
+  const escFunction = useCallback((event) => {
+    if (event.keyCode === 27) {
+      setOpen(true)
+    }
+  }, []);
+  useEffect(() => {
+    document.addEventListener("keydown", escFunction);
+
+    return () => {
+      document.removeEventListener("keydown", escFunction);
+    };
+  }, [escFunction]);
   const [playList, setPlayList] = useState<Array<object>>([]);
   // 임시 userid params 의 데이터를 넘겨주는걸 생각해봐야할듯
   const dispatch = useAppDispatch();
