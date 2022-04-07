@@ -37,12 +37,13 @@ const UIBar = () => {
   const numId = Number(userId);
   const navigation = useNavigate();
   const myId = sessionStorage.getItem("userId");
-  const [itsMe, setItsMe] = useState(false);
 
-  // if (myId === userId) {
-  //   setItsMe(true);
-  //   console.log("나다이쉐키야");
-  // }
+  let itsMe;
+  if (myId === userId) {
+    itsMe = true;
+  } else {
+    itsMe = false;
+  }
 
   const {
     data: Alldata,
@@ -224,7 +225,9 @@ const UIBar = () => {
                 <p>Editing</p>
               </div>
             </div>
-          ) : null}
+          ) : (
+            <div>gd</div>
+          )}
         </Body>
         <BottomItem className={tog ? "close" : "open"}>
           <div className="Bottom">
