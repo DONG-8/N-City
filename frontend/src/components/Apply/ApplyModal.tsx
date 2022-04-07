@@ -269,6 +269,9 @@ const ModalBase = ({
         navigate('/')
       },
       onError: (err: any) => {
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
         console.log(err, "❌APPLY 실패!");
         alert('요청 실패!')
         navigate(-1)

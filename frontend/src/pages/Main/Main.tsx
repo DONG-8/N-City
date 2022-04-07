@@ -617,6 +617,7 @@ export default function Main() {
                 } else {
                   return (
                     <div
+                      key={idx}
                       className="inner"
                       id={id}
                       onClick={(e) => {

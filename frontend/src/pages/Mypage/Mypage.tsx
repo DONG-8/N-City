@@ -404,6 +404,9 @@ export default function Mypage() {
       },
       onError: (err: any) => {
         console.log("에러발생", err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   )
@@ -421,6 +424,9 @@ export default function Mypage() {
       },
       onError: (err: any) => {
         console.log("에러발생", err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   )
