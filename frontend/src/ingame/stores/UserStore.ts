@@ -49,7 +49,7 @@ export const userSlice = createSlice({
       state.loggedIn = action.payload
     },
     setPlayerNameMap: (state, action: PayloadAction<{ id: string; name: string }>) => { //방이름 이름 저장
-      state.playerNameMap.set(sanitizeId(action.payload.id), action.payload.name)
+      state.playerNameMap.set(action.payload.id, action.payload.name)
     },
     removePlayerNameMap: (state, action: PayloadAction<string>) => { // 
       state.playerNameMap.delete(sanitizeId(action.payload))

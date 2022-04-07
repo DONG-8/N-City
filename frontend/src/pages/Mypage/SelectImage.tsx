@@ -95,8 +95,10 @@ const SelectImage:React.FC<Iprops> = ({userId,open,setOpen,setuserURL}) => {
             </div>
           }
           {items!==undefined &&
-            (items.content).map((item)=>{
-              return(<img alt='img' 
+            (items.content).map((item,idx)=>{
+              return(
+              <img alt='img' 
+              key={idx}
               onClick={()=>{
               setuserURL(item.productThumbnailUrl);
               handleClose()}

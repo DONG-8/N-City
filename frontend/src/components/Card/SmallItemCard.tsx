@@ -14,15 +14,23 @@ import influencer from "../../essets/images/influencer-mark.png"
 import artist from "../../essets/images/artist-mark.png"
 import enterprise from "../../essets/images/enterprise-mark.png"
 
-const CardWrapper = styled.div`
-  font-family: 'Noto Sans KR', sans-serif;
-  cursor: pointer;
-  height: 420;
-  width: 350px;
-  background-color: #ffffff;
-  border-radius: 10px;
+const Wrapper = styled.div`
+  #character{
+    border:2px solid #636dffcd ;
+  }
+  #normal{
   border:0.5px solid #E9E4E4;
+  }
+`
+
+const CardWrapper = styled.div`
+  cursor: pointer;
+  height: 278px;
+  width: 210px;
+  background-color: #ffffff;
+  border-radius: 10px;  
   margin: 30px ;
+  border:0.5px solid #E9E4E4;
   &:hover{
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     .buy{
@@ -34,91 +42,78 @@ const CardWrapper = styled.div`
       transition: 0.1s ;
     }
   }
-  &#character{
-    border:2px solid #636dffcd ;
-
-  }
-  &#normal{
-  border:0.5px solid #E9E4E4;
-  }
 `
+
 const Image = styled.div`
   img{
-    width:350px;
-    height:300px ;
+    width: 210px;
+    height: 210px;
     border-radius: 10px 10px 0 0 ;
     object-fit: cover;    
-    }
+  }
 `
 const CardCenter = styled.div`
   display: flex;
-  height: 60px;
+  height: 50px;
+  display: flex;
+  border-radius: 0 0 2px 2px ;
 `;
 
 const CardBottom = styled.div`
-    height:40px;
-    border-radius:0 0 10px 10px ;
-    background-color: whitesmoke ;
+  margin-top: -14px;
+  height: 27px;
+  border-radius: 0 0 10px 10px;
+  background-color: whitesmoke;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .like {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 7px;
     display: flex;
-    justify-content: space-between ;
     align-items: center;
-    .buy{
-      visibility: hidden ;
-      font-weight: 600;
-      color:#FF865B ;
-      font-size:1.2rem ;
-      margin:5px ;
-      margin-left: 1.5rem ; 
-    }
-    .like{
-      font-size:1.2rem ;
-      font-weight: 600;
-      margin: 7px ;
-      display: flex;
-    }
-    .icon{
+  }
+  .icon {
+    display: flex;
+    align-items: center;
     cursor: pointer;
-    margin-right: 0.5vw;
-    margin-top:0.2vh;
-    &:hover{
-      transform: scale(1.1);
+    margin-right: 0.2vw;
+    svg {
+      height: 20px;
+      &:hover {
+        transform: scale(1.1);
+      }
     }
   }
-`
+`;
 const DesLeft = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
-const Artist = styled.div`
-  margin: 0.2rem;
-  font-weight: 600;
-  margin-left: 0.5rem;
-`;
-const DesRight = styled.div`
-  flex: 4;
-  margin-left: 70px;
-  margin-top: -25px;
-  font-weight: 600;
-  font-size: 30px;
-
-`;
 
 
 const SaleState = styled.div`
-  margin-right: 15px;
+  margin-right: 5px;
   font-weight: 500;
+  font-size: 13px;
 `
 const Title = styled.div`
-  font-size: 1.5rem;
+  margin-top: -15px;
+  font-size: 1rem;
   font-weight: 600;
   img{
     position: absolute;
+    width: 15px;
+    height: auto;
   }
 `;
 interface Iprops {
   item: {
+    productFavoriteUser: Array<any>;
     productId: number;
     productTitle: string;
     productPrice: number;
@@ -131,18 +126,17 @@ interface Iprops {
     favorite: boolean;
     tokenId?: number;
     userRole: string;
-  };
-  handleOpen: (item) => void;
+  }; 
+  setMode :React.Dispatch<React.SetStateAction<string>>
 }
 
-const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
-  const navigate = useNavigate()
+const SmallItemCard:React.FC<Iprops>= ({item,setMode}) => {
   const goDetailPage = (productId)=>{
-    // localStorage.setItem("item",JSON.stringify(item))
-    navigate(`/store/detail/${productId}`)
+    sessionStorage.setItem("item",JSON.stringify(item))
+    setMode('detail')
   }
   const [liked,setLiked] = useState(item.favorite)
-  const [likes,setLikes] = useState(Number(item.productFavoriteCount))
+  const [likes,setLikes] = useState(item.productFavoriteUser.length)
 
   const addLike = useMutation<any, Error>(
     "addLike",
@@ -196,12 +190,13 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
   }
 
   const onClickCard = (productId) => {
-    navigate(`/store/detail/${productId}`)
+    sessionStorage.setItem("item",JSON.stringify(item))
+    setMode('detail')
   }
 
   return (
-    <>
-      <CardWrapper  id={item.productCode===7?'character':'normal'}>
+    <Wrapper>
+      <CardWrapper id={item.productCode===7?'character':'normal'}>
         <Image
           onClick={() => {
             goDetailPage(item.productId);
@@ -215,7 +210,10 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
         </Image>
         <CardCenter>
           <DesLeft>
-            <Title><span>{item.productTitle}</span>{getVerifiedMark(item.userRole)}</Title>
+            <Title>
+              <span>{item.productTitle}</span>
+              {getVerifiedMark(item.userRole)}
+            </Title>
           </DesLeft>
         </CardCenter>
         <CardBottom>
@@ -251,20 +249,12 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
               <SaleState>경매중 {item.productPrice}NCT</SaleState>
             ) : item.productState === 2 ? (
               <SaleState>판매중 {item.productPrice}NCT</SaleState>
-            ) : (
-              <div>
-                <Button onClick={() => handleOpen(item)}>
-              <Tooltip title="판매하기">
-                  <SellIcon />
-              </Tooltip>
-                </Button>
-              </div>
-            )}
+            ) : null}
           </div>
         </CardBottom>
       </CardWrapper>
-    </>
+    </Wrapper>
   );
 }
 
-export default ItemCard
+export default SmallItemCard
