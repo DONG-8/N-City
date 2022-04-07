@@ -273,7 +273,6 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
   const resistSell = useMutation<any, Error>(
     "resistSell",
     async () => {
-      setIsLoading(true)
       return await postRegisterPurchase(value, item.productId);
     },
     {
@@ -291,7 +290,6 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
   const resistAuction = useMutation<any, Error>(
     "resistAuction",
     async () => {
-      setIsLoading(true)
       return await postRegisterAuction(value, item.productId, period);
     },
     {
