@@ -110,3 +110,13 @@ export const getProductSearch = async (productTitle : string) => {
   return response.data
 }
 
+// 상품 배치(마이룸)
+export const putProductXYView = async (data : any) => {
+  const response = await apiClient.put<any>(
+    `/products/myroom`,
+    data
+  )
+
+  return response.data
+}
+

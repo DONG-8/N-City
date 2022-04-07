@@ -62,9 +62,22 @@ export default class Network {
     })
   }
 
+    // public 방 만들기 
+  async getActiveRoom() {
+    return this.client.getAvailableRooms()
+  }
+
   // public 방 만들기 
   async joinOrCreatePublic() {
     this.room = await this.client.joinOrCreate(RoomType.PUBLIC)
+    this.initialize()
+  }
+
+  async joinOrCreate2(name:string, id:string) {
+    this.room = await this.client.joinOrCreate("custom", {
+      name: "name",
+      id: "name"
+    })
     this.initialize()
   }
 
