@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { useMutation } from "react-query";
+import { useParams } from "react-router-dom";
+
 import styled from "styled-components";
 import phaserGame from "../PhaserGame";
 import Editmap from "../scenes/Editmap";
@@ -27,7 +29,7 @@ const Sidebar = styled.div`
   padding: 4px 2px;
   right: 0;
   color: black;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   /* overflow-y: scroll; */
 `;
 
@@ -109,8 +111,8 @@ const ItemList = styled.div`
 
   img {
     margin: 8px;
-    width: 100px;
-    height: 100px;
+    /* width: 100px;
+    height: 100px; */
   }
 `;
 enum ItemCategory {
@@ -118,7 +120,7 @@ enum ItemCategory {
   WALL,
   CHAIR,
   GENERIC,
-  INTERACTION,
+  OFFICE,
   RUGS,
   STAIRS,
   TABLES,
@@ -160,9 +162,12 @@ const EditBar = () => {
 
   const [mode, setMode] = useState(true);
   const location = useAppSelector((state) => state.edit.locationInfo);
-  const userId = useAppSelector((state) => state.edit.userId);
+  // const userId = useAppSelector((state) => state.edit.userId);
   // const myArts = useAppSelector((state) => state.edit.arts);
   const navigate = useNavigate();
+
+  const { userId } = useParams();
+  const numUserId = Number(userId);
 
   useEffect(() => {
     roomInfo.mutate();
@@ -276,10 +281,10 @@ const EditBar = () => {
     }
     switch (status) {
       case ItemCategory.GROUND:
-        return makeImgTags("grounds", tileset);
+        return makeImgTagsForOb(10);
         break;
       case ItemCategory.WALL:
-        return makeImgTags("walls", wallset);
+        return makeImgTagsForOb(9);
         break;
       case ItemCategory.CHAIR:
         return makeImgTagsForOb(0);
@@ -287,7 +292,7 @@ const EditBar = () => {
       case ItemCategory.GENERIC:
         return makeImgTagsForOb(1);
         break;
-      case ItemCategory.INTERACTION:
+      case ItemCategory.OFFICE:
         return makeImgTagsForOb(2);
         break;
       case ItemCategory.RUGS:
@@ -332,7 +337,7 @@ const EditBar = () => {
       case ItemCategory.TABLES:
         return 6;
         break;
-      case ItemCategory.INTERACTION:
+      case ItemCategory.OFFICE:
         if (itemGid < 4685) {
           return 7;
         } else {
@@ -365,9 +370,15 @@ const EditBar = () => {
   function ChangeMap() {
     // console.log(newData)
     if (mode) {
-      if (status === ItemCategory.GROUND && newData.layers[0].data) {
+      if ((status === ItemCategory.GROUND || status === ItemCategory.WALL)&& newData.layers[0].data) {
+        if (status === ItemCategory.WALL) {
+          console.log('hi')
+        }
         // 타일 데이터 넣기
-        newData.layers[0].data[location.x] = location.gid;
+        const tileIdx = location.y * 40 + location.x
+        console.log(location.y, location.x)
+        console.log(tileIdx)
+        newData.layers[0].data[tileIdx] = location.gid;
       } else if (status === ItemCategory.CHAIR) {
         // 의자 데이터 넣기
         let chairDirection = "down";
@@ -434,8 +445,6 @@ const EditBar = () => {
     } else {
       if (location.gid === 10) {
         // 작품일 경우 삭제
-        // putArts.push({id:location.x, x:0, y:0, view:false})
-        // makeImgTagsByMyArt(location.x, false)
         for (var key of newArtList.content) {
           if (key.productId === location.x) {
             key.productXCoordinate = 0
@@ -462,7 +471,7 @@ const EditBar = () => {
   const roomInfo = useMutation<any, Error>(
     "postRoomInfo",
     async () => {
-      return await postRoomJoin(15);
+      return await postRoomJoin(numUserId);
     },
     {
       onSuccess: (res) => {
@@ -500,7 +509,7 @@ const EditBar = () => {
   const { mutate: getMyArts } = useMutation<any, Error>(
     "getUsercollectedInfo",
     async () => {
-      return await getUsercollectedInfo(15);
+      return await getUsercollectedInfo(numUserId);
     },
     {
       onSuccess: (res) => {
@@ -578,7 +587,7 @@ const EditBar = () => {
             className="Ground"
             id="{}"
           >
-            ground
+            Ground
           </button>
           <button
             onClick={() => {
@@ -587,16 +596,25 @@ const EditBar = () => {
             }}
             className="Wall"
           >
-            벽
+            Wall
           </button>
           <button
             onClick={() => {
-              setStatus(ItemCategory.INTERACTION);
+              setStatus(ItemCategory.OFFICE);
               ModeChange(true);
             }}
-            className="Interaction"
+            className="Office"
           >
-            상호작용
+            Office
+          </button>
+          <button
+            onClick={() => {
+              setStatus(ItemCategory.TABLES);
+              ModeChange(true);
+            }}
+            className="Table"
+          >
+            Table
           </button>
           <button
             onClick={() => {
@@ -605,7 +623,7 @@ const EditBar = () => {
             }}
             className="Chair"
           >
-            의자
+            Chair
           </button>
           <button
             onClick={() => {
@@ -614,7 +632,7 @@ const EditBar = () => {
             }}
             className="Generic"
           >
-            제내릭
+            Generic
           </button>
           <button
             onClick={() => {
@@ -623,7 +641,7 @@ const EditBar = () => {
             }}
             className="Rugs"
           >
-            러그
+            Rug
           </button>
           <button
             onClick={() => {
@@ -632,7 +650,7 @@ const EditBar = () => {
             }}
             className="Window_Door"
           >
-            창문,문
+            Window &#38; Door
           </button>
           <button
             onClick={() => {
@@ -641,7 +659,7 @@ const EditBar = () => {
             }}
             className="Stairs"
           >
-            ????
+            Stair
           </button>
           <button
             onClick={() => {
