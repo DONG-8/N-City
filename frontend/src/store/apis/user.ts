@@ -2,7 +2,6 @@ import axios from "axios"
 import * as API from "./types" 
 
 const apiClient = axios.create({
-  // baseURL: "https://j6e106.p.ssafy.io/api",
   // baseURL: "http://localhost:8080/api",
   baseURL: "https://j6e106.p.ssafy.io/api",
   headers: {
@@ -10,7 +9,6 @@ const apiClient = axios.create({
   },
 });
 const fileApiClient = axios.create({
-  // baseURL: "https://j6e106.p.ssafy.io/api",
   baseURL: "https://j6e106.p.ssafy.io/api",
   // baseURL: "http://localhost:8080/api",
   headers: {

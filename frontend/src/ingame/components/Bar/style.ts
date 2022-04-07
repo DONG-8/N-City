@@ -45,6 +45,7 @@ export const Wrapper = styled.div`
     width: 300px;
     /* background-color: red; */
   }
+  
 
   .Icon {
     position: relative;
@@ -63,13 +64,11 @@ export const Wrapper = styled.div`
 
     .content {
       width: 200px;
-      /* background-color: aliceblue; */
-      /* display: flex; */
-      /* height: 100px; */
+   
       p {
         text-align: center;
-        font-size: 24px;
-        margin-top: 30px;
+        font-size: 18px;
+        /* margin-top: 30px; */
       }
     }
     .playimg {
@@ -173,7 +172,8 @@ export const BottomItem = styled.div`
       p {
         text-align: center;
         font-size: 24px;
-        margin-top: 30px;
+        /* margin-top: 30px; */
+        margin: 0;
       }
     }
     .playimg {
@@ -212,3 +212,9 @@ export const Absol = styled.div`
 const ButtonTop = styled.div``;
 
 const ButtonBottom = styled.div``;
+
+export const NonMusicDiv = styled.div`
+  width : 100%;
+  height: 100%;
+  text-align: center;
+`

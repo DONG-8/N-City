@@ -13,9 +13,6 @@ const apiClient = axios.create({
   },
 });
 
-// const BASE_URL = `j6e106.p.ssafy.io:8443`;
-// const BASE_URL = `localhost:8080`;
-
 export const getProductAll =async ({page,size}:API.TypeProductGetAll) => {
   const response = await apiClient.get<API.TypeProductGetAll>(
     '/products', 

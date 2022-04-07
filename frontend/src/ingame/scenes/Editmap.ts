@@ -103,9 +103,11 @@ class Editmap extends Phaser.Scene {
         gameObjects.destroy();
         console.log(gameObjects)
         if (gameObjects.name === "10") {  // 작품일 경우 삭제 
-          store.dispatch(LocationInfoChange({x:gameObjects.texture.key, y:0, gid:Number(gameObjects.name)}));
-        } else {
+          store.dispatch(LocationInfoChange({x:Number(gameObjects.texture.key), y:0, gid:Number(gameObjects.name)}));
+        } else if (gameObjects.name === "2") {
           store.dispatch(LocationInfoChange({x:gameObjects.x-16, y:gameObjects.y+32, gid:Number(gameObjects.name)}));
+        } else {
+          store.dispatch(LocationInfoChange({x:gameObjects.x-16, y:gameObjects.y+16, gid:Number(gameObjects.name)}));
         }
       }
     }, this)
@@ -189,9 +191,7 @@ class Editmap extends Phaser.Scene {
     //   ).setInteractive();
     // });
     {this.myArtList.content.map((product, idx) => {
-      console.log(this.myArtList)
       if (product.productView) {
-        console.log(product.productId)
         // this.add.image(product.productXCoordinate, productYCoordinate, `${this.itemGid}`).setDepth(this.marker.y+16).setInteractive()
         vendingMachines.get(product.productXCoordinate, product.productYCoordinate, String(product.productId), String(product.productId))
         .setDepth(10).setInteractive().setName("10")
@@ -260,13 +260,13 @@ class Editmap extends Phaser.Scene {
           break
         case ItemCategory.INTERACTION: 
           if(this.itemGid < 4685) {
-            this.physics.add.staticSprite(this.marker.x+16, this.marker.y, 'computers', this.itemGid-4680).setDepth(this.marker.y).setInteractive()
+            this.physics.add.staticSprite(this.marker.x+48, this.marker.y, 'computers', this.itemGid-4680).setDepth(this.marker.y).setInteractive()
             .setName("8")
           } else {
-            this.physics.add.staticSprite(this.marker.x+16, this.marker.y, 'whiteboards', this.itemGid-4685).setDepth(this.marker.y).setInteractive()
+            this.physics.add.staticSprite(this.marker.x+32, this.marker.y, 'whiteboards', this.itemGid-4685).setDepth(this.marker.y).setInteractive()
             .setName("7")
           }
-          store.dispatch(LocationInfoChange({x:this.marker.x-32, y:this.marker.y+32, gid:this.itemGid}));
+          store.dispatch(LocationInfoChange({x:this.marker.x, y:this.marker.y+32, gid:this.itemGid}));
           break
         case ItemCategory.CHAIR: 
           this.add.image(this.marker.x+16, this.marker.y, 'chairs', this.itemGid-2561).setDepth(this.marker.y).setInteractive().setName("2")
@@ -277,9 +277,9 @@ class Editmap extends Phaser.Scene {
           var h = this.itemHeight / 32
           for (let i = 0; i< w; i ++){
             for (let j = 0; j< h; j ++){
-              this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(this.marker.y+16+(j*32)).setInteractive()
+              this.add.image(this.marker.x+16+(i*32), this.marker.y+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(this.marker.y+16+(j*32)).setInteractive()
               .setName(this.selectedItemC === ItemCategory.GENERIC ? "6" : "5")
-              store.dispatch(LocationInfoChange({x:this.marker.x-32+(i*32), y:this.marker.y+64+(j*32), gid:this.itemGid+(i+j*16)+3432}));
+              store.dispatch(LocationInfoChange({x:this.marker.x+(i*32), y:this.marker.y+32+(j*32), gid:this.itemGid+(i+j*16)+3432}));
           }
           }
           break
@@ -290,12 +290,12 @@ class Editmap extends Phaser.Scene {
               for (let j = 0; j< h; j ++){
                 console.log('Editmap', this.itemGid+(i+j*16))
                 this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(0).setInteractive().setName("5")
-                store.dispatch(LocationInfoChange({x:this.marker.x-32+(i*32), y:this.marker.y+96+(j*32), gid:this.itemGid+(i+j*16)+3432}));
+                store.dispatch(LocationInfoChange({x:this.marker.x-32+(i*32), y:this.marker.y+80+(j*32), gid:this.itemGid+(i+j*16)+3432}));
             }
           }
           break
         case ItemCategory.MYART:
-          this.add.image(this.marker.x+16, this.marker.y+16, `${this.itemGid}`).setDepth(this.marker.y+16).setInteractive().setName("10")
+          this.add.image(this.marker.x, this.marker.y-16, `${this.itemGid}`).setDepth(10).setInteractive().setName("10")
           store.dispatch(LocationInfoChange({x:this.marker.x, y:this.marker.y+32, gid:this.itemGid}));
           this.selectedItemC = ItemCategory.NONE
 

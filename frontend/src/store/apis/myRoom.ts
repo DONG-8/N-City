@@ -2,7 +2,6 @@ import axios from "axios"
 import * as API from "./types" 
 
 const apiClient = axios.create({
-  // baseURL: "https://j6e106.p.ssafy.io/api",
   // baseURL: "http://localhost:8080/api",
   baseURL: "https://j6e106.p.ssafy.io/api",
   headers: {
@@ -54,6 +53,7 @@ export const postRandomJoin = async ()=> {
   const response = await apiClient.post<any>(
     `/myroom/random`
   )
+  return response.data
 }
 
 export const getCharacter= async (userId:number)=> {
