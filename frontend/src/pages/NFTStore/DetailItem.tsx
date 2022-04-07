@@ -486,9 +486,9 @@ interface Istate {
   };
 }
 const DetailItem = () => {
-  const [localitem, setLocalitem] = useState<Istate["item"]>(
-    JSON.parse(sessionStorage.getItem("item") || "")
-  );
+  // const [localitem, setLocalitem] = useState<Istate["item"]>(
+  //   JSON.parse(sessionStorage.getItem("item") || "")
+  // );
   const [likes, setLikes] = useState(Number(0));
   const [followers, setFollowers] = useState(0);
   const [followees, setFollowees] = useState(0);
@@ -566,11 +566,11 @@ const DetailItem = () => {
   const getVerifiedMark = (userType: string) => {
     switch (userType) {
       case "ROLE_INFLUENCER":
-        return <img src={influencer} alt="mark" />;
+        return <img src={influencer} title='influencer' alt="mark" />;
       case "ROLE_ARTIST":
-        return <img src={artist} alt="mark" />;
+        return <img src={artist}  title='artist' alt="mark" />;
       case "ROLE_ENTERPRISE":
-        return <img src={enterprise} alt="mark" />;
+        return <img src={enterprise} title='enterprise' alt="mark" />;
       default:
         return;
     }

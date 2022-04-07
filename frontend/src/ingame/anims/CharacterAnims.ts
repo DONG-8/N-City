@@ -363,123 +363,176 @@ export const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) 
   //   frameRate: animsFrameRate,
   // })
 
-  anims.create({
-    key: 'character_idle_right',
-    frames: anims.generateFrameNames('character', {
-      start: 0,
-      end: 5,
-    }),
-    repeat: -1,
-    frameRate: animsFrameRate * 0.6,
-  })
+ const characterList = [...Array(6).keys()].map(key => key + 1)
 
-  anims.create({
-    key: 'character_idle_up',
-    frames: anims.generateFrameNames('character', {
-      start: 6,
-      end: 11,
-    }),
-    repeat: -1,
-    frameRate: animsFrameRate * 0.6,
-  })
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_idle_right`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 0,
+          end: 5,
+        }),
+        repeat: -1,
+        frameRate: animsFrameRate * 0.6,
+      }))
+    })
+  
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_idle_up`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 6,
+          end: 11,
+        }),
+        repeat: -1,
+        frameRate: animsFrameRate * 0.6,
+      }))
+    })
 
-  anims.create({
-    key: 'character_idle_left',
-    frames: anims.generateFrameNames('character', {
-      start: 12,
-      end: 17,
-    }),
-    repeat: -1,
-    frameRate: animsFrameRate * 0.6,
-  })
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_idle_up`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 6,
+          end: 11,
+        }),
+        repeat: -1,
+        frameRate: animsFrameRate * 0.6,
+       }))
+    })
 
-  anims.create({
-    key: 'character_idle_down',
-    frames: anims.generateFrameNames('character', {
-      start: 18,
-      end: 23,
-    }),
-    repeat: -1,
-    frameRate: animsFrameRate * 0.6,
-  })
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_idle_left`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 12,
+          end: 17,
+        }),
+        repeat: -1,
+        frameRate: animsFrameRate * 0.6,
+      }))
+    })
 
-  anims.create({
-    key: 'character_run_right',
-    frames: anims.generateFrameNames('character', {
-      start: 24,
-      end: 29,
-    }),
-    repeat: -1,
-    frameRate: animsFrameRate,
-  })
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_idle_down`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 18,
+          end: 23,
+        }),
+        repeat: -1,
+        frameRate: animsFrameRate * 0.6,
+      }))
+    })
 
-  anims.create({
-    key: 'character_run_up',
-    frames: anims.generateFrameNames('character', {
-      start: 30,
-      end: 35,
-    }),
-    repeat: -1,
-    frameRate: animsFrameRate,
-  })
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_run_right`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 24,
+          end: 29,
+        }),
+        repeat: -1,
+        frameRate: animsFrameRate,
+      }))
+    })
 
-  anims.create({
-    key: 'character_run_left',
-    frames: anims.generateFrameNames('character', {
-      start: 36,
-      end: 41,
-    }),
-    repeat: -1,
-    frameRate: animsFrameRate,
-  })
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_run_up`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 30,
+          end: 35,
+        }),
+        repeat: -1,
+        frameRate: animsFrameRate,
+      }))
+    })
 
-  anims.create({
-    key: 'character_run_down',
-    frames: anims.generateFrameNames('character', {
-      start: 42,
-      end: 47,
-    }),
-    repeat: -1,
-    frameRate: animsFrameRate,
-  })
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_run_left`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 36,
+          end: 41,
+        }),
+        repeat: -1,
+        frameRate: animsFrameRate,
+      }))
+    })
 
-  anims.create({
-    key: 'character_sit_down',
-    frames: anims.generateFrameNames('character', {
-      start: 48,
-      end: 48,
-    }),
-    repeat: 0,
-    frameRate: animsFrameRate,
-  })
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_run_down`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 42,
+          end: 47,
+        }),
+        repeat: -1,
+        frameRate: animsFrameRate,
+      }))
+    })
 
-  anims.create({
-    key: 'character_sit_left',
-    frames: anims.generateFrameNames('character', {
-      start: 49,
-      end: 49,
-    }),
-    repeat: 0,
-    frameRate: animsFrameRate,
-  })
+  
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_sit_down`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 48,
+          end: 48,
+        }),
+        repeat: 0,
+        frameRate: animsFrameRate,
+      }))
+    })
 
-  anims.create({
-    key: 'character_sit_right',
-    frames: anims.generateFrameNames('character', {
-      start: 50,
-      end: 50,
-    }),
-    repeat: 0,
-    frameRate: animsFrameRate,
-  })
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_sit_left`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 49,
+          end: 49,
+        }),
+        repeat: 0,
+        frameRate: animsFrameRate,
+      }))
+    })
 
-  anims.create({
-    key: 'character_sit_up',
-    frames: anims.generateFrameNames('character', {
-      start: 51,
-      end: 51,
-    }),
-    repeat: 0,
-    frameRate: animsFrameRate,
-  })
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_sit_right`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 50,
+          end: 50,
+        }),
+        repeat: 0,
+        frameRate: animsFrameRate,
+      }))
+    })
+
+  characterList.map((idx) => {
+    return (
+      anims.create({
+        key: `${idx}_sit_up`,
+        frames: anims.generateFrameNames(`${idx}`, {
+          start: 51,
+          end: 51,
+        }),
+        repeat: 0,
+        frameRate: animsFrameRate,
+      }))
+    })
+  
 }

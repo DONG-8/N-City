@@ -4,6 +4,7 @@ import MetaMaskOnboarding from "@metamask/onboarding";
 import { useMutation } from 'react-query';
 import { postLogin } from "../../store/apis/log";
 import { useNavigate } from "react-router-dom";
+import { NFTcreatorAddress, SSFTokenAddress, web3 } from "../../web3Config";
 
 //// style
 const Wrapper = styled.div`
@@ -123,22 +124,60 @@ const Login = () => {
       await ethereum.request({ method: "eth_requestAccounts" });
       const accounts = await ethereum.request({ method: "eth_accounts" });
       await setAccount(accounts[0])
-      // login
-      login.mutate()
-    } catch (error) {
-      console.error(error);
-      alert("메타마스크에 연결중 오류가 발생하였습니다.");
-    }
-  };
 
-  const login = useMutation<any, Error>(
-    "postPurchase",
-    async () => {
-      return postLogin(account)
-    },
-    {
-      onSuccess: (res) => {
-        console.log("로그인요청 성공", res);
+      // NCT토큰 자동불러오기 (이미 등록되어있어도 뜸.. 이건 해결방법은 없음(못찾는게아니라 애초에 방법이없음))
+      // https://coder-solution.com/solution-blog/288728 참고
+      
+      
+      
+      const chainId = 31221
+      const rpcurl = "http://20.196.209.2:8545"
+      
+
+        await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: web3.utils.toHex(chainId) }],
+          });
+        
+
+        await ethereum
+          .request({
+            method: "wallet_watchAsset",
+            params: {
+              type: "ERC20",
+              options: {
+                address: SSFTokenAddress,
+                symbol: "NCT",
+                decimals: 0,
+                image: "",
+              },
+            },
+          })
+          .then((success) => {
+            if (success) {
+              console.log("successfully added to wallet!");
+            } else {
+              throw new Error("Something went wrong.");
+            }
+          })
+          .catch(console.error);
+          
+          // login
+        login.mutate()
+      } catch (error) {
+        console.error(error);
+        alert("메타마스크에 연결중 오류가 발생하였습니다.");
+      }
+    };
+    
+    const login = useMutation<any, Error>(
+      "postPurchase",
+      async () => {
+        return postLogin(account)
+      },
+      {
+        onSuccess: (res) => {
+          console.log("로그인요청 성공", res);
         sessionStorage.setItem("userId", res.userId)
         sessionStorage.setItem("userNickname", res.userNick)
         navigate("/")

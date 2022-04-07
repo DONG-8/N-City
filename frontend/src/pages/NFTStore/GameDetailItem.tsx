@@ -300,19 +300,6 @@ const GameDetailItem:React.FC<Iprops> = ({setMode}) => {
 
   
 
-  const getVerifiedMark = (userType: string) => {
-    switch (userType) {
-      case "ROLE_INFLUENCER":
-        return <img src={influencer} alt="mark" />;
-      case "ROLE_ARTIST":
-        return <img src={artist} alt="mark" />;
-      case "ROLE_ENTERPRISE":
-        return <img src={enterprise} alt="mark" />;
-      default:
-        return;
-    }
-  }
-
   const getLiked = useMutation<any, Error>(
     "getProductLike",
     async () => {
