@@ -32,13 +32,14 @@ const Sidebar = styled.div`
 
 const XButton = styled.div`
   position: relative;
-  width: 200px;
+  width: 100%;
   height: 50px;
-  left: 30%;
-  top: 10px;
-  margin: 5px;
+  margin-right: 20px;
+  margin-top: 20px;
   /* background-color: red; */
   display: flex;
+  justify-content: space-around;
+  font-size: 120%;
   .button {
     width: 50px;
     height: 50px;
@@ -52,7 +53,7 @@ const CategoriWrapper = styled.div`
   height: 40%;
   display: flex;
   flex-direction: row;
-  margin-top: 30px;
+  margin-top: 10px;
 `;
 
 const CategoriBar = styled.div`
@@ -490,6 +491,7 @@ const EditBar = () => {
         });
         setPutArts([{ id: 0, x: 0, y: 0, view: true }]);
         console.log("저장 완료");
+        window.location.reload();
       },
       onError: (err: any) => {
         console.log(err);
@@ -537,24 +539,29 @@ const EditBar = () => {
   return (
     <Sidebar>
       <XButton>
-        <img
-          className="button"
-          src="/essets/room/save.png"
-          alt=""
-          onClick={() => changeRoom()}
-        />
-        <img
-          className="button"
-          src="/essets/room/delete.png"
-          alt=""
-          onClick={() => ModeChange(false)}
-        />
-        <img
-          className="button"
-          src="/essets/room/edit.png"
-          onClick={() => ModeChange(true)}
-        />
-        <img className="button" src="/essets/room/close.png" alt="" />
+        {mode ? <div>생성중</div> : <div>삭제중</div>}
+
+        <div>
+          <img
+            className="button"
+            src="/essets/room/save.png"
+            alt=""
+            onClick={() => changeRoom()}
+          />
+          <img
+            className="button"
+            src="/essets/room/delete.png"
+            alt=""
+            onClick={() => ModeChange(false)}
+          />
+          <img
+            className="button"
+            src="/essets/room/edit.png"
+            alt=""
+            onClick={() => ModeChange(true)}
+          />
+          <img className="button" src="/essets/room/close.png" alt="" />
+        </div>
       </XButton>
 
       <CategoriWrapper>
