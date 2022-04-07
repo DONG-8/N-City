@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
@@ -8,6 +8,7 @@ import { Button } from '@mui/material'
 import GameItemCard from './NFTstore/GameDetailItem'
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import GameDetailItem from './NFTstore/GameDetailItem'
+import SmallItemCard from '../../components/Card/SmallItemCard'
 
 const Wrapper = styled.div`
   border-radius: 5px;
@@ -26,10 +27,7 @@ const Wrapper = styled.div`
     top: 1vh;
     right: 2vw;
   }
-  
-  
 `
-
 const ColorBar = styled.div`
     margin: auto;
     margin-top:0;
@@ -109,7 +107,7 @@ const CategoryBar = styled.div`
 `
 const ItemCards = styled.div`
   margin:auto ;
-  width: 90% ;
+  width: 80% ;
   display: flex ;
   flex-wrap: wrap ;
   justify-content:center ;
@@ -117,8 +115,8 @@ const ItemCards = styled.div`
 const ModalWrapper = styled.div`
    position: absolute;
     bottom: 10vh;
-    right: 5vw;
-  width: 80vw;
+    right: 20vw;
+  width: 7rt0vw;
   height: 80vh;
   color: #eee;
   background: white;
@@ -171,35 +169,40 @@ const StoreWapper = styled.div`
   }
 `
 interface Istate{
-  items :{
-    productId: Number,
-    productTitle: string,
-    productPrice: Number,
-    productThumbnailUrl: string,
-    productFavorite: Number,
-    productRegDt:Object,
-    productCode: Number,
-    productFavoriteUser:{
-      authId: Number,
-      userAddress: string,
-      userDescription: string,
-      userEmail: string,
-      userEmailConfirm: boolean,
-      userId: number,
-      userImgUrl: string,
-      userNick: string,
-      userRole: string,
-    }[]
-  }[]
+  item: {
+    productFavoriteUser: Array<any>;
+    productId: number;
+    productTitle: string;
+    productPrice: number;
+    productThumbnailUrl: string;
+    productFavorite: number;
+    productRegDt: Object;
+    productCode: number;
+    productState: number;
+    productFavoriteCount: number;
+    favorite: boolean;
+    tokenId?: number;
+    userRole: string;
+  }; 
 }
 
 const VendingMachineDialog = () => {
   const [nftnumber,setNftnumber] = useState(useAppSelector((state)=>state.vendingMachine.nftnumber))
-  // const [imgurl,setImgurl] = useState(TOKENS[Number(nftnumber)])
+  const [userProducts,setUserProducts] = useState(useAppSelector((state)=>state.user.userProducts))
+  const [imgurl,setImgurl] = useState('')
   const dispatch = useAppDispatch()
   const [mode,setMode]  = useState('display')
   const [filter,setFilter] = useState("all")
-  const [items,setItems] = useState<Istate['items']>([])
+  const [items,setItems] = useState<Istate['item'][]>([])
+
+  useEffect(() => {
+    userProducts.content.map((product) => {
+      if(product.productId === nftnumber) {
+        setImgurl(product.productFileUrl)
+      }
+    })
+  },[nftnumber])
+
   return (
     <ModalWrapper>
         {mode ==='display' &&
@@ -208,7 +211,7 @@ const VendingMachineDialog = () => {
               <CloseIcon />
             </IconButton>
             <div className='display'>
-              {/* <img className='img' src={imgurl} alt='작품'/> */}
+              <img className='img' src={imgurl} alt='작품'/>
               <div className='btnbox'>
                 <Button variant="contained" className='btn'
                 onClick={()=>{setMode('detail')}}
@@ -222,13 +225,13 @@ const VendingMachineDialog = () => {
         }
 
         <StoreWapper>
-            <IconButton size="small" className="close" onClick={() => dispatch(closeVendingMachineDialogOpen())}>
-              <CloseIcon />
-            </IconButton>
-          <div className='nftstore'>
-          {mode==='index'&&
-            <div className='Index'>
-              <ColorBar>
+          <IconButton size="small" className="close" onClick={() => dispatch(closeVendingMachineDialogOpen())}>
+            <CloseIcon />
+          </IconButton>
+            {mode==='index'&&
+            <div className='nftstore'>
+              <div className='Index'>
+                <ColorBar>
                   {filter === "all" && (
                     <img className="all" src="essets/images/오로라.jpg" alt="bg" />
                   )}
@@ -281,19 +284,19 @@ const VendingMachineDialog = () => {
                   </li>
                 </CategoryBar>
               <ItemCards>
-                {/* {items.map((item,idx) => {
-                  return <GameItemCard setMode={setMode} key={idx} item={item} />;
-                })} */}
+                {items.map((item,idx) => {
+                  return <SmallItemCard setMode={setMode} key={idx} item={item} />;
+                })}
               </ItemCards>
+            </div>
             </div>
           }
           {mode==='detail'&&
             <div className='Detail'>
-              <KeyboardReturnIcon style={{  cursor: 'pointer'}} onClick={()=>{setMode('index')}} />
+              <KeyboardReturnIcon style={{cursor: 'pointer'}} onClick={()=>{setMode('index')}} />
               <GameDetailItem setMode={setMode}/>
             </div>
           }
-          </div>
       </StoreWapper>
     </ModalWrapper>
       
