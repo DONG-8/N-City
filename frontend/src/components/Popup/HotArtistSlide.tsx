@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForward from "@material-ui/icons/ArrowForward";
-import RankArtistCard from "./RankArtistCard";
 import { useMutation, useQuery } from 'react-query';
-import {getRoomTop5} from '../../store/apis/myRoom'
 import RankCitizen from "./RankCitizen";
 import { getUserfollowTop5 } from "../../store/apis/user";
 

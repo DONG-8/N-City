@@ -251,7 +251,7 @@ export default function Chat() {
           // 채팅창을 안열었을 경우 아이콘 보여주기
           <FabWrapper>
             <Fab
-              color="warning"
+              color="default"
               aria-label="showChat"
               onClick={() => {
                 dispatch(setShowChat(true));
