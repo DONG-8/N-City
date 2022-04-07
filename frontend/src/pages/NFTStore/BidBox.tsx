@@ -211,9 +211,12 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
         setIsloading(false);
         navigate(`/mypage/${sessionStorage.getItem("userId")}`);
       },
-      onError: (err) => {
+      onError: (err:any) => {
         setIsloading(false);
         console.log("confirm 실패", err)
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -229,9 +232,12 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
         setIsloading(false)
         window.location.reload()
       },
-      onError: (err) => {
+      onError: (err:any) => {
         setIsloading(false)
         console.log("경매취소 실패", err)
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       }
     }
   );
@@ -251,6 +257,9 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
       onError: (err: any) => {
         console.log("구매등록 취소 실패", err);
         setIsloading(false)
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );

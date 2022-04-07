@@ -154,21 +154,37 @@ const ItemCard2:React.FC<Iprops>= ({item}) => {
     sessionStorage.setItem("item",JSON.stringify(item))
   }
   const [likes,setLikes] = useState(item.productFavoriteUser.length)
-  const LikeIt = useMutation<any,Error>( // 좋아요 api
-    'postProductLike',
-    async()=>{ return (
-      await ( postProductLike(Number(item.productId)))
-      )
+
+  const LikeIt = useMutation<any, Error>( // 좋아요 api
+    "postProductLike",
+    async () => {
+      return await postProductLike(Number(item.productId));
     },
-    {onSuccess: (res)=>console.log(res),
-      onError:(err)=>console.log(err)}
-  )
-  const cancelLikeIt = useMutation<any,Error>( //좋아요 취소 api
-    'delProductLike',
-    async()=>{ return (await ( delProductLike(Number(item.productId))))},
-    {onSuccess: (res)=>console.log(res),
-    onError:(err)=>console.log(err)}
-  )
+    {
+      onSuccess: (res) => console.log(res),
+      onError: (err:any) => {
+        console.log(err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
+      },
+    }
+  );
+  const cancelLikeIt = useMutation<any, Error>( //좋아요 취소 api
+    "delProductLike",
+    async () => {
+      return await delProductLike(Number(item.productId));
+    },
+    {
+      onSuccess: (res) => console.log(res),
+      onError: (err:any) => {
+        console.log(err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
+      },
+    }
+  );
   const Like =()=>{ //좋아요 버튼 
     setLikes(likes+1)
     LikeIt.mutate()

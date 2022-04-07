@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ConfirmModal from "../../components/admin/ConfirmModal";
 import MintERC20Modal from "../../components/admin/MintERC20Modal";
@@ -192,6 +193,7 @@ const Admin = () => {
   const [newUserId, setNewUserId] = useState(0)
   // 이름, 이메일, 파일
   const { ethereum } = window;
+  const navigate = useNavigate();
 
   const getAccount = async () => {
     const accounts = await ethereum.request({ method: "eth_accounts" });
@@ -221,6 +223,9 @@ const Admin = () => {
       },
       onError: (err: any) => {
         console.log("❌디자이너 불러오기 실패!",err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -236,6 +241,9 @@ const Admin = () => {
       },
       onError: (err: any) => {
         console.log("❌인플루언서 불러오기 실패!",err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -251,6 +259,9 @@ const Admin = () => {
       },
       onError: (err: any) => {
         console.log("❌기업 불러오기 실패!",err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -267,6 +278,9 @@ const Admin = () => {
       },
       onError: (err: any) => {
         console.log("❌신규유저 불러오기 실패!",err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -283,6 +297,9 @@ const Admin = () => {
       },
       onError: (err: any) => {
         console.log("❌토큰신청유저 불러오기 실패!",err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -298,6 +315,9 @@ const Admin = () => {
       },
       onError: (err: any) => {
         console.log("❌토큰전송 실패!",err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );

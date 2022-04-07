@@ -6,6 +6,7 @@ import { delProductLike, postProductLike } from "../../../store/apis/favorite";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
+import { useNavigate } from "react-router-dom";
 interface Iprops {
   setMode: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -138,6 +139,7 @@ const GameDetailItem: React.FC<Iprops> = ({ setMode }) => {
   const [MyAddress, setMyAddress] = useState(sessionStorage.getItem("userId"));
   const [likes, setLikes] = useState(item.productFavoriteUser.length);
   const [liked, setLiked] = useState(false); // 내가 좋아요 했나
+  const navigate = useNavigate()
   useEffect(() => {
     var tmp = false;
     item.productFavoriteUser.map((user) => {
@@ -152,14 +154,30 @@ const GameDetailItem: React.FC<Iprops> = ({ setMode }) => {
     async () => {
       return await postProductLike(Number(item.productId));
     },
-    { onSuccess: (res) => console.log(res), onError: (err) => console.log(err) }
+    {
+      onSuccess: (res) => console.log(res),
+      onError: (err: any) => {
+        console.log(err);
+        if (err.response.status === 401) {
+          navigate("/login");
+        }
+      },
+    }
   );
   const cancelLikeIt = useMutation<any, Error>( //좋아요 취소 api
     "delProductLike",
     async () => {
       return await delProductLike(Number(item.productId));
     },
-    { onSuccess: (res) => console.log(res), onError: (err) => console.log(err) }
+    {
+      onSuccess: (res) => console.log(res),
+      onError: (err: any) => {
+        console.log(err);
+        if (err.response.status === 401) {
+          navigate("/login");
+        }
+      },
+    }
   );
   const Like = () => {
     //좋아요 버튼

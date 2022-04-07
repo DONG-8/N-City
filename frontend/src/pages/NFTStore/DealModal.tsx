@@ -248,6 +248,9 @@ const DealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
       onError: (err: any) => {
         setIsLoading(false)
         console.log(err, "경매 오류");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -267,6 +270,9 @@ const DealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
       onError: (err: any) => {
         setIsLoading(false)
         console.log("buy요청 실패", err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );

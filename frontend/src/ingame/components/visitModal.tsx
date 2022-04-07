@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 // x 아이콘 넣기
 import IconButton from "@mui/material/IconButton";
@@ -103,7 +104,9 @@ interface Iprops{
 const VisitModal:React.FC<Iprops> = ({setOpen}) => {
 
   // 스토어에서 받아온 유저정보
-  const userId = useAppSelector((state) => state.edit.userId);
+  // const userId = useAppSelector((state) => state.edit.userId);
+  const { userId } = useParams();
+  const ownerId = Number(userId);
   const dispatch = useAppDispatch();
   const [pagenumber, setPagenumber] = useState(1);
   const [pageArr, setPageArr] = useState<number[]>([]);
@@ -111,12 +114,13 @@ const VisitModal:React.FC<Iprops> = ({setOpen}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState("");
   const myid = JSON.parse(sessionStorage.getItem("userId") || "");
+
   // 파라미터에서 userid를 받아온다
   // 현재는 임시 데이터이다.
   const { data: userInfo, isLoading: userInfoLoading } = useQuery<any>(
     "userInfo",
     async () => {
-      return await getUserInfo(userId);
+      return await getUserInfo(ownerId);
     }
   );
   const {
@@ -124,13 +128,13 @@ const VisitModal:React.FC<Iprops> = ({setOpen}) => {
     isLoading: RoomInfoLoading,
     mutate: RoomInfo,
   } = useMutation<any, Error>("postRoomInfo", async () => {
-    return await postRoomJoin(userId);
+    return await postRoomJoin(ownerId);
   });
 
   const postBook = useMutation<any, Error>(
     "postBookinput",
     async () => {
-      return await postGuestBook(inputValue, userId, myid);
+      return await postGuestBook(inputValue, ownerId, myid);
     },
     {
       onSuccess: (res) => {
@@ -147,7 +151,7 @@ const VisitModal:React.FC<Iprops> = ({setOpen}) => {
   } = useQuery<any>(
     ["guestbook"],
     async () => {
-      return await getGuestBook(userId, pagenumber);
+      return await getGuestBook(ownerId, pagenumber);
     },
     {
       onSuccess: (res) => {
