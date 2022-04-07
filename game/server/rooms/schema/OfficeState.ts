@@ -5,7 +5,7 @@ import {
   IComputer,
   IWhiteboard,
   IChatMessage,
-} from '../../../../frontend/src/types/IOfficeState';
+} from '../../types/IOfficeState';
 
 export class Player extends Schema implements IPlayer {
   @type('string') name = ''

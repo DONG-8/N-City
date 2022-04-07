@@ -1,4 +1,4 @@
-import { IOfficeState } from './../../../../frontend/src/types/IOfficeState';
+import { IOfficeState } from '../../types/IOfficeState';
 import { Command } from '@colyseus/command'
 import { Client } from 'colyseus'
 
