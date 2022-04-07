@@ -14,6 +14,7 @@ import DealModal from '../../pages/NFTStore/DealModal'
 import { closeVendingMachineDialogOpen } from '../stores/VendingMachineStore'
 import { useAppDispatch } from '../hooks'
 import store from '../stores'
+import GameDealModal from '../../pages/NFTStore/GameDealModal'
 
 
 const ModalWrapper = styled.div`
@@ -573,7 +574,7 @@ const VendingMachineDialog = () => {
               </IconButton>
               <StoreWapper className="StoreWapper">
                 <div className="nftstore">
-                  <DealModal
+                  <GameDealModal
                     item={item}
                     status={status}
                     open={open}
