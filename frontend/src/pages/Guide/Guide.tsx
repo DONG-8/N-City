@@ -37,6 +37,47 @@ const Header = styled.div`
   width: 100%;
   height: 180px;
 `
+
+const FilterBar = styled.div`
+  font-family: "Noto Sans KR", sans-serif;
+  margin: auto;
+  margin-top: 100px;
+  margin-bottom: 65px;
+  width: 70vw;
+  display: flex;
+  div {
+    cursor: pointer;
+    flex: 2.5;
+    height: 6vh;
+    text-align: center;
+    &:hover {
+      background-color: whitesmoke;
+      transition: 0.3s;
+    }
+    p {
+      font-size: 2.5vh;
+      margin-top: 1vh;
+      font-weight: 600;
+    }
+  }
+  div {
+    border-bottom: 2px solid #6225E6  ;
+  }
+
+  #select {
+    background-color: white;
+    border-left: 2px solid #6225E6  ;
+    border-right: 2px solid #6225E6  ;
+    border-top: 2px solid #6225E6  ;
+    border-bottom: none;
+    color: #6225E6  ;
+    &:hover {
+      background-color: #f9f9f9;
+    }
+  }
+`;
+
+
 const ButtonBox = styled.div`
 margin-left: 20px;
   button {
@@ -45,7 +86,6 @@ margin-left: 20px;
     padding: 10px;
     font-weight: 500;
   }
-
 `
 
 const Title = styled.h1`
@@ -54,7 +94,7 @@ const Title = styled.h1`
 `
 //component
 const Guide = () => {
-  const [categoryState, setCategoryState] = useState(true)
+  const [categoryState, setCategoryState] = useState("log")
   return (
     <Wrapper>
       <Header>
@@ -62,12 +102,30 @@ const Guide = () => {
       </Header>
       <ButtonBox>
 
-      <button onClick={() => setCategoryState(true)}>로그인 가이드</button>
-      <button onClick={() => setCategoryState(false)}>
-        네트워크 연결 가이드
-      </button>
+
+      <FilterBar>
+        <div
+          id={categoryState === "log" ? "select" : ""}
+          onClick={() => {
+            setCategoryState("log");
+          }}
+          className="log"
+        >
+          <p>로그인 가이드</p>
+        </div>
+        <div
+          id={categoryState === "network" ? "select" : ""}
+          onClick={() => {
+            setCategoryState("network");
+          }}
+          className="network"
+        >
+          <p>네트워크 연결 가이드</p>
+        </div>
+      </FilterBar>
+
       </ButtonBox>
-      {categoryState ? (
+      {categoryState === "log" ? (
         <Box>
           <Img src="/essets/guideimage/로그인버튼1_설명추가.png" alt="사진" />
           <Img
