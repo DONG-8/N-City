@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 // api 요청
 import { useMutation, useQuery } from "react-query";
@@ -80,6 +80,18 @@ interface Iprops{
   setOpen : React.Dispatch<React.SetStateAction<boolean>>
 }
 const UsersModal:React.FC<Iprops> = ({setOpen}) => {
+  const escFunction = useCallback((event) => {
+    if (event.keyCode === 27) {
+      setOpen(true)
+    }
+  }, []);
+  useEffect(() => {
+    document.addEventListener("keydown", escFunction);
+
+    return () => {
+      document.removeEventListener("keydown", escFunction);
+    };
+  }, [escFunction]);
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.edit.userId);
   console.log(userId, "유저아이디");
