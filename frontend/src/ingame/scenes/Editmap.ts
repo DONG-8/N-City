@@ -45,41 +45,41 @@ class Editmap extends Phaser.Scene {
 
   preload() { // 시작전 세팅 
 
-    this.load.image('backdrop_day', 'essets/background/backdrop_day.png')
+    this.load.image('backdrop_day', '/essets/background/backdrop_day.png')
     
-    // this.load.tilemapTiledJSON('tilemap1', 'essets/map/editmap.json') // 배경 다 들고오기 
+    // this.load.tilemapTiledJSON('tilemap1', '/essets/map/editmap.json') // 배경 다 들고오기 
 
-    this.load.spritesheet('tiles_wall', 'essets/map/FloorAndGround.png', { // items 사이즈 지정 
+    this.load.spritesheet('tiles_wall', '/essets/map/FloorAndGround.png', { // items 사이즈 지정 
       frameWidth: 32,
       frameHeight: 32,
     })
 
-    this.load.spritesheet('chairs', 'essets/items/chair.png', {
+    this.load.spritesheet('chairs', '/essets/items/chair.png', {
       frameWidth: 32,
       frameHeight: 64,
     })
-    this.load.spritesheet('computers', 'essets/items/computer.png', {
+    this.load.spritesheet('computers', '/essets/items/computer.png', {
       frameWidth: 96,
       frameHeight: 64,
     })
-    this.load.spritesheet('whiteboards', 'essets/items/whiteboard.png', {
+    this.load.spritesheet('whiteboards', '/essets/items/whiteboard.png', {
       frameWidth: 64,
       frameHeight: 64,
     })
-    this.load.spritesheet('vendingmachines', 'essets/items/vendingmachine.png', {
+    this.load.spritesheet('vendingmachines', '/essets/items/vendingmachine.png', {
       frameWidth: 48,
       frameHeight: 72,
     })
-    this.load.spritesheet('office', 'essets/items/Modern_Office_Black_Shadow.png', {
+    this.load.spritesheet('office', '/essets/items/Modern_Office_Black_Shadow.png', {
       frameWidth: 32,
       frameHeight: 32,
     })
-    this.load.spritesheet('basement', 'essets/items/Basement.png', {
+    this.load.spritesheet('basement', '/essets/items/Basement.png', {
       frameWidth: 32,
       frameHeight: 32,
     })
 
-    this.load.spritesheet('generic', 'essets/items/Generic.png', {
+    this.load.spritesheet('generic', '/essets/items/Generic.png', {
       frameWidth: 32,
       frameHeight: 32,
     })

@@ -29,49 +29,49 @@ export default class Bootstrap extends Phaser.Scene {
     console.log(this.mapInfo,'맵정보')
     this.load.atlas( // atlas 는 여러개의 스프라이트를 한장의 큰 텍스쳐에 모아놓은 것 
       'cloud_day',
-      'essets/background/cloud_day.png',
-      'essets/background/cloud_day.json'
+      '/essets/background/cloud_day.png',
+      '/essets/background/cloud_day.json'
     ) //배경 가져오기
-    this.load.image('backdrop_day', 'essets/background/backdrop_day.png') //
+    this.load.image('backdrop_day', '/essets/background/backdrop_day.png') //
     this.load.atlas(
       'cloud_night',
-      'essets/background/cloud_night.png',
-      'essets/background/cloud_night.json'
+      '/essets/background/cloud_night.png',
+      '/essets/background/cloud_night.json'
     )
-    this.load.image('backdrop_night', 'essets/background/backdrop_night.png')
-    this.load.image('sun_moon', 'essets/background/sun_moon.png')
+    this.load.image('backdrop_night', '/essets/background/backdrop_night.png')
+    this.load.image('sun_moon', '/essets/background/sun_moon.png')
 
     this.load.tilemapTiledJSON('tilemap', this.mapInfo) // 배경 다 들고오기 
 
-    this.load.spritesheet('tiles_wall', 'essets/map/FloorAndGround.png', { // items 사이즈 지정 
+    this.load.spritesheet('tiles_wall', '/essets/map/FloorAndGround.png', { // items 사이즈 지정 
       frameWidth: 32,
       frameHeight: 32,
     })
-    this.load.spritesheet('chairs', 'essets/items/chair.png', {
+    this.load.spritesheet('chairs', '/essets/items/chair.png', {
       frameWidth: 32,
       frameHeight: 64,
     })
-    this.load.spritesheet('computers', 'essets/items/computer.png', {
+    this.load.spritesheet('computers', '/essets/items/computer.png', {
       frameWidth: 96,
       frameHeight: 64,
     })
-    this.load.spritesheet('whiteboards', 'essets/items/whiteboard.png', {
+    this.load.spritesheet('whiteboards', '/essets/items/whiteboard.png', {
       frameWidth: 64,
       frameHeight: 64,
     })
-    this.load.spritesheet('vendingmachines', 'essets/items/vendingmachine.png', {
+    this.load.spritesheet('vendingmachines', '/essets/items/vendingmachine.png', {
       frameWidth: 96,
       frameHeight: 96,
     })
-    this.load.spritesheet('office', 'essets/items/Modern_Office_Black_Shadow.png', {
+    this.load.spritesheet('office', '/essets/items/Modern_Office_Black_Shadow.png', {
       frameWidth: 32,
       frameHeight: 32,
     })
-    this.load.spritesheet('basement', 'essets/items/Basement.png', {
+    this.load.spritesheet('basement', '/essets/items/Basement.png', {
       frameWidth: 32,
       frameHeight: 32,
     })
-    this.load.spritesheet('generic', 'essets/items/Generic.png', {
+    this.load.spritesheet('generic', '/essets/items/Generic.png', {
       frameWidth: 32,
       frameHeight: 32,
     })
@@ -80,15 +80,15 @@ export default class Bootstrap extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 48,
     })
-    this.load.spritesheet('ash', 'essets/character/ash.png', {
+    this.load.spritesheet('ash', '/essets/character/ash.png', {
       frameWidth: 32,
       frameHeight: 48,
     })
-    this.load.spritesheet('lucy', 'essets/character/lucy.png', {
+    this.load.spritesheet('lucy', '/essets/character/lucy.png', {
       frameWidth: 32,
       frameHeight: 48,
     })
-    this.load.spritesheet('nancy', 'essets/character/nancy.png', {
+    this.load.spritesheet('nancy', '/essets/character/nancy.png', {
       frameWidth: 32,
       frameHeight: 48,
     })
