@@ -2,127 +2,32 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
-import { useAppDispatch,useAppSelector } from '../hooks'
-import { closeVendingMachineDialogOpen } from '../stores/VendingMachineStore'
-import { Button } from '@mui/material'
-import GameItemCard from './NFTstore/GameDetailItem'
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import GameDetailItem from './NFTstore/GameDetailItem'
-import SmallItemCard from '../../components/Card/SmallItemCard'
 
-const Wrapper = styled.div`
-  border-radius: 5px;
-  width: 80vw;
-  height: 90vh;
-  background: white;
-  padding: 16px;
-  color: #eee;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0px 0px 5px #0000006f;
-  .close {
-    color: black;
-    position: absolute;
-    top: 1vh;
-    right: 2vw;
-  }
-`
-const ColorBar = styled.div`
-    margin: auto;
-    margin-top:0;
-    width: 100vw ;
-  img{
-    margin: auto;
-    width: 100vw ;
-    height: 20vh;
-    object-fit: cover;
-  }
-  .all{
-    object-position:10% 10%;
-  }
-  .art{
-    object-position:70% 70%;
-  }
-  .music{
-    object-position:70% 70%;
-  }
-  .photography{
-    object-position:40% 40%;
-  }
-  .sports{
-    object-position:90% 90%;
-  }
-  .game{
-    object-position:60% 60%;
-  }
-`
-const Title = styled.div`
-  display:flex ;
-  justify-content:space-around;
-  h1{
-    font-size: 4rem;
-  }
-  p{
-    margin-top: 10vh;
-    font-weight: 600;
-    font-size: 1.5rem;
-  }
-  margin-bottom: 0;
-`
-const CategoryBar = styled.div`
-  margin: auto;
-  margin-top: 5vh;
-  width: 70% ;
-  display: flex;
-  li{
-    margin: auto;
-  }
-  p{
-    font-size:3vh;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-    position: relative;
-    text-align: center;
-  }
-  p::before{
-    content: "";
-    height: 5px;
-    width: 0px;
-    background-color: #F43B00;
-    border-radius: 10px;
-    transition: 0.3s;
-    position: absolute;
-    bottom: -0.5rem;
-  }
-  p:hover::before{
-    width: 100%;
-    background-color: #F43B00;
-  }
-  #category::before{
-    width: 100%;
-    background-color: #F43B00;
-  }
-`
-const ItemCards = styled.div`
-  margin:auto ;
-  width: 80% ;
-  display: flex ;
-  flex-wrap: wrap ;
-  justify-content:center ;
-`
+import { useMutation } from 'react-query'
+import { delProductLike, getProductLike, postProductLike } from '../../store/apis/favorite'
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { getProductDetail } from '../../store/apis/product'
+import { deleteFollow, getFollowee, postFollow } from '../../store/apis/follow'
+import GameBidBox from '../../pages/NFTStore/GameBidBox'
+import DealModal from '../../pages/NFTStore/DealModal'
+import { closeVendingMachineDialogOpen } from '../stores/VendingMachineStore'
+import { useAppDispatch } from '../hooks'
+import store from '../stores'
+
+
 const ModalWrapper = styled.div`
-   position: absolute;
-    bottom: 10vh;
-    right: 20vw;
-  width: 7rt0vw;
-  height: 80vh;
-  color: #eee;
-  background: white;
-  box-shadow: 0px 0px 5px #0000006f;
-  border-radius: 5px;
-  padding: 15px 35px 15px 15px;
+    position: absolute;
+    top:130px;
+    right: 180px;
+    width: 980px;
+    height: 580px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 4px;
+    overflow-y: scroll;
+    border-radius: 5px;
+    padding: 15px 35px 15px 15px;
 
   .close {
     position: absolute;
@@ -134,170 +39,553 @@ const ModalWrapper = styled.div`
     margin-left: 12px;
   }
 `
+const Wrapper = styled.div`
+  width: 950px;
+  height: 570px;
+  .loadingbox {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: -20vh;
+    p {
+      margin-top: -60px;
+      font-size: 38px;
+      font-weight: 600;
+    }
+    img {
+      width: 300px;
+      height: 300px;
+    }
+  }
+  .title2{
+    margin-left: 5vw;
+  }
+  .color{
+    color:#6225E6  ;
+  }
+`;
+
+const TopR = styled.div`
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee,
+    inset 1px 1px 0 rgb(233 235 242 / 10%);
+  background-color: #f7f8fa;
+  margin-left: 3vw;
+  border-radius: 10px;
+  .top {
+    height: 400px;
+    display: flex;
+    overflow-y: hidden;
+  }
+  .top-left {
+    /* background-color: yellowgreen; */
+    width: 50%;
+    .itemtitle {
+      font-size: 30px;
+      font-weight: 600;
+      margin-top: 1vh;
+      text-align: center;
+    }
+    .content2 {
+      /* background-color: red; */
+      margin-left: 2vw;
+      margin-top: 3vh;
+      font-size: 17px;
+      height: 120px;
+    }
+  }
+  .preview {
+    display: flex;    
+    align-items: center;
+    border-left: 0.5px solid #e0dede;
+  }
+  .img {
+    height: 350px;
+    width: 350px;
+    border-radius: 10px;
+    border: 1px solid #e0dede;
+    margin-left: 40px;
+  }
+  .mediaBox {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    video {
+      width: 300px;
+      margin: 4vh 5vw 0 0;
+    }
+  }
+`;
+
 const StoreWapper = styled.div`
-  .nftstore{
+  .nftstore {
     margin-left: 1vw;
     margin-top: 2vh;
     width: 80vw;
     height: 78vh;
-    overflow: auto;
+    overflow: hidden;
     color: black;
-    overflow-y:scroll;
-    overflow-x:hidden;
-    &::-webkit-scrollbar{width: 10px; height:12px;}
-    &::-webkit-scrollbar-thumb{ background-color: teal; border-radius: 10px; } 
-    &::-webkit-scrollbar-track{ background-color: #fbe9e1;}
   }
-  .img{
-    margin-left: 15vw;
-    margin-top:1vh;
-    margin-bottom: 0;
-    width: 50vw;
-    height: 35vw;
-    border: 0.5px solid gray;
+`;
+
+const FavoriteBox = styled.div`
+  display: flex;
+  align-items: center;
+  .icon {
+
   }
-  .btnbox{
-    display: flex;
-    width: 50vw;
-    margin: auto;
-    margin-top:3vh;
-    justify-content: space-between;
+  svg {
+    cursor: pointer;
+    margin-right: 5px;
   }
-  .btn{
-    width: 24.5vw;
-    height: 5vh;
+`;
+const Description = styled.div`
+  border-top: 0.5px solid #a9a9a9;
+  h3 {
+    margin-left: 2vw;
+    font-size: 25px;
+    margin-bottom: 10px;
   }
-`
-interface Istate{
+  .box {
+    width: 26vw;
+    height: 19vh;
+    margin-left: 2vw;
+    border-radius: 10px;
+    p {
+      margin: 5px 0;
+      font-size: 15px;
+    }
+  }
+`;
+const Bottom = styled.div`
+  display: flex;
+  height: 150px;
+  .right {
+    flex: 1;
+    border-top: 0.5px solid #e0dede;
+    .content {
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+
+`;
+interface Istate {
   item: {
-    productFavoriteUser: Array<any>;
     productId: number;
     productTitle: string;
-    productPrice: number;
+    productPrice: Number;
     productThumbnailUrl: string;
-    productFavorite: number;
+    productFavorite: Number;
     productRegDt: Object;
-    productCode: number;
-    productState: number;
-    productFavoriteCount: number;
-    favorite: boolean;
-    tokenId?: number;
-    userRole: string;
-  }; 
+    productCode: Number;
+    productFavoriteUser: {
+      authId: Number;
+      userAddress: string;
+      userDescription: string;
+      userEmail: string;
+      userEmailConfirm: boolean;
+      userId: number;
+      userImgUrl: string;
+      userNick: string;
+      userRole: string;
+    }[];
+  };
+  itemdetail: {
+    productId: Number;
+    userId: Number;
+    productTitle: string;
+    productDesc: string;
+    productCode: Number;
+    productXCoordinate: Number;
+    productYCoordinate: Number;
+    productView: Boolean;
+    productState: Number;
+    productPrice: Number;
+    productRegDt: string;
+    productFileUrl: string;
+    productThumbnailUrl: string;
+    favoriteCount: Number;
+  }; // 작가, 작가 정보, 거래 관련..
+  user: {
+    authId: Number;
+    followeeCnt: Number;
+    followerCnt: Number;
+    userAddress: String;
+    userDescription: String;
+    userEmail: String;
+    userEmailConfirm: Boolean;
+    userId: Number;
+    userImgUrl: String;
+    userNick: String;
+    userRole: String;
+    mintUserId : String;
+  };
+  history: {
+    dealCreatedAt: number[];
+    dealFrom: number;
+    dealFromNickName: string;
+    dealPrice: number;
+    dealTo: number;
+    dealToNickName: string;
+    dealType: number;
+  };
 }
 
 const VendingMachineDialog = () => {
-  const [nftnumber,setNftnumber] = useState(useAppSelector((state)=>state.vendingMachine.nftnumber))
-  const [userProducts,setUserProducts] = useState(useAppSelector((state)=>state.user.userProducts))
-  const [imgurl,setImgurl] = useState('')
+  const [likes, setLikes] = useState(Number(0));
+  const [followers, setFollowers] = useState(0);
+  const [followees, setFollowees] = useState(0);
+  const [liked, setLiked] = useState(false); // 내가 좋아요 했나
+  const [user, setUser] = useState<Istate["user"]>({
+    authId: 0,
+    followeeCnt: 0,
+    followerCnt: 0,
+    userAddress: "",
+    userDescription: "",
+    userEmail: "",
+    userEmailConfirm: false,
+    userId: 0,
+    userImgUrl: "",
+    userNick: "",
+    userRole: "",
+    mintUserId: ""
+  });
+  const [items, setItems] = useState<Istate["item"][]>([
+  ]);
+  const [followBtnState, setFollowBtnState] = useState<boolean | null>(null);
+  // 모달창
+  const [open, setOpen] = useState(false);
+
+  // 1: bid , 2:sell , 3:normal
+  const CATEGORY =['All','Music',' Picture','Video','Art','Celebrity','Sports','Character','Animation']
+  const [status, setStatus] = useState("bid");
+  const [productId, setProductId] = useState(store.getState().vendingMachine.productNum);
+  const [item, setItem] = useState({
+    productId: -1,
+    mintUserId: "",
+    userId: 0,
+    tokenId: 0,
+    productTitle: "",
+    productDesc: "",
+    productCode: 0,
+    productXCoordinate: 0,
+    productYCoordinate: 0,
+    productView: false,
+    productState: 2,
+    productPrice: 0,
+    productRegDt: "",
+    productFileUrl: "",
+    productThumbnailUrl: "",
+    productAuctionEndTime: null,
+    favoriteCount: 0,
+    userNick: ""
+  });
+  const [isImg, setIsImg] = useState(true)
+  const [isLoading, setIsloading] = useState(true)
+  const { ethereum } = window
   const dispatch = useAppDispatch()
-  const [mode,setMode]  = useState('display')
-  const [filter,setFilter] = useState("all")
-  const [items,setItems] = useState<Istate['item'][]>([])
+
+
+  const getLiked = useMutation<any, Error>(
+    "getProductLike",
+    async () => {
+      return await getProductLike(Number(productId));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("좋아요여부 받아오기 성공", res);
+        setLiked(res);
+      },
+    }
+  );
+
+  const getProduct = useMutation<any, Error>(
+    "productDetail",
+    async () => {
+      return await getProductDetail(Number(productId));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("상품상세받아오기성공", res);
+        setItem(res);
+        setLikes(res.favoriteCount);
+        setIsloading(false)
+      },
+      onError: (err: any) => {
+        console.log(err, "❌디테일 페이지 실패!");
+      },
+    }
+  );
+
+  const LikeIt = useMutation<any, Error>(
+    "postProductLike",
+    async () => {
+      return await postProductLike(Number(productId));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("좋아요 성공", res);
+        setLiked(true);
+      },
+      onError: (err) => console.log("좋아요 실패", err),
+    }
+  );
+
+  const cancelLikeIt = useMutation<any, Error>(
+    "delProductLike",
+    async () => {
+      return await delProductLike(Number(productId));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("좋아요 취소 성공", res);
+        setLiked(false);
+      },
+      onError: (err) => console.log("좋아요 취소 실패", err),
+    }
+  );
+
+  const follow = useMutation<any, Error>(
+    "follow",
+    async () => {
+      return await postFollow(Number(item.mintUserId));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("팔로우 성공", res);
+        setFollowBtnState(false);
+      },
+      onError: (err) => console.log("팔로우 실패", err),
+    }
+  );
+
+  const unFollow = useMutation<any, Error>(
+    "follow",
+    async () => {
+      return await deleteFollow(Number(item.mintUserId));
+    },
+    {
+      onSuccess: (res) => {
+        console.log("언팔로우 성공", res);
+        setFollowBtnState(true);
+      },
+      onError: (err) => console.log("언팔로우 실패", err),
+    }
+  );
+
+  const getUserFollower = useMutation<any, Error>(
+    "getFollower",
+    async () => {
+      if (!item.mintUserId) return;
+      return await getFollowee(Number(item.mintUserId));
+    },
+    {
+      onSuccess: async (res) => {
+        // await setFollowers(res)
+        console.log("팔로워들", res);
+        const userIds = res.map((user) => user.userId);
+        console.log(userIds);
+        if (userIds.includes(Number(sessionStorage.getItem("userId")))) {
+          setFollowBtnState(false);
+        } else {
+          setFollowBtnState(true);
+        }
+      },
+      onError: (err: any) => {
+        console.log("에러발생", err);
+      },
+    }
+  );
+  const Like = () => {
+    setLikes(likes + 1);
+    LikeIt.mutate();
+  };
+
+  const cancelLike = () => {
+    setLikes(likes - 1);
+    cancelLikeIt.mutate();
+  };
+
+  const onClickFollow = () => {
+    setFollowers(followers + 1);
+    follow.mutate();
+  };
+
+  const onClickUnFollow = () => {
+    setFollowers(followers - 1);
+    unFollow.mutate();
+  };
+
+  const getStatus = () => {
+    if (item.productState === 1) {
+      setStatus("bid");
+    }
+    if (item.productState === 2) {
+      setStatus("sell");
+    }
+    if (item.productState === 3) {
+      setStatus("normal");
+    }
+  };
+
+  const isImage = () => {
+    const URL = item.productFileUrl.split(".")
+    const temp = URL[URL.length - 1]
+    // console.log(temp)
+    const imgArr = ["jpg","JPG", "jpeg", "JPEG", "png", "PNG", "gif", "GIF", "bmp", "BMP", "tif", "TIF", "tiff", "TIFF"]
+    // console.log(imgArr.includes(temp))
+    if (imgArr.includes(temp)) {
+      setIsImg(true)
+    } else {
+      setIsImg(false)
+    }
+  }
+  function leadingZeros(n, digits) {
+    var zero = '';
+    n = n.toString();
+  
+    if (n.length < digits) {
+      for (var i = 0; i < digits - n.length; i++)
+        zero += '0';
+    }
+    return zero + n;
+  }
+  useEffect(() => {
+    getStatus();
+    isImage()
+  }, [item]);
 
   useEffect(() => {
-    userProducts.content.map((product) => {
-      if(product.productId === nftnumber) {
-        setImgurl(product.productFileUrl)
-      }
-    })
-  },[nftnumber])
+    getProduct.mutate();
+    getLiked.mutate();
+    window.scrollTo(0, 0);
+  }, [productId]);
+  
+  useEffect(() => {
+    getLiked.mutate();
+  }, [likes]);
+
+  const convertDate = (dateArray) => {
+    const year = String(dateArray[0]);
+    const month = String(dateArray[1]);
+    const day = String(dateArray[2]);
+    const hour = String(dateArray[3])
+    const minute = String(dateArray[4])
+    const second = String(dateArray[5] ? dateArray[5] : "00")
+    return year + "-" + leadingZeros(month, 2) + "-" + leadingZeros(day, 2) + " " + leadingZeros(hour, 2) + ":" + leadingZeros(minute, 2)+ ":" + leadingZeros(second, 2)
+  }
+
+  
 
   return (
     <ModalWrapper>
-        {mode ==='display' &&
-          <StoreWapper>
-            <IconButton size="small" className="close" onClick={() => dispatch(closeVendingMachineDialogOpen())}>
-              <CloseIcon />
-            </IconButton>
-            <div className='display'>
-              <img className='img' src={imgurl} alt='작품'/>
-              <div className='btnbox'>
-                <Button variant="contained" className='btn'
-                onClick={()=>{setMode('detail')}}
-                >작품구경가기</Button>
-                <Button color='info' variant="contained" className='btn'
-                  onClick={()=>{setMode('index')}}
-                >상점 이동</Button>
-              </div>
-            </div> 
-          </StoreWapper>
-        }
+        <Wrapper>
+      {isLoading ? (
+        <div className="loadingbox">
+            <img alt="dk" src="https://i.gifer.com/Xqg8.gif" />
+            <p className="text">작품 불러오는중...</p>{" "}
+        </div>
+      ) : (
+        <>
+            {item !== undefined && (
+              <TopR>
+                <IconButton
+                  aria-label="close dialog"
+                  className="close"
+                  onClick={() => dispatch(closeVendingMachineDialogOpen())}
+                >
+                  <CloseIcon />
+                </IconButton>
+                <div className="ITEM">
+                  <div className="top">
+                    <div className="top-left">
+                      <div className="itemtitle">{item.productTitle}</div>
+                      <div className="content2">
+                        <div className="left">
+                          <div>카테고리 : {CATEGORY[item.productCode]}</div>
+                          <div>등록일자 : {item.productRegDt.replaceAll("-", "/")}</div>
+                          <div>NFT 소유자 : {item.userNick}</div>
+                          <div className="right">
+                            {/* <div>상품상태 : {status}</div> */}
+                            <FavoriteBox className="icon">
+                              {liked ? (
+                                <FavoriteIcon
+                                  onClick={() => {
+                                    cancelLike();
+                                  }}
+                                  color="error"
+                                />
+                              ) : (
+                                <FavoriteBorderIcon
+                                  onClick={() => {
+                                    Like();
+                                  }}
+                                  color="error"
+                                />
+                              )}
+                              {likes}
+                            </FavoriteBox>
+                          </div>
+                        </div>
+                      </div>
+                      <Description>
+                        <h3>작품설명</h3>
+                        <div className="box">
+                          <p>{item.productDesc}</p>
+                        </div>
+                      </Description>
+                    </div>
+                    <div className="preview">
+                      {isImg ? (
+                        <img
+                          className="img"
+                          alt="작품"
+                          src={item.productThumbnailUrl}
+                        />
+                      ) : (
+                        <div className="mediaBox">
+                          <video src={item.productFileUrl} controls></video>
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
-        <StoreWapper>
-          <IconButton size="small" className="close" onClick={() => dispatch(closeVendingMachineDialogOpen())}>
-            <CloseIcon />
-          </IconButton>
-            {mode==='index'&&
-            <div className='nftstore'>
-              <div className='Index'>
-                <ColorBar>
-                  {filter === "all" && (
-                    <img className="all" src="essets/images/오로라.jpg" alt="bg" />
-                  )}
-                  {filter === "art" && (
-                    <img className="art" src="essets/images/art.jpg" alt="bg" />
-                  )}
-                  {filter === "music" && (
-                    <img className="music" src="essets/images/music.jpg" alt="bg" />
-                  )}
-                  {filter === "photography" && (
-                    <img className="photography" src="essets/images/photography2.jpg" alt="bg" />
-                  )}
-                  {filter === "sports" && (
-                    <img className="sports" src="essets/images/sports.jpg" alt="bg" />
-                  )}
-                  {filter === "game" && (
-                    <img className="game" src="essets/images/game.jpg" alt="bg" />
-                  )}
-              </ColorBar> 
-              <CategoryBar>
-                  <li>
-                    <p id={filter === "all" ? "category" : ""}
-                      onClick={() => {setFilter("all");}}
-                      > All </p>
-                  </li>
-                  <li>
-                    <p id={filter === "art" ? "category" : ""}
-                      onClick={() => {setFilter("art");}}
-                    > Art</p>
-                  </li>
-                  <li>
-                    <p id={filter === "music" ? "category" : ""}
-                      onClick={() => { setFilter("music");}}
-                    > Music</p>
-                  </li>
-                  <li>
-                    <p id={filter === "photography" ? "category" : ""}
-                      onClick={() => {setFilter("photography");}}
-                    > Photography</p>
-                  </li>
-                  <li>
-                    <p id={filter === "sports" ? "category" : ""}
-                      onClick={() => {setFilter("sports");}}
-                    > Sports</p>
-                  </li>
-                  <li>
-                    <p id={filter === "game" ? "category" : ""}
-                      onClick={() => {setFilter("game");}}
-                    > Game </p>
-                  </li>
-                </CategoryBar>
-              <ItemCards>
-                {items.map((item,idx) => {
-                  return <SmallItemCard setMode={setMode} key={idx} item={item} />;
-                })}
-              </ItemCards>
-            </div>
-            </div>
-          }
-          {mode==='detail'&&
-            <div className='Detail'>
-              <KeyboardReturnIcon style={{cursor: 'pointer'}} onClick={()=>{setMode('index')}} />
-              <GameDetailItem setMode={setMode}/>
-            </div>
-          }
-      </StoreWapper>
+                  <Bottom>
+                    <div className="right">
+                      <GameBidBox setOpen={setOpen} item={item} />
+                    </div>
+                  </Bottom>
+                </div>
+              </TopR>
+            )}
+         
+          {open && (
+            <ModalWrapper>
+              <IconButton
+                className="close"
+                onClick={() => setOpen(false)}
+                size="small"
+              >
+                <CloseIcon />
+              </IconButton>
+              <StoreWapper className="StoreWapper">
+                <div className="nftstore">
+                  <DealModal
+                    item={item}
+                    status={status}
+                    open={open}
+                    setOpen={setOpen}
+                  />
+                </div>
+              </StoreWapper>
+            </ModalWrapper>
+          )}
+        </>
+      )}
+    </Wrapper>
     </ModalWrapper>
       
   )
