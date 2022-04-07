@@ -17,7 +17,7 @@ enum GameMode {
 export default class Bootstrap extends Phaser.Scene {
   network!: Network
   mapInfo = basicData
-  myArtList = {content:[{productThumbnailUrl:'', productId:0}]}
+  myArtList = {content:[{productThumbnailUrl:'', productId:0, productView:true}]}
 
   constructor() {
     super('bootstrap');

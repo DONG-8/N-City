@@ -24,6 +24,8 @@ enum GameMode {
 }
 
 export default class Game extends Phaser.Scene {
+  myArtList = {content:[{productThumbnailUrl:'', productId:0, productView:true, productXCoordinate:0, productYCoordinate: 0}]}
+
   network!: Network // null이 될수가 없는 변수에 대해서 지정
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private keyE!: Phaser.Input.Keyboard.Key
@@ -76,14 +78,12 @@ export default class Game extends Phaser.Scene {
     
     this.cameras.main.zoom = 1.6
     
-    
-
     createCharacterAnims(this.anims)
 
     this.map = this.make.tilemap({ key: 'tilemap' }) // 맵만들기 ⭐⭐⭐
     console.log(this.map)
     const FloorAndGround = this.map.addTilesetImage('FloorAndGround', 'tiles_wall')
-
+    
     const groundLayer = this.map.createLayer('Ground', FloorAndGround)
     console.log(groundLayer)
     groundLayer.setCollisionByProperty({ collides: true })
@@ -111,6 +111,7 @@ export default class Game extends Phaser.Scene {
       const id = `${i}`
       item.id = id
       this.computerMap.set(id, item)
+      item.name = "computer"
     })
 
     // import whiteboards objects from Tiled map to Phaser
@@ -136,11 +137,20 @@ export default class Game extends Phaser.Scene {
 
     // import vending machine objects from Tiled map to Phaser
     const vendingMachines = this.physics.add.staticGroup({ classType: VendingMachine })
-    const vendingMachineLayer = this.map.getObjectLayer('VendingMachine')
-    console.log(vendingMachineLayer)
-    vendingMachineLayer.objects.forEach((obj, i) => {
-      this.addObjectFromTiled(vendingMachines, obj, 'vendingmachines', 'vendingmachine')
-    })
+    // const vendingMachineLayer = this.map.getObjectLayer('VendingMachine')
+    // console.log(vendingMachineLayer)
+    // vendingMachineLayer.objects.forEach((obj, i) => {
+    //   this.addObjectFromTiled(vendingMachines, obj, 'vendingmachines', 'vendingmachine')
+    // })
+
+    // 작품 세팅
+    {this.myArtList.content.map((product, idx) => {
+      if (product.productView) {
+        // this.add.image(product.productXCoordinate, productYCoordinate, `${this.itemGid}`).setDepth(this.marker.y+16).setInteractive()
+        vendingMachines.get(product.productXCoordinate, product.productYCoordinate, String(product.productId), String(product.productId))
+        .setDepth(10)
+      }
+    })}
     
     this.addGroupFromTiled('Wall', 'tiles_wall', 'FloorAndGround', false)
     this.addGroupFromTiled('Objects', 'office', 'Modern_Office_Black_Shadow', false)
@@ -154,7 +164,7 @@ export default class Game extends Phaser.Scene {
     this.cameras.main.startFollow(this.myPlayer, true) // 인칭
 
     this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], groundLayer) // 충돌나는 물건들 
-    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines) //  충돌
+    // this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines) //  충돌
    
     this.physics.add.overlap( // ⭐ 이거 없으면 상호작용 불가
       this.playerSelector,
