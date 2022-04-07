@@ -143,7 +143,7 @@ const EditBar = () => {
     return (
       <ItemList>
         {itemsGid.map((item, idx) => {
-          return <img src={`essets/items_for_edit/${folderName}/${item}.png`}  onClick={()=>{choiceCatogory(item, 32, 32)}} width="32px" key={idx}/>
+          return <img src={`/essets/items_for_edit/${folderName}/${item}.png`}  onClick={()=>{choiceCatogory(item, 32, 32)}} width="32px" key={idx}/>
         })}
       </ItemList>
     )
@@ -154,7 +154,7 @@ const EditBar = () => {
       <ItemList>
         {Files[index].products.map((product) => {
           return (product.ids.map((id, idx) => {
-           return <img src={`essets/items_for_edit/${Files[index].name}/${product.width}X${product.height}/${id}.png`}  onClick={()=>{choiceCatogory(id, product.width, product.height)}} width={`${product.width}px`} key={idx}/>
+           return <img src={`/essets/items_for_edit/${Files[index].name}/${product.width}X${product.height}/${id}.png`}  onClick={()=>{choiceCatogory(id, product.width, product.height)}} width={`${product.width}px`} key={idx}/>
         }))
       })}
       </ItemList>
@@ -301,6 +301,7 @@ const EditBar = () => {
         setData(newData);
       } else if (status === ItemCategory.MYART) { // 작품 데이터 넣기 
         for (var key of newArtList.content) {
+          console.log(key.productId, location.gid)
           if (key.productId === location.gid) {
             key.productXCoordinate = location.x
             key.productYCoordinate = location.y
@@ -310,6 +311,7 @@ const EditBar = () => {
         }
         // putArts.push({id: location.gid, x: location.x, y: location.y, view: true})
         // makeImgTagsByMyArt(location.gid, true)
+        console.log(newArtList)
         setMyArts(newArtList)
       } else {
         const item = {
@@ -334,20 +336,23 @@ const EditBar = () => {
         // putArts.push({id:location.x, x:0, y:0, view:false})
         // makeImgTagsByMyArt(location.x, false)
         for (var key of newArtList.content) {
-          if (key.productId === location.gid) {
-            key.productXCoordinate = location.x
-            key.productYCoordinate = location.y
+          if (key.productId === location.x) {
+            key.productXCoordinate = 0
+            key.productYCoordinate = 0
             key.productView = false
             break
           }
         }
         setMyArts(newArtList)
-        console.log(newArtList)
       } else {
+        console.log('이전 데이터',newData.layers[location.gid].objects )
+        console.log(location.x, location.y)
         const DelData = newData.layers[location.gid].objects?.filter((obj, i) => {
-          return obj.x !== location.x && obj.y !== location.y;
+          console.log(obj.x, obj.y)
+          return (obj.x !== location.x || obj.y !== location.y)
         });
         newData.layers[location.gid].objects = DelData
+        console.log('새 데이터', DelData)
         setData(newData)
       }
     }
@@ -380,10 +385,7 @@ const EditBar = () => {
         dispatch(UserMapInfo(data))
         console.log(putArts)
         myArts.content.map((product, idx) => {
-          if (idx > 0) {
-            console.log(product)
-            putProductXY({id: product.productId, view: product.productView, x: product.productXCoordinate, y: product.productYCoordinate})
-          }
+          putProductXY({id: product.productId, view: product.productView, x: product.productXCoordinate, y: product.productYCoordinate})
         })
         setPutArts([{id:0, x:0, y:0, view:true}])
         console.log('저장 완료')
