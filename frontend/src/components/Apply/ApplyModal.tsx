@@ -77,7 +77,7 @@ const Title = styled.h1<{ visible: boolean }>`
 `;
 
 const Divider = styled.hr`
-  border: solid 1px #ff865b;
+  border: solid 1px #a9a9f2 ;
   width: 65%;
   margin-bottom: 30px;
 `;
@@ -94,11 +94,12 @@ const FormWrapper = styled.form<{ visible: boolean }>`
   // 업로드 버튼
   .file-label {
     display: flex;
-    /* background-color: #FF865B; */
-    color: #ff865b;
-    border: 1px solid #ff865b;
+    /* background-color: #a9a9f2; */
+    color: #5555f6;
+    border: 2px solid #8888ee;
     justify-content: center;
     align-items: center;
+    font-weight: 500;
     padding: 8px 10px;
     width: 90px;
     height: 26px;
@@ -166,7 +167,7 @@ const SubmitButton = styled.button`
   position: absolute;
   right: 35px;
   bottom: 35px;
-  background-color: #ff865b;
+  background-color: #6b6bf4;
   color: #fff;
   font-weight: bold;
   display: flex;
@@ -178,9 +179,11 @@ const SubmitButton = styled.button`
   border-radius: 10px;
   &:hover {
     font-weight: bold;
+    background-color: #8080fc;
+
   }
   &:active {
-    background-color: #de5d30;
+    background-color: #8888ee;
   }
 `;
 
@@ -190,7 +193,7 @@ const ExplaneText = styled.p<{ visible: boolean }>`
   font-weight: 500;
   margin: 0;
   span {
-    color: #aa2e2e;
+    color: #4141f2;
   }
 `;
 const FileUploadButtonBox = styled.div`
