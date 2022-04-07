@@ -33,7 +33,7 @@ interface ILocationInfo {
 
 export async function JoinUserRoomAPI(userId : number) {
   const result = await axios
-  .post(`http://localhost:8080/api/myroom/${userId}`)
+  .post(`https://j6e106.p.ssafy.io/api/myroom/${userId}`)
 
   return result
 }

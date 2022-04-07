@@ -51,7 +51,6 @@ const GameApp: Function = () => {
   const dispatch = useAppDispatch();
   // 유저 아이디를 통한 방 정보 요청 --> 로딩시간중 안불러와지면? 로딩이 필요하겠다.
   // 쿼리를 사용해야겠음
-  const [rooms, setRooms] = useState<any[]>([])
 
   const {
     mutate: RoomInfo,
@@ -96,30 +95,18 @@ const GameApp: Function = () => {
     name: '혀농이방',
     description: '혀농이방이야',
     password: null,
-    autoDispose: false, // 마지막 사용자가 나오면 자동으로 방 없애기 (화이트보드 때문에 지금은 false)
+    autoDispose: true, // 마지막 사용자가 나오면 자동으로 방 없애기 (화이트보드 때문에 지금은 false)
   });
-
-  const progress = async () => {
-    // await ConnectStart()
-    // await isAvaliable1()
-    // await ConnectBootstrap()
-    // await ConnectGame()
-    setTimeout(() =>  ConnectStart(), 3000);
-    setTimeout(() => isAvaliable1(), 5500)
-    setTimeout(() => ConnectBootstrap(), 6000); // Bootstrap 연결
-    setTimeout(() => ConnectGame(), 7000); // 게임 접속
-    setTimeout(() => isAvaliable1(), 9000)
-  }
 
   useEffect(() => {
     (window as any).game = phaserGame;
     getMyArts()
     RoomInfo()
 
-    setTimeout(() => progress(), 3000);
-    // setTimeout(() => isAvaliable1(), 5500)
-    // setTimeout(() => ConnectBootstrap(), 6000); // Bootstrap 연결
-    // setTimeout(() => ConnectGame(), 7000); // 게임 접속
+    setTimeout(() => ConnectStart(), 2000);
+    setTimeout(() => checkAvailableRoom(), 2500)
+    setTimeout(() => ConnectBootstrap(), 3000); // Bootstrap 연결
+    setTimeout(() => ConnectGame(), 3500); // 게임 접속
     return () => {
       (window as any).game.destroy(true);
     };
@@ -132,7 +119,6 @@ const GameApp: Function = () => {
   const whiteboardDialogOpen = useAppSelector(
     (state) => state.whiteboard.whiteboardDialogOpen
   );
-  // const videoConnected = useAppSelector((state) => state.user.videoConnected)
   const VendingMachineDialogOpen = useAppSelector(
     (state) => state.vendingMachine.vendingMachineDialogOpen
   );
@@ -141,14 +127,15 @@ const GameApp: Function = () => {
   let bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
   let start = phaserGame.scene.keys.start as Start
 
-  const [ok, setOk] = useState(false)
+  let ok = false
 
-  async function isAvaliable1() {
-    console.log(availableRooms)
-    availableRooms.map((room, idx) => {
+  async function checkAvailableRoom() { // 방 체크 
+    const activeRoom = await bootstrap.network.getActiveRoom()
+
+    activeRoom.map((room, idx) => {
       if (room.roomId === values.roomId) {
-        setOk(true)
-        return
+        ok = true
+        return 
       }
     })
   }
@@ -161,18 +148,17 @@ const GameApp: Function = () => {
     start = phaserGame.scene.keys.start as Start
     start.launchBootstrap()
 
-    // game = phaserGame.scene.keys.game as Game;
-    // game.myArtList = myArts
+    game = phaserGame.scene.keys.game as Game;
+    game.myArtList = myArts
 
-    // const editmap = phaserGame.scene.keys.Editmap as Editmap
-    // editmap.myArtList = myArts
+    const editmap = phaserGame.scene.keys.Editmap as Editmap
+    editmap.myArtList = myArts
   }
 
   async function ConnectBootstrap ()  {    // ⭐ bootstrap 연결하기
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
-    
-    console.log('입장할 시간')
-    if (ok) {
+
+    if (ok === true) {
       await bootstrap.network
       .joinRoom("userId")
       .then(() => bootstrap.launchGame(Setting))
@@ -186,24 +172,13 @@ const GameApp: Function = () => {
   };
 
   async function ConnectGame() {    // 게임 접속
-    console.log('겜접')
-    console.log(availableRooms)
-    
     game = phaserGame.scene.keys.game as Game;
-    // game.myArtList = myArts
 
     game.registerKeys(); // 키 설정
     game.myPlayer.setPlayerName("임현홍"); // ❗ 내이름 설정해주기
     game.myPlayer.setPlayerTexture("adam"); // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
     game.network.readyToConnect(); // 네트워크 연결
   };
-
-  useEffect(() => {
-    console.log("useEffect");
-    console.log(availableRooms)
-    setRooms(availableRooms)
-  }, [availableRooms]);
-
   
   let ui: JSX.Element;
   ui = <MainDialog />;
@@ -232,11 +207,6 @@ const GameApp: Function = () => {
         {ui}
         {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />}
         {Setting ? <EditBar></EditBar> : <UIBar></UIBar>}
-        <h1>{rooms.map((room, idx) => {
-          return <div>
-            {room.name}
-          </div>
-        })}</h1>
       </Backdrop>
     </>
   );

@@ -453,6 +453,9 @@ public class ProductServiceImpl implements ProductService{
                     .isFavorite(favoriteRepositorySupport.getIsFavoriteByUserIdAndProductId(userId,p.getProductId()))
                     .productFavoriteCount(favoriteRepositorySupport.getFavoriteCount(p.getProductId()))
                     .productAuctionEndTime(p.getProductAuctionEndTime())
+                    .productView(p.isProductView())
+                    .productXCoordinate(p.getProductXCoordinate())
+                    .productYCoordinate(p.getProductYCoordinate())
                     .build();
 
             list.add(userProductWithIsFavoriteRes);
