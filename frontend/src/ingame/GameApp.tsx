@@ -108,7 +108,10 @@ const GameApp: Function = () => {
         console.log(res)
         console.log(characterIdx)
       },
-      onError: (err: any) => {console.log('userId를 받아오지 못했습니다.',err)},
+      onError: (err: any) => {
+        characterIdx = "1";
+        console.log('userId를 받아오지 못했습니다.',err);
+      },
     }
   );
 
