@@ -92,7 +92,7 @@ export default class Game extends Phaser.Scene {
 
     // debugDraw(groundLayer, this) // 만들어둔 debug 사용해보기
 
-    this.myPlayer = this.add.myPlayer(705, 500, '1', this.network.mySessionId) // 시작 할때 캐릭터 위치 설정
+    this.myPlayer = this.add.myPlayer(640, 896, '1', this.network.mySessionId) // 시작 할때 캐릭터 위치 설정
     this.playerSelector = new PlayerSelector(this, 0, 0, 16, 16) // ⭐player selector가 뭘까
 
     // 의자 위치 잡기
@@ -170,7 +170,7 @@ export default class Game extends Phaser.Scene {
    
     this.physics.add.overlap( // ⭐ 이거 없으면 상호작용 불가
       this.playerSelector,
-      [chairs, computers, whiteboards, vendingMachines],
+      [chairs, whiteboards, vendingMachines],
       this.handleItemSelectorOverlap,
       undefined,
       this
