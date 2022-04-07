@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   Wrapper,
@@ -27,7 +27,22 @@ import UserModal from "../user/UserModal";
 import { EditModeChange, MakingModeChange } from "../../stores/EditStore";
 import { postRandomJoin } from "../../../store/apis/myRoom";
 import SearchModal from "../seatchbar/SearchModal";
+import { Button } from "@mui/material";
+import { deleteFollow, getFollowee, postFollow } from "../../../store/apis/follow";
 
+interface IUserInfo {
+  userId: number;
+  authId: number;
+  userAddress: string;
+  userRole: string;
+  userNick: string;
+  userEmail: string;
+  userEmailConfirm: boolean;
+  userDescription: string;
+  userImgUrl: string;
+  followerCnt: number;
+  followeeCnt: number;
+}
 
 const UIBar = () => {
   const [musicList, setMusic] = useState();
@@ -38,6 +53,8 @@ const UIBar = () => {
   const [visitTog, setVisitTog] = useState(true);
   const [userTog, setUserTog] = useState(true);
   const [searchTog, setSearchTog] = useState(true);
+  const [followBtnState, setFollowBtnState] = useState<boolean | null>(null);
+  const [userInfo, setUserInfo] = useState<IUserInfo>();
   const { userId } = useParams();
   const numId = Number(userId);
   const navigate = useNavigate();
@@ -64,6 +81,89 @@ const UIBar = () => {
       },
     }
   );
+
+    const getMyInfo = useMutation<any, Error>(
+    "getUserInfo",
+    async () => {
+      if (userId) {
+        return await getUserInfo(Number(userId));
+      } else {
+        alert("내 정보를 받아올 수 없습니다.");
+        return;
+      }
+    },
+    {
+      onSuccess: async (res) => {
+        console.log("내정보를 받아왔습니다.");
+        await setUserInfo(res);
+        console.log(userInfo);
+      },
+      onError: (err: any) => {
+        console.log(err, "에러발생");
+      },
+    }
+  );
+
+  const getUserFollower = useMutation<any, Error>(
+    "getFollower",
+    async () => {
+      return await getFollowee(Number(userId));
+    },
+    {
+      onSuccess:  (res) => {
+        console.log("팔로워들", res);
+        const userIds = res.map((user) => user.userId);
+        console.log(userIds);
+        if (userIds.includes(Number(sessionStorage.getItem("userId")))) {
+          setFollowBtnState(false);
+        } else {
+          setFollowBtnState(true);
+        }
+      },
+      onError: (err: any) => {
+        console.log("에러발생", err);
+      },
+    }
+  );
+
+  const follow = useMutation<any, Error>(
+    "follow",
+    async () => {
+      return await postFollow(Number(userId));
+    },
+    {
+      onSuccess: async (res) => {
+        console.log("팔로우요청 성공", res);
+        await getMyInfo.mutate();
+        // getUserFollower.mutate()
+      },
+      onError: (err: any) => {
+        console.log("에러발생", err);
+      },
+    }
+  )
+
+  const unFollow = useMutation<any, Error>(
+    "unFollow",
+    async () => {
+      return await deleteFollow(Number(userId));
+    },
+    {
+      onSuccess: async (res) => {
+        console.log("언팔로우요청 성공", res);
+        await getMyInfo.mutate();
+        // getUserFollower.mutate()
+      },
+      onError: (err: any) => {
+        console.log("에러발생", err);
+      },
+    }
+  )
+
+  const onClickFollow = async () => {
+    followBtnState? follow.mutate() : unFollow.mutate()
+    setFollowBtnState(!followBtnState)
+  }
 
   const {
     data: Alldata,
@@ -106,12 +206,12 @@ const UIBar = () => {
       },
     }
   );
-  const { data: userInfo, isLoading: userInfoLoading } = useQuery<any>(
-    "sideuserInfo",
-    async () => {
-      return await getUserInfo(numId);
-    }
-  );
+  // const { data: userInfo, isLoading: userInfoLoading } = useQuery<any>(
+  //   "sideuserInfo",
+  //   async () => {
+  //     return await getUserInfo(numId);
+  //   }
+  // );
 
   // room 이동 요청
   // get 해당 유저의 id , 데이터 변경 , post 요청 입장, route 주소 변경
@@ -171,13 +271,19 @@ const UIBar = () => {
     setUserTog(true);
     setSearchTog(!searchTog)
   }
+
+  useEffect(() => {
+    getUserFollower.mutate()
+    getMyInfo.mutate()
+  }, [])
+
   return (
     <Wrapper>
       {/* <Head className={tog ? "close" : "open"}> */}
       <Head className={tog ? "close" : "open"}>
         <ToggleBtn onClick={() => toggle()}>
           <img
-            alt=''
+            alt=""
             className={tog ? "changeButton" : "button"}
             src="/essets/room/arrow-left-circle.png"
           ></img>
@@ -190,10 +296,21 @@ const UIBar = () => {
               <img src="/essets/room/none.png" alt="" />
             )}
 
-            <div className={tog ? "hidden" : ""}>
-              <div>{userInfo.userNick}</div>
-              <div>follower : {userInfo.followerCnt}</div>
-              <div> following : {userInfo.followeeCnt}</div>
+            <div className={tog ? "hidden" : "profileBox"}>
+              <div>
+                <div>{userInfo.userNick}</div>
+                <div>팔로워 : {userInfo?.followerCnt}</div>
+                <div>팔로잉 : {userInfo?.followeeCnt}</div>
+              </div>
+              <div>
+              <Button
+                  className="profilesetting"
+                  variant="contained"
+                  onClick={onClickFollow}
+                >
+                  {followBtnState ? "Follow" : "Unfollow"}
+                </Button>
+              </div>
             </div>
           </>
         ) : (
@@ -202,14 +319,26 @@ const UIBar = () => {
       </Head>
       <BodyWrapper>
         <Body className={tog ? "close" : "open"}>
-          <Absol>{shopTog ? null : <StoreModal setOpen={setShopTog} ></StoreModal>}</Absol>
-          <Absol>{visitTog ? null : <VisitModal setOpen={setVisitTog}></VisitModal>}</Absol>
-          <Absol>{musicTog ? null : <MusicModal setOpen={setMusicTog}></MusicModal>}</Absol>
-          <Absol>{userTog ? null : <UserModal setOpen={setUserTog}></UserModal>}</Absol>
-          <Absol>{searchTog ? null : <SearchModal setOpen={setSearchTog}></SearchModal>}</Absol>
+          <Absol>
+            {shopTog ? null : <StoreModal setOpen={setShopTog}></StoreModal>}
+          </Absol>
+          <Absol>
+            {visitTog ? null : <VisitModal setOpen={setVisitTog}></VisitModal>}
+          </Absol>
+          <Absol>
+            {musicTog ? null : <MusicModal setOpen={setMusicTog}></MusicModal>}
+          </Absol>
+          <Absol>
+            {userTog ? null : <UserModal setOpen={setUserTog}></UserModal>}
+          </Absol>
+          <Absol>
+            {searchTog ? null : (
+              <SearchModal setOpen={setSearchTog}></SearchModal>
+            )}
+          </Absol>
           <div className="Icon">
             <img
-              alt=''
+              alt=""
               onClick={() => {
                 openMusic();
               }}
