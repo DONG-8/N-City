@@ -24,6 +24,7 @@ import StoreModal from "../NFTstore/StoreModal";
 import VisitModal from "../visitModal";
 import UserModal from "../user/UserModal";
 import { EditModeChange, MakingModeChange } from "../../stores/EditStore";
+import SearchModal from "../seatchbar/SearchModal";
 
 const UIBar = () => {
   const [musicList, setMusic] = useState();
@@ -33,6 +34,7 @@ const UIBar = () => {
   const [shopTog, setShopTog] = useState(true);
   const [visitTog, setVisitTog] = useState(true);
   const [userTog, setUserTog] = useState(true);
+  const [searchTog, setSearchTog] = useState(true);
   const { userId } = useParams();
   const numId = Number(userId);
   const navigation = useNavigate();
@@ -126,6 +128,10 @@ const UIBar = () => {
   const openUser = () => {
     setUserTog(!userTog);
   };
+
+  const openSearch = () => {
+    setSearchTog(!searchTog)
+  }
   return (
     <Wrapper>
       <Head className={tog ? "close" : "open"}>
@@ -156,6 +162,7 @@ const UIBar = () => {
           <Absol>{visitTog ? null : <VisitModal></VisitModal>}</Absol>
           <Absol>{musicTog ? null : <MusicModal></MusicModal>}</Absol>
           <Absol>{userTog ? null : <UserModal></UserModal>}</Absol>
+          <Absol>{searchTog ? null : <SearchModal></SearchModal>}</Absol>
           <div className="Icon">
             <img
               onClick={() => {
@@ -236,7 +243,7 @@ const UIBar = () => {
                 </button>
               </Tooltip>
               <Tooltip title="Search User">
-                <button>
+                <button onClick={openSearch}>
                   <img className="user" src="/essets/room/search.png" alt="" />
                 </button>
               </Tooltip>

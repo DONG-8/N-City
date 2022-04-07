@@ -116,6 +116,7 @@ const UserItem: React.FC<Iprops> = ({ user }) => {
 
   const onClickJoinRoom = () => {
     navigate("/ingame/" + String(user.userId))
+    window.location.reload()
   };
 
   useEffect(() => {
