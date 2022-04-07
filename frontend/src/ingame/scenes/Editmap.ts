@@ -20,12 +20,13 @@ enum ItemCategory {
   WINDOW_DOOR,
   BASEMENT,
   STRUCTURE,
-  MYART
+  MYART,
+  NONE
 }
 
 class Editmap extends Phaser.Scene {
-  selectedItemC = ItemCategory.GROUND;
-  itemGid = 198;
+  selectedItemC = ItemCategory.NONE;
+  itemGid = 0;
   itemWidth = 32;
   itemHeight = 32;
   isCreateMode = true;
@@ -193,7 +194,7 @@ class Editmap extends Phaser.Scene {
         console.log(product.productId)
         // this.add.image(product.productXCoordinate, productYCoordinate, `${this.itemGid}`).setDepth(this.marker.y+16).setInteractive()
         vendingMachines.get(product.productXCoordinate, product.productYCoordinate, String(product.productId), String(product.productId))
-        .setDepth(product.productYCoordinate).setInteractive().setName("10")
+        .setDepth(10).setInteractive().setName("10")
       }
     })}
 
@@ -296,6 +297,8 @@ class Editmap extends Phaser.Scene {
         case ItemCategory.MYART:
           this.add.image(this.marker.x+16, this.marker.y+16, `${this.itemGid}`).setDepth(this.marker.y+16).setInteractive().setName("10")
           store.dispatch(LocationInfoChange({x:this.marker.x, y:this.marker.y+32, gid:this.itemGid}));
+          this.selectedItemC = ItemCategory.NONE
+
           break
         default:
           return null;

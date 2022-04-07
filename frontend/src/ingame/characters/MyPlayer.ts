@@ -69,7 +69,7 @@ export default class MyPlayer extends Player {
           break
         case ItemType.VENDINGMACHINE: // 화면을 띄운다.
           const vendingMachine = item as VendingMachine
-          vendingMachine.openDialog(1)
+          vendingMachine.openDialog(vendingMachine.texture.key)
           break
       }
     }

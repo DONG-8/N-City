@@ -14,7 +14,7 @@ export default class VendingMachine extends Item {
   onOverlapDialog() {
     this.setDialogBox('R-그림 자세히 보기')
   }
-  openDialog(roomnum){
-    store.dispatch(openVendingMachineDialog(roomnum))
+  openDialog(productId){
+    store.dispatch(openVendingMachineDialog(Number(productId)))
   }
 }

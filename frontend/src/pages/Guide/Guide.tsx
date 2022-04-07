@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { useState } from "react";
 import styled from "styled-components";
 import { NFTcreatorAddress, SSFTokenAddress } from "../../web3Config";
@@ -15,6 +16,19 @@ const Box = styled.div`
   color: #6225E6;  
   .firstdiv {
     color: teal;
+  }
+  img{
+    margin-top:10vh;
+    border: 1px solid gray;
+    border-radius: 10px;
+  }
+  h1{
+    margin-top:10vh;
+  }
+  button{
+    &:hover{
+      background-color: white;
+    }
   }
 `
 const Img = styled.img`
@@ -185,6 +199,9 @@ const Guide = () => {
             alt="사진"
           />
           <h1>로그인 완료!!!</h1>
+          <Button onClick={()=>{setCategoryState("network");window.scrollTo(0,0);}}>
+            <h2>이어서 네트워크 연결하러 가기!</h2>
+          </Button>
         </Box>
       ) : (
         <Box>
@@ -212,7 +229,8 @@ const Guide = () => {
             src="/essets/guideimage/메타마스크페이지_13_설명추가_cut.png"
             alt="사진"
           />
-          <h1> 토큰 계약 주소에 주소를 입력합니다. {NFTcreatorAddress} </h1>
+          <h1> 토큰 계약 주소에 주소를 입력합니다.  </h1>
+          <h2>{NFTcreatorAddress}</h2>
           <Token
             src="/essets/guideimage/메타마스크페이지_15_cut.png"
             alt="사진"
@@ -231,7 +249,7 @@ const Guide = () => {
           <h1>토큰 2개를 추가한 화면</h1>
 
           <h1>메타마스크 설정 완료!!</h1>
-
+          <Button><a href="/">N-city 이용하러 가기</a></Button>
         </Box>
       )}
     </Wrapper>
