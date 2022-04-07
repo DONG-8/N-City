@@ -28,7 +28,6 @@ import { EditModeChange, MakingModeChange } from "../../stores/EditStore";
 import { postRandomJoin } from "../../../store/apis/myRoom";
 import SearchModal from "../seatchbar/SearchModal";
 
-
 const UIBar = () => {
   const [musicList, setMusic] = useState();
   const dispatch = useAppDispatch();
@@ -134,23 +133,83 @@ const UIBar = () => {
 
   const openMusic = () => {
     setMusicTog(!musicTog);
+    if (shopTog === false) {
+      setShopTog(!shopTog);
+    }
+    if (visitTog === false) {
+      setVisitTog(!visitTog);
+    }
+    if (userTog === false) {
+      setUserTog(!userTog);
+    }
+    if (searchTog === false) {
+      setSearchTog(!searchTog);
+    }
   };
 
   const openShop = () => {
     setShopTog(!shopTog);
+    if (musicTog === false) {
+      setMusicTog(!musicTog);
+    }
+    if (visitTog === false) {
+      setVisitTog(!visitTog);
+    }
+    if (userTog === false) {
+      setUserTog(!userTog);
+    }
+    if (searchTog === false) {
+      setSearchTog(!searchTog);
+    }
   };
 
   const openVisit = () => {
     setVisitTog(!visitTog);
+    if (shopTog === false) {
+      setShopTog(!shopTog);
+    }
+    if (visitTog === false) {
+      setVisitTog(!visitTog);
+    }
+    if (userTog === false) {
+      setUserTog(!userTog);
+    }
+    if (searchTog === false) {
+      setSearchTog(!searchTog);
+    }
   };
 
   const openUser = () => {
     setUserTog(!userTog);
+    if (shopTog === false) {
+      setShopTog(!shopTog);
+    }
+    if (visitTog === false) {
+      setVisitTog(!visitTog);
+    }
+    if (musicTog === false) {
+      setMusicTog(!musicTog);
+    }
+    if (searchTog === false) {
+      setSearchTog(!searchTog);
+    }
   };
 
   const openSearch = () => {
-    setSearchTog(!searchTog)
-  }
+    setSearchTog(!searchTog);
+    if (shopTog === false) {
+      setShopTog(!shopTog);
+    }
+    if (visitTog === false) {
+      setVisitTog(!visitTog);
+    }
+    if (userTog === false) {
+      setUserTog(!userTog);
+    }
+    if (musicTog === false) {
+      setMusicTog(!musicTog);
+    }
+  };
   return (
     <Wrapper>
       {/* <Head className={tog ? "close" : "open"}> */}
@@ -172,7 +231,7 @@ const UIBar = () => {
             <div className={tog ? "hidden" : ""}>
               <div>{userInfo.userNick}</div>
               <div>follower : {userInfo.followerCnt}</div>
-              <div> following : {userInfo.followeeCnt}</div>
+              <div>following : {userInfo.followeeCnt}</div>
             </div>
           </>
         ) : (
