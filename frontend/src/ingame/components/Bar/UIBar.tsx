@@ -39,9 +39,10 @@ const UIBar = () => {
   const myId = sessionStorage.getItem("userId");
   const [itsMe, setItsMe] = useState(false);
 
-  if (myId === userId) {
-    setItsMe(true);
-  }
+  // if (myId === userId) {
+  //   setItsMe(true);
+  //   console.log("나다이쉐키야");
+  // }
 
   const {
     data: Alldata,
@@ -58,23 +59,29 @@ const UIBar = () => {
         // 성공하면 db에 뮤직 string List를 만들어서 넘겨준다.
         let arr;
         console.log(res, "앱창에서 불러온 정보");
-        const MusicArray = res.content.map((obj, i) => {
-          if (obj.productCode === 1) {
-            return {
-              title: obj.productTitle,
-              artist: obj.productDesc,
-              audioSrc: obj.productFileUrl,
-              image: obj.productThumbnailUrl,
-              color: "#6225E6",
-            };
-          } else {
-            return null;
+        console.log(res.content, "콘텐츠"); // []
+        if (res.content.length !== 0) {
+          const music = res.content.filter((obj, i) => {
+            return obj.productCode === 1;
+          });
+          console.log(music, "음악 정보만 받아옴");
+          let MusicArray;
+          if (music) {
+            MusicArray = music.map((obj, i) => {
+              return {
+                title: obj.productTitle,
+                artist: obj.productDesc,
+                audioSrc: obj.productFileUrl,
+                image: obj.productThumbnailUrl,
+                color: "#6225E6",
+              };
+            });
           }
-        });
-        const result = MusicArray.filter((obj, i) => obj !== null);
-        console.log(result, "새 결과");
-        dispatch(setMusicList(result));
-        setMusic(result);
+
+          console.log(MusicArray, "뮤직어레이");
+          dispatch(setMusicList(MusicArray));
+          setMusic(MusicArray);
+        }
       },
     }
   );
@@ -159,7 +166,11 @@ const UIBar = () => {
               alt="사진없노"
             />
             <div className={tog ? "hidden" : "content"}>
-              {musicList && <AudioPlayer tracks={musicList} />}
+              {musicList ? (
+                <AudioPlayer tracks={musicList} />
+              ) : (
+                <div>음악이 없어요 사러 가볼까요?</div>
+              )}
             </div>
           </div>
 
