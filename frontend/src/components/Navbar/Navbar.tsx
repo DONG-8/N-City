@@ -294,6 +294,9 @@ export default function Navbar() {
                 <Link className="inner" to="event">
                   <p>Event</p>
                 </Link>
+                <Link className="inner" to="guide">
+                  <p>Guide</p>
+                </Link>
               </div>
             </div>
 
