@@ -17,7 +17,6 @@ import { putProductXYView } from "../../store/apis/product";
 import { IUser } from "colyseus.js/lib/Auth";
 import { prototype } from "node-polyfill-webpack-plugin";
 import { TRUE } from "sass";
-import { useNavigate } from "react-router-dom";
 
 const Sidebar = styled.div`
   position: absolute;
@@ -164,7 +163,6 @@ const EditBar = () => {
   const location = useAppSelector((state) => state.edit.locationInfo);
   // const userId = useAppSelector((state) => state.edit.userId);
   // const myArts = useAppSelector((state) => state.edit.arts);
-  const navigate = useNavigate();
 
   const { userId } = useParams();
   const numUserId = Number(userId);
@@ -475,7 +473,12 @@ const EditBar = () => {
     },
     {
       onSuccess: (res) => {
-        setData(res.myRoomBackground);
+        if (res.myRoomBackground === null) {
+          setData(firstmap);
+        } else {
+          setData(res.myRoomBackground);
+        }
+        
         // newData = res.myRoomBackground
         console.log(res.myRoomBackground, "백그라운드정보");
       },
@@ -498,9 +501,6 @@ const EditBar = () => {
         window.location.reload();
       },
       onError: (err: any) => {
-        if (err.response.status === 401) { 
-          navigate("/login")
-        }
         console.log(err);
       },
     }
@@ -517,9 +517,6 @@ const EditBar = () => {
         setMyArts(res);
       },
       onError: (err: any) => {
-        if (err.response.status === 401) { 
-          navigate("/login")
-        }
         console.log(err);
       },
     }
@@ -541,9 +538,6 @@ const EditBar = () => {
         console.log("작품 수정 완료");
       },
       onError: (err: any) => {
-        if (err.response.status === 401) { 
-          navigate("/login")
-        }
         console.log(err);
       },
     }
