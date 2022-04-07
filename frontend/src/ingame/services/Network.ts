@@ -32,10 +32,10 @@ export default class Network {
 
   constructor() { // 네트워크 관련 ⭐⭐⭐⭐
     const protocol = window.location.protocol.replace('http', 'ws')
-    const endpoint =
-      process.env.NODE_ENV === 'production'
-        ? `wss://sky-office.herokuapp.com`
-        : `${protocol}//${window.location.hostname}:2567`
+    const endpoint = 'wss://j6e106.p.ssafy.io/colyseus'
+      // process.env.NODE_ENV === 'production'
+      //   ? `wss://sky-office.herokuapp.com`
+      //   : `${protocol}//${window.location.hostname}:2567`
     this.client = new Client(endpoint)
     this.joinLobbyRoom().then(() => {
       store.dispatch(setLobbyJoined(true))

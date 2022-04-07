@@ -139,6 +139,9 @@ const UIBar = () => {
       },
       onError: (err: any) => {
         console.log("에러발생", err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   )
@@ -156,6 +159,9 @@ const UIBar = () => {
       },
       onError: (err: any) => {
         console.log("에러발생", err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   )
@@ -225,6 +231,7 @@ const UIBar = () => {
     // return <Navigate to="/" />;
     navigate("/");
     (window as any).game.destroy(true);
+    window.location.reload()
   };
 
   const ClickModeChange = () => {

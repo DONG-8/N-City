@@ -16,6 +16,7 @@ import {
 import etherimg from './ethereum.png'
 import IsLoading2 from '../../pages/NFTStore/IsLoading2';
 import { randomwords } from '../../pages/NFTStore/words';
+import { useNavigate } from 'react-router-dom';
 interface Iprops{
   open:boolean,
   setOpen:React.Dispatch<React.SetStateAction<boolean>>
@@ -265,6 +266,7 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
   const [session1,setSession1] = useState("")
   const [value,setValue]  = useState(0)
   const [period, setPeriod] = useState(0);
+  const navigate = useNavigate();
   const { ethereum } = window;
   const [isLoading,setIsLoading] = useState(false)
   useEffect(()=>{
@@ -284,6 +286,9 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
       onError: (err: any) => {
         setIsLoading(false)
         console.log(err, "에러발생");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -301,6 +306,9 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
       onError: (err: any) => {
         setIsLoading(false)
         console.log(err, "에러발생");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );

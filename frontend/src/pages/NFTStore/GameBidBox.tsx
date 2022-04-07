@@ -6,6 +6,7 @@ import { getPastHistory, postAuctionConfirm, postCancelAuction, postCancelPurcha
 import { createSaleContract, SaleFactoryContract } from '../../web3Config';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers';
 
 interface IState {
   history: {
@@ -210,9 +211,12 @@ const GameBidBox:React.FC<Iprops> = ({item,setOpen}) => {
         console.log("confirm 성공", res);
         setIsloading(false);
       },
-      onError: (err) => {
+      onError: (err:any) => {
         setIsloading(false);
         console.log("confirm 실패", err)
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -228,9 +232,12 @@ const GameBidBox:React.FC<Iprops> = ({item,setOpen}) => {
         setIsloading(false)
         setOpen(false)
       },
-      onError: (err) => {
+      onError: (err:any) => {
         setIsloading(false)
         console.log("경매취소 실패", err)
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       }
     }
   );
@@ -250,6 +257,9 @@ const GameBidBox:React.FC<Iprops> = ({item,setOpen}) => {
       onError: (err: any) => {
         console.log("구매등록 취소 실패", err);
         setIsloading(false)
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );

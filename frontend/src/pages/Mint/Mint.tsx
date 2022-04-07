@@ -311,6 +311,7 @@ const Mint = () => {
       const accounts = await ethereum.request({ method: "eth_accounts" });
       if (!accounts[0]) {
         alert("지갑을 연결해주세요")
+        navigate("/login")
         return;
       }
 
@@ -361,6 +362,9 @@ const Mint = () => {
            
       },
       onError: (err: any) => {
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
         console.log(err, "에러발생!");
       },
     }
@@ -377,10 +381,13 @@ const Mint = () => {
     },
     {
       onSuccess: (res) => {
-        console.log(res, "정보 수정이 완료되었습니댜");
+        console.log(res, "정보 수정이 완료되었습니다");
       },
       onError: (err: any) => {
         console.log(err, "put 에러발생에러발생");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -522,7 +529,7 @@ const Mint = () => {
       if (sessionStorage.getItem("userId")) {
         return await getUserInfo(Number(sessionStorage.getItem("userId")));
       } else {
-        alert("내 정보를 받아올 수 없습니다.");
+        navigate("/login")
         return;
       }
     },
