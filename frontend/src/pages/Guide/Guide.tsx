@@ -112,7 +112,7 @@ const Guide = () => {
   return (
     <Wrapper>
       <Header>
-        <Title>메타마스크? 그게 뭐지? 그런거 없는데를 위한 페이지</Title>
+        <Title>어떻게 시작하나요?</Title>
       </Header>
       <ButtonBox>
 

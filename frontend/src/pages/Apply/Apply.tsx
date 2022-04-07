@@ -53,11 +53,12 @@ const Card = styled.div`
   flex-direction: column;
   justify-content: center;
   color: white;
-  background-color: #ffaa8c;
+  background-color: #a1a1ff ;
   width: 0%;
   height: 100%;
   opacity: 0;
   white-space: nowrap;
+
 `;
 
 const CardTextBox = styled.div`
@@ -77,7 +78,7 @@ const Background = styled.img`
   width: 105%;
   height: 105%;
   object-fit: cover;
-  opacity: 40%;
+  opacity: 70%;
 `;
 
 const CardTitle = styled.div`

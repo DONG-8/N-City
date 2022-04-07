@@ -5,7 +5,7 @@ import ArrowForward from "@material-ui/icons/ArrowForward";
 import RankArtistCard from "./RankArtistCard";
 import Img1 from './image/1.png'
 import Img2 from './image/2.png'
-import Img3 from './image/3.png'
+import { useNavigate } from "react-router-dom";
 const SubBannerWrraper = styled.div`
   position: relative;
   width: 448px;
@@ -18,7 +18,7 @@ const SubBannerWrraper = styled.div`
 const SubBanner = styled.div`
   border: 1px solid #dfdfdf;
   width: 420px;
-  height: 300px;
+  height: 280px;
   object-fit: cover;
   display: flex;
   flex-direction: column;
@@ -27,6 +27,7 @@ const SubBanner = styled.div`
   overflow: hidden;
   z-index: 0;
   background-color: white;
+  border-radius: 10px;
   cursor: pointer;
   .inner {
     width: 448px;
@@ -85,17 +86,12 @@ const GuideSlide = () => {
     {
       pic: Img1,
       ID: 1,
-      name: "구찌",
+      name: "로그인가이드",
     },
     {
       pic: Img2,
       ID: 2,
-      name: "로아 프레딧 룩",
-    },
-    {
-      pic: Img3,
-      ID: 3,
-      name: "로아 도화가",
+      name: "네트워크가이드",
     },
   ];
   const moveSubAuto = () => {
@@ -148,10 +144,11 @@ const GuideSlide = () => {
     moveSubAuto();
   }, [subCheck]);
 
+  const navigate = useNavigate()
   return (
     <>
       <SubBannerWrraper>
-        <SubBanner>
+        <SubBanner onClick={()=>{navigate('/guide')}}>
           {subImages.map((value, idx) => {
             return (
               <div key={idx} className="inner">
@@ -168,25 +165,6 @@ const GuideSlide = () => {
             );
           })}
         </SubBanner>
-        <SubPagenationBanner>
-          <button
-            onClick={() => {
-              moveSubLeft();
-            }}
-          >
-            <ArrowBackIcon></ArrowBackIcon>
-          </button>
-          <button>
-            {subEventNumber + 1}/{subImages.length}
-          </button>
-          <button
-            onClick={() => {
-              moveSubRight();
-            }}
-          >
-            <ArrowForward></ArrowForward>
-          </button>
-        </SubPagenationBanner>
       </SubBannerWrraper>
     </>
   );

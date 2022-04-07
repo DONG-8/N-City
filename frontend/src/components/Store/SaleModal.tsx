@@ -174,7 +174,7 @@ const Session2 = styled.div`
   .buttons {
     height: 50px;
     display: flex;
-    margin-top: 50px;
+    margin-top: 30px;
     font-weight: 600;
     justify-content: space-around;
   }

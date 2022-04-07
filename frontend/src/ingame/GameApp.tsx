@@ -25,7 +25,7 @@ import { UserMapInfo } from "./stores/EditStore";
 import { setUserProducts } from "./stores/UserStore";
 
 // 쿼리
-import { postRoomJoin } from "../store/apis/myRoom";
+import { postRoomJoin, getCharacter } from "../store/apis/myRoom";
 import { getUsercollectedInfo } from "../store/apis/user";
 import { useMutation } from "react-query";
 import basicData from "./scenes/map.json";
@@ -68,8 +68,10 @@ const GameApp: Function = () => {
   // 유저 아이디를 통한 방 정보 요청 --> 로딩시간중 안불러와지면? 로딩이 필요하겠다.
   // 쿼리를 사용해야겠음
   const userNick = sessionStorage.getItem("userNickname") || "";
+  const myId = sessionStorage.getItem("userId")?  sessionStorage.getItem("userId") : "0";
+ 
 
-  const { mutate: RoomInfo } = useMutation<any, Error>(
+  const { mutate: RoomInfo } = useMutation<any, Error>( // 방 정보 가져오기 
     "postRoomInfo",
     async () => {
       return await postRoomJoin(roomuserId);
@@ -81,11 +83,27 @@ const GameApp: Function = () => {
         } else {
           map = res.myRoomBackground;
         }
-        characterIdx = res.myRoomCharacter;
         dispatch(UserMapInfo(res.myRoomBackground));
         console.log("방 정보 불러오기", res);
       },
       onError: (err: any) => {},
+    }
+  );
+
+  const { // 내 캐릭터 가져오기 
+    mutate: getCharacterIndex,
+    } = useMutation<any, Error>(
+    "getCharacter",
+    async () => {
+      return await getCharacter(Number(myId));
+    },
+    {
+      onSuccess: (res) => {
+        characterIdx = res.myRoomCharacter
+        console.log(res)
+        console.log(characterIdx)
+      },
+      onError: (err: any) => {console.log('userId를 받아오지 못했습니다.',err)},
     }
   );
 
@@ -100,6 +118,7 @@ const GameApp: Function = () => {
       },
     ],
   };
+
   const { mutate: getMyArts } = useMutation<any, Error>(
     "getUsercollectedInfo",
     async () => {
@@ -131,6 +150,7 @@ const GameApp: Function = () => {
     setLoading(true); //😎
     getMyArts();
     RoomInfo();
+    getCharacterIndex();
     setTimeout(() => ConnectStart(), 3000);
     setTimeout(() => checkAvailableRoom(), 4000);
     setTimeout(() => ConnectBootstrap(), 5000); // Bootstrap 연결
@@ -162,7 +182,7 @@ const GameApp: Function = () => {
   async function checkAvailableRoom() {
     // 방 체크
     const activeRoom = await bootstrap.network.getActiveRoom();
-
+    console.log('activeRoom', activeRoom)
     activeRoom.map((room, idx) => {
       if (room.roomId === values.roomId) {
         ok = true;
@@ -176,7 +196,6 @@ const GameApp: Function = () => {
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
     bootstrap.mapInfo = map;
     bootstrap.myArtList = myArts;
-    bootstrap.characterIdx = characterIdx;
 
     start = phaserGame.scene.keys.start as Start;
     start.launchBootstrap();
@@ -191,13 +210,16 @@ const GameApp: Function = () => {
   async function ConnectBootstrap() {
     // ⭐ bootstrap 연결하기
     bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap;
-
-    if (ok === true) {
+    console.log('ok', ok)
+    console.log('stringId', stringId)
+    if (ok) {
+      console.log('방 참여')
       await bootstrap.network
         .joinRoom(stringId)
         .then(() => bootstrap.launchGame(Setting))
         .catch((error) => console.error(error));
     } else {
+      console.log('방 생성')
       await bootstrap.network
         .createRoom(values)
         .then(() => bootstrap.launchGame(Setting))
@@ -208,10 +230,10 @@ const GameApp: Function = () => {
   async function ConnectGame() {
     // 게임 접속
     game = phaserGame.scene.keys.game as Game;
-
+    console.log('character', characterIdx)
     game.registerKeys(); // 키 설정
     game.myPlayer.setPlayerName(userNick); // ❗ 내이름 설정해주기
-    game.myPlayer.setPlayerTexture("character"); // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
+    game.myPlayer.setPlayerTexture(characterIdx); // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)
     game.network.readyToConnect(); // 네트워크 연결
   }
 

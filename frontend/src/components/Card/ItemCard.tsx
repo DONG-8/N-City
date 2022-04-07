@@ -119,6 +119,7 @@ const Title = styled.div`
 `;
 interface Iprops {
   item: {
+    userId: number;
     productId: number;
     productTitle: string;
     productPrice: number;
@@ -177,11 +178,11 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
   const getVerifiedMark = (userType: string) => {
     switch (userType) {
       case "ROLE_INFLUENCER":
-        return <img src={influencer} alt="mark" />;
+        return <img src={influencer} title='influencer' alt="mark" />;
       case "ROLE_ARTIST":
-        return <img src={artist} alt="mark" />;
+        return <img src={artist}  title='artist' alt="mark" />;
       case "ROLE_ENTERPRISE":
-        return <img src={enterprise} alt="mark" />;
+        return <img src={enterprise} title='enterprise' alt="mark" />;
       default:
         return;
     }
@@ -201,7 +202,7 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
 
   return (
     <>
-      <CardWrapper  id={item.productCode===7?'character':'normal'}>
+      <CardWrapper id={item.productCode === 7 ? "character" : "normal"}>
         <Image
           onClick={() => {
             goDetailPage(item.productId);
@@ -215,7 +216,10 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
         </Image>
         <CardCenter>
           <DesLeft>
-            <Title><span>{item.productTitle}</span>{getVerifiedMark(item.userRole)}</Title>
+            <Title>
+              <span>{item.productTitle}</span>
+              {getVerifiedMark(item.userRole)}
+            </Title>
           </DesLeft>
         </CardCenter>
         <CardBottom>
@@ -247,19 +251,22 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
             {likes}
           </div>
           <div>
-            {item.productState === 1 ? (
+            {item.productState === 1 && (
               <SaleState>경매중 {item.productPrice}NCT</SaleState>
-            ) : item.productState === 2 ? (
-              <SaleState>판매중 {item.productPrice}NCT</SaleState>
-            ) : (
-              <div>
-                <Button onClick={() => handleOpen(item)}>
-              <Tooltip title="판매하기">
-                  <SellIcon />
-              </Tooltip>
-                </Button>
-              </div>
             )}
+            {item.productState === 2 && (
+              <SaleState>판매중 {item.productPrice}NCT</SaleState>
+            )}
+            {item.productState === 3 &&
+              item.userId === Number(sessionStorage.getItem("userId")) && (
+                <div>
+                  <Button onClick={() => handleOpen(item)}>
+                    <Tooltip title="판매하기">
+                      <SellIcon />
+                    </Tooltip>
+                  </Button>
+                </div>
+              )}
           </div>
         </CardBottom>
       </CardWrapper>
