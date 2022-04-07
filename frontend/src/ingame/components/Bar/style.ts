@@ -4,7 +4,7 @@ export const ToggleBtn = styled.div`
   position: absolute;
   top: 25px;
   left: -40px;
-  background-color: yellow;
+  /* background-color: yellow; */
   width: 10px;
   height: 10px;
   .button {
@@ -26,7 +26,7 @@ export const ToggleBtn = styled.div`
 
 export const Wrapper = styled.div`
   padding: 10px 14px;
-  height: 100%;
+  height: 98%;
   position: absolute;
   display: flex;
   flex-direction: column;

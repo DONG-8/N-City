@@ -25,7 +25,7 @@ import Guide from "./pages/Guide/Guide";
 
 function App() {
   useEffect(() => {
-    if (window.location.pathname === "/ingame") {
+    if (window.location.pathname.slice(0, 7) === "/ingame") {
       (window as any).game = phaserGame;
     } else {
       (window as any).game.destroy(true);
@@ -57,7 +57,7 @@ function App() {
             <Route path="/YNTest" element={<YNTest />} />
             <Route path="/search/:data" element={<SearchPage />} />
             <Route path="/guide" element={<Guide />} />
-            <Route path="/ingame" element={<GameApp />} />
+            <Route path="/ingame/:userId" element={<GameApp />} />
             <Route path="/character" element={<Character />} />
           </Routes>
         </Provider>

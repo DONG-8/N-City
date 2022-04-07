@@ -11,7 +11,7 @@ import {
 } from "./style";
 
 import { useMutation, useQuery } from "react-query";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getUserInfo } from "../../../../src/store/apis/user"; //  유저정보 가져오기
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { getUsercollectedInfo } from "../../../../src/store/apis/user"; //  유저정보 가져오기
@@ -27,15 +27,21 @@ import { EditModeChange, MakingModeChange } from "../../stores/EditStore";
 
 const UIBar = () => {
   const [musicList, setMusic] = useState();
-  const userId = useAppSelector((state) => state.edit.userId);
   const dispatch = useAppDispatch();
   const [tog, setTog] = useState(true);
   const [musicTog, setMusicTog] = useState(true);
   const [shopTog, setShopTog] = useState(true);
   const [visitTog, setVisitTog] = useState(true);
   const [userTog, setUserTog] = useState(true);
-
+  const { userId } = useParams();
+  const numId = Number(userId);
   const navigation = useNavigate();
+  const myId = sessionStorage.getItem("userId");
+  const [itsMe, setItsMe] = useState(false);
+
+  if (myId === userId) {
+    setItsMe(true);
+  }
 
   const {
     data: Alldata,
@@ -45,7 +51,7 @@ const UIBar = () => {
     "ALLNFT",
     async () => {
       const size = 1000;
-      return await getUsercollectedInfo(userId, size);
+      return await getUsercollectedInfo(numId, size);
     },
     {
       onSuccess: (res) => {
@@ -75,7 +81,7 @@ const UIBar = () => {
   const { data: userInfo, isLoading: userInfoLoading } = useQuery<any>(
     "sideuserInfo",
     async () => {
-      return await getUserInfo(userId);
+      return await getUserInfo(numId);
     }
   );
 
@@ -143,27 +149,20 @@ const UIBar = () => {
           <Absol>{visitTog ? null : <VisitModal></VisitModal>}</Absol>
           <Absol>{musicTog ? null : <MusicModal></MusicModal>}</Absol>
           <Absol>{userTog ? null : <UserModal></UserModal>}</Absol>
-          <div
-            className="Icon"
-            onClick={() => {
-              openMusic();
-            }}
-          >
-            <img className="Mimg" src="/essets/room/music.png" alt="사진없노" />
+          <div className="Icon">
+            <img
+              onClick={() => {
+                openMusic();
+              }}
+              className="Mimg"
+              src="/essets/room/music.png"
+              alt="사진없노"
+            />
             <div className={tog ? "hidden" : "content"}>
               {musicList && <AudioPlayer tracks={musicList} />}
             </div>
           </div>
-          <div className="Icon" onClick={() => ClickModeChange()}>
-            <img
-              className="Mimg"
-              src="/essets/room/hammer.png"
-              alt="사진없노"
-            />
-            <div className={tog ? "hidden" : "content"}>
-              <p>Editing</p>
-            </div>
-          </div>
+
           <div className="Icon" onClick={() => gotoHome()}>
             <img className="Mimg" src="/essets/room/home.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
@@ -203,6 +202,18 @@ const UIBar = () => {
               <p>UserList</p>
             </div>
           </div>
+          {itsMe ? (
+            <div className="Icon" onClick={() => ClickModeChange()}>
+              <img
+                className="Mimg"
+                src="/essets/room/hammer.png"
+                alt="사진없노"
+              />
+              <div className={tog ? "hidden" : "content"}>
+                <p>Editing</p>
+              </div>
+            </div>
+          ) : null}
         </Body>
         <BottomItem className={tog ? "close" : "open"}>
           <div className="Bottom">
