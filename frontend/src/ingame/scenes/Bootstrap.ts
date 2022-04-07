@@ -17,6 +17,7 @@ enum GameMode {
 export default class Bootstrap extends Phaser.Scene {
   network!: Network
   mapInfo = basicData
+  characterIdx = '1'
   myArtList = {content:[{productThumbnailUrl:'', productId:0, productView:true}]}
 
   constructor() {
@@ -74,7 +75,8 @@ export default class Bootstrap extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     })
-    this.load.spritesheet('adam', '/essets/character/adam.png', {
+    console.log(this.characterIdx)
+    this.load.spritesheet('character', `essets/character/${this.characterIdx}.png`, {
       frameWidth: 32,
       frameHeight: 48,
     })
@@ -96,7 +98,7 @@ export default class Bootstrap extends Phaser.Scene {
       return (
         this.load.spritesheet(`${product.productId}`, `https://ncity-bucket-resize.${product.productThumbnailUrl.slice(21)}`, {
           frameWidth: 120,
-          frameHeight: 80,
+          frameHeight: 120,
         })
       )
     })}
