@@ -17,6 +17,8 @@ import { PlayerBehavior } from '../../types/PlayerBehavior'
 import store from '../stores'
 import { setFocused, setShowChat } from '../stores/ChatStore'
 import { closeVendingMachineDialogOpen } from '../stores/VendingMachineStore'
+import { getCharacter } from "../../store/apis/myRoom";
+import {useMutation} from "react-query";
 import stores from "../stores"
 
 enum GameMode {
@@ -90,7 +92,7 @@ export default class Game extends Phaser.Scene {
 
     // debugDraw(groundLayer, this) // 만들어둔 debug 사용해보기
 
-    this.myPlayer = this.add.myPlayer(705, 500, 'character', this.network.mySessionId) // 시작 할때 캐릭터 위치 설정
+    this.myPlayer = this.add.myPlayer(705, 500, '1', this.network.mySessionId) // 시작 할때 캐릭터 위치 설정
     this.playerSelector = new PlayerSelector(this, 0, 0, 16, 16) // ⭐player selector가 뭘까
 
     // 의자 위치 잡기
@@ -144,13 +146,13 @@ export default class Game extends Phaser.Scene {
     // })
 
     // 작품 세팅
-    {this.myArtList.content.map((product, idx) => {
+    this.myArtList.content.map((product, idx) => {
       if (product.productView) {
         // this.add.image(product.productXCoordinate, productYCoordinate, `${this.itemGid}`).setDepth(this.marker.y+16).setInteractive()
         vendingMachines.get(product.productXCoordinate, product.productYCoordinate, String(product.productId), String(product.productId))
         .setDepth(10)
       }
-    })}
+    })
     
     this.addGroupFromTiled('Wall', 'tiles_wall', 'FloorAndGround', false)
     this.addGroupFromTiled('Objects', 'office', 'Modern_Office_Black_Shadow', false)
@@ -247,7 +249,9 @@ export default class Game extends Phaser.Scene {
 
   // 새로운 player가 들어왔을 때  추가해주기
   private handlePlayerJoined(newPlayer: IPlayer, id: string) {
-    const otherPlayer = this.add.otherPlayer(newPlayer.x, newPlayer.y, 'character', id, newPlayer.name)
+
+  
+    const otherPlayer = this.add.otherPlayer(newPlayer.x, newPlayer.y, '1', id, newPlayer.name)
     this.otherPlayers.add(otherPlayer)
     this.otherPlayerMap.set(id, otherPlayer)
   }

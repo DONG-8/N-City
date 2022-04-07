@@ -17,13 +17,11 @@ enum GameMode {
 export default class Bootstrap extends Phaser.Scene {
   network!: Network
   mapInfo = basicData
-  characterIdx = '1'
   myArtList = {content:[{productThumbnailUrl:'', productId:0, productView:true}]}
 
   constructor() {
     super('bootstrap');
   }
-  
   
   preload() { // 시작전 세팅 
     console.log(this.mapInfo,'맵정보')
@@ -76,21 +74,38 @@ export default class Bootstrap extends Phaser.Scene {
       frameHeight: 32,
     })
 
-    // 캐릭터 로드 
-    this.load.spritesheet('character', `/essets/character/${this.characterIdx}.png`, {
-      frameWidth: 32,
-      frameHeight: 48,
-    })
+    const characterList = [...Array(6).keys()].map(key => key + 1)
+   
+    characterList.map((idx) => {
+      return (
+      this.load.spritesheet(`${idx}`, `/essets/character/${idx}.png`, {
+        frameWidth: 32,
+        frameHeight: 48,
+      })
+    )})
+
+    // this.load.spritesheet('ash', 'essets/character/ash.png', {
+    //   frameWidth: 32,
+    //   frameHeight: 48,
+    // })
+    // this.load.spritesheet('lucy', 'essets/character/lucy.png', {
+    //   frameWidth: 32,
+    //   frameHeight: 48,
+    // })
+    // this.load.spritesheet('nancy', 'essets/character/nancy.png', {
+    //   frameWidth: 32,
+    //   frameHeight: 48,
+    // })
 
     // 사용자가 가진 이미지 로드 
-    {this.myArtList.content.map((product, idx) => {
+    this.myArtList.content.map((product, idx) => {
       return (
         this.load.spritesheet(`${product.productId}`, `https://ncity-bucket-resize.${product.productThumbnailUrl.slice(21)}`, {
           frameWidth: 120,
           frameHeight: 120,
         })
       )
-    })}
+    })
   }
 
   init() { // import Network from '../services/Network'
