@@ -133,7 +133,7 @@ const Right = styled.div``;
 
 const GameDetailItem: React.FC<Iprops> = ({ setMode }) => {
   const [item, setItem] = useState<Istate["item"]>(
-    JSON.parse(localStorage.getItem("item") || "")
+    JSON.parse(sessionStorage.getItem("item") || "")
   );
   const [MyAddress, setMyAddress] = useState(sessionStorage.getItem("userId"));
   const [likes, setLikes] = useState(item.productFavoriteUser.length);

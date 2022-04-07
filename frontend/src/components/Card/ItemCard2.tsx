@@ -151,7 +151,7 @@ const ItemCard2:React.FC<Iprops>= ({item}) => {
   const navigate = useNavigate()
   const goDetailPage = ()=>{
     navigate(`/store/detail/${item.productId}`)
-    localStorage.setItem("item",JSON.stringify(item))
+    sessionStorage.setItem("item",JSON.stringify(item))
   }
   const [likes,setLikes] = useState(item.productFavoriteUser.length)
   const LikeIt = useMutation<any,Error>( // 좋아요 api

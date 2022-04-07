@@ -150,7 +150,7 @@ interface Iprops {
 const StoreItemCard:React.FC<Iprops>= ({item}) => {
   const navigate = useNavigate()
   const goDetailPage = (productId)=>{
-    // localStorage.setItem("item",JSON.stringify(item))
+    // sessionStorage.setItem("item",JSON.stringify(item))
     navigate(`/store/detail/${productId}`)
   }
   const [liked,setLiked] = useState(item.favorite)
