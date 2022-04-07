@@ -222,6 +222,9 @@ const ProfileSetting = () => {
         setEmailProgressState(0)
       },
       onError: (err: any) => {
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
         console.log(err, "인증확인요청실패");
       },
     }
@@ -265,6 +268,9 @@ const ProfileSetting = () => {
         setEmailProgressState(1)
       },
       onError: (err: any) => {
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
         alert('이메일 중복 오류')
       },
     }
@@ -290,6 +296,9 @@ const ProfileSetting = () => {
         window.location.reload()
       },
       onError: (err: any) => {
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
         console.log("프로필 저장 에러");
       },
     }
