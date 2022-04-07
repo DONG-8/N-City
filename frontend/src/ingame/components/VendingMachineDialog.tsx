@@ -15,6 +15,7 @@ import { closeVendingMachineDialogOpen } from '../stores/VendingMachineStore'
 import { useAppDispatch } from '../hooks'
 import store from '../stores'
 import GameDealModal from '../../pages/NFTStore/GameDealModal'
+import { useNavigate } from 'react-router-dom'
 
 
 const ModalWrapper = styled.div`

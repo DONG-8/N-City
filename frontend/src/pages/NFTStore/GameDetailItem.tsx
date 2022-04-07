@@ -21,6 +21,7 @@ import influencer from "../../essets/images/influencer-mark.png"
 import artist from "../../essets/images/artist-mark.png"
 import enterprise from "../../essets/images/enterprise-mark.png"
 import { useNavigate } from "react-router-dom";
+import GameDealModal from "./GameDealModal";
 
 interface Iprops {
   setMode: React.Dispatch<React.SetStateAction<string>>;
@@ -593,7 +594,7 @@ const GameDetailItem:React.FC<Iprops> = ({setMode}) => {
               </IconButton>
               <StoreWapper className="StoreWapper">
                 <div className="nftstore">
-                  <DealModal
+                  <GameDealModal
                     item={item}
                     status={status}
                     open={open}
