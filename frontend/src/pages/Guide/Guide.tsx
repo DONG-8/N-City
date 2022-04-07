@@ -191,7 +191,7 @@ const Guide = () => {
             alt="사진"
           />
           <br />
-          <Token src="/essets/guideimage/메타마스크페이지_17.png" alt="사진" />
+          <Token src="/essets/guideimage/메타마스크페이지_17.PNG" alt="사진" />
           <h1>연결</h1>
 
           <Token

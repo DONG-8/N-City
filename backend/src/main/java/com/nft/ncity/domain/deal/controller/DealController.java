@@ -98,7 +98,7 @@ public class DealController {
     })
     public ResponseEntity<BaseResponseBody> auctionCancel(@ApiParam(value = "상품id") @PathVariable("productId") Long proudctId, Principal principal){
         log.info("auctionCancel - 호출");
-        Long userId = Long.valueOf(1L);
+        Long userId = Long.valueOf(principal.getName());
         Deal deal = dealService.auctionCancel(proudctId,userId);
         if(!deal.equals(null)){
             return ResponseEntity.status(201).body(BaseResponseBody.of(201, "취소 성공"));

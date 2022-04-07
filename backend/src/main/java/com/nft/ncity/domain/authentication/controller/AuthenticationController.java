@@ -190,27 +190,6 @@ public class AuthenticationController {
     }
 
     /**
-     * 유저 토큰 재요청
-     */
-    @PutMapping("/token/request/{userId}")
-    @ApiOperation(value = "유저 토큰 재지급 요청", notes = "<strong>유저 토큰 재지급 요청정보</strong>를 넘겨준다.")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "성공", response = User.class),
-            @ApiResponse(code = 404, message = "유저 없음.")
-    })
-    public ResponseEntity<BaseResponseBody>ModifyUserRoleByUserId(@PathVariable Long userId){
-
-        log.info("ModifyUserRoleByUserId - 호출");
-        Long execute = userService.modifyUserTokenRequest(userId);
-
-        if(execute < 1) {
-            log.error("ModifyUserRoleByUserId - User doesn't exist.");
-            return ResponseEntity.status(404).body(BaseResponseBody.of(404,"유저 없음."));
-        }
-        return ResponseEntity.status(201).body(BaseResponseBody.of(201,"유저 토큰 재지급 완료."));
-    }
-
-    /**
      유저 토큰 지급
      */
     @PutMapping("/token/{userId}")

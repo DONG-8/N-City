@@ -68,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler) // 액세스 할 수 없는 요청 했을 시 동작
                 .and()
                 .authorizeRequests()// 인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
+                .antMatchers("/api/users/token/request/**").hasAnyRole("NEW","USER", "ENTERPRISE", "ARTIST", "INFLUENCER")
                 .antMatchers("/api/favorites/{\\d}",
                         "/api/users/change-info","/api/users/confirm", "/api/users/{userNick}/duplicate",
                         "/api/follow/{\\d}",
