@@ -2,6 +2,7 @@ import React, { ReactNode, useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { useMutation, useQuery } from 'react-query';
 import {postAuthentiaction} from '../../store/apis/authentication'
+import { useNavigate } from "react-router-dom";
 
 export type ModalBaseProps = {
   /** 모달에 들어갈 컴포넌트 */
@@ -55,7 +56,7 @@ const ModalSection = styled.div<{ visible: boolean }>`
   font-family: "Noto Sans KR", sans-serif;
   width: 600px;
   height: 810px;
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: column;
   top: 500px;
@@ -240,7 +241,7 @@ const ModalBase = ({
   const [extra, setExtra] = useState<string>("");
   const [files, setFiles] = useState<any>([]);
   // const [fileNames, setFileNames] = useState<string[]>([]);
-
+  const navigate = useNavigate()
   const postAuth = useMutation<any, Error>(
     "postAuthentiaction",
     async () => {
@@ -264,9 +265,13 @@ const ModalBase = ({
     {
       onSuccess: (res) => {
         console.log("요청성공",res)
+        alert('요청 성공!')
+        navigate('/')
       },
       onError: (err: any) => {
         console.log(err, "❌APPLY 실패!");
+        alert('요청 실패!')
+        navigate(-1)
       },
     }
   );

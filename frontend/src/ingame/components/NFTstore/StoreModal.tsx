@@ -320,7 +320,7 @@ const StoreModal = () => {
       {allitems.length === 0 && (
         <ISL>
           <IsLoading2 />
-          <div className="loading">{randomwords}</div>
+          <div className="loading">{randomwords()}</div>
         </ISL>
       )}
       <ItemCards>
