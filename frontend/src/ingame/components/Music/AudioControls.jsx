@@ -29,7 +29,7 @@ const AudioControls = ({
       aria-label="Previous"
       onClick={onPrevClick}
     >
-      <img className="btnimg" src="essets/room/arrow-left.png" alt="" />
+      <img className="btnimg" src="/essets/room/arrow-left.png" alt="" />
     </button>
     {isPlaying ? (
       <button
@@ -38,7 +38,7 @@ const AudioControls = ({
         onClick={() => onPlayPauseClick(false)}
         aria-label="Pause"
       >
-        <img className="btnimg" src="essets/room/pause-line.png" alt="" />
+        <img className="btnimg" src="/essets/room/pause-line.png" alt="" />
       </button>
     ) : (
       <button
@@ -47,7 +47,7 @@ const AudioControls = ({
         onClick={() => onPlayPauseClick(true)}
         aria-label="Play"
       >
-        <img className="btnimg" src="essets/room/play.png" alt="" />
+        <img className="btnimg" src="/essets/room/play.png" alt="" />
       </button>
     )}
     <button
@@ -56,7 +56,7 @@ const AudioControls = ({
       aria-label="Next"
       onClick={onNextClick}
     >
-      <img className="btnimg" src="essets/room/arrow-right.png" alt="" />
+      <img className="btnimg" src="/essets/room/arrow-right.png" alt="" />
     </button>
   </AudioWrapper>
 );
