@@ -103,7 +103,7 @@ const Visitbook: React.FC<IguestInfo> = ({ book }) => {
   };
   // 작성자 정보 불러오기
   const { data: writerInfo, isLoading: writerInfoLoading } = useQuery<any>(
-    "writerInfo",
+    ["writerInfo", `${book.guestbookId}`],
     async () => {
       return await getUserInfo(book.guestbookWriterId);
     }
@@ -151,12 +151,14 @@ const Visitbook: React.FC<IguestInfo> = ({ book }) => {
   // 로딩시 현재 접속한 userid를 불러온다.
   useEffect(() => {
     if (myid === book.guestbookOwnerId || myid === book.guestbookWriterId) {
-      setModifybtn(true);
       setDeletebtn(true);
+    }
+    if (myid === book.guestbookWriterId) {
+      setModifybtn(true);
     }
   }, []);
   console.log(book);
-  console.log(writerInfo);
+  console.log(writerInfo, "작성자 정보");
   return (
     <Wrapper>
       {/* 상단 */}
