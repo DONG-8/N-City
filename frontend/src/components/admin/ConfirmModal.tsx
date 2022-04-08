@@ -162,7 +162,7 @@ const ConfirmModal = ({
   const patchApprove = useMutation<any, Error>(
     "patchApprove",
     async () => {
-      return await patchAutentication(selectedItem.authId, selectedItem.authType,  control === "승인" ? 1 : 0 );
+      return await patchAutentication(selectedItem.authentication.authId, selectedItem.authentication.authType,  control === "승인" ? 1 : 0 );
     },
     {
       onSuccess: (res) => {
@@ -219,12 +219,12 @@ const ConfirmModal = ({
         <Divider />
         {control === "승인" && (
           <ExplaneText>
-            정말로&nbsp; <span>{selectedItem.authName}</span>님을 승인하시겠습니까?
+            정말로&nbsp; <span>{selectedItem.authentication.authName}</span>님을 승인하시겠습니까?
           </ExplaneText>
         )}
         {control === "거절" && (
           <ExplaneText>
-            정말로&nbsp; <span>{selectedItem.authName}</span>님의 승인신청을 거절하시겠습니까?
+            정말로&nbsp; <span>{selectedItem.authentication.authName}</span>님의 승인신청을 거절하시겠습니까?
           </ExplaneText>
         )}
         <ButtonBox>
