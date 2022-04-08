@@ -70,9 +70,13 @@ public class MyRoomController {
         } else {
             // json으로 변환하기
             ObjectMapper mapper = new ObjectMapper();
-            Map<String, String> mapInfo = mapper.readValue(userRoom.getMyRoomBackground(), Map.class);
+            if (userRoom.getMyRoomBackground() != null) {
+                Map<String, String> mapInfo = mapper.readValue(userRoom.getMyRoomBackground(), Map.class);
+                return ResponseEntity.status(200).body(MyRoomGetRes.of(200, "마이룸 불러오기 성공", userRoom, mapInfo));
+            } else {
+                return ResponseEntity.status(200).body(MyRoomGetRes.of(200, "마이룸 불러오기 성공", userRoom, null));
+            }
 
-            return ResponseEntity.status(200).body(MyRoomGetRes.of(200, "마이룸 불러오기 성공", userRoom, mapInfo));
         }
     }
 
@@ -85,7 +89,7 @@ public class MyRoomController {
     public ResponseEntity<? extends BaseResponseBody> modifyMyRoomBackground(@RequestBody @ApiParam(value = "방 변경 정보", required = true) MyRoomBackgroundPutReq myRoomBackgroundInfo,
                                                                              Principal principal) throws IOException {
         log.info("modifyMyRoomBackground - Call");
-
+        
         Long userId = Long.valueOf(principal.getName());
         // JSON -> String
         ObjectMapper mapper = new ObjectMapper();

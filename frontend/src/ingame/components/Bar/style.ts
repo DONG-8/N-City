@@ -2,25 +2,25 @@ import styled from "styled-components";
 
 export const ToggleBtn = styled.div`
   position: absolute;
-  top: 25px;
-  left: -40px;
+  top: 50px;
+  left: -45px;
   /* background-color: yellow; */
-  width: 10px;
-  height: 10px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 
   .button {
     position: fixed;
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     transform: translateY(-50%) rotate(180deg);
     transition: all 0.3s ease;
   }
 
   .changeButton {
     position: fixed;
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     transform: translateY(-50%) rotate(0deg);
     transition: all 0.3s ease;
   }
@@ -47,17 +47,17 @@ export const Wrapper = styled.div`
     width: 300px;
     /* background-color: red; */
   }
-  
 
   .Icon {
     position: relative;
     width: 100%;
-    height: 80px;
+    height: 90px;
     display: flex;
     flex-direction: row;
     margin-bottom: 5px;
     /* background-color: blue; */
     border-radius: 10px;
+    align-items: center;
     cursor: pointer;
     :hover {
       background-color: rgba(98, 37, 230, 0.5);
@@ -66,10 +66,11 @@ export const Wrapper = styled.div`
 
     .content {
       width: 200px;
-   
+
       p {
         text-align: center;
         font-size: 18px;
+        font-weight: 500;
         /* margin-top: 30px; */
       }
     }
@@ -85,30 +86,50 @@ export const Wrapper = styled.div`
 `;
 
 export const Head = styled.div`
+  white-space: nowrap;
   width: 250px;
   margin: 0px;
-  height: 13%;
+  height: 16%;
   position: relative;
   /* background-color: red; */
   /* background-color: white; */
   transition: all 0.3s ease;
   display: flex;
   flex-direction: row;
+  justify-content: center;
   z-index: 2;
   align-items: center;
 
   img {
-    width: 88px;
-    height: 88px;
-    border-radius: 25px;
-    margin: 0;
-  }
-  div {
-    margin-left: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    margin-right: 20px;
   }
   .profileBox {
+    margin-bottom: 20px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    .bottom {
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      button {
+        margin-left: 30px;
+      }
+    }
+
+    .nick {
+      margin-bottom: 10px;
+      font-size: 26px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      img {
+        margin-left: 3px;
+      }
+    }
     button {
       font-family: "Noto Sans KR", sans-serif;
       font-weight: 600;
@@ -121,13 +142,17 @@ export const Head = styled.div`
         background-color: #7e7ef8;
       }
     }
+    img {
+      width: 22px;
+      height: 22px;
+    }
   }
 `;
 
 export const BodyWrapper = styled.div`
   position: relative;
   width: 100%;
-  height: 87%;
+  height: 84%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -141,7 +166,6 @@ export const Body = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-
   .Mimg {
     width: 30px;
     height: 30px;

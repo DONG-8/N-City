@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch  } from "./hooks";
 // typescript에서 useSelector 사용 하려면 hooks를 만들어서 불러와야한다.
@@ -31,6 +31,8 @@ import { useMutation } from "react-query";
 import basicData from "./scenes/map.json";
 import Editmap from "./scenes/Editmap";
 import GameLoading from "../components/Popup/GameLoading";
+import IsLoading2 from "../pages/NFTStore/IsLoading2";
+import IsLoading from "../pages/NFTStore/IsLoading";
 
 const Backdrop = styled.div`
 
@@ -45,13 +47,17 @@ window.addEventListener(
   },
   false
 );
-
+const LoadingBox = styled.div`
+  
+`
 const GameApp: Function = () => {
   const [loading, setLoading] = useState(true);
+  const [today, setToday] = useState(0)
+  const [total, setTotal] = useState(0)
+
   const { userId } = useParams();
   const roomuserId = Number(userId);
   const stringId = String(roomuserId);
-  const navigate = useNavigate();
   let map = basicData;
   let characterIdx = "1";
   const dispatch = useAppDispatch();
@@ -68,18 +74,19 @@ const GameApp: Function = () => {
     },
     {
       onSuccess: async (res) => {
+        setToday(res.myRoomTodayCnt)
+        setTotal(res.myRoomTotalCnt)
         if (res.myRoomBackground === null) {
+          console.log('없음')
           map = basicData;
         } else {
+          
           map = res.myRoomBackground;
         }
         dispatch(UserMapInfo(res.myRoomBackground));
         console.log("방 정보 불러오기", res);
       },
       onError: (err: any) => {
-        if (err.response.status === 401) { 
-          navigate("/login")
-        }
       },
     }
   );
@@ -98,9 +105,6 @@ const GameApp: Function = () => {
         console.log(characterIdx)
       },
       onError: (err: any) => {
-        if (err.response.status === 401) { 
-          navigate("/login")
-        }
         characterIdx = "1"
         console.log('userId를 받아오지 못했습니다.',err)
       },
@@ -152,10 +156,11 @@ const GameApp: Function = () => {
     RoomInfo();
     getCharacterIndex();
     setTimeout(() => ConnectStart(), 3000);
-    setTimeout(() => ConnectBootstrap(), 4000); // Bootstrap 연결
+    setTimeout(() => {ConnectBootstrap();
+    setLoading(false);
+    }, 4000); // Bootstrap 연결
     setTimeout(() => {
       ConnectGame();
-      setLoading(false);
     },5000); // 게임 접속
     return () => {
       (window as any).game.destroy(true);
@@ -236,8 +241,9 @@ const GameApp: Function = () => {
     // ui 는 상황별로 다르게 열리고 , 컴퓨터/화이트 보드가 안열린 이상 우측아래 버튼들 활성화
     <>
       <Backdrop>
+       {loading && <GameLoading/>}
         {/* {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />} */}
-        {Setting ? <EditBar></EditBar> : <UIBar></UIBar>}
+        {Setting ? <EditBar></EditBar> : <UIBar today={today} total={total}></UIBar>}
         {Setting ? null : <>{ui}</>}
       </Backdrop>
     </>
