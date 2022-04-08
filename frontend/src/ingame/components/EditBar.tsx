@@ -492,7 +492,7 @@ const EditBar = () => {
   function mapEditSave() {
     swal({
       title: "맵을 저장하시겠습니까?",
-      text: "확인버튼을 누르면 맵을 저장하고 나가게 됩니다.",
+      text: "확인버튼을 누르면 맵을 저장하고 2초 뒤 나가게 됩니다.",
       icon: "success",
       buttons: {
         cancel: true,
@@ -502,7 +502,7 @@ const EditBar = () => {
       if (ok) {
         (() => {
           changeRoom()
-          window.location.reload();
+          setTimeout(() => window.location.reload(), 2000)
         })()
       } else {
       }
