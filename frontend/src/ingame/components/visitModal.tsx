@@ -145,7 +145,7 @@ const VisitModal:React.FC<Iprops> = ({setOpen}) => {
   const postBook = useMutation<any, Error>(
     "postBookinput",
     async () => {
-      return await postGuestBook(inputValue, ownerId, myid);
+      return await postGuestBook(inputValue, myid, ownerId);
     },
     {
       onSuccess: (res) => {
