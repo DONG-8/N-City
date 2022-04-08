@@ -15,7 +15,7 @@ const VideoGuide = () => {
     <VideoWrapper>
       <h1>How To use N-City?</h1>
       <video controls width="1320px">
-        <source src="essets/video/운동유어스타.mp4" type="video/mp4" />
+        <source src="essets/video/특화PJT_부울경_1반_E106_UCC경진대회.mp4" type="video/mp4" />
       </video>
     </VideoWrapper>
   );
