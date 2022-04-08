@@ -89,7 +89,7 @@ public class MyRoomController {
     public ResponseEntity<? extends BaseResponseBody> modifyMyRoomBackground(@RequestBody @ApiParam(value = "방 변경 정보", required = true) MyRoomBackgroundPutReq myRoomBackgroundInfo,
                                                                              Principal principal) throws IOException {
         log.info("modifyMyRoomBackground - Call");
-        
+
         Long userId = Long.valueOf(principal.getName());
         // JSON -> String
         ObjectMapper mapper = new ObjectMapper();
