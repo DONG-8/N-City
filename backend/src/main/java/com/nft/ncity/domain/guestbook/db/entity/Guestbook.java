@@ -5,11 +5,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -34,7 +32,6 @@ public class Guestbook {
     @ApiModelProperty(value = "방명록 내용")
     private String guestbookContents;
 
-    @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @ApiModelProperty(value = "방명록 생성일")
     private LocalDateTime guestbookCreatedAt;

@@ -21,7 +21,6 @@ public class GuestbookRepositorySupport {
         Long execute = 0L;
         execute =  jpaQueryFactory.update(qGuestbook)
                 .set(qGuestbook.guestbookContents, guestbookContents)
-                .set(qGuestbook.guestbookCreatedAt, LocalDateTime.now())
                 .where(qGuestbook.guestbookId.eq(guestbookId))
                 .execute();
         return execute;

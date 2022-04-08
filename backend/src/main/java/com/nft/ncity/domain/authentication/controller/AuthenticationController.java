@@ -132,7 +132,8 @@ public class AuthenticationController {
     public ResponseEntity<BaseResponseBody> authenticationConfirm(@RequestBody AuthenticationConfirmReq authenticationConfirmReq) {
 
         log.info("AuthenticationConfirmByAuthId - 호출");
-
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println(authenticationConfirmReq.toString());
         Long execute = authenticationService.modifyUserRole(authenticationConfirmReq);
 
         if(execute < 1) {

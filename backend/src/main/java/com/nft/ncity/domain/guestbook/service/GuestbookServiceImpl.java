@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @Slf4j
 public class GuestbookServiceImpl implements GuestbookService {
@@ -38,6 +40,7 @@ public class GuestbookServiceImpl implements GuestbookService {
                 .guestbookOwnerId(guestbookInfo.getGuestbookOwnerId())
                 .guestbookWriterId(guestbookInfo.getGuestbookWriterId())
                 .guestbookContents(guestbookInfo.getGuestbookContents())
+                .guestbookCreatedAt(LocalDateTime.now())
                 .build();
         guestbookRepository.save(newGuestbook);
         return true;
