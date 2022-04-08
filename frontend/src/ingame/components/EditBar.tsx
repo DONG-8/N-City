@@ -14,14 +14,14 @@ import { UserMapInfo } from "../stores/EditStore";
 import { postRoomJoin, putBackGroundChange } from "../../store/apis/myRoom";
 import { getUsercollectedInfo } from "../../store/apis/user";
 import { putProductXYView } from "../../store/apis/product";
-import { IUser } from "colyseus.js/lib/Auth";
-import { prototype } from "node-polyfill-webpack-plugin";
-import { TRUE } from "sass";
+import swal from 'sweetalert';
 
 const Sidebar = styled.div`
   position: absolute;
   display: flex;
   flex-direction: column;
+  min-width:250px;
+  
   width: 20%;
   height: 98.5%;
   background-color: white;
@@ -46,6 +46,10 @@ const XButton = styled.div`
     width: 50px;
     height: 50px;
     cursor: pointer;
+  }
+
+  img {
+    margin-right: 10px;
   }
 `;
 
@@ -368,7 +372,7 @@ const EditBar = () => {
   function ChangeMap() {
     // console.log(newData)
     if (mode) {
-      if ((status === ItemCategory.GROUND || status === ItemCategory.WALL)&& newData.layers[0].data) {
+      if ((status === ItemCategory.GROUND || status === ItemCategory.WALL || status === ItemCategory.STRUCTURE)&& newData.layers[0].data) {
         if (status === ItemCategory.WALL) {
           console.log('hi')
         }
@@ -466,6 +470,47 @@ const EditBar = () => {
     }
   }
 
+  function outEditMode() {
+    swal({
+      title: "편집 모드를 종료하시겠습니까?",
+      text: "저장하지 않고 나가게 되면 편집했던 내용이 모두 사라지게 됩니다.",
+      icon: "warning",
+      buttons: {
+        cancel: true,
+        ok: true,
+      },
+    }).then((ok) => {
+      if (ok) {
+        window.location.reload();
+      } else {
+      }
+    })
+    
+  }
+
+  // 장영남이 작업함
+  function mapEditSave() {
+    swal({
+      title: "맵을 저장하시겠습니까?",
+      text: "확인버튼을 누르면 맵을 저장하고 나가게 됩니다.",
+      icon: "success",
+      buttons: {
+        cancel: true,
+        ok: true,
+      },
+    }).then((ok) => {
+      if (ok) {
+        (() => {
+          changeRoom()
+          window.location.reload();
+        })()
+      } else {
+      }
+    });
+  }
+
+  
+
   const roomInfo = useMutation<any, Error>(
     "postRoomInfo",
     async () => {
@@ -498,7 +543,6 @@ const EditBar = () => {
           putProductXY({id: product.productId, view: product.productView, x: product.productXCoordinate, y: product.productYCoordinate})
         })
         console.log('저장 완료')
-        window.location.reload();
       },
       onError: (err: any) => {
         console.log(err);
@@ -546,28 +590,29 @@ const EditBar = () => {
   return (
     <Sidebar>
       <XButton>
-        {mode ? <div>생성중</div> : <div>삭제중</div>}
-
+        
+      {mode ? <div>생성중..🎨</div> : <div>삭제중..✂</div>}
         <div>
-          <img
-            className="button"
-            src="/essets/room/save.png"
-            alt=""
-            onClick={() => changeRoom()}
-          />
+          {mode? 
           <img
             className="button"
             src="/essets/room/delete.png"
             alt=""
             onClick={() => ModeChange(false)}
-          />
+          />:
           <img
             className="button"
             src="/essets/room/edit.png"
             alt=""
             onClick={() => ModeChange(true)}
+          />}
+          <img
+            className="button"
+            src="/essets/room/save.png"
+            alt=""
+            onClick={() => mapEditSave()}
           />
-          <img className="button" src="/essets/room/close.png" alt="" />
+          <img className="button" src="/essets/room/close.png" alt="" onClick={() => outEditMode()}/>
         </div>
       </XButton>
 

@@ -226,7 +226,7 @@ export default class Game extends Phaser.Scene {
   ) {
     const group = this.physics.add.staticGroup()
     const objectLayer = this.map.getObjectLayer(objectLayerName)
-    objectLayer.objects.forEach((object) => {
+    objectLayer?.objects.forEach((object) => {
       const actualX = object.x! + object.width! * 0.5
       const actualY = object.y! - object.height! * 0.5
       // if (objectLayerName === 'GenericObjects') {
