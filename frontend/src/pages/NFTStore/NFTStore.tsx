@@ -1,178 +1,354 @@
-import React, { useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import styled from 'styled-components'
-import ArtistCard from '../../components/Card/ArtistCard'
-import ItemCard from '../../components/Card/ItemCard'
-
-
-
-const Title = styled.div`
-  background-color: #F8D9CE ;
-  margin-top: 4vh ;
-  display:flex ;
-  justify-content:space-around;
-  p{
-    margin-top: 4vh;
-    font-weight: 1000 ;
+import { getProductAll, getSellProduct } from '../../store/apis/product'
+import { useMutation, useQuery } from 'react-query'
+import ToggleSwitch from './ToggleSwitch'
+import ToggleSwitch2 from './ToggleSwitch2'
+import IsLoading2 from './IsLoading2'
+import StoreItemCard from '../../components/Card/StoreItemCard' 
+import { randomwords, words } from './words'
+const Wrapper = styled.div`
+  .ISL{
+    margin-top: -5vh;
 
   }
+  .loading{
+    text-align: center;
+    font-size: 2.5vh;
+    font-weight: 600;
+    margin-top: -7vh;
+  }
+
 `
-const FilterBar = styled.div`
-  box-shadow:2px 2px 2px gray ;
-  margin: auto;
-  margin-top: -2vh;
-  width: 70% ;
-  display: flex;
-  div{
-    cursor:pointer;
-    flex: 2.5;
-    height: 5vh ;
-    text-align:center ;
-    &:hover{
-      background-color: white ;
-      transition:0.3s ;
-    }
-    p{
-      font-size:2vh ;
-      margin-top : 1vh;
-      font-weight: 1000 ;
-    }
-  }
-  .allPicture{
-    background-color: #FECDBB;
 
-  }
-  .likePicture{
-    background-color: #FEAF84;
-    
-  }
-  .allArtist{
-    background-color: #FECDBB;
-  }
-  .followArtist{
-    background-color: #FEAD9D;
-  }
-  #select{
-    background-color: white ;
-  }
-`
 const CategoryBar = styled.div`
   margin: auto;
+  margin-top: 5vh;
   width: 70% ;
   display: flex;
-  div{
-    flex:auto;
+  li{
+    margin: auto;
   }
   p{
-    font-size:2.5vh;
-    font-weight:1000;
+    font-size:2vh;
+    font-weight: 600;
     cursor: pointer;
+    transition: 0.3s;
+    position: relative;
+    text-align: center;
+  }
+  p::before{
+    content: "";
+    height: 5px;
+    width: 0px;
+    background-color: #6225E6  ;
+    border-radius: 10px;
+    transition: 0.3s;
+    position: absolute;
+    bottom: -0.5rem;
+  }
+  p:hover::before{
+    width: 100%;
+    background-color: #6225E6  ;
+  }
+  #category::before{
+    width: 100%;
+    background-color: #6225E6;
   }
 `
 const ItemCards = styled.div`
-  margin:auto ;
-  width: 90% ;
+  margin: auto;
+  width: 90vw ;
   display: flex ;
   flex-wrap: wrap ;
-  justify-content:center ;
+  justify-content: center;
+  &:last-child {
+    margin-right: auto;
+  }
 `
-const ArtistCards = styled.div`
-  margin:auto ;
-  width: 90% ;
-  display: flex ;
-  flex-wrap: wrap ;
-  justify-content:center ;
+const IntroBox = styled.div`
+  width: 85vw;
+  height: 50vh;
+  background-color: #F7F8FA ;
+  box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
+  border-radius: 30px;
+  margin: auto;
+  margin-top: 10vh;
+  display: flex;
+  margin-bottom:5vh;
+  overflow-y: hidden;
+
 `
-export interface IState{
+const Left = styled.div`
+  flex: 1;
+  .text{
+    margin-left: 5vw;
+    margin-top: 8vh;
+    
+  .h1{
+    font-size: 8vh;
+    margin-bottom: 5vh;
+    font-weight: 600;
+  }
+  .h3{
+    font-size: 3vh;
+  }
+  .h4{
+    font-size : 2vh
+  }
+  .blue{
+    background:linear-gradient(to top,transparent 10%,skyblue 70%, transparent 10%);
+  }
+  .purple{
+    background:linear-gradient(to top, white 20% ,#BDBDFF 70% , white 20%);
+  }
+}
+`
+const Right = styled.div`
+  flex: 1;
+  .black {
+    height: 100%;
+    width: 100%;
+    background-color: #030338;
+    border-radius: 0 30px 30px 0;
+    .text {
+      color: white;
+      font-size: 3rem;
+      text-align: center;
+      margin-left: 1vw;
+      margin-top : -30px;
+    }
+  }
+  img {
+    margin-left: 9vw;
+    margin-top: 4vh;
+    height: 60%;
+    width: 60%;
+  }
+  `;
+
+const FilterButton = styled.div`
+display: flex;
+justify-content: end;
+margin-right:10vw;
+.toggle{
+  margin-left: 3vw;
+}
+.name{
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+`
+interface Istate{
   item :{
-    id:number,
-    name:string,
-    title:string,
-    price:number,
-    liked:number,
-    url:string
-  }[],
-  artist :{
-    name:string,
-    profileImg:string,
-    verified:boolean,
-    sumnailImg:string,
-    descreption:string
-  }[],
+    productId: Number,
+    productTitle: string,
+    productPrice: Number,
+    productThumbnailUrl: string,
+    productFavorite: Number,
+    productRegDt:Object,
+    productCode: Number,
+    productFavoriteUser:{
+      authId: Number,
+      userAddress: string,
+      userDescription: string,
+      userEmail: string,
+      userEmailConfirm: boolean,
+      userId: number,
+      userImgUrl: string,
+      userNick: string,
+      userRole: string,
+    }[],
+    userRole: string
+  }
 }
 const NFTStore = () => {
-  const [items,setItems] = useState<IState["item"]>([
-    {id:1,name:"Hong Hosus",title:"#Hong1535",price:1.24,liked:35,url:'https://lh3.googleusercontent.com/MmtavcUNNiTpLFfDqqol8pwp1_TKSEv0AbkKSxmN2lffhgYtkxAdfAo72lZVSJ4hpRW87s9TCL-HYMEIpaJ8PdgWBQWVlPsMZkgM6A=w305'},
-    {id:2,name:"Giks Home",title:"#ghe23434",price:1.35,liked:43,url:'https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352'},
-    {id:3,name:"Giks Home",title:"#ghe254334",price:1.2,liked:24,url:'https://lh3.googleusercontent.com/3usYOjVkwnra66EAhX4yJB-xmYCfFoTsREGVvVLCYWhtVG4pifdZLBRCSgv6wbjbV4rwPamlBDgganvgFO3xeifJyZQtqxwTYpXiqtc=w300'},
-    {id:4,name:"Hong Hosus",title:"#Hong1535",price:1.24,liked:35,url:'https://lh3.googleusercontent.com/Cxb_lnNlgplYCULm_ZGlY9pCrxQ67GO2hmStVJTSEN3O2hNeIZoWyK3CwaCj-vZBxeQqioC-P1qT7cK6wXWc-WjjfUyjR3zXNwKN=w300'},
-    {id:5,name:"Giks Home",title:"#ghe23434",price:1.35,liked:43,url:'https://lh3.googleusercontent.com/qeCj7NRekCZ9BUjM8c9Pk02DxmPgX483qgEkVJeLXYIDOFVTXAfCg8TTztcMMQPgYFsNDUqndF5asWPCgJVpiM6P39VzpWa3TTKrvg=w300'},
-    {id:6,name:"Giks Home",title:"#ghe254334",price:1.2,liked:24,url:'https://lh3.googleusercontent.com/jWonBwIV3RRzCv2xEu3pKA5buXUne_vnltLcLIfnluPuctdbTd-ScsBO94-njkA2L5VHVRA56CG5tbbxwacCvFdFWaZzuIJNUB1sVCA=w300'},
-    {id:7,name:"Giks Home",title:"#g53434",price:1.37,liked:52,url:'https://lh3.googleusercontent.com/Op3TUf8vqznY1geantykLx86mlGf4yEaBfKT25utQlQu8keA9ywYdwYYzVSqGZG_3uSJKCNcUBAVK6qs520xhZ6lsP3dVDGsM9wnRA=w352'},
-    {id:8,name:"Hong Hosus",title:"#Hong1535",price:1.24,liked:35,url:'https://lh3.googleusercontent.com/jc4P6pZhiNsBNxErAilpkx-d3RZDpNpJbYjs2k5nou29DJGe_r27tu2i0xy0KBOIgHaQhgVOqIF4-aLpjIqLV6eo-IsIUQ98VI_jDw=w300'},
-    {id:9,name:"Giks Home",title:"#ghe23434",price:1.35,liked:43,url:'https://lh3.googleusercontent.com/qGLA-qtTThUV063ueH3gLxZgm0pC1VKusEYh7BrOUi8hBMAbssWvv2Vt0oRTdsWO51CDCkvF5Lc93fC62iI_liTxKz1H2qYyQxnRfg=w352'},
-    {id:10,name:"Giks Home",title:"#g53434",price:1.37,liked:52,url:'https://lh3.googleusercontent.com/Op3TUf8vqznY1geantykLx86mlGf4yEaBfKT25utQlQu8keA9ywYdwYYzVSqGZG_3uSJKCNcUBAVK6qs520xhZ6lsP3dVDGsM9wnRA=w352'},
-    {id:11,name:"Giks Home",title:"#ghe254334",price:1.2,liked:24,url:'https://lh3.googleusercontent.com/BqScg3QwKPcNW_cxtvBws2D2cE8Us-QsN9yYmB_8UzUikBwLfOC5Nc2JgXWOB2ijx4lAU2KcYplGujimb2FUD9ArixBFeCyNPcES=w352'},
-    {id:12,name:"Giks Home",title:"#g53434",price:1.37,liked:52,url:'https://lh3.googleusercontent.com/OjwqOOt3_po4pPlTYg43Us9_pp4Ji9X8JKZY4aCsjzHISKQL-u2oSX_q4NmK5qZZn5PPYfMCpDS8OKFXBzXzXA6ljfWfaxGdEvc8DA=w300'},
-  ])
-  const [artists,setArtists] = useState<IState["artist"]>([
-    { name:"Happy Club ",
-      sumnailImg:"https://lh3.googleusercontent.com/YCprgCsKKotONKjXCkJbiSWitAY_X5CrIfCMARxlsQ1d7ZkVwqxIXbBDqgpuVD7zt3B2eJxJkS6PYwcGuQUqSURlB1R_gk9Xqwdze-o=w352",
-      profileImg:"https://lh3.googleusercontent.com/rPB_SZcWuxqlK5M6LpQdF_-4gm3ucQ4xuS7AMjgZJk1kseF2d20Q1GTsXPQs_aOyu8iyDpwKowjw1tw1XfyJbna5oeOSJz1n3LAEQZE=w352",
-      verified:false,
-      descreption:"Happy Club is the best Club all over the world. u know what? it is better to run out when i see u. cuase i'm too strong to keep ur house safe."},
-      { name:"Happy Club ",
-      sumnailImg:"https://lh3.googleusercontent.com/vALHImVEwEODQSOflhpMtBzFlcpFSLsx23Cl9RmeI_Kkjs55D3cqxZGpKevob-W8qXTEBw7NGbepY1MHSo8g-FpC1cgHteie-452=w352",
-      profileImg:"https://lh3.googleusercontent.com/cxi2xFzMFTwzV9ooqyi5KR5ax8i4sce_1PdeLSyHIms8kTUrAih_tPtGGcslqhvB8yibvCZIIQsFrfDLq_76Hpqs72zwoo1F_bLC2Q=w352",
-      verified:true,
-      descreption:"Happy Club is the best Club all over the world. u know what? it is better to run out when i see u. cuase i'm too strong to keep ur house safe."},
-      { name:"Happy Club ",
-      sumnailImg:"https://lh3.googleusercontent.com/np9zjHHBCwZbx0026anZjJJ_9HY_StZYfD0-l_zmjrpGKS3ioB-eQ38vElOjuekV_mR411iwaK69mWW5y-4lRXOAPZOlUJ4xW4_Ayw=w352",
-      profileImg:"https://lh3.googleusercontent.com/9HZDavtHY7rsjCgFlcBb3fz-nw8Zr4iHRSxjbpKSh8LNpZ2dHTHfdlRC1RRpAAkL4MnuKUCskykNx5zK0M87F1GLyCshn7G4fydlOA=w352",
-      verified:false,
-      descreption:"Happy Club is the best Club all over the world. u know what? it is better to run out when i see u. cuase i'm too strong to keep ur house safe."},
-      { name:"Happy Club ",
-      sumnailImg:"https://lh3.googleusercontent.com/lKO8Gswt-ZKxHMg6PK8caKuMhi2sW2Vp-f5ltxCi-N3hiODM3u0fbMQad-t5dockqy_Rfb5SAA0QItZgFuXsqAKGzCjWN22sqzeE=w352",
-      profileImg:"https://lh3.googleusercontent.com/pDBXxExd4AV6RUTV5o9SbSoDMZZ7RX9oiv4RTJ4BXm9lBa2hwvog0bPTy19itnb-10OHXmOAWwvKUcCQFaucEkrAmfmz5WJuYaCd=w352",
-      verified:true,
-      descreption:"Happy Club is the best Club all over the world. u know what? it is better to run out when i see u. cuase i'm too strong to keep ur house safe."},
-  ])
-  const [status,setStatus] = useState("items")
-  return (<>
-    <Title>
-      <h1>Store</h1>
-      <div>
-        <p>소지금 : 356,321💎</p> 
-      </div>
-    </Title>
+  const [filter,setFilter] = useState(0) 
+  const [status,setStatus]  = useState(false)
+  const [order,setOrder]  = useState(false)
+  const [allitems,setAllitems] = useState([])
+  const [saleitems,setSaleitems] = useState([])
+  const [showItems,setShowItems] = useState<any[]>([])
+  const [showSales,setShowSales] = useState<any[]>([])
+    // 상품 정보 모두 가져오기
+  const getAll = useMutation<any,Error>(
+    "prouductAll",
+    async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))},
+    { onSuccess:(res)=>{
+      console.log(res)
+      setAllitems(res.content)
+      setShowItems(res.content)
+    },
+      onError: (err: any) => {console.log(err, "상품정보 가져오기 오류")},
+    });
+  const getSale = useMutation<any,Error>(
+    "getSellProduct",
+    async () => {return (await (getSellProduct()))
+      },
+    { 
+      onSuccess:(res)=>{
+        setSaleitems(res.content)
+        setShowSales(res.content)
+      },
+      onError: (err: any) => {
+        console.log(err, "판매중 정보 실패");
+      },
+    }
+  );
 
-    <FilterBar>
-      <div className='allPicture' id={status==='items'?'select':""} onClick={()=>{setStatus("items")}}><p>전체작품</p></div>
-      <div className='likePicture' ><p>관심있는 작품</p></div>
-      <div className='allArtist' id={status==='artists'?'select':""} onClick={()=>{setStatus("artists")}}><p>전체 작가</p></div>
-      <div className='followArtist'><p>팔로우한 작가</p></div>
-    </FilterBar>
+  const getFilter = (num)=>{
+    if (num===0){
+      setShowItems(allitems)
+      setShowSales(saleitems)
+    }
+    else{
+      let items: Istate["item"][] = [];
+      allitems.map((item: Istate["item"]) => {
+        if (item.productCode === num) {
+          items.push(item);
+        }
+      });
+      setShowItems(items);
 
-    <CategoryBar>
-      <div><p>TOP</p></div>
-      <div><p>Art</p></div>
-      <div><p>Music</p></div>
-      <div><p>Photography</p></div>
-      <div><p>Sports</p></div>
-      <div><p>game</p></div>
-    </CategoryBar>
-    {status==="items" &&
-    <ItemCards>
-      {items.map(item=>{return(
-        <ItemCard key={item.id} item={item} />)})}
-    </ItemCards>}
-    {status==="artists" &&
-    <ArtistCards>
-      {artists.map(artist=>{return(
-        <ArtistCard key={artist.profileImg} artist={artist}/>
-      )})}
-    </ArtistCards>}
-    </>
-  )
+      let sales: Istate["item"][] = [];
+      saleitems.map((item: Istate["item"]) => {
+        if (item.productCode === num) {
+          sales.push(item);
+        }
+      });
+      setShowSales(sales);
+    }
+  }
+
+  useEffect(()=>{
+    // 좋아요를 하고 status를 바꿔도 그대로인 오류...❌
+    getAll.mutate()
+    getSale.mutate()
+  },[status])
+
+  useEffect(()=>{
+    console.log('필터 함수!!!!!!!!')
+    getFilter(filter)
+  },[filter])
+
+
+
+  return (
+    <Wrapper>
+      <IntroBox>
+        <Left>
+          <div className='text'>
+            <div className='h3'>NFT Marketplace</div>
+            <div className='h1'>N-city Store</div>
+            <div className='h4'>N-city는 다양한 <span className='blue'>NFT 작품</span>들을 판매하고 있습니다. </div>
+            <div className='h4'><span className='purple'>NCT 토큰</span>을 이용해 갤러리를 구경하고 거래할 수 있습니다. </div>
+            <div className='h4'>물건을 구입해 <span className='blue'>마이룸</span>을 꾸미세요. </div>
+          </div>
+        </Left>
+        <Right>
+          <div className='black'>
+          <img alt='black' src='https://i.gifer.com/7VA.gif' />            <div className='text'><p>N-city Store</p></div>
+          </div>
+        </Right>
+      </IntroBox>
+      {allitems.length>0 &&
+      <>
+        <FilterButton>
+          <div className='toggle'>
+            {status?<div className='name'>판매하는</div >:<div className='name'>모든물품</div>}
+            <ToggleSwitch2 status={status} setStatus={setStatus}/>
+          </div>
+          <div className='toggle'>
+            {order?<div className='name'>오래된</div>:<div className='name'>최신순 </div>}
+            <ToggleSwitch order={order} setOrder={setOrder}/>
+          </div>
+        </FilterButton>
+      <CategoryBar>
+        <li>
+          <p id={filter === 0 ? "category" : ""} onClick={() => {setFilter(0)}}>
+            All
+          </p>
+        </li>
+        <li>
+          <p id={filter === 1 ? "category" : ""} onClick={() => {  setFilter(1)}}>
+          Music
+          </p>
+        </li>
+        <li>
+          <p id={filter === 2 ? "category" : ""} onClick={() => {  setFilter(2)}}>
+          Picture
+          </p>
+        </li>
+        <li>
+          <p id={filter === 3 ? "category" : ""} onClick={() => {  setFilter(3)}}>
+          Video
+          </p>
+        </li>
+        <li>
+          <p id={filter === 4 ? "category" : ""} onClick={() => {  setFilter(4)}}>
+          Art
+          </p>
+        </li>
+        <li>
+          <p id={filter === 5 ? "category" : ""} onClick={() => {  setFilter(5)}}>
+          Celebrity
+          </p>
+        </li>
+        <li>
+          <p id={filter === 6 ? "category" : ""} onClick={() => {  setFilter(6)}}>
+          Sports
+          </p>
+        </li>
+        <li>
+          <p id={filter ===7 ? "category" : ""} onClick={() => {  setFilter(7)}}>
+          Character
+          </p>
+        </li>
+        <li>
+          <p id={filter === 8 ? "category" : ""} onClick={() => {  setFilter(8)}}>
+          Animation
+          </p>
+        </li>
+      </CategoryBar>
+      </>
+      }
+          {allitems.length===0 &&
+          <div className='ISL'>
+          <IsLoading2/>
+          <div className='loading'>
+            {randomwords()}
+          </div>
+          </div>}
+        <ItemCards>
+          {!status && showItems && !order&&
+          ([...showItems].reverse()).map((item,idx) => {
+          return(
+            <StoreItemCard key={idx} item={item} />
+            )
+          })}
+          {!status && showItems && order&&
+          showItems.map((item,idx) => {
+          return(
+            <StoreItemCard key={idx} item={item} />
+            )
+          })}
+          {status && showSales && !order&&
+          ([...showSales].reverse()).map((item,idx) => {
+          return(
+            <StoreItemCard key={idx} item={item} />
+            )
+          })}
+          {status && showSales && order&&
+          showSales.map((item,idx) => {
+          return(
+            <StoreItemCard key={idx} item={item} />
+            )
+          })}
+        </ItemCards>
+      </Wrapper>
+  );
 }
 
 export default NFTStore

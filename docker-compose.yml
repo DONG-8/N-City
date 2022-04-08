@@ -1,0 +1,39 @@
+version: '3.2'
+
+services: 
+  frontend:
+    image: frontend-react
+    build:
+      context: frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443" 
+    # [인증서 파일 저장 경로]:/var/www/html
+    volumes:
+      - /home/ubuntu/docker-volume/ssl:/var/www/html
+    container_name: "frontend"
+  
+  backend:
+    image: backend-spring
+    build:
+      context: backend/
+      dockerfile: Dockerfile
+    ports:
+      - "8443:8443"  
+        # [인증서 파일 저장 경로]:/root 
+    volumes:
+      - /home/ubuntu/docker-volume/ssl:/root
+    container_name: "backend"
+
+  game:
+    image: game
+    build:
+      context: game/
+      dockerfile: Dockerfile
+    ports:
+      - "2567:2567"  
+        # [인증서 파일 저장 경로]:/root 
+    volumes:
+      - /home/ubuntu/docker-volume/ssl:/var/www/html
+    container_name: "game"

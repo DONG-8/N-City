@@ -10,20 +10,26 @@ import javax.persistence.*;
 @Getter
 @Entity
 @ApiModel(value = "Follow", description = "팔로우 정보")
-//@MappedSuperclass
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "user")
 @Builder
 public class Follow {
 
+    @ApiModelProperty(value = "팔로우 Id")
     @Id
-    @ApiModelProperty(value = "팔로우 요청하는 사람 id")
-    private Long followFollower;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // 회원 id
+    Long followId;
 
-    @Id
+    @ManyToOne
+    @JoinColumn(name = "follow_follower")
+    @ApiModelProperty(value = "팔로우 요청하는 사람 id")
+    User followFollower;
+
+    @ManyToOne
+    @JoinColumn(name = "follow_followee")
     @ApiModelProperty(value = "팔로우 요청받는 사람 id")
-    private Long followFollowee;
+    User followFollowee;
 
 //    @Id
 //    @ManyToOne
@@ -32,7 +38,4 @@ public class Follow {
 //            @JoinColumn(name = "userId")
 //    })
 //    private Follow follow;
-
-
-
 }

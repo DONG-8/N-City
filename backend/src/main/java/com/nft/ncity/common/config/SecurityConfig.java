@@ -2,8 +2,6 @@ package com.nft.ncity.common.config;
 
 import com.nft.ncity.common.auth.JwtAuthenticationFilter;
 import com.nft.ncity.common.auth.UserDetailService;
-import com.nft.ncity.domain.user.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,21 +14,26 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * 인증(authentication) 와 인가(authorization) 처리를 위한 스프링 시큐리티 설정 정의.
  */
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailService UserDetailService;
-    
-    @Autowired
-    private UserService userService;
 
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
+
+    @Autowired
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     // Password 인코딩 방식에 BCrypt 암호화 방식 사용
     @Bean
@@ -56,37 +59,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .httpBasic().disable()
-//                .csrf().disable().cors().and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 하지않음
-//                .and()
-//                .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
-//                .authorizeRequests()
-//                .antMatchers("/**").permitAll(); // 인증이 필요 없는 부분
-//                .antMatchers("/oauth2/authorization/google").authenticated() // 인증이 필요한 부분 구글 oauth2Login부분
-//                .and()
-//                .logout()
-//                .logoutSuccessUrl("/")
-//                .and()
-//                .oauth2Login()
-//                .userInfoEndpoint()
-//                .userService(customOAuth2UserService)
-//                .and()
-//                .successHandler(oAuth2AuthenticationSuccessHandler)
-//                .failureHandler(oAuth2AuthenticationFailureHandler);
-
-
-        // 에러 복구용
         http
-                .httpBasic().disable()
-                .csrf().disable()
+                .csrf().disable() // csrf 미적용
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 하지않음
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
-                .authorizeRequests()
-                .antMatchers("/users/info").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
+                .httpBasic().authenticationEntryPoint(customAuthenticationEntryPoint)   // 인증 되지 않은 유저가 요청했을때 동작
+                .and()
+                .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler) // 액세스 할 수 없는 요청 했을 시 동작
+                .and()
+                .authorizeRequests()// 인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
+//                .antMatchers("/api/favorites/{\\d}",
+//                        "/api/users/change-info","/api/users/confirm", "/api/users/confirm-email", "/api/users/{userNick}/duplicate",
+//                        "/api/follow/{\\d}",
+//                        "/api/products", "/api/products/token", "/api/products/{productId}",
+//                        "/api/authentication",
+//                        "/api/guestbooks/**",
+//                        "/api/deals/**",
+//                        "/api/myroom/**").hasAnyRole("NEW", "USER", "REQUEST","ENTERPRISE", "ARTIST", "INFLUENCER", "ADMIN") // 로그인한 유저만 접근 가능 경로
+//                .antMatchers("/api/authentication/**").hasRole("ADMIN") // 관리자만 접근 가능 경로
+//                .antMatchers("/api/deals/{productId}",
+//                        "/api/favorites/{productId}/count",
+//                        "/api/follow/follower/{\\d}","/api/follow/followee/{\\d}",
+//                        // 총 방문수가 높은 방 5개를 위한건데 /붙은거에 **이 위에있기때문에 확실하지 않음
+//                        "/api/myroom",
+//                        "/v3/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/swagger-ui/**").permitAll()
     	        	    .anyRequest().permitAll()
                 .and().cors();
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
     }
+
+
 }

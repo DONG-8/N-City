@@ -8,6 +8,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -34,9 +35,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Override
+    public void addCorsMappings(CorsRegistry registry){
+        registry.addMapping("/**")
+                .exposedHeaders("X-AUTH-TOKEN")
+                .allowCredentials(true)
+                .allowedOrigins("http://localhost:3000");
+    }
+
+    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
     		registry.addResourceHandler("/resources/**")
     				.addResourceLocations("/WEB-INF/resources/");
+
+            registry.addResourceHandler("/EmailConfirmGetRes.html")
+                            .addResourceLocations("classpath:/static/");
     		
     		registry.addResourceHandler("swagger-ui.html")
     				.addResourceLocations("classpath:/META-INF/resources/");

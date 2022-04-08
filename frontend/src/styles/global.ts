@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
   body {
+    font-family: "Noto Sans KR", sans-serif;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -18,6 +19,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   button {
+    font-family: "Noto Sans KR", sans-serif;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -26,6 +28,12 @@ const GlobalStyle = createGlobalStyle`
   ul {
     padding: 0;
     margin: 0;
+  }
+  html{
+    scroll-behavior: smooth;
+  }
+  li {
+    list-style-type : none 
   }
 `;
 export default GlobalStyle;

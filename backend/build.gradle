@@ -44,6 +44,7 @@ dependencies {
 
 	// lombok 추가
 	implementation 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 
 	// jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
@@ -58,6 +59,14 @@ dependencies {
 	implementation("com.google.guava:guava:29.0-jre")
 	annotationProcessor("com.google.guava:guava:29.0-jre")
 
+	// aws s3
+	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
+
+	// email
+	implementation("org.springframework.boot:spring-boot-starter-mail")
+
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {
