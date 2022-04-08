@@ -9,6 +9,9 @@ import { client } from "../../../../src/index"; // query data refresh 용도
 //스토어
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { setMusicList } from "../../stores/RoomStore";
+import { useNavigate } from "react-router-dom";
+import { postPurchase } from "../../../store/apis/deal";
+import { createSaleContract, SaleFactoryContract, SSFTokenContract } from "../../../web3Config";
 
 const Wrapper = styled.div`
   position: absolute;
@@ -52,7 +55,7 @@ const Body = styled.div`
 
   margin: auto;
   width: 90%;
-  height: 60%;
+  height: 77%;
   /* background-color: #6b6a72; */
   display: flex;
   flex-direction: column;
@@ -128,6 +131,10 @@ const MusicModal:React.FC<Iprops> = ({setOpen}) => {
   console.log(userId, "유저아이디");
   const tracks = useAppSelector((state) => state.room.roomMusicList);
   const [musicList, setMusic] = useState();
+  const [object, setObject] = useState<any>();
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate();
+  const {ethereum} = window
   // 작품 조회
   // productcode === 1 : 음악코드
 
@@ -166,7 +173,64 @@ const MusicModal:React.FC<Iprops> = ({setOpen}) => {
       },
     }
   );
+  
+  const postgetBuy = useMutation<any, Error>(
+    "postPurchase",
+    async () => {
+      return await postPurchase(Number(object?.productId));
+    },
+    {
+      onSuccess: (res) => {
+        setIsLoading(false)
+        console.log("buy요청성공", res);
+      },
+      onError: (err: any) => {
+        setIsLoading(false)
+        console.log("buy요청 실패", err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
+      },
+    }
+  );
 
+  const onClickBuy = async (obj) => {
+    setObject(obj)
+    try {
+      const accounts = await ethereum.request({ method: "eth_accounts" })
+      if (!accounts) {
+        alert("지갑을 연결해주세요")
+        return
+      }
+      console.log(accounts[0])
+      setIsLoading(true)
+      // sale컨트랙트 주소 받아서 생성
+      const response = await SaleFactoryContract.methods
+      .getSaleContractAddress(obj.tokenId)
+      .call();
+      console.log(response)
+      const saleContract = await createSaleContract(response)
+      
+      // sale컨트랙트로 erc20토큰 전송권한 허용
+      await SSFTokenContract.methods
+      .approve(response, obj.productPrice)
+      .send({ from: accounts[0] });
+
+      //purchase 요청
+      const response2 = await saleContract.methods.purchase(obj.productPrice).send({ from: accounts[0] });
+      const winner = (response2.events.SaleEnded.returnValues.winner);
+      const amount = (response2.events.SaleEnded.returnValues.amount);
+      console.log("구매자", winner)
+      console.log("구매가격", amount);
+      postgetBuy.mutate()
+    } catch (error) {
+      console.log(error)
+      setIsLoading(false)
+      return
+    }
+  }
+
+ 
   console.log(musicList, "뮤직리스트");
 
   return (
@@ -187,15 +251,12 @@ const MusicModal:React.FC<Iprops> = ({setOpen}) => {
                   <div className="subTitle">{obj.productTitle}</div>
                   {/* <audio controls src={obj.productFileUrl}></audio> */}
                   {(obj.productState===1 || obj.productState===2 )&& (userId!==obj.productUserId)&& // 내가 이 작품의 주인이 아닐경우,
-                  <button className="buyBtn">구매하기</button>}
+                  <button className="buyBtn" onClick={() => onClickBuy(obj)}>구매하기</button>}
                 </MusicItem>
               );
             }
           })}
       </Body>
-      <Foot>
-        <button>리스트 변경</button>
-      </Foot>
     </Wrapper>
   );
 };

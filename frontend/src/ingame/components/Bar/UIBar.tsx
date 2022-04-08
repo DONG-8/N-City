@@ -29,6 +29,9 @@ import { postRandomJoin } from "../../../store/apis/myRoom";
 import SearchModal from "../seatchbar/SearchModal";
 import { Button } from "@mui/material";
 import { deleteFollow, getFollowee, postFollow } from "../../../store/apis/follow";
+import influencer from "../../../essets/images/influencer-mark.png"
+import artist from "../../../essets/images/artist-mark.png"
+import enterprise from "../../../essets/images/enterprise-mark.png"
 
 interface IUserInfo {
   userId: number;
@@ -223,6 +226,19 @@ const UIBar = () => {
   // get 해당 유저의 id , 데이터 변경 , post 요청 입장, route 주소 변경
   // Ramdom 로직 확인 후 분할 혹은 병합
 
+  const getVerifiedMark = (userType: string|undefined) => {
+    switch (userType) {
+      case "ROLE_INFLUENCER":
+        return <img className="mark" src={influencer} title='influencer' alt="mark" />;
+      case "ROLE_ARTIST":
+        return <img className="mark" src={artist}  title='artist' alt="mark" />;
+      case "ROLE_ENTERPRISE":
+        return <img className="mark" src={enterprise} title='enterprise' alt="mark" />;
+      default:
+        return;
+    }
+  }
+
   const toggle = () => {
     setTog(!tog);
   };
@@ -302,21 +318,30 @@ const UIBar = () => {
             ) : (
               <img src="/essets/room/none.png" alt="" />
             )}
-
             <div className={tog ? "hidden" : "profileBox"}>
-              <div>
-                <div>{userInfo.userNick}</div>
-                <div>팔로워 : {userInfo?.followerCnt}</div>
-                <div>팔로잉 : {userInfo?.followeeCnt}</div>
+              <div className="top">
+                <div className="nick">
+                  {userInfo.userNick}
+                  <span>{getVerifiedMark(userInfo.userRole)}</span>
+                </div>
               </div>
-              <div>
-              <Button
-                  className="profilesetting"
-                  variant="contained"
-                  onClick={onClickFollow}
-                >
-                  {followBtnState ? "Follow" : "Unfollow"}
-                </Button>
+              <div className="bottom">
+                <div>
+                  <div>팔로워 : {userInfo?.followerCnt}</div>
+                  <div>팔로잉 : {userInfo?.followeeCnt}</div>
+                </div>
+                <div>
+                  {userInfo.userId !==
+                    Number(sessionStorage.getItem("userId")) && (
+                    <Button
+                      className="profilesetting"
+                      variant="contained"
+                      onClick={onClickFollow}
+                    >
+                      {followBtnState ? "Follow" : "Unfollow"}
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </>
@@ -334,9 +359,6 @@ const UIBar = () => {
           </Absol>
           <Absol>
             {musicTog ? null : <MusicModal setOpen={setMusicTog}></MusicModal>}
-          </Absol>
-          <Absol>
-            {userTog ? null : <UserModal setOpen={setUserTog}></UserModal>}
           </Absol>
           <Absol>
             {searchTog ? null : (
@@ -389,17 +411,6 @@ const UIBar = () => {
             <img className="Mimg" src="/essets/room/visit.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <p>Guest Book</p>
-            </div>
-          </div>
-          <div
-            className="Icon"
-            onClick={() => {
-              openUser();
-            }}
-          >
-            <img className="Mimg" src="/essets/room/visit.png" alt="사진없노" />
-            <div className={tog ? "hidden" : "content"}>
-              <p>UserList</p>
             </div>
           </div>
           {itsMe ? (
