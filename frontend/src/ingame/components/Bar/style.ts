@@ -2,25 +2,25 @@ import styled from "styled-components";
 
 export const ToggleBtn = styled.div`
   position: absolute;
-  top: 25px;
-  left: -40px;
+  top: 50px;
+  left: -45px;
   /* background-color: yellow; */
-  width: 10px;
-  height: 10px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 
   .button {
     position: fixed;
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     transform: translateY(-50%) rotate(180deg);
     transition: all 0.3s ease;
   }
 
   .changeButton {
     position: fixed;
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     transform: translateY(-50%) rotate(0deg);
     transition: all 0.3s ease;
   }

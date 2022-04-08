@@ -33,6 +33,11 @@ import influencer from "../../../essets/images/influencer-mark.png"
 import artist from "../../../essets/images/artist-mark.png"
 import enterprise from "../../../essets/images/enterprise-mark.png"
 
+interface Iprops {
+  today: Number;
+  total: Number;
+}
+
 interface IUserInfo {
   userId: number;
   authId: number;
@@ -47,7 +52,7 @@ interface IUserInfo {
   followeeCnt: number;
 }
 
-const UIBar = () => {
+const UIBar:React.FC<Iprops> = ({today, total}) => {
   const [musicList, setMusic] = useState();
   const dispatch = useAppDispatch();
   const [tog, setTog] = useState(true);
@@ -327,8 +332,10 @@ const UIBar = () => {
               </div>
               <div className="bottom">
                 <div>
-                  <div>팔로워 : {userInfo?.followerCnt}</div>
-                  <div>팔로잉 : {userInfo?.followeeCnt}</div>
+                  <div>TOTAL : {total}</div>
+                  <div>TODAY : {today}</div>
+                  {/* <div>팔로워 : {userInfo?.followerCnt}</div>
+                  <div>팔로잉 : {userInfo?.followeeCnt}</div> */}
                 </div>
                 <div>
                   {userInfo.userId !==

@@ -50,6 +50,9 @@ const LoadingBox = styled.div`
 `
 const GameApp: Function = () => {
   const [loading, setLoading] = useState(true);
+  const [today, setToday] = useState(0)
+  const [total, setTotal] = useState(0)
+
   const { userId } = useParams();
   const roomuserId = Number(userId);
   const stringId = String(roomuserId);
@@ -70,6 +73,8 @@ const GameApp: Function = () => {
     },
     {
       onSuccess: async (res) => {
+        setToday(res.myRoomTodayCnt)
+        setTotal(res.myRoomTotalCnt)
         if (res.myRoomBackground === null) {
           map = basicData;
         } else {
@@ -240,7 +245,7 @@ const GameApp: Function = () => {
       <Backdrop>
        {loading && <GameLoading/>}
         {/* {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />} */}
-        {Setting ? <EditBar></EditBar> : <UIBar></UIBar>}
+        {Setting ? <EditBar></EditBar> : <UIBar today={today} total={total}></UIBar>}
         {Setting ? null : <>{ui}</>}
       </Backdrop>
     </>
