@@ -32,8 +32,29 @@ const Header = styled.div`
   align-items: center;
   margin-bottom: 10px;
   h2 {
+    width: 240px;
     font-size: 12px;
     /* margin: 0px; */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: filter 5s linear infinite;
+  }
+  .box {
+    width: 240px;
+    overflow: hidden;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  @keyframes filter {
+    to {
+      transform: translateX(-300px);
+      filter: hue-rotate(0);
+    }
+    from {
+      transform: translateX(300px);
+      filter: hue-rotate(360deg);
+    }
   }
 `;
 
@@ -165,9 +186,11 @@ const AudioPlayer = ({ tracks }) => {
             src={image}
             alt={`track artwork for ${title} by ${artist}`}
           />
-          <h2 className="title">
-            {artist} : {title}
-          </h2>
+          <div className="box">
+            <h2 className="title">
+              {artist} : {title}
+            </h2>
+          </div>
         </Header>
         <Player>
           <AudioControls
