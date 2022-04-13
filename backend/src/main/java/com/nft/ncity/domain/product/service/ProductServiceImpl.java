@@ -182,6 +182,7 @@ public class ProductServiceImpl implements ProductService{
             productList.setProductFavorite(favoriteRepositorySupport.getFavoriteCount(p.getProductId()));
             productList.setProductFavoriteUser(favoriteRepositorySupport.getFavoriteUser(p.getProductId()));
             productList.setProductState(p.getProductState());
+            productList.setProductAuctionEndTime(p.getProductAuctionEndTime());
 
             productListGetRes.add(productList);
         }

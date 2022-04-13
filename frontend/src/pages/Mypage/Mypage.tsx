@@ -211,7 +211,6 @@ const ListItem = styled.div`
   width: 79vw;
   padding: 10px;     
   border-radius: 5px;
-           
   div{
     flex:1;
     text-align: center;
@@ -219,6 +218,8 @@ const ListItem = styled.div`
   .event{
     text-align: start;
     margin-left: 2vw;
+    display: flex;
+    align-items: center;
   }
   .title{
     margin-left: -2vw;
