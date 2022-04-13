@@ -64,6 +64,8 @@ export const Wrapper = styled.div`
       transition: all 0.3s ease;
     }
 
+    
+
     .content {
       width: 200px;
 
@@ -83,6 +85,23 @@ export const Wrapper = styled.div`
   .hidden {
     display: none;
   }
+  .head {
+      position: relative;
+      display: flex;
+      width: 100%;
+      flex-direction: row;
+      margin-bottom: 5px;
+      align-items: center;
+      .content {
+        width: 200px;
+      }
+
+      .onHiddenImg {
+        width: 70px;
+        height: 70px;
+        border-radius: 10px;
+      }
+    }
 `;
 
 export const Head = styled.div`
@@ -96,7 +115,7 @@ export const Head = styled.div`
   transition: all 0.3s ease;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  /* justify-content: center; */
   z-index: 2;
   align-items: center;
 
@@ -104,7 +123,8 @@ export const Head = styled.div`
     width: 60px;
     height: 60px;
     border-radius: 15px;
-    margin-right: 20px;
+    /* margin-right: 20px; */
+    margin: auto; 
   }
   .profileBox {
     margin-bottom: 20px;
@@ -116,7 +136,9 @@ export const Head = styled.div`
       display: flex;
       align-items: center;
       button {
-        margin-left: 30px;
+        width : 90px;
+        font-size: 12px;
+        margin-left: 5px;
       }
     }
 
@@ -195,6 +217,9 @@ export const BottomItem = styled.div`
       background-color: rgba(98, 37, 230, 0.5);
       transition: all 0.3s ease;
     }
+  
+    .content {
+      width: 200px;
     /* background-color: red; */
   }
 
@@ -209,21 +234,38 @@ export const BottomItem = styled.div`
     margin-bottom: 5px;
     /* background-color: blue; */
     border-radius: 10px;
+    button {
+      width: 50px;
+      height: 50px;
+    }
+    /* .bottomcontent {
+      display: flex;
+      justify-content: space-around;
+    } */
+    .content {
+      width: 200px;
+    } 
+  }
+
+   .Bcontainer{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+
     }
 
-    div {
-      width: 200px;
-      p {
-        text-align: center;
-        font-size: 24px;
-        /* margin-top: 30px; */
-        margin: 0;
-      }
+  div {
+    width: 200px;
+    p {
+      text-align: center;
+      font-size: 24px;
+      /* margin-top: 30px; */
+      margin: 0;
     }
-    .playimg {
-      width: 25px;
-      height: 25px;
-    }
+  }
+  .playimg {
+    width: 25px;
+    height: 25px;
   }
 
   .hidden {
@@ -241,12 +283,13 @@ export const BottomItem = styled.div`
       transition: all 0.3s ease;
     } */
     .user {
-      width: 80%;
+      width: 50px;
+      height: 50px;
       text-align: center;
-      height: 80%;
       margin: 5%;
     }
   }
+}
 `;
 
 export const Absol = styled.div`
@@ -261,4 +304,17 @@ export const NonMusicDiv = styled.div`
   width : 100%;
   height: 100%;
   text-align: center;
+`
+
+export const BottomWrap = styled.div`
+  width : 100%;
+  height: 90px;
+  display: flex;
+  flex-direction: row;
+  
+  .content {
+    width : 200px;
+    display: flex;
+    justify-content: space-around;
+  }
 `

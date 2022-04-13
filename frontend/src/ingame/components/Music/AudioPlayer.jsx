@@ -38,7 +38,7 @@ const Header = styled.div`
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    animation: filter 5s linear infinite;
+    animation: filter 8s linear infinite;
   }
   .box {
     width: 240px;
@@ -48,11 +48,11 @@ const Header = styled.div`
   }
   @keyframes filter {
     to {
-      transform: translateX(-300px);
+      transform: translateX(-200px);
       filter: hue-rotate(0);
     }
     from {
-      transform: translateX(300px);
+      transform: translateX(200px);
       filter: hue-rotate(360deg);
     }
   }

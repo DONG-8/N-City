@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import influencer from "../../essets/images/influencer-mark.png"
 import artist from "../../essets/images/artist-mark.png"
 import enterprise from "../../essets/images/enterprise-mark.png"
+import 'moment/locale/ko';
 
 const Wrapper = styled.div`
   #character{
@@ -126,6 +127,7 @@ interface Iprops {
     favorite: boolean;
     tokenId?: number;
     userRole: string;
+    productAuctionEndTime: string;
   }; 
   setMode :React.Dispatch<React.SetStateAction<string>>
 }
@@ -138,7 +140,8 @@ const SmallItemCard:React.FC<Iprops>= ({item,setMode}) => {
   const [liked,setLiked] = useState(item.favorite)
   const [likes,setLikes] = useState(item.productFavoriteUser.length)
   const navigate = useNavigate();
-
+  const moment = require('moment')
+  
   const addLike = useMutation<any, Error>(
     "addLike",
     async () => {
@@ -188,6 +191,27 @@ const SmallItemCard:React.FC<Iprops>= ({item,setMode}) => {
     }
   }
 
+  function leadingZeros(n, digits) {
+    var zero = '';
+    n = n.toString();
+  
+    if (n.length < digits) {
+      for (var i = 0; i < digits - n.length; i++)
+        zero += '0';
+    }
+    return zero + n;
+  }
+  
+  const convertDate = (dateArray) => {
+    const year = String(dateArray[0]);
+    const month = String(dateArray[1]);
+    const day = String(dateArray[2]);
+    const hour = String(dateArray[3])
+    const minute = String(dateArray[4])
+    const second = String(dateArray[5] ? dateArray[5] : "00")
+    return year + "-" + leadingZeros(month, 2) + "-" + leadingZeros(day, 2) + " " + leadingZeros(hour, 2) + ":" + leadingZeros(minute, 2)+ ":" + leadingZeros(second, 2)
+  }
+
   const onClickAddLike = async () => {
     addLike.mutate();
   }
@@ -203,7 +227,7 @@ const SmallItemCard:React.FC<Iprops>= ({item,setMode}) => {
 
   return (
     <Wrapper>
-      <CardWrapper id={item.productCode===7?'character':'normal'}>
+      <CardWrapper id={item.productCode === 7 ? "character" : "normal"}>
         <Image
           onClick={() => {
             goDetailPage(item.productId);
@@ -252,11 +276,19 @@ const SmallItemCard:React.FC<Iprops>= ({item,setMode}) => {
             {likes}
           </div>
           <div>
-            {item.productState === 1 ? (
-              <SaleState>경매중 {item.productPrice}NCT</SaleState>
-            ) : item.productState === 2 ? (
+            {item.productState === 1 &&
+              convertDate(item.productAuctionEndTime) &&
+              moment(convertDate(item.productAuctionEndTime)).isBefore(
+                moment()
+              ) && <SaleState>경매종료</SaleState>}
+            {item.productState === 1 &&
+              convertDate(item.productAuctionEndTime) &&
+              !moment(convertDate(item.productAuctionEndTime)).isBefore(
+                moment()
+              ) && <SaleState>경매중 {item.productPrice}NCT</SaleState>}
+            {item.productState === 2 && (
               <SaleState>판매중 {item.productPrice}NCT</SaleState>
-            ) : null}
+            )}
           </div>
         </CardBottom>
       </CardWrapper>

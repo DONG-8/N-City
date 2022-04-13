@@ -8,10 +8,10 @@ import e6 from './image/e6.jpg'
 export const events = [
   {
     id:1,
-    title:"N-city Release",
+    title:"N-City Release",
     url:e1,
     date:"2022.04.08 06:00 ~ 04.18 06:00",
-    content:"N-city 가 4월8일 출시되었습니다. 많은 이용 부탁드립니다~"
+    content:"N-City 가 4월8일 출시되었습니다. 많은 이용 부탁드립니다~"
   },
   {
     id:4,
@@ -22,17 +22,17 @@ export const events = [
   },
   {
     id:2,
-    title:"N-city와 시작하는 봄",
+    title:"N-City와 시작하는 봄",
     url:e2,
     date:"2022.04.08 06:00 ~ 04.18 06:00",
-    content:"이번 봄은 N-city와 함께 해보는게 어떤가요"
+    content:"이번 봄은 N-City와 함께 해보는게 어떤가요"
   },
   {
     id:3,
-    title:"N-city은 나에게 봄",
+    title:"N-City은 나에게 봄",
     url:e3,
     date:"2022.04.08 06:00 ~ 04.18 06:00",
-    content:"N-city가 있는 봄은 설레는 계절입니다."
+    content:"N-City가 있는 봄은 설레는 계절입니다."
   },
   {
     id:5,

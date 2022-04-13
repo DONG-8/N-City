@@ -21,6 +21,7 @@ import artist from "../../essets/images/artist-mark.png"
 import enterprise from "../../essets/images/enterprise-mark.png"
 import IsLoading2 from "../NFTStore/IsLoading2";
 import { randomwords, words } from "../NFTStore/words";
+import { Link } from "react-router-dom";
 const MypageWrapper = styled.div`
   box-shadow: 1px 1px 1px;
   font-family: "Noto Sans KR", sans-serif;
@@ -210,7 +211,6 @@ const ListItem = styled.div`
   width: 79vw;
   padding: 10px;     
   border-radius: 5px;
-           
   div{
     flex:1;
     text-align: center;
@@ -218,6 +218,8 @@ const ListItem = styled.div`
   .event{
     text-align: start;
     margin-left: 2vw;
+    display: flex;
+    align-items: center;
   }
   .title{
     margin-left: -2vw;
@@ -730,15 +732,17 @@ export default function Mypage() {
           </ListCategory>
           {myHistory.map((history, idx) => {
             return (
-              <ListItem key={idx}>
-                <div className="event">{dealTypeConvert(history.dealType)}</div>
-                <div className="title">{history.productTitle}</div>
-                <div className="price">{history.dealPrice}</div>
-                <div className="from">{history.dealFromUserNick}</div>
-                <div className="to">{history.dealToUserNick}</div>
-                <div className="date">{history.dealCreatedAt}</div>
-                {/* <div className="id">{dealTypeConvert(history.dealType)}</div> */}
-              </ListItem>
+              <Link to={`/store/detail/${history.productId}`}>
+                <ListItem key={idx}>
+                  <div className="event">{dealTypeConvert(history.dealType)}</div>
+                  <div className="title">{history.productTitle}</div>
+                  <div className="price">{history.dealPrice}</div>
+                  <div className="from">{history.dealFromUserNick}</div>
+                  <div className="to">{history.dealToUserNick}</div>
+                  <div className="date">{history.dealCreatedAt}</div>
+                  {/* <div className="id">{dealTypeConvert(history.dealType)}</div> */}
+                </ListItem>
+              </Link>
             );
           })}
         </List>

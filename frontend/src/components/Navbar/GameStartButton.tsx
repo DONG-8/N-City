@@ -13,7 +13,7 @@ const Wrapper = styled.div`
     padding: 3px 40px;
     text-decoration: none;
     font-family: "Noto Sans KR", sans-serif;
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 500;
     color: white;
     background: #6225e6;
@@ -25,7 +25,7 @@ const Wrapper = styled.div`
       padding-bottom: 3px;
     }
     span {
-      width: 80px;
+      width: 100px;
     }
   }
 
@@ -119,7 +119,7 @@ const GameStartButton: React.FC<Iprops> = ({ isLogin }) => {
         }}
         className="cta"
       >
-        <span>마이룸</span>
+        <span>My Room</span>
         <span>
           <svg
             width="66px"

@@ -6,6 +6,10 @@ import Extra from "./extraguide";
 
 const Wrapper = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
+
+  .important {
+    color : red;
+  }
 `
 
 const Box = styled.div`
@@ -146,6 +150,7 @@ const Guide = () => {
             src="/essets/guideimage/로그인페이지_설명추가_big.png"
             alt="사진"
           />
+          <h1>메타마스크 설치후 지갑생성부터 진행하겠습니다.</h1>
           <Img
             src="/essets/guideimage/메타마스크_첫페이지_설명추가_cut.png"
             alt="사진"
@@ -154,17 +159,17 @@ const Guide = () => {
             src="/essets/guideimage/메타마스크페이지_3_cut.png"
             alt="사진"
           />
-          비밀번호 설정및 이용약관 동의
-          {/* <Img src="/essets/guideimage/메타마스크페이지_4_cut.png" alt="사진" />
-      아마 삭제? */}
+          
+          <h1>메타마스크용 새 비밀번호를 입력해줍니다.</h1>
+          
           <Img
             src="/essets/guideimage/메타마스크페이지_5_설명추가_cut.png"
             alt="사진"
           />
-          <h1>중요중요</h1>
+          <h1 className="important">중요 중요!!</h1>
           <h2>
-            위 화면에서 빨간색 박스안의 비밀 복구 구문은{" "}
-            <span color="red">반드시</span> 저장하세요!!!
+            위 화면에서 <span className="important">빨간색 박스</span>안의 비밀 복구 구문은{" "}
+            <span className="important">반드시</span> 따로 저장하세요!!!
           </h2>
           <Token
             src="/essets/guideimage/메타마스크페이지_6_cut.png"
@@ -178,12 +183,12 @@ const Guide = () => {
             src="/essets/guideimage/메타마스크페이지_7_설명추가_cut.png"
             alt="사진"
           />
-          <h1>입력을 마치면 하단의 버튼이 바뀝니다.</h1>
+          <h1>입력을 마치면 하단의 확인버튼이 활성화 됩니다.</h1>
           <Token
             src="/essets/guideimage/메타마스크페이지_8_cut.png"
             alt="사진"
           />
-          <h1>메타마스크 연결 완료!!!!</h1>
+          <h1>메타마스크 지갑 생성 완료!!!!</h1>
           
           <h1>이제 로그인을 해볼까요?</h1>
           <Token
@@ -191,14 +196,14 @@ const Guide = () => {
             alt="사진"
           />
           <br />
-          <Token src="/essets/guideimage/메타마스크페이지_17.PNG" alt="사진" />
-          <h1>연결</h1>
+          <Token src="/essets/guideimage/메타마스크페이지_17.png" alt="사진" />
+          <h1>메타마스크의 지갑계정을 N-City 사이트와 연결 해줍니다.</h1>
 
           <Token
             src="/essets/guideimage/메타마스크페이지_18_설명추가_cut.png"
             alt="사진"
           />
-          <h1>로그인 완료!!!</h1>
+          <h1>위와 같이 연결된 지갑 주소가 출력된다면 <br/>로그인 완료!!!</h1>
           <Button onClick={()=>{setCategoryState("network");window.scrollTo(0,0);}}>
             <h2>이어서 네트워크 연결하러 가기!</h2>
           </Button>
@@ -219,6 +224,11 @@ const Guide = () => {
             alt="사진"
           />
 
+          <h1>RPC URL - http://20.196.209.2:8545 <br/>
+              체인 ID - 31221 <br/>
+              위 항목들을 알맞게 입력해줍니다.
+          </h1>
+
           <h1>이제 토큰을 가져오겠습니다.</h1>
           <Img
             src="/essets/guideimage/메타마스크페이지_12_설명추가_cut.png"
@@ -229,18 +239,18 @@ const Guide = () => {
             src="/essets/guideimage/메타마스크페이지_13_설명추가_cut.png"
             alt="사진"
           />
-          <h1> 토큰 계약 주소에 주소를 입력합니다.  </h1>
+          <h1> 토큰 계약 주소에 아래의 주소를 입력합니다. </h1>
           <h2>{NFTcreatorAddress}</h2>
           <Token
             src="/essets/guideimage/메타마스크페이지_15_cut.png"
             alt="사진"
           />
-          <h1>위와 같은 화면이 나옵니다.</h1>
+          <h1>성공했다면 위와 같은 화면이 나옵니다.</h1>
           <Token
             src="/essets/guideimage/메타마스크페이지_14_설명추가_cut.png"
             alt="사진"
           />
-          <h1>한번더 해줍니다. {SSFTokenAddress}</h1>
+          <h1>{SSFTokenAddress} <br/>위의 주소값으로 한번더 해줍니다.</h1>
 
           <Token
             src="/essets/guideimage/메타마스크페이지_15-2_설명 추가_cut.png"
@@ -249,7 +259,7 @@ const Guide = () => {
           <h1>토큰 2개를 추가한 화면</h1>
 
           <h1>메타마스크 설정 완료!!</h1>
-          <Button><a href="/">N-city 이용하러 가기</a></Button>
+          <Button><a href="/">N-City 이용하러 가기</a></Button>
         </Box>
       )}
     </Wrapper>

@@ -2,7 +2,6 @@ package com.nft.ncity.domain.myroom.service;
 
 import com.nft.ncity.domain.myroom.db.entity.MyRoom;
 import com.nft.ncity.domain.myroom.response.MyRoomTop5GetRes;
-import com.querydsl.core.Tuple;
 
 import java.util.List;
 
