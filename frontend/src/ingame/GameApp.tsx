@@ -10,7 +10,6 @@ import ComputerDialog from "./components/ComputerDialog"; // 컴퓨터 사용
 import WhiteboardDialog from "./components/WhiteboardDialog"; // 화이트보드 사용
 // import VideoConnectionDialog from './components/VideoConnectionDialog' // 캐릭터 고를때 웹캠 연결됐나 확인용
 import Chat from "./components/Chat"; // 채팅 관련
-import HelperButtonGroup from "./components/HelperButtonGroup"; // 우측 하단 버튼들
 import phaserGame from "./PhaserGame";
 import VendingMachineDialog from "./components/VendingMachineDialog";
 
@@ -31,8 +30,6 @@ import { useMutation } from "react-query";
 import basicData from "./scenes/map.json";
 import Editmap from "./scenes/Editmap";
 import GameLoading from "../components/Popup/GameLoading";
-import IsLoading2 from "../pages/NFTStore/IsLoading2";
-import IsLoading from "../pages/NFTStore/IsLoading";
 
 const Backdrop = styled.div``;
 
@@ -138,27 +135,21 @@ const GameApp: Function = () => {
   );
 
   const Setting = useAppSelector((state) => state.edit.EditMode);
-  // const [values, setValues] = useState<IRoomData>({
-  //   // 방이름 방설명 패스워드
-  //   roomId: stringId, // userId 넣어주기
-  //   name: "",
-  //   description: "",
-  //   password: null,
-  //   autoDispose: true, // 마지막 사용자가 나오면 자동으로 방 없애기 (화이트보드 때문에 지금은 false)
-  // });
 
   useEffect(() => {
     (window as any).game = phaserGame;
-    setLoading(true); //😎
+    // 필요한 API 불러오기 
+    setLoading(true); // 로딩 페이지 
     getMyArts();
     RoomInfo();
     getCharacterIndex();
+
+    // 게임 연결 
     setTimeout(() => ConnectStart(), 3000);
-    setTimeout(() => {ConnectBootstrap();
-    setLoading(false);
-    }, 4000); // Bootstrap 연결
+    setTimeout(() => {ConnectBootstrap();}, 4000); // Bootstrap 연결
     setTimeout(() => {
       ConnectGame();
+      setLoading(false);
     },5000); // 게임 접속
     return () => {
       (window as any).game.destroy(true);
@@ -239,7 +230,6 @@ const GameApp: Function = () => {
     <>
       <Backdrop>
        {loading && <GameLoading/>}
-        {/* {!computerDialogOpen && !whiteboardDialogOpen && <HelperButtonGroup />} */}
         {Setting ? <EditBar></EditBar> : <UIBar today={today} total={total}></UIBar>}
         {Setting ? null : <>{ui}</>}
       </Backdrop>
