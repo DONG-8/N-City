@@ -260,6 +260,11 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
     console.log("변경중");
   };
 
+  const onClickMyRoom = () => {
+    navigate(`/ingame/${sessionStorage.getItem("userId")}`)
+    window.location.reload()
+  }
+
   const openMusic = () => {
     setMusicTog(!musicTog);
     setShopTog(true);
@@ -319,7 +324,7 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
         {userInfo ? (
           <>
             {userInfo.userImgUrl ? (
-              <img src={userInfo.userImgUrl} alt="" />
+              <img className="onHiddenImg" src={userInfo.userImgUrl} alt="" />
             ) : (
               <img src="/essets/room/none.png" alt="" />
             )}
@@ -433,7 +438,8 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
             </div>
           ) : null}
           <div className="Icon" onClick={() => gotoHome()}>
-            <img className="Mimg" src="/essets/room/home.png" alt="사진없노" />
+            
+            <img className="Mimg" src="/essets/room/move.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <p>Home</p>
             </div>
@@ -441,8 +447,14 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
         </Body>
         <BottomItem className={tog ? "close" : "open"}>
           <div className="Bottom">
-            <img src="/essets/room/move.png" alt="사진없노" />
-            <div className={tog ? "hidden" : "content"}>
+            {userInfo?.userId !== Number(sessionStorage.getItem("userId")) && (
+              <Tooltip title="My Room">
+                <button onClick={onClickMyRoom}>
+                <img src="/essets/room/home.png" alt="사진없노" />
+                </button>
+              </Tooltip>
+            )}
+            <div className={tog ? "hidden" : "bottomcontent"}>
               <Tooltip title="Random User">
                 <button onClick={() => goRandom.mutate()}>
                   <img className="user" src="/essets/room/random.png" alt="" />
