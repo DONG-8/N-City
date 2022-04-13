@@ -61,7 +61,6 @@ export const userSlice = createSlice({
     },
     setUserProducts: (state, action : PayloadAction<userProductInfo> ) => {
       state.userProducts = action.payload
-      console.log(state.userProducts)
     }
   },
 })

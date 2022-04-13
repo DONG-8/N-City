@@ -17,7 +17,6 @@ import GameApp from "./ingame/GameApp";
 import { Provider } from "react-redux";
 import gamestore from "./ingame/stores";
 import phaserGame from "./ingame/PhaserGame";
-import YNTest from "./pages/Test/YNTest";
 import SearchPage from "./pages/NFTStore/SearchPage";
 import MapChoice from "./pages/Room/MapChoice";
 import Character from "./pages/Mypage/Character";
@@ -55,7 +54,6 @@ function App() {
             <Route path="/event/:eventId" element={<EventDetail />} />
             <Route path="/rank" element={<Rank />} />
             <Route path="/artists" element={<Artists />} />
-            <Route path="/YNTest" element={<YNTest />} />
             <Route path="/search/:data" element={<SearchPage />} />
             <Route path="/guide" element={<Guide />} />
             <Route path="/ingame/:userId" element={<GameApp />} />

@@ -166,13 +166,12 @@ const StoreItemCard:React.FC<Iprops>= ({item}) => {
     },
     {
       onSuccess: async (res) => {
-        console.log("좋아요 성공", res);
+        
       },
       onError: (err: any) => {
         if (err.response.status === 401) { 
           navigate("/login")
         }
-        console.log(err, "에러발생");
       },
     }
   ); 
@@ -184,13 +183,13 @@ const StoreItemCard:React.FC<Iprops>= ({item}) => {
     },
     {
       onSuccess: async (res) => {
-        console.log("좋아요 취소 성공", res);
+        
       },
       onError: (err: any) => {
         if (err.response.status === 401) { 
           navigate("/login")
         }
-        console.log(err, "에러발생");
+      
       },
     }
   ); 

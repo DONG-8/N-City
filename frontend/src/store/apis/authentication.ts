@@ -28,7 +28,6 @@ export const postAuthentiaction = async (formdata: any) => {
     '/authentication', 
     formdata
   )
-  console.log("인증요청 등록")
   return response.data
 }
 

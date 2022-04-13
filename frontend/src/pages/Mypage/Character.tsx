@@ -161,7 +161,7 @@ const Character = () => {
       onSuccess:(res)=>{ 
       setItems(res.content.filter((item)=> item.productCode===7))
       },
-      onError: (err: any) => {console.log(err, "전체 nft 조회 실패")}
+      onError: (err: any) => {}
       }
   );
 
@@ -172,15 +172,12 @@ const Character = () => {
     },
     {
       onSuccess: (res) => {
-        console.log('🎶',res)
         if(res.myRoomCharacter===null){
           setMyChar('1')
         }
         else{setMyChar(res.myRoomCharacter)}
-        console.log('🚗',myChar)
       },
       onError: (err: any) => {
-        console.log("❌캐릭터 실패",err);
       },
     }
   );
@@ -192,13 +189,10 @@ const Character = () => {
     },
     {
       onSuccess: (res) => {
-        console.log(myChar,'로 바꾸기 신청')
-        console.log("캐릭터 바꾸기 성공",res);
         alert('캐릭터를 변경했습니다. '+ myChar )
         navigate('/')
       },
       onError: (err: any) => {
-        console.log("❌캐릭터 실패",err);
       },
     }
   );
@@ -207,7 +201,6 @@ const Character = () => {
 
   },[])
   useEffect(()=>{
-    console.log('🎨',myChar)
   },[myChar])
   return (
     <Wrapper>

@@ -74,13 +74,11 @@ const SelectImage:React.FC<Iprops> = ({userId,open,setOpen,setuserURL}) => {
     {
       onSuccess: (res) => {},
       onError: (err: any) => {
-        console.log(err, "요청 실패")
         if (err.response.status === 401) { 
           navigate("/login")
         }}
     }
   );
-  console.log(items)
   return (
     <Modal 
       open={open}

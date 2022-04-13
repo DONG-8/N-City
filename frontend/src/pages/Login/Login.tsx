@@ -156,7 +156,6 @@ const Login = () => {
           })
           .then((success) => {
             if (success) {
-              console.log("successfully added to wallet!");
             } else {
               throw new Error("Something went wrong.");
             }
@@ -166,7 +165,6 @@ const Login = () => {
           // login
         login.mutate()
       } catch (error) {
-        console.error(error);
         alert("메타마스크에 연결중 오류가 발생하였습니다.");
       }
     };
@@ -178,14 +176,12 @@ const Login = () => {
       },
       {
         onSuccess: (res) => {
-          console.log("로그인요청 성공", res);
         sessionStorage.setItem("userId", res.userId)
         sessionStorage.setItem("userNickname", res.userNick)
         navigate("/")
         window.location.reload();
       },
       onError: (err: any) => {
-        console.log("로그인요청 실패", err);
       },
     }
   );

@@ -87,7 +87,6 @@ interface Iitem {
   const ProductSearchResult:React.FC<Iitem> = ({item, searchValue,onclose}) => {
   const [items, setItems] = useState(item)
   const navigate = useNavigate();
-  console.log(item)
   const onClickItem = (productId) => {
     onclose()
     navigate(`/store/detail/${productId}`)

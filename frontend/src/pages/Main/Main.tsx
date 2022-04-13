@@ -366,7 +366,6 @@ export default function Main() {
   // ];
 
   const moveRight = () => {
-    // console.log(e)
     // clearTimeout(1000)
     const len = events.length;
     const idx = Math.floor((eventNumber + 1) % len);
@@ -382,7 +381,6 @@ export default function Main() {
     } else if (2 < idx && idx < len - 1) {
       setPageTextPosition(pageTextPosition - 182.5);
     }
-    console.log(eventNumber, "우");
   };
 
   const moveLeft = () => {
@@ -398,7 +396,6 @@ export default function Main() {
     } else {
       setEventNumber(eventNumber - 1);
     }
-    console.log(Math.floor(idx % 4));
     if (idx < 0) {
       setPageTextPosition(
         -182.5 * (len - 1) + (2 - Math.floor(idx % 4)) * 182.5
@@ -406,12 +403,10 @@ export default function Main() {
     } else if (2 < idx && idx < len - 2) {
       setPageTextPosition(pageTextPosition + 182.5);
     } else if (idx === len - 2) {
-      // console.log('옆으로 밀어주때욤')
     } else {
       setPageTextPosition(0);
     }
 
-    // console.log(eventNumber,'좌')
   };
 
   const clickToMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -421,17 +416,13 @@ export default function Main() {
     const num = parseInt(e.currentTarget.id);
     const dif = num - eventNumber;
     if (dif < 0) {
-      console.log(eventNumber, "클릭 이벤트넘버 현재위치");
-      console.log(dif, "차이");
       const di = Math.abs(dif);
       const idx = Math.floor(eventNumber - di);
-      console.log(idx, "idx");
-      setPosition(position + 890 * di);
+       setPosition(position + 890 * di);
       setEventNumber(eventNumber - di);
       // setPageTextPosition(pageTextPosition + 250*(di))
       if (di === 1) {
         if (idx === len - 2) {
-          console.log("들어옴");
         } else {
           if (idx < 2) {
           } else {
@@ -453,7 +444,6 @@ export default function Main() {
       const idx = Math.floor(eventNumber + dif);
       setPosition(position - 890 * dif);
       setEventNumber(eventNumber + dif);
-      // console.log(idx,'idx')
       if (dif === 1) {
         if (idx === 0) {
           setPageTextPosition(0);
@@ -488,7 +478,6 @@ export default function Main() {
     } else if (2 < idx && idx < len - 1) {
       setPageTextPosition(pageTextPosition - 182.5);
     }
-    // console.log(eventNumber,'우')
     if (check === 0) {
       setTimeout(() => {
         setCheck(1);

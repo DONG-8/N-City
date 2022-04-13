@@ -161,14 +161,14 @@ const ItemCard2: React.FC<Iprops> = ({ item }) => {
     async () => {
       return await postProductLike(Number(item.productId));
     },
-    { onSuccess: (res) => console.log(res), onError: (err) => console.log(err) }
+    
   );
   const cancelLikeIt = useMutation<any, Error>( //좋아요 취소 api
     "delProductLike",
     async () => {
       return await delProductLike(Number(item.productId));
     },
-    { onSuccess: (res) => console.log(res), onError: (err) => console.log(err) }
+    
   );
   const Like = () => {
     //좋아요 버튼
