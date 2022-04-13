@@ -26,7 +26,7 @@ const EmailCheck = () => {
   return (
     <Wrapper>
       <Inner className="inner" >
-          <h1>NCity 이메일 인증이 완료되었습니다.</h1>
+          <h1>N-City 이메일 인증이 완료되었습니다.</h1>
           <h1>계속해서 프로필 수정을 완료해주세요.</h1>
           <Button onClick = {()=>{closed()}} variant='contained'>창 닫기</Button>
       </Inner>

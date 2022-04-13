@@ -216,7 +216,7 @@ const Artists = () => {
             {/* <img alt='black' src='https://i.gifer.com/QGA.gif' /> */}
             <img alt="black" src="https://i.gifer.com/BKfh.gif" />
             <div className="text">
-              <p>N-city citizen</p>
+              <p>N-City citizen</p>
             </div>
           </div>
         </Left>
@@ -225,7 +225,7 @@ const Artists = () => {
             <div className="h3">NFT Marketplace</div>
             <div className="h1">Citizen</div>
             <div className="h4">
-              N-city에는 다양한 <span className="blue">Citizen</span>이
+              N-City에는 다양한 <span className="blue">Citizen</span>이
               존재합니다.{" "}
             </div>
             <div className="h4">

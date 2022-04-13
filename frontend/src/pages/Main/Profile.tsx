@@ -385,7 +385,7 @@ const Profile = () => {
                   <div className="box">
                     <p>메타 마스크를 통해</p>
                     <p>로그인하세요</p>
-                    <p>n-city가 처음이라면</p>
+                    <p>N-City가 처음이라면</p>
                     <p>가이드를 읽어주세요</p>
                   </div>
                 )}

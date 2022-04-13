@@ -217,7 +217,7 @@ const Character = () => {
             <div className='h1'>Select Characters</div>
             <div className='h4'>Myroom에서<span className='blue'>NFT 캐릭터</span>를  사용해 보세요 </div>
             <div className='h4'> <span className='purple'>Store</span>에서 NFT 캐릭터를 구입하세요</div>
-            <div className='h4'>개성있는 자신만의 캐릭터로 <span className='blue'> N-city</span>를 즐기세요</div>
+            <div className='h4'>개성있는 자신만의 캐릭터로 <span className='blue'> N-City</span>를 즐기세요</div>
             <div className='h4'><Button>상점으로 이동 </Button></div>
           </div>
         </Left>
