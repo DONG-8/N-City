@@ -617,6 +617,7 @@ export default function Main() {
                 } else {
                   return (
                     <div
+                      key={idx}
                       className="inner"
                       id={id}
                       onClick={(e) => {
@@ -658,12 +659,12 @@ export default function Main() {
       
       <HotTokkenWrraper>
         <HotTokken>
-          <HotTokkenList/>
+          <NewTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>
       <HotTokkenWrraper>
         <HotTokken>
-          <NewTokkenList/>
+          <HotTokkenList/>
         </HotTokken>
       </HotTokkenWrraper>
       <VideoGuide />

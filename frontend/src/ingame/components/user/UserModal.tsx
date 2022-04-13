@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 // api 요청
 import { useMutation, useQuery } from "react-query";
@@ -65,9 +65,33 @@ const Foot = styled.div`
   height: 20%;
   /* background-color: #f5cbd4; */
 `;
+const CloseButton = styled.div`
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z'/%3E%3C/svg%3E");
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+`; 
+interface Iprops{
+  setOpen : React.Dispatch<React.SetStateAction<boolean>>
+}
+const UsersModal:React.FC<Iprops> = ({setOpen}) => {
+  const escFunction = useCallback((event) => {
+    if (event.keyCode === 27) {
+      setOpen(true)
+    }
+  }, []);
+  useEffect(() => {
+    document.addEventListener("keydown", escFunction);
 
-
-const UsersModal = () => {      
+    return () => {
+      document.removeEventListener("keydown", escFunction);
+    };
+  }, [escFunction]);
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.edit.userId);
   console.log(userId, "유저아이디");
@@ -332,6 +356,8 @@ const UsersModal = () => {
 
   return (
     <Wrapper>
+      <CloseButton onClick={()=>{setOpen(true)}}/>
+
       <Head>
         <div className="name">Users</div>
         <div className="divider"></div>

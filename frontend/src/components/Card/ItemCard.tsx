@@ -156,6 +156,9 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   ); 
@@ -171,6 +174,9 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   ); 

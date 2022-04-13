@@ -1,5 +1,6 @@
 import React, { ReactNode, SetStateAction, useEffect, useState } from "react";
 import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 import { patchAutentication } from "../../store/apis/authentication";
 
@@ -156,17 +157,21 @@ const ConfirmModal = ({
   setIsOpenProp,
 }: ModalBaseProps) => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const navigate = useNavigate();
+  
   const patchApprove = useMutation<any, Error>(
     "patchApprove",
     async () => {
-      return await patchAutentication(selectedItem.authId, selectedItem.authType,  control === "승인" ? 1 : 0 );
+      return await patchAutentication(selectedItem.authentication.authId, selectedItem.authentication.authType,  control === "승인" ? 1 : 0 );
     },
     {
       onSuccess: (res) => {
         console.log("인증 수락/거절 성공!",res);
       },
       onError: (err: any) => {
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
         console.log("❌인증 수락/거절 실패!",err);
       },
     }
@@ -214,12 +219,12 @@ const ConfirmModal = ({
         <Divider />
         {control === "승인" && (
           <ExplaneText>
-            정말로&nbsp; <span>{selectedItem.authName}</span>님을 승인하시겠습니까?
+            정말로&nbsp; <span>{selectedItem.authentication.authName}</span>님을 승인하시겠습니까?
           </ExplaneText>
         )}
         {control === "거절" && (
           <ExplaneText>
-            정말로&nbsp; <span>{selectedItem.authName}</span>님의 승인신청을 거절하시겠습니까?
+            정말로&nbsp; <span>{selectedItem.authentication.authName}</span>님의 승인신청을 거절하시겠습니까?
           </ExplaneText>
         )}
         <ButtonBox>

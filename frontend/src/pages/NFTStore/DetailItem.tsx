@@ -13,7 +13,7 @@ import {
   getProductLike,
   postProductLike,
 } from "../../store/apis/favorite";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
 import ItemCard2 from "../../components/Card/ItemCard2";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -543,6 +543,7 @@ const DetailItem = () => {
   const [isImg, setIsImg] = useState(true)
   const [isLoading, setIsloading] = useState(true)
   const { ethereum } = window
+  const navigate = useNavigate();
 
   const dealTypeConvert = (dealType) => {
     switch (dealType) {
@@ -689,7 +690,10 @@ function leadingZeros(n, digits) {
         console.log("좋아요 성공", res);
         setLiked(true);
       },
-      onError: (err) => console.log("좋아요 실패", err),
+      onError: (err:any) => {console.log("좋아요 실패", err)
+      if (err.response.status === 401) { 
+        navigate("/login")
+      }},
     }
   );
 
@@ -703,7 +707,10 @@ function leadingZeros(n, digits) {
         console.log("좋아요 취소 성공", res);
         setLiked(false);
       },
-      onError: (err) => console.log("좋아요 취소 실패", err),
+      onError: (err:any) => {console.log("좋아요 취소 실패", err)
+      if (err.response.status === 401) { 
+        navigate("/login")
+      }},
     }
   );
 
@@ -717,7 +724,11 @@ function leadingZeros(n, digits) {
         console.log("팔로우 성공", res);
         setFollowBtnState(false);
       },
-      onError: (err) => console.log("팔로우 실패", err),
+      onError: (err:any) => {console.log("팔로우 실패", err)
+      if (err.response.status === 401) { 
+        navigate("/login")
+      }},
+      
     }
   );
 
@@ -731,7 +742,10 @@ function leadingZeros(n, digits) {
         console.log("언팔로우 성공", res);
         setFollowBtnState(true);
       },
-      onError: (err) => console.log("언팔로우 실패", err),
+      onError: (err:any) => {console.log("언팔로우 실패", err)
+      if (err.response.status === 401) { 
+        navigate("/login")
+      }}
     }
   );
 

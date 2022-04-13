@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import AudioPlayer from "./AudioPlayer";
 // api 요청
@@ -9,6 +9,9 @@ import { client } from "../../../../src/index"; // query data refresh 용도
 //스토어
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { setMusicList } from "../../stores/RoomStore";
+import { useNavigate } from "react-router-dom";
+import { postPurchase } from "../../../store/apis/deal";
+import { createSaleContract, SaleFactoryContract, SSFTokenContract } from "../../../web3Config";
 
 const Wrapper = styled.div`
   position: absolute;
@@ -52,7 +55,7 @@ const Body = styled.div`
 
   margin: auto;
   width: 90%;
-  height: 60%;
+  height: 77%;
   /* background-color: #6b6a72; */
   display: flex;
   flex-direction: column;
@@ -106,8 +109,33 @@ const MusicItem = styled.div`
     flex-direction: column;
   }
 `;
+const CloseButton = styled.div`
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z'/%3E%3C/svg%3E");
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+`; 
+interface Iprops{
+  setOpen : React.Dispatch<React.SetStateAction<boolean>>
+}
+const MusicModal:React.FC<Iprops> = ({setOpen}) => {
+  const escFunction = useCallback((event) => {
+    if (event.keyCode === 27) {
+      setOpen(true)
+    }
+  }, []);
+  useEffect(() => {
+    document.addEventListener("keydown", escFunction);
 
-const MusicModal = () => {
+    return () => {
+      document.removeEventListener("keydown", escFunction);
+    };
+  }, [escFunction]);
   const [playList, setPlayList] = useState<Array<object>>([]);
   // 임시 userid params 의 데이터를 넘겨주는걸 생각해봐야할듯
   const dispatch = useAppDispatch();
@@ -115,6 +143,10 @@ const MusicModal = () => {
   console.log(userId, "유저아이디");
   const tracks = useAppSelector((state) => state.room.roomMusicList);
   const [musicList, setMusic] = useState();
+  const [object, setObject] = useState<any>();
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate();
+  const {ethereum} = window
   // 작품 조회
   // productcode === 1 : 음악코드
 
@@ -153,11 +185,70 @@ const MusicModal = () => {
       },
     }
   );
+  
+  const postgetBuy = useMutation<any, Error>(
+    "postPurchase",
+    async () => {
+      return await postPurchase(Number(object?.productId));
+    },
+    {
+      onSuccess: (res) => {
+        setIsLoading(false)
+        console.log("buy요청성공", res);
+      },
+      onError: (err: any) => {
+        setIsLoading(false)
+        console.log("buy요청 실패", err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
+      },
+    }
+  );
 
+  const onClickBuy = async (obj) => {
+    setObject(obj)
+    try {
+      const accounts = await ethereum.request({ method: "eth_accounts" })
+      if (!accounts) {
+        alert("지갑을 연결해주세요")
+        return
+      }
+      console.log(accounts[0])
+      setIsLoading(true)
+      // sale컨트랙트 주소 받아서 생성
+      const response = await SaleFactoryContract.methods
+      .getSaleContractAddress(obj.tokenId)
+      .call();
+      console.log(response)
+      const saleContract = await createSaleContract(response)
+      
+      // sale컨트랙트로 erc20토큰 전송권한 허용
+      await SSFTokenContract.methods
+      .approve(response, obj.productPrice)
+      .send({ from: accounts[0] });
+
+      //purchase 요청
+      const response2 = await saleContract.methods.purchase(obj.productPrice).send({ from: accounts[0] });
+      const winner = (response2.events.SaleEnded.returnValues.winner);
+      const amount = (response2.events.SaleEnded.returnValues.amount);
+      console.log("구매자", winner)
+      console.log("구매가격", amount);
+      postgetBuy.mutate()
+    } catch (error) {
+      console.log(error)
+      setIsLoading(false)
+      return
+    }
+  }
+
+ 
   console.log(musicList, "뮤직리스트");
 
   return (
     <Wrapper>
+      <CloseButton onClick={()=>{setOpen(true)}}/>
+
       <Head><div className="name">Tracks</div>
       
         <div className="subtitle">All Tracks</div>
@@ -172,15 +263,12 @@ const MusicModal = () => {
                   <div className="subTitle">{obj.productTitle}</div>
                   {/* <audio controls src={obj.productFileUrl}></audio> */}
                   {(obj.productState===1 || obj.productState===2 )&& (userId!==obj.productUserId)&& // 내가 이 작품의 주인이 아닐경우,
-                  <button className="buyBtn">구매하기</button>}
+                  <button className="buyBtn" onClick={() => onClickBuy(obj)}>구매하기</button>}
                 </MusicItem>
               );
             }
           })}
       </Body>
-      <Foot>
-        <button>리스트 변경</button>
-      </Foot>
     </Wrapper>
   );
 };

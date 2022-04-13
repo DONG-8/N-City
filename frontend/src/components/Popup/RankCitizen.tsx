@@ -81,7 +81,7 @@ const TitleCardDiv = styled.div`
     height: 160px;
     object-fit: fill;
     border-radius: 100%;
-    border: #c4c1c1   solid 0.3px;
+    /* border: #c4c1c1   solid 0.3px; */
   }
 
   #explain {

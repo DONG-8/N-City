@@ -7,29 +7,29 @@ import { useAppSelector, useAppDispatch } from '../hooks'
 import { closeWhiteboardDialog } from '../stores/WhiteboardStore'
 
 const Title = styled.div`
-  width: 10vw;
-  height: 8vh;
+  width: 500px;
+  height: 90px;
   margin: auto;
-  margin-right: 33vw;
-  font-size: 4rem;
-  color: white;
+  font-size: 60px;
+  color: #4f4f4f;
+  font-weight: 500;
 `
 
 const Backdrop = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 90%;
-  height: 90%;
+  width: 1100px;
+  height: 700px;
   overflow: hidden;
   padding: 16px 180px 16px 16px;
-  margin-left: 10vw;
-  margin-top: 5vh;
+  margin-left: 150px;
+  margin-top: 50px;
 `
 const Wrapper = styled.div`
-  width: 90%;
-  height: 90%;
-  background: #222639;
+  width: 1000px;
+  height: 600px;
+  background: #bfc9fa;
   border-radius: 16px;
   padding: 16px;
   color: #eee;
@@ -38,17 +38,21 @@ const Wrapper = styled.div`
   flex-direction: column;
 
   .close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
+    flex: 1;
+    margin: auto;
+  }
+  .x{
+    position: fixed;
+    top:70px;
+    left:1150px
   }
 `
 
 const WhiteboardWrapper = styled.div`
-  flex: 1;
+  flex: 9;
   border-radius: 5px;
   overflow: hidden;
-  margin-top: 10vh;
+  /* margin-top: 10vh; */
   iframe {
     width: 100%;
     height: 100%;
@@ -62,14 +66,16 @@ export default function WhiteboardDialog() {
   return (
     <Backdrop>
       <Wrapper>
-        <IconButton
+        <button
           aria-label="close dialog"
           className="close"
           onClick={() => dispatch(closeWhiteboardDialog())}
         > 
-        <Title>방명록</Title>
-          <CloseIcon />
-        </IconButton>
+        <Title>낙서장</Title>
+          <div className='x'>
+            <CloseIcon />
+          </div>
+        </button>
         {whiteboardUrl && (
           <WhiteboardWrapper>
             <iframe title="white board" src={whiteboardUrl} />

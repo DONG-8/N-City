@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQuery } from 'react-query';
 import { getUsercollectedInfo } from '../../store/apis/user';
+import { useNavigate } from 'react-router-dom';
 
 
 const Wrapper = styled.div`
@@ -65,13 +66,18 @@ const ImgBox = styled.div`
 
 const SelectImage:React.FC<Iprops> = ({userId,open,setOpen,setuserURL}) => {
   const handleClose = () => setOpen(false);
+  const navigate = useNavigate();
   const { isLoading:ILA, data:items } = useQuery<any>(
     "getUsercollectedInfo",
     async () => {return (await (getUsercollectedInfo(Number(userId))))
     },
     {
       onSuccess: (res) => {},
-      onError: (err: any) => {console.log(err, "요청 실패")}
+      onError: (err: any) => {
+        console.log(err, "요청 실패")
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }}
     }
   );
   console.log(items)

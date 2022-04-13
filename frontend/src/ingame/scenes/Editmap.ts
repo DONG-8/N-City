@@ -13,7 +13,7 @@ enum ItemCategory {
   WALL,
   CHAIR,
   GENERIC,
-  INTERACTION,
+  OFFICE,
   RUGS,
   STAIRS,
   TABLES,
@@ -91,6 +91,10 @@ class Editmap extends Phaser.Scene {
 
   create(data: { network: Network }) { // 백그라운드 시작
     this.cameras.main.zoom = 1
+    // this.cameras.main.x = -30
+    // this.cameras.main.y = -30
+    // this.cameras.main.centerOn(0, 0);
+    // this.cameras.main.setBounds(10, 10, 1100, 800)
 
     this.map = this.make.tilemap({ key: "tilemap" }); // 맵만들기 ⭐⭐⭐
     const FloorAndGround = this.map.addTilesetImage(
@@ -101,11 +105,12 @@ class Editmap extends Phaser.Scene {
     this.input.on('gameobjectdown', function(this:any, mousePointer, gameObjects) {
       if(this.isCreateMode == false) {
         gameObjects.destroy();
-        console.log(gameObjects)
+        console.log(gameObjects.x, gameObjects.y)
+        console.log(mousePointer)
         if (gameObjects.name === "10") {  // 작품일 경우 삭제 
           store.dispatch(LocationInfoChange({x:Number(gameObjects.texture.key), y:0, gid:Number(gameObjects.name)}));
         } else if (gameObjects.name === "2") {
-          store.dispatch(LocationInfoChange({x:gameObjects.x-16, y:gameObjects.y+32, gid:Number(gameObjects.name)}));
+          store.dispatch(LocationInfoChange({x:gameObjects.x+16, y:gameObjects.y+32, gid:Number(gameObjects.name)}));
         } else {
           store.dispatch(LocationInfoChange({x:gameObjects.x-16, y:gameObjects.y+16, gid:Number(gameObjects.name)}));
         }
@@ -126,7 +131,7 @@ class Editmap extends Phaser.Scene {
     // }, this)
 
     this.marker = this.add.graphics({ lineStyle: { width: 3, color: 0xffffff, alpha: 1 } });
-    this.marker.strokeRect(0, 0, 32, 32);
+    this.marker.strokeRect(0, 0, 32, 32).setDepth(1000)
     
     const groundLayer = this.map.createLayer("Ground", FloorAndGround);
     groundLayer.setCollisionByProperty({ collides: true });
@@ -181,18 +186,8 @@ class Editmap extends Phaser.Scene {
     const vendingMachines = this.physics.add.staticGroup({
       classType: VendingMachine,
     });
-    // const vendingMachineLayer = this.map.getObjectLayer("VendingMachine");
-    // vendingMachineLayer.objects.forEach((obj, i) => {
-    //   this.addObjectFromTiled(
-    //     vendingMachines,
-    //     obj,
-    //     "vendingmachines",
-    //     "vendingmachine"
-    //   ).setInteractive();
-    // });
     {this.myArtList.content.map((product, idx) => {
       if (product.productView) {
-        // this.add.image(product.productXCoordinate, productYCoordinate, `${this.itemGid}`).setDepth(this.marker.y+16).setInteractive()
         vendingMachines.get(product.productXCoordinate, product.productYCoordinate, String(product.productId), String(product.productId))
         .setDepth(10).setInteractive().setName("10")
       }
@@ -233,32 +228,31 @@ class Editmap extends Phaser.Scene {
       switch (this.selectedItemC) {
         case ItemCategory.GROUND:
           const tileInfo = this.map.getTileAt(pointTileX, pointTileY)
-          console.log(tileInfo.index) // 타일 (타일 모양) 
-          console.log(tileInfo.y*40 + tileInfo.x - 1) // 타일 위치 (인덱스)
           this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
-          console.log(this.marker.x, this.marker.y)
-          this.marker.x = tileInfo.y*40 + tileInfo.x - 1  // 타일 위치 (인덱스)
-          store.dispatch(LocationInfoChange({x:this.marker.x+1, y:0, gid:tileInfo.index}));
+          store.dispatch(LocationInfoChange({x:tileInfo.x, y:tileInfo.y, gid:tileInfo.index}));
           break
-        // case ItemCategory.STRUCTURE:
-          // this.map.putTileAtWorldXY(this.itemGid+1, mousePointer.x, mousePointer.y)
-          // if (this.itemHeight === 64) {
-          //   this.map.putTileAtWorldXY(this.itemGid+65, mousePointer.x, mousePointer.y+63)
-          // }
-          //   break
+        case ItemCategory.STRUCTURE:
+          const structureInfo = this.map.getTileAt(pointTileX, pointTileY)
+          this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
+          console.log(structureInfo)
+          store.dispatch(LocationInfoChange({x:structureInfo.x, y:structureInfo.y, gid:structureInfo.index}));
+          if (this.itemHeight === 64) {
+            this.map.putTileAtWorldXY(this.itemGid+64, this.marker.x, this.marker.y+63)
+            store.dispatch(LocationInfoChange({x:structureInfo.x, y:structureInfo.y+1, gid:structureInfo.index+64}));
+          }
+            break
         case ItemCategory.WALL:
-          // this.physics.add.staticSprite(this.marker.x+16, this.marker.y+16, 'tiles_wall', this.itemGid-1).setDepth(this.marker.y+16).setInteractive()
-          // this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
+          const wallInfo = this.map.getTileAt(pointTileX, pointTileY)
           this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
-          this.map.putTileAtWorldXY(this.itemGid+4, this.marker.x, this.marker.y+63)
-          this.map.putTileAtWorldXY(this.itemGid+4, this.marker.x, this.marker.y+95)
-          
-          this.map.putTileAtWorldXY(this.itemGid+4, this.marker.x, this.marker.y+127)
-          this.map.putTileAtWorldXY(this.itemGid+64, this.marker.x, this.marker.y+159)
-          // store.dispatch(LocationInfoChange({x:this.marker.x-32, y:this.marker.y+32, gid:this.itemGid}));
-          // store.dispatch(LocationInfoChange({x:this.marker.x+1, y:0, gid:this.itemGid}));
+          store.dispatch(LocationInfoChange({x:wallInfo.x, y:wallInfo.y, gid:wallInfo.index}));
+          for (var i = 63, j = 40; i < 160; i+= 32, j+= 40) {
+            this.map.putTileAtWorldXY(this.itemGid+4, this.marker.x, this.marker.y+i)
+            store.dispatch(LocationInfoChange({x:wallInfo.x+j, y:wallInfo.y, gid:wallInfo.index + 4}));
+          }
+          this.map.putTileAtWorldXY(this.itemGid+64, this.marker.x, this.marker.y+191)
+          store.dispatch(LocationInfoChange({x:wallInfo.x+200, y:wallInfo.y, gid:wallInfo.index + 64}));
           break
-        case ItemCategory.INTERACTION: 
+        case ItemCategory.OFFICE: 
           if(this.itemGid < 4685) {
             this.physics.add.staticSprite(this.marker.x+48, this.marker.y, 'computers', this.itemGid-4680).setDepth(this.marker.y).setInteractive()
             .setName("8")
@@ -280,9 +274,31 @@ class Editmap extends Phaser.Scene {
               this.add.image(this.marker.x+16+(i*32), this.marker.y+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(this.marker.y+16+(j*32)).setInteractive()
               .setName(this.selectedItemC === ItemCategory.GENERIC ? "6" : "5")
               store.dispatch(LocationInfoChange({x:this.marker.x+(i*32), y:this.marker.y+32+(j*32), gid:this.itemGid+(i+j*16)+3432}));
-          }
+            }
           }
           break
+        case ItemCategory.TABLES:
+          var w = this.itemWidth/ 32
+          var h = this.itemHeight / 32
+          for (let i = 0; i< w; i ++){
+            for (let j = 0; j< h; j ++){
+              this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(this.marker.y+16+(j*32)).setInteractive()
+              .setName("6")
+              store.dispatch(LocationInfoChange({x:this.marker.x+(i*32), y:this.marker.y+48+(j*32), gid:this.itemGid+(i+j*16)+3432}));
+            }
+          }
+          break
+          case ItemCategory.BASEMENT:
+            var w = this.itemWidth/ 32
+            var h = this.itemHeight / 32
+            for (let i = 0; i< w; i ++){
+              for (let j = 0; j< h; j ++){
+                this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'basement', this.itemGid+(i+j*16)).setDepth(this.marker.y+16+(j*32)).setInteractive()
+                .setName("9")
+                store.dispatch(LocationInfoChange({x:this.marker.x+(i*32), y:this.marker.y+32+(j*32), gid:this.itemGid+(i+j*16)+4688}));
+              }
+            }
+            break
         case ItemCategory.RUGS: case ItemCategory.STAIRS:
           var w = this.itemWidth/ 32
           var h = this.itemHeight / 32

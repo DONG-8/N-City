@@ -49,7 +49,7 @@ const InnerContent = styled.div`
   display: flex;
   margin: auto 20px;
   align-items: center;
-  img {
+  .mark {
     width: 20px;
     height: 20px;
     position:absolute;
@@ -92,11 +92,11 @@ const UserSearchResult:React.FC<IUser> = ({searchValue,item, onclose}) => {
   const getVerifiedMark = (userType: string) => {
     switch (userType) {
       case "ROLE_INFLUENCER":
-        return <img src={influencer} title='influencer' alt="mark" />;
+        return <img className="mark" src={influencer} title='influencer' alt="mark" />;
       case "ROLE_ARTIST":
-        return <img src={artist}  title='artist' alt="mark" />;
+        return <img className="mark" src={artist}  title='artist' alt="mark" />;
       case "ROLE_ENTERPRISE":
-        return <img src={enterprise} title='enterprise' alt="mark" />;
+        return <img className="mark" src={enterprise} title='enterprise' alt="mark" />;
       default:
         return;
     }
