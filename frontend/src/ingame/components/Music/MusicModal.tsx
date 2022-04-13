@@ -262,7 +262,7 @@ const MusicModal:React.FC<Iprops> = ({setOpen}) => {
                   <img src={obj.productThumbnailUrl} alt="사진없노~" />
                   <div className="subTitle">{obj.productTitle}</div>
                   {/* <audio controls src={obj.productFileUrl}></audio> */}
-                  {(obj.productState===1 || obj.productState===2 )&& (userId!==obj.productUserId)&& // 내가 이 작품의 주인이 아닐경우,
+                  {(obj.productState===1 || obj.productState===2 ) && (userId !== obj.userId)&& // 내가 이 작품의 주인이 아닐경우,
                   <button className="buyBtn" onClick={() => onClickBuy(obj)}>구매하기</button>}
                 </MusicItem>
               );

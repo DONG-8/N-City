@@ -13,7 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import influencer from "../../essets/images/influencer-mark.png"
 import artist from "../../essets/images/artist-mark.png"
 import enterprise from "../../essets/images/enterprise-mark.png"
-
+import 'moment/locale/ko';
 const CardWrapper = styled.div`
   font-family: 'Noto Sans KR', sans-serif;
   cursor: pointer;
@@ -132,11 +132,13 @@ interface Iprops {
     favorite: boolean;
     tokenId?: number;
     userRole: string;
+    productAuctionEndTime: string
   };
   handleOpen: (item) => void;
 }
 
 const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
+  const moment = require('moment')
   const navigate = useNavigate()
   const goDetailPage = (productId)=>{
     // sessionStorage.setItem("item",JSON.stringify(item))
@@ -257,9 +259,8 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
             {likes}
           </div>
           <div>
-            {item.productState === 1 && (
-              <SaleState>경매중 {item.productPrice}NCT</SaleState>
-            )}
+            {item.productState === 1 && item.productAuctionEndTime && (moment(item.productAuctionEndTime).isBefore(moment()) && <SaleState>경매종료</SaleState>)}
+            {item.productState === 1 && item.productAuctionEndTime && !moment(item.productAuctionEndTime).isBefore(moment()) &&<SaleState>경매중 {item.productPrice}NCT</SaleState>}
             {item.productState === 2 && (
               <SaleState>판매중 {item.productPrice}NCT</SaleState>
             )}

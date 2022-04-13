@@ -209,21 +209,28 @@ export const BottomItem = styled.div`
     margin-bottom: 5px;
     /* background-color: blue; */
     border-radius: 10px;
+    button {
+      width: 50px;
+      height: 50px;
     }
+    .bottomcontent {
+      display: flex;
+      justify-content: space-around;
+    }
+  }
 
-    div {
-      width: 200px;
-      p {
-        text-align: center;
-        font-size: 24px;
-        /* margin-top: 30px; */
-        margin: 0;
-      }
+  div {
+    width: 200px;
+    p {
+      text-align: center;
+      font-size: 24px;
+      /* margin-top: 30px; */
+      margin: 0;
     }
-    .playimg {
-      width: 25px;
-      height: 25px;
-    }
+  }
+  .playimg {
+    width: 25px;
+    height: 25px;
   }
 
   .hidden {
@@ -241,9 +248,9 @@ export const BottomItem = styled.div`
       transition: all 0.3s ease;
     } */
     .user {
-      width: 80%;
+      width: 50px;
+      height: 50px;
       text-align: center;
-      height: 80%;
       margin: 5%;
     }
   }

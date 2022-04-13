@@ -176,6 +176,7 @@ const UserBox = styled.div`
   .profile { 
     border-radius: 100%;
     height: 12vh;
+    width: 12vh;
     margin: 5vh;
     margin-bottom: 2vh;
   }

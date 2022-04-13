@@ -56,7 +56,7 @@ const ModalSection = styled.div<{ visible: boolean }>`
   font-family: "Noto Sans KR", sans-serif;
   width: 600px;
   height: 810px;
-  position: fixed;
+  position: absolute;
   display: flex;
   flex-direction: column;
   top: 500px;
