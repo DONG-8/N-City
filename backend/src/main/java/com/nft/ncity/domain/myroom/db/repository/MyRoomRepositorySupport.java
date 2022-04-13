@@ -26,8 +26,8 @@ public class MyRoomRepositorySupport {
     }
 
     public List<MyRoom> findTop5ByOrderByMyRoomTotalCntDesc() {
-        return jpaQueryFactory.select(qMyRoom)
-                .from(qMyRoom)
+        return jpaQueryFactory.selectFrom(qMyRoom)
+                .orderBy(qMyRoom.myRoomTotalCnt.desc())
                 .limit(5)
                 .fetch();
     }
