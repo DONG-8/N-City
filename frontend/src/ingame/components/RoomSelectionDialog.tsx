@@ -163,7 +163,7 @@ export default function RoomSelectionDialog() {
           ) : (
             // 방만들기x 방 보기x => 메인
             <>
-              <Title>N-CITY에 오신것을 환영합니다</Title>
+              <Title>N-City에 오신것을 환영합니다</Title>
               <Content>
                 <img src="/essets/login/logo.png" alt="logo" />
                 <Button

@@ -27,7 +27,7 @@ const GameLoading = () => {
   return (
     <Wrapper>
       <img alt='dk' src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/0dd7fe29134303.55e466b153cc4.gif'/>
-      <h1>N-city</h1>
+      <h1>N-City</h1>
     </Wrapper>
   )
 }
