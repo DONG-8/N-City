@@ -42,6 +42,7 @@ export const whiteboardSlice = createSlice({
         action.payload.whiteboardId,
         `https://www.tldraw.com/r/ncity-${action.payload.roomId}-${action.payload.whiteboardId}`
       )
+      console.log('화이트보드', action.payload.roomId, action.payload.whiteboardId)
     },
   },
 })

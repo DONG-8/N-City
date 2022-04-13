@@ -79,7 +79,7 @@ export const {
   setAvailableRooms,
   addAvailableRooms,
   removeAvailableRooms,
-  setMusicList
+  setMusicList,
 } = roomSlice.actions
 
 export default roomSlice.reducer

@@ -85,7 +85,6 @@ public class MyRoomServiceImpl implements MyRoomService{
     @Override
     public List<MyRoomTop5GetRes> getMyRoomRank() {
 
-//        return myRoomRepository.findTop5ByOrderByMyRoomTotalCntDesc();
         List<MyRoom> list = myRoomRepositorySupport.findTop5ByOrderByMyRoomTotalCntDesc();
         List<MyRoomTop5GetRes> myRoomTop5GetResList = new ArrayList<MyRoomTop5GetRes>();
         for(int i = 0; i < list.size(); i++) {

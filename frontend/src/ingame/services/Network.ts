@@ -8,6 +8,7 @@ import { phaserEvents, Event } from '../components/events/EventCenter'
 import store from '../stores'
 import { setSessionId, setPlayerNameMap, removePlayerNameMap } from '../stores/UserStore'
 
+
 import {
   setLobbyJoined,
   setJoinedRoomData,
@@ -22,10 +23,12 @@ import {
 } from '../stores/ChatStore'
 import { setWhiteboardUrls } from '../stores/WhiteboardStore'
 
+
 export default class Network {
   private client: Client
   private room?: Room<IOfficeState>
   private lobby!: Room
+  private roomId = '0'
   webRTC?: WebRTC
 
   mySessionId!: string
@@ -73,17 +76,10 @@ export default class Network {
     this.initialize()
   }
 
-  async joinOrCreate2(name:string, id:string) {
-    this.room = await this.client.joinOrCreate("custom", {
-      name: "name",
-      id: "name"
-    })
-    this.initialize()
-  }
-
   // ❗ 방 들어가기 
   async joinRoom(roomId: string) {
     this.room = await this.client.joinById(roomId)
+    this.roomId = roomId
     this.initialize()
   }
 
@@ -97,6 +93,7 @@ export default class Network {
       password,
       autoDispose,
     })
+    this.roomId = roomId
     this.initialize()
     console.log(this.room)
   }
@@ -139,7 +136,6 @@ export default class Network {
       this.webRTC?.deleteOnCalledVideoStream(key)
       store.dispatch(pushPlayerLeftMessage(player.name))
       store.dispatch(removePlayerNameMap(key))
-      // store.dispatch(removeJoinUser())
     }
 
     // 컴퓨터 사용 🎮
@@ -158,7 +154,7 @@ export default class Network {
       store.dispatch(
         setWhiteboardUrls({
           whiteboardId: key,
-          roomId: whiteboard.roomId,
+          roomId: this.roomId,
         })
       )
       // track changes on every child object's connectedUser
