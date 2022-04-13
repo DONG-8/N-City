@@ -52,8 +52,6 @@ export default class Game extends Phaser.Scene {
       store.dispatch(closeVendingMachineDialogOpen())
     })
     this.input.keyboard.on('keydown-CTRL', (event) => {
-      console.log('캐릭터 x 좌표 : ',this.myPlayer.x)
-      console.log('캐릭터 y 좌표 : ',this.myPlayer.y)
     })
   }
 
@@ -123,17 +121,14 @@ export default class Game extends Phaser.Scene {
         'whiteboards',
         'whiteboard'
       ) as Whiteboard
-      // console.log(item,'아이템 뽑아왔어요')
       const id = `${i}`
       item.id = id
-      // console.log(this.whiteboardMap, '화이트보트맵', id)
       this.whiteboardMap.set(id, item)
     })
 
     // import vending machine objects from Tiled map to Phaser
     const vendingMachines = this.physics.add.staticGroup({ classType: VendingMachine })
     // const vendingMachineLayer = this.map.getObjectLayer('VendingMachine')
-    // console.log(vendingMachineLayer)
     // vendingMachineLayer.objects.forEach((obj, i) => {
     //   this.addObjectFromTiled(vendingMachines, obj, 'vendingmachines', 'vendingmachine')
     // })

@@ -279,13 +279,11 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
     },
     {
       onSuccess: async (res) => {
-        console.log("구매등록성공", res);
         setIsLoading(false)
         window.location.reload();
       },
       onError: (err: any) => {
         setIsLoading(false)
-        console.log(err, "에러발생");
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -300,12 +298,10 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
     {
       onSuccess: async (res) => {
         setIsLoading(false)
-        console.log("경매등록성공", res);
         window.location.reload();
       },
       onError: (err: any) => {
         setIsLoading(false)
-        console.log(err, "에러발생");
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -341,13 +337,10 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
           NFTcreatorAddress
         )
         .send({ from: accounts[0] });
-      console.log(response);
-      console.log(item.productId, value)
       await resistSell.mutate();
     } catch (error) {
       setIsLoading(false)
       handleClose();
-      console.log(error);
     }
   };
 
@@ -383,11 +376,9 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
           NFTcreatorAddress
         )
         .send({ from: accounts[0] });
-      console.log(response);
       await resistAuction.mutate();
     } catch (error) {
       setIsLoading(false)
-      console.log(error);
       handleClose();
     }
   };
@@ -464,11 +455,10 @@ const SaleModal:React.FC<Iprops> = ({open,setOpen,item}) => {
                 <div className='price2'>
                 <p>시작가격: </p> <input onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
                     setValue(Number(e.target.value))
-                    console.log(value)
                   }}/><p> NCT</p>
                 </div>
                 <div className="price2"><p>경매기간 :{" "}</p><input onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setPeriod(Number(e.target.value)); console.log(period);}}/><p>일</p>
+                setPeriod(Number(e.target.value));}}/><p>일</p>
               </div>
               </div>
               

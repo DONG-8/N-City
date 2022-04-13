@@ -153,7 +153,6 @@ const Artists = () => {
     },
     {
       onSuccess: (res) => {
-        console.log(res);
         let tmp: IState["user"][] = [];
         res.map((data) => {
           tmp.push(data.user);
@@ -162,7 +161,6 @@ const Artists = () => {
         setUsers(tmp);
       },
       onError: (err: any) => {
-        console.log("❌유저 불러오기 실패!", err);
       },
     }
   );
@@ -200,12 +198,9 @@ const Artists = () => {
     }
   };
   useEffect(() => {
-    console.log("EFFECT");
     getFilter(filter);
   }, [filter]);
   useEffect(() => {
-    console.log("🚗🎶", allUsers);
-    console.log("👍", users);
     getArtist.mutate();
   }, []);
   return (

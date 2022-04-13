@@ -199,9 +199,9 @@ export default function Navbar() {
 
   window.onstorage = (event) => {
     if (event.key !== "userNickname") return;
-    console.log("스토리지변경감지");
+    
     const newNick = sessionStorage.getItem("userNickname");
-    console.log(newNick);
+    
     if (newNick) {
       setNickName(newNick);
       setIsLogin(true);
@@ -216,7 +216,7 @@ export default function Navbar() {
   }, [pathname]);
 
   useEffect(() => {
-    console.log(sessionStorage.getItem("userId"));
+    
     if (sessionStorage.getItem("userId")) {
       setIsLogin(true);
       setNickName(sessionStorage.getItem("userNickname"));
@@ -235,7 +235,7 @@ export default function Navbar() {
     setIsLogin(false);
     get_logout.mutate();
     navigate("/");
-    // window.location.reload();
+    
   };
 
   const get_logout = useMutation<any, Error>(
@@ -245,12 +245,12 @@ export default function Navbar() {
     },
     {
       onSuccess: (res) => {
-        console.log("로그아웃성공", res);
+
         sessionStorage.removeItem("userId");
         sessionStorage.removeItem("userNickname");
       },
       onError: (err) => {
-        console.log("로그아웃실패", err);
+        
         sessionStorage.removeItem("userId");
         sessionStorage.removeItem("userNickname");
       },

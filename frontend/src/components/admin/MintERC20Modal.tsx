@@ -182,7 +182,6 @@ const MintERC20Modal = ({
 
   const onClickMint = async () => {
     const response = await SSFTokenContract.methods.mint(amount).send({from: account})
-    console.log(response)
     setIsOpenProp(false)
     getBalance();
   }

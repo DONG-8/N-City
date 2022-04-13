@@ -93,7 +93,6 @@ const Visitbook: React.FC<IguestInfo> = ({ book }) => {
   const [inputValue, setInputValue] = useState(book.guestbookContents);
   const id = sessionStorage.getItem("userId") || "";
   const myid = Number(id);
-  console.log(myid, "내 아이디");
   const imageOnErrorHandler = (
     // 사진이 오류날 시 기본 사진
     event: React.SyntheticEvent<HTMLImageElement, Event>
@@ -140,12 +139,11 @@ const Visitbook: React.FC<IguestInfo> = ({ book }) => {
   };
 
   const deleteRequets = () => {
-    console.log("삭제실행");
+    
     DeleteApi.mutate();
   };
 
   const ChangeInputValue = (e) => {
-    // console.log(e.target.value);
     setInputValue(e.target.value);
   };
   // 로딩시 현재 접속한 userid를 불러온다.
@@ -157,8 +155,6 @@ const Visitbook: React.FC<IguestInfo> = ({ book }) => {
       setModifybtn(true);
     }
   }, []);
-  console.log(book);
-  console.log(writerInfo, "작성자 정보");
   return (
     <Wrapper>
       {/* 상단 */}

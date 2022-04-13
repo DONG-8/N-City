@@ -22,10 +22,6 @@ contract("Sale Contract Testing", (accounts) => {
         const seller = accounts[0];
         const bidder1 = accounts[1];
         const bidder2 = accounts[2];
-        console.log(`\n--------------------  ${title} --------------------`);
-        console.log(`Seller: ${seller} ${await getBalance(seller)}`);
-        console.log(`Bidder1: ${bidder1} ${await getBalance(bidder1)}`);
-        console.log(`Bidder2: ${bidder2} ${await getBalance(bidder2)}\n`);
     }
 
     /**

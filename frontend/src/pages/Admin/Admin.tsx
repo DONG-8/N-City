@@ -198,14 +198,12 @@ const Admin = () => {
   const getAccount = async () => {
     const accounts = await ethereum.request({ method: "eth_accounts" });
     setAccount(accounts[0])
-    console.log(accounts[0])
   }
 
   const getBalance = async () => {
     const response = await SSFTokenContract.methods.balanceOf(account).call();
     const response2 = await SSFTokenContract.methods.totalSupply().call();
     
-    console.log(response)
     setBalance(response)
     setTotal(response2)
   }
@@ -218,11 +216,9 @@ const Admin = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("디자이너 불러오기 성공!",res);
         setArtist(res.content);
       },
       onError: (err: any) => {
-        console.log("❌디자이너 불러오기 실패!",err);
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -236,11 +232,9 @@ const Admin = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("인플루언서 불러오기 성공!",res);
         setInfluencer(res.content);
       },
       onError: (err: any) => {
-        console.log("❌인플루언서 불러오기 실패!",err);
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -254,11 +248,9 @@ const Admin = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("기업 불러오기 성공!",res);
         setEnterprise(res.content);
       },
       onError: (err: any) => {
-        console.log("❌기업 불러오기 실패!",err);
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -273,11 +265,9 @@ const Admin = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("신규유저 불러오기 성공!",res);
         setNewUsers(res.content);
       },
       onError: (err: any) => {
-        console.log("❌신규유저 불러오기 실패!",err);
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -292,11 +282,9 @@ const Admin = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("토큰신청유저 불러오기 성공!",res);
         setTokenApplyUsers(res.content);
       },
       onError: (err: any) => {
-        console.log("❌토큰신청유저 불러오기 실패!",err);
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -311,10 +299,8 @@ const Admin = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("토큰전송 성공!",res);
       },
       onError: (err: any) => {
-        console.log("❌토큰전송 실패!",err);
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -398,10 +384,7 @@ const Admin = () => {
         .send({ from: account });
       await putSendToken.mutate();
       removeList(user)
-      console.log("토큰전송 성공")
     } catch (error) {
-      console.log(error)
-      console.log("토큰전송 실패")
     }
   }
 

@@ -177,11 +177,10 @@ const NFTStore = () => {
     "prouductAll",
     async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))},
     { onSuccess:(res)=>{
-      console.log(res)
       setAllitems(res.content)
       setShowItems(res.content)
     },
-      onError: (err: any) => {console.log(err, "상품정보 가져오기 오류")},
+      onError: (err: any) => {},
     });
   const getSale = useMutation<any,Error>(
     "getSellProduct",
@@ -193,7 +192,6 @@ const NFTStore = () => {
         setShowSales(res.content)
       },
       onError: (err: any) => {
-        console.log(err, "판매중 정보 실패");
       },
     }
   );
@@ -229,7 +227,6 @@ const NFTStore = () => {
   },[status])
 
   useEffect(()=>{
-    console.log('필터 함수!!!!!!!!')
     getFilter(filter)
   },[filter])
 

@@ -140,7 +140,6 @@ const MusicModal:React.FC<Iprops> = ({setOpen}) => {
   // 임시 userid params 의 데이터를 넘겨주는걸 생각해봐야할듯
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.edit.userId);
-  console.log(userId, "유저아이디");
   const tracks = useAppSelector((state) => state.room.roomMusicList);
   const [musicList, setMusic] = useState();
   const [object, setObject] = useState<any>();
@@ -164,7 +163,6 @@ const MusicModal:React.FC<Iprops> = ({setOpen}) => {
       onSuccess: (res) => {
         // 성공하면 db에 뮤직 string List를 만들어서 넘겨준다.
         let arr;
-        console.log(res, "앱창에서 불러온 정보");
         const MusicArray = res.content.map((obj, i) => {
           if (obj.productCode === 1) {
             return {
@@ -179,7 +177,6 @@ const MusicModal:React.FC<Iprops> = ({setOpen}) => {
           }
         });
         const result = MusicArray.filter((obj, i) => obj !== null);
-        console.log(result, "새 결과");
         dispatch(setMusicList(result));
         setMusic(result);
       },
@@ -194,11 +191,9 @@ const MusicModal:React.FC<Iprops> = ({setOpen}) => {
     {
       onSuccess: (res) => {
         setIsLoading(false)
-        console.log("buy요청성공", res);
       },
       onError: (err: any) => {
         setIsLoading(false)
-        console.log("buy요청 실패", err);
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -214,13 +209,11 @@ const MusicModal:React.FC<Iprops> = ({setOpen}) => {
         alert("지갑을 연결해주세요")
         return
       }
-      console.log(accounts[0])
       setIsLoading(true)
       // sale컨트랙트 주소 받아서 생성
       const response = await SaleFactoryContract.methods
       .getSaleContractAddress(obj.tokenId)
       .call();
-      console.log(response)
       const saleContract = await createSaleContract(response)
       
       // sale컨트랙트로 erc20토큰 전송권한 허용
@@ -232,18 +225,12 @@ const MusicModal:React.FC<Iprops> = ({setOpen}) => {
       const response2 = await saleContract.methods.purchase(obj.productPrice).send({ from: accounts[0] });
       const winner = (response2.events.SaleEnded.returnValues.winner);
       const amount = (response2.events.SaleEnded.returnValues.amount);
-      console.log("구매자", winner)
-      console.log("구매가격", amount);
       postgetBuy.mutate()
     } catch (error) {
-      console.log(error)
       setIsLoading(false)
       return
     }
   }
-
- 
-  console.log(musicList, "뮤직리스트");
 
   return (
     <Wrapper>

@@ -86,7 +86,7 @@ const CoinChargeModal:React.FC<Iprops> = ({open,setOpen}) => {
     },
     {
       onSuccess: (res) => {
-        console.log("토큰신청  성공!",res);
+        
         alert("성공적으로 신청되었습니다.")
         handleClose();
       },
@@ -94,7 +94,6 @@ const CoinChargeModal:React.FC<Iprops> = ({open,setOpen}) => {
         if (err.response.status === 401) { 
           navigate("/login")
         }
-        console.log("❌토큰신청 실패!",err);
       },
     }
   );

@@ -21,7 +21,6 @@ export const postLogin = async (userAddress : string)=> {
       "userAddress" : userAddress
     }
   ) 
-  console.log('로그인진행중')
   return response.data
 }
 
@@ -29,7 +28,6 @@ export const getLogout = async () => {
   const response = await apiClient.get<any>(
     '/users/logout',
   ) 
-  console.log('로그아웃진행중')
   return response.data
 }
 

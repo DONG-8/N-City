@@ -105,7 +105,6 @@ interface Iprops {
 
 const GameStartButton2: React.FC<Iprops> = ({ userNick,userId }) => {
   const navigate = useNavigate();
-  console.log(userId, "유저아이디확인");
   const gamestart = () => {    
     navigate("/ingame/" + userId);
     window.location.reload();

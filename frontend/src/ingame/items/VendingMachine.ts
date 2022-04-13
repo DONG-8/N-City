@@ -17,7 +17,5 @@ export default class VendingMachine extends Item {
   openDialog(productId){
     store.dispatch(setProductNum(productId))
     store.dispatch(openVendingMachineDialog(Number(productId)))
-    // sessionStorage.setItem('productId',productId)
-    console.log('productId',productId)
   }
 }

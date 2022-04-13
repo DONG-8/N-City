@@ -327,7 +327,6 @@ export default function Mypage() {
 
   const handleOpen = (item) => {
     setItem(item)
-    console.log(item)
     setOpen(true);
   }
 
@@ -344,12 +343,9 @@ export default function Mypage() {
     },
     {
       onSuccess: async (res) => {
-        console.log("내정보를 받아왔습니다.");
         await setUserInfo(res);
-        console.log(userInfo);
       },
       onError: (err: any) => {
-        console.log(err, "에러발생");
       },
     }
   );
@@ -362,9 +358,7 @@ export default function Mypage() {
     {
       onSuccess: async (res) => {
         await setFollowers(res)
-        console.log("팔로워들", res);
         const userIds = res.map((user) => user.userId);
-        console.log(userIds);
         if (userIds.includes(Number(sessionStorage.getItem("userId")))) {
           setFollowBtnState(false);
         } else {
@@ -372,7 +366,6 @@ export default function Mypage() {
         }
       },
       onError: (err: any) => {
-        console.log("에러발생", err);
       },
     }
   );
@@ -384,11 +377,9 @@ export default function Mypage() {
     },
     {
       onSuccess: async (res) => {
-        console.log("팔로우들", res);
         await setFollowees(res)
       },
       onError: (err: any) => {
-        console.log("에러발생", err);
       },
     }
   )
@@ -400,12 +391,10 @@ export default function Mypage() {
     },
     {
       onSuccess: async (res) => {
-        console.log("팔로우요청 성공", res);
         await getMyInfo.mutate();
         getUserFollower.mutate()
       },
       onError: (err: any) => {
-        console.log("에러발생", err);
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -420,12 +409,10 @@ export default function Mypage() {
     },
     {
       onSuccess: async (res) => {
-        console.log("언팔로우요청 성공", res);
         await getMyInfo.mutate();
         getUserFollower.mutate()
       },
       onError: (err: any) => {
-        console.log("에러발생", err);
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -447,12 +434,10 @@ export default function Mypage() {
     },
     {
       onSuccess: async (res) => {
-        console.log("내가가진 NFT들", res);
         setMyTokens(res.content.reverse())
         setIsLoading(false)
       },
       onError: (err: any) => {
-        console.log(err, "에러발생");
         setIsLoading(false)
       },
     }
@@ -466,13 +451,11 @@ export default function Mypage() {
     },
     {
       onSuccess: async (res) => {
-        console.log("내가민팅한 NFT들", res);
         setMyMint(res.content.reverse())
         setIsLoading(false)
 
       },
       onError: (err: any) => {
-        console.log(err, "에러발생");
         setIsLoading(false)
 
       },
@@ -487,13 +470,11 @@ export default function Mypage() {
     },
     {
       onSuccess: async (res) => {
-        console.log("내가좋아요한 NFT들", res);
         setMyLikes(res.content.reverse())
         setIsLoading(false)
 
       },
       onError: (err: any) => {
-        console.log(err, "에러발생");
         setIsLoading(false)
 
       },
@@ -508,13 +489,11 @@ export default function Mypage() {
     },
     {
       onSuccess: async (res) => {
-        console.log("나의 활동내역", res);
         setMyHistory(res.content)
         setIsLoading(false)
 
       },
       onError: (err: any) => {
-        console.log(err, "에러발생");
         setIsLoading(false)
 
       },

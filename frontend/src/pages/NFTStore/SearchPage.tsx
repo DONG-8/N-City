@@ -95,11 +95,9 @@ const SearchPage = () => {
           (itm:ItemType['item'])=>{
             if((itm.productTitle).includes(String(data)))
              {tmp.push(itm)} })
-        console.log(tmp)
         setItems(tmp)
       },
       onError: (err: any) => {
-        console.log(err, "요청 실패");
       },
     }
   );
@@ -116,11 +114,9 @@ const SearchPage = () => {
           (itm:ItemType['item'])=>{
             if((itm.productTitle).includes(String(data)))
              {tmp.push(itm)} })
-        console.log(tmp)
         setItems(tmp as any[])
       },
       onError: (err: any) => {
-        console.log(err, "요청 실패");
       },
     }
   );
@@ -130,8 +126,6 @@ const SearchPage = () => {
   //   "getSearchUserNick",
   //   async () => {return (await getSearchUserNick(data as string))
   //     },
-  //     {onSuccess:(res)=>{console.log(res)},
-  //     onError:(err)=>{console.log(err)}
   //     }
   // );
 
@@ -142,17 +136,13 @@ const SearchPage = () => {
     },
     {
       onSuccess: (res) => {
-        // console.log("요청성공",res);
         setUsers(res);
       },
       onError: (err) => {
-        console.log(err);
       },
     }
   );
 
-  console.log('❤',users)
-  console.log('❤',items)
 
   useEffect(() => {
     reloadProduct.mutate();

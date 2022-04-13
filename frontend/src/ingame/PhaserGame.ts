@@ -37,7 +37,6 @@ export default phaserGame
 
 
 // function returnConfig() {
-//   console.log(setting,'페이저게임에서의 세팅 값')
 //   if (setting === false) {
 //     const config: Phaser.Types.Core.GameConfig = { //건드릴거없을듯 ?
 //       type: Phaser.AUTO,
@@ -59,7 +58,6 @@ export default phaserGame
 //       autoFocus: true,
 //       scene: [Bootstrap,Background,Game] //scene 추가 
 //     } 
-//     console.log(config,'그냥맵')
 //     return (config)
 //   } else {
 //     const config: Phaser.Types.Core.GameConfig = { //건드릴거없을듯 ?
@@ -82,8 +80,6 @@ export default phaserGame
 //       autoFocus: true,
 //       scene: Editmap //scene 추가 
 //     } 
-//     console.log(config,'에딧맵')
-
 //     return (config)
 //   }
 // }

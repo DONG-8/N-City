@@ -45,4 +45,4 @@ gameServer.define(RoomType.CUSTOM, NCity ).enableRealtimeListing()
 app.use('/colyseus', monitor())
 
 gameServer.listen(port)
-console.log(`Listening on ws://localhost:${port}`)
+
