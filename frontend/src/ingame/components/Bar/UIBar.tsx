@@ -9,6 +9,7 @@ import {
   Absol,
   BottomItem,
   NonMusicDiv,
+  BottomWrap,
 } from "./style";
 
 import { useMutation, useQuery } from "react-query";
@@ -28,10 +29,14 @@ import { EditModeChange, MakingModeChange } from "../../stores/EditStore";
 import { postRandomJoin } from "../../../store/apis/myRoom";
 import SearchModal from "../seatchbar/SearchModal";
 import { Button } from "@mui/material";
-import { deleteFollow, getFollowee, postFollow } from "../../../store/apis/follow";
-import influencer from "../../../essets/images/influencer-mark.png"
-import artist from "../../../essets/images/artist-mark.png"
-import enterprise from "../../../essets/images/enterprise-mark.png"
+import {
+  deleteFollow,
+  getFollowee,
+  postFollow,
+} from "../../../store/apis/follow";
+import influencer from "../../../essets/images/influencer-mark.png";
+import artist from "../../../essets/images/artist-mark.png";
+import enterprise from "../../../essets/images/enterprise-mark.png";
 
 interface Iprops {
   today: Number;
@@ -52,7 +57,7 @@ interface IUserInfo {
   followeeCnt: number;
 }
 
-const UIBar:React.FC<Iprops> = ({today, total}) => {
+const UIBar: React.FC<Iprops> = ({ today, total }) => {
   const [musicList, setMusic] = useState();
   const dispatch = useAppDispatch();
   const [tog, setTog] = useState(true);
@@ -90,7 +95,7 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
     }
   );
 
-    const getMyInfo = useMutation<any, Error>(
+  const getMyInfo = useMutation<any, Error>(
     "getUserInfo",
     async () => {
       if (userId) {
@@ -118,7 +123,7 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
       return await getFollowee(Number(userId));
     },
     {
-      onSuccess:  (res) => {
+      onSuccess: (res) => {
         console.log("팔로워들", res);
         const userIds = res.map((user) => user.userId);
         console.log(userIds);
@@ -147,12 +152,12 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
       },
       onError: (err: any) => {
         console.log("에러발생", err);
-        if (err.response.status === 401) { 
-          navigate("/login")
+        if (err.response.status === 401) {
+          navigate("/login");
         }
       },
     }
-  )
+  );
 
   const unFollow = useMutation<any, Error>(
     "unFollow",
@@ -167,17 +172,17 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
       },
       onError: (err: any) => {
         console.log("에러발생", err);
-        if (err.response.status === 401) { 
-          navigate("/login")
+        if (err.response.status === 401) {
+          navigate("/login");
         }
       },
     }
-  )
+  );
 
   const onClickFollow = async () => {
-    followBtnState? follow.mutate() : unFollow.mutate()
-    setFollowBtnState(!followBtnState)
-  }
+    followBtnState ? follow.mutate() : unFollow.mutate();
+    setFollowBtnState(!followBtnState);
+  };
 
   const {
     data: Alldata,
@@ -231,18 +236,32 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
   // get 해당 유저의 id , 데이터 변경 , post 요청 입장, route 주소 변경
   // Ramdom 로직 확인 후 분할 혹은 병합
 
-  const getVerifiedMark = (userType: string|undefined) => {
+  const getVerifiedMark = (userType: string | undefined) => {
     switch (userType) {
       case "ROLE_INFLUENCER":
-        return <img className="mark" src={influencer} title='influencer' alt="mark" />;
+        return (
+          <img
+            className="mark"
+            src={influencer}
+            title="influencer"
+            alt="mark"
+          />
+        );
       case "ROLE_ARTIST":
-        return <img className="mark" src={artist}  title='artist' alt="mark" />;
+        return <img className="mark" src={artist} title="artist" alt="mark" />;
       case "ROLE_ENTERPRISE":
-        return <img className="mark" src={enterprise} title='enterprise' alt="mark" />;
+        return (
+          <img
+            className="mark"
+            src={enterprise}
+            title="enterprise"
+            alt="mark"
+          />
+        );
       default:
         return;
     }
-  }
+  };
 
   const toggle = () => {
     setTog(!tog);
@@ -252,7 +271,7 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
     // return <Navigate to="/" />;
     navigate("/");
     (window as any).game.destroy(true);
-    window.location.reload()
+    window.location.reload();
   };
 
   const ClickModeChange = () => {
@@ -261,16 +280,16 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
   };
 
   const onClickMyRoom = () => {
-    navigate(`/ingame/${sessionStorage.getItem("userId")}`)
-    window.location.reload()
-  }
+    navigate(`/ingame/${sessionStorage.getItem("userId")}`);
+    window.location.reload();
+  };
 
   const openMusic = () => {
     setMusicTog(!musicTog);
     setShopTog(true);
     setVisitTog(true);
     setUserTog(true);
-    setSearchTog(true)
+    setSearchTog(true);
   };
 
   const openShop = () => {
@@ -278,7 +297,7 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
     setShopTog(!shopTog);
     setVisitTog(true);
     setUserTog(true);
-    setSearchTog(true)
+    setSearchTog(true);
   };
 
   const openVisit = () => {
@@ -286,7 +305,7 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
     setShopTog(true);
     setVisitTog(!visitTog);
     setUserTog(true);
-    setSearchTog(true)
+    setSearchTog(true);
   };
 
   const openUser = () => {
@@ -294,7 +313,7 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
     setShopTog(true);
     setVisitTog(true);
     setUserTog(!userTog);
-    setSearchTog(true)
+    setSearchTog(true);
   };
 
   const openSearch = () => {
@@ -302,13 +321,13 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
     setShopTog(true);
     setVisitTog(true);
     setUserTog(true);
-    setSearchTog(!searchTog)
-  }
+    setSearchTog(!searchTog);
+  };
 
   useEffect(() => {
-    getUserFollower.mutate()
-    getMyInfo.mutate()
-  }, [])
+    getUserFollower.mutate();
+    getMyInfo.mutate();
+  }, []);
 
   return (
     <Wrapper>
@@ -322,41 +341,43 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
           ></img>
         </ToggleBtn>
         {userInfo ? (
-          <>
+          <div className="head">
             {userInfo.userImgUrl ? (
               <img className="onHiddenImg" src={userInfo.userImgUrl} alt="" />
             ) : (
               <img src="/essets/room/none.png" alt="" />
             )}
             <div className={tog ? "hidden" : "profileBox"}>
-              <div className="top">
-                <div className="nick">
-                  {userInfo.userNick}
-                  <span>{getVerifiedMark(userInfo.userRole)}</span>
+              <div className="content">
+                <div className="top">
+                  <div className="nick">
+                    {userInfo.userNick}
+                    <span>{getVerifiedMark(userInfo.userRole)}</span>
+                  </div>
                 </div>
-              </div>
-              <div className="bottom">
-                <div>
-                  <div>TOTAL : {total}</div>
-                  <div>TODAY : {today}</div>
-                  {/* <div>팔로워 : {userInfo?.followerCnt}</div>
+                <div className="bottom">
+                  <div>
+                    <div>TOTAL : {total}</div>
+                    <div>TODAY : {today}</div>
+                    {/* <div>팔로워 : {userInfo?.followerCnt}</div>
                   <div>팔로잉 : {userInfo?.followeeCnt}</div> */}
-                </div>
-                <div>
-                  {userInfo.userId !==
-                    Number(sessionStorage.getItem("userId")) && (
-                    <Button
-                      className="profilesetting"
-                      variant="contained"
-                      onClick={onClickFollow}
-                    >
-                      {followBtnState ? "Follow" : "Unfollow"}
-                    </Button>
-                  )}
+                  </div>
+                  <div>
+                    {userInfo.userId !==
+                      Number(sessionStorage.getItem("userId")) && (
+                      <Button
+                        className="profilesetting"
+                        variant="contained"
+                        onClick={onClickFollow}
+                      >
+                        {followBtnState ? "Follow" : "Unfollow"}
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </>
+          </div>
         ) : (
           <>로딩중..</>
         )}
@@ -438,23 +459,27 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
             </div>
           ) : null}
           <div className="Icon" onClick={() => gotoHome()}>
-            
             <img className="Mimg" src="/essets/room/move.png" alt="사진없노" />
             <div className={tog ? "hidden" : "content"}>
               <p>Home</p>
             </div>
           </div>
         </Body>
+
         <BottomItem className={tog ? "close" : "open"}>
-          <div className="Bottom">
+          <BottomWrap>
             {userInfo?.userId !== Number(sessionStorage.getItem("userId")) && (
               <Tooltip title="My Room">
-                <button onClick={onClickMyRoom}>
-                <img src="/essets/room/home.png" alt="사진없노" />
-                </button>
+                <img
+                  onClick={onClickMyRoom}
+                  src="/essets/room/home.png"
+                  alt="사진없노"
+                  style={{ margin: "auto" }}
+                />
               </Tooltip>
             )}
-            <div className={tog ? "hidden" : "bottomcontent"}>
+
+            <div className={tog ? "hidden" : "content"}>
               <Tooltip title="Random User">
                 <button onClick={() => goRandom.mutate()}>
                   <img className="user" src="/essets/room/random.png" alt="" />
@@ -466,7 +491,7 @@ const UIBar:React.FC<Iprops> = ({today, total}) => {
                 </button>
               </Tooltip>
             </div>
-          </div>
+          </BottomWrap>
         </BottomItem>
       </BodyWrapper>
     </Wrapper>
