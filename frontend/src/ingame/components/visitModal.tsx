@@ -119,7 +119,7 @@ const VisitModal = () => {
   const postBook = useMutation<any, Error>(
     "postBookinput",
     async () => {
-      return await postGuestBook(inputValue, myid, ownerId);
+      return await postGuestBook(inputValue, ownerId, myid);
     },
     {
       onSuccess: (res) => {
