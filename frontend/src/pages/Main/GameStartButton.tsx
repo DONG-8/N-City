@@ -83,7 +83,7 @@ const GameStartButton3 = () => {
   return (
     <Wrapper>
       <a className="cta" href={"/ingame/" + sessionStorage.getItem("userId")}>
-        <span className="name">내 방으로</span>
+        <span className="name">My Room</span>
         <span>
           <svg
             width="36px"
