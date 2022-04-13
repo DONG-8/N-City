@@ -155,9 +155,7 @@ const GameDetailItem: React.FC<Iprops> = ({ setMode }) => {
       return await postProductLike(Number(item.productId));
     },
     {
-      onSuccess: (res) => console.log(res),
       onError: (err: any) => {
-        console.log(err);
         if (err.response.status === 401) {
           navigate("/login");
         }
@@ -170,9 +168,7 @@ const GameDetailItem: React.FC<Iprops> = ({ setMode }) => {
       return await delProductLike(Number(item.productId));
     },
     {
-      onSuccess: (res) => console.log(res),
       onError: (err: any) => {
-        console.log(err);
         if (err.response.status === 401) {
           navigate("/login");
         }

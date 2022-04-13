@@ -299,7 +299,6 @@ const VendingMachineDialog = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("좋아요여부 받아오기 성공", res);
         setLiked(res);
       },
     }
@@ -312,13 +311,11 @@ const VendingMachineDialog = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("상품상세받아오기성공", res);
         setItem(res);
         setLikes(res.favoriteCount);
         setIsloading(false)
       },
       onError: (err: any) => {
-        console.log(err, "❌디테일 페이지 실패!");
       },
     }
   );
@@ -330,11 +327,9 @@ const VendingMachineDialog = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("좋아요 성공", res);
         setLiked(true);
       },
       onError: (err:any) => {
-        console.log("좋아요 실패", err);
         if (err.response.status === 401) {
           navigate("/login");
         }
@@ -349,11 +344,9 @@ const VendingMachineDialog = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("좋아요 취소 성공", res);
         setLiked(false);
       },
       onError: (err:any) => {
-        console.log("좋아요 취소 실패", err);
         if (err.response.status === 401) {
           navigate("/login");
         }
@@ -368,10 +361,9 @@ const VendingMachineDialog = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("팔로우 성공", res);
         setFollowBtnState(false);
       },
-      onError: (err:any) => {console.log("팔로우 실패", err)
+      onError: (err:any) => {
       if (err.response.status === 401) {
         navigate("/login");
       }
@@ -386,11 +378,9 @@ const VendingMachineDialog = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("언팔로우 성공", res);
         setFollowBtnState(true);
       },
       onError: (err: any) => {
-        console.log("언팔로우 실패", err);
         if (err.response.status === 401) {
           navigate("/login");
         }
@@ -407,9 +397,7 @@ const VendingMachineDialog = () => {
     {
       onSuccess: async (res) => {
         // await setFollowers(res)
-        console.log("팔로워들", res);
         const userIds = res.map((user) => user.userId);
-        console.log(userIds);
         if (userIds.includes(Number(sessionStorage.getItem("userId")))) {
           setFollowBtnState(false);
         } else {
@@ -417,7 +405,6 @@ const VendingMachineDialog = () => {
         }
       },
       onError: (err: any) => {
-        console.log("에러발생", err);
       },
     }
   );
@@ -456,9 +443,8 @@ const VendingMachineDialog = () => {
   const isImage = () => {
     const URL = item.productFileUrl.split(".")
     const temp = URL[URL.length - 1]
-    // console.log(temp)
+    
     const imgArr = ["jpg","JPG", "jpeg", "JPEG", "png", "PNG", "gif", "GIF", "bmp", "BMP", "tif", "TIF", "tiff", "TIFF"]
-    // console.log(imgArr.includes(temp))
     if (imgArr.includes(temp)) {
       setIsImg(true)
     } else {

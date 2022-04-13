@@ -87,8 +87,6 @@ const UIBar: React.FC<Iprops> = ({ today, total }) => {
     },
     {
       onSuccess: (res) => {
-        console.log(res, "랜덤입장~");
-        console.log(res.userId, "유저아이디");
         navigate(`/ingame/${res.userId}`);
         window.location.reload();
       },
@@ -107,12 +105,9 @@ const UIBar: React.FC<Iprops> = ({ today, total }) => {
     },
     {
       onSuccess: async (res) => {
-        console.log("내정보를 받아왔습니다.");
         await setUserInfo(res);
-        console.log(userInfo);
       },
       onError: (err: any) => {
-        console.log(err, "에러발생");
       },
     }
   );
@@ -124,9 +119,7 @@ const UIBar: React.FC<Iprops> = ({ today, total }) => {
     },
     {
       onSuccess: (res) => {
-        console.log("팔로워들", res);
         const userIds = res.map((user) => user.userId);
-        console.log(userIds);
         if (userIds.includes(Number(sessionStorage.getItem("userId")))) {
           setFollowBtnState(false);
         } else {
@@ -134,7 +127,6 @@ const UIBar: React.FC<Iprops> = ({ today, total }) => {
         }
       },
       onError: (err: any) => {
-        console.log("에러발생", err);
       },
     }
   );
@@ -146,12 +138,10 @@ const UIBar: React.FC<Iprops> = ({ today, total }) => {
     },
     {
       onSuccess: async (res) => {
-        console.log("팔로우요청 성공", res);
         await getMyInfo.mutate();
         // getUserFollower.mutate()
       },
       onError: (err: any) => {
-        console.log("에러발생", err);
         if (err.response.status === 401) {
           navigate("/login");
         }
@@ -166,12 +156,10 @@ const UIBar: React.FC<Iprops> = ({ today, total }) => {
     },
     {
       onSuccess: async (res) => {
-        console.log("언팔로우요청 성공", res);
         await getMyInfo.mutate();
         // getUserFollower.mutate()
       },
       onError: (err: any) => {
-        console.log("에러발생", err);
         if (err.response.status === 401) {
           navigate("/login");
         }
@@ -198,13 +186,10 @@ const UIBar: React.FC<Iprops> = ({ today, total }) => {
       onSuccess: (res) => {
         // 성공하면 db에 뮤직 string List를 만들어서 넘겨준다.
         let arr;
-        console.log(res, "앱창에서 불러온 정보");
-        console.log(res.content, "콘텐츠"); // []
         if (res.content.length !== 0) {
           const music = res.content.filter((obj, i) => {
             return obj.productCode === 1;
           });
-          console.log(music, "음악 정보만 받아옴");
           let MusicArray;
           if (music.length !== 0) {
             MusicArray = music.map((obj, i) => {
@@ -217,8 +202,6 @@ const UIBar: React.FC<Iprops> = ({ today, total }) => {
               };
             });
           }
-
-          console.log(MusicArray, "뮤직어레이");
           dispatch(setMusicList(MusicArray));
           setMusic(MusicArray);
         }
@@ -276,7 +259,6 @@ const UIBar: React.FC<Iprops> = ({ today, total }) => {
 
   const ClickModeChange = () => {
     dispatch(EditModeChange());
-    console.log("변경중");
   };
 
   const onClickMyRoom = () => {

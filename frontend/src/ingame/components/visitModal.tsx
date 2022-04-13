@@ -149,7 +149,6 @@ const VisitModal:React.FC<Iprops> = ({setOpen}) => {
     },
     {
       onSuccess: (res) => {
-        console.log(res, "작성하기 성공");
         client.invalidateQueries("guestbook");
       },
     }
@@ -166,7 +165,6 @@ const VisitModal:React.FC<Iprops> = ({setOpen}) => {
     },
     {
       onSuccess: (res) => {
-        console.log(res.totalPages);
       },
     }
   );
@@ -176,25 +174,21 @@ const VisitModal:React.FC<Iprops> = ({setOpen}) => {
 
   // 입력 변경
   const ChangeInputValue = (e) => {
-    // console.log(e.target.value);
     setInputValue(e.target.value);
   };
 
   const InputBook = () => {
     setInputValue("");
-    console.log(inputRef.current, "레프");
     postBook.mutate();
   };
 
   useEffect(() => {
-    console.log(pagenumber, "페이지변경");
     action();
     scrollTop();
   }, [pagenumber]);
 
   useEffect(() => {
     // 컴포넌트 생성 시 방의 정보를 불러온다
-    console.log(pageArr);
     RoomInfo();
   }, []);
 

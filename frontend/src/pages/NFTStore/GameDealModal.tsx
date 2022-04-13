@@ -226,7 +226,7 @@ const GameDealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPriceValue(e.target.value);
-    console.log(priceValue)
+    
   }; // 인풋창 수정
 
 
@@ -238,7 +238,7 @@ const GameDealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
     },
     {
       onSuccess: (res) => {
-        console.log("bid요청성공", res);
+        
         setAfterBuy(true);
         setPrice(Number(priceValue));
         setPriceValue("")
@@ -247,7 +247,7 @@ const GameDealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
       },
       onError: (err: any) => {
         setIsLoading(false)
-        console.log(err, "경매 오류");
+        
       },
     }
   );
@@ -261,12 +261,12 @@ const GameDealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
       onSuccess: (res) => {
         setAfterBuy(true) // 나중에 위에서 처리 예정
         setIsLoading(false)
-        console.log("buy요청성공", res);
+        
         window.location.reload()
       },
       onError: (err: any) => {
         setIsLoading(false)
-        console.log("buy요청 실패", err);
+      
       },
     }
   );
@@ -306,31 +306,28 @@ const GameDealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
       const response2 = await saleContract.methods.bid(Number(priceValue)).send({ from: accounts[0] });
       const bidder = (response2.events.HighestBidIncereased.returnValues.bidder);
       const amount = (response2.events.HighestBidIncereased.returnValues.amount);
-      console.log("bidder", bidder)
-      console.log("bid가격", amount);
       postgetBid.mutate()
     } catch (error) {
-      console.log(error)
       setIsLoading(false)
       return
     }
   }
   const getBuy = async () => {
-    console.log(price)
+    
     try {
       const accounts = await ethereum.request({ method: "eth_accounts" })
       if (!accounts) {
         alert("지갑을 연결해주세요")
         return
       }
-      console.log(accounts[0])
-      console.log(localitem)
+      
+     
       setIsLoading(true)
       // sale컨트랙트 주소 받아서 생성
       const response = await SaleFactoryContract.methods
       .getSaleContractAddress(localitem.tokenId)
       .call();
-      console.log(response)
+      
       const saleContract = await createSaleContract(response)
       
       // sale컨트랙트로 erc20토큰 전송권한 허용
@@ -342,11 +339,9 @@ const GameDealModal:React.FC<Iprops> = ({item,open,setOpen,status}) => {
       const response2 = await saleContract.methods.purchase(price).send({ from: accounts[0] });
       const winner = (response2.events.SaleEnded.returnValues.winner);
       const amount = (response2.events.SaleEnded.returnValues.amount);
-      console.log("구매자", winner)
-      console.log("구매가격", amount);
       postgetBuy.mutate()
     } catch (error) {
-      console.log(error)
+      
       setIsLoading(false)
       return
     }

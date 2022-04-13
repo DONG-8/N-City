@@ -481,6 +481,7 @@
                "id":4,
                "name":"Chair",
                "objects":[
+                    
                       {
                        "gid":2580,
                        "height":64,

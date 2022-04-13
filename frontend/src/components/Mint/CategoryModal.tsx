@@ -200,11 +200,7 @@ const CategoryModal = ({
   ]);
 
   const onClickSelect = (category: { name: string; selected: boolean }) => {
-    // const newSelected = [...selectedCategories]
-    // const temp = ((e.target as HTMLButtonElement).innerHTML)
-    // const el = ((e.target as HTMLButtonElement).className)
-
-    console.log(category);
+    
     setSelectedCategories(
       selectedCategories.map((item) =>
         item.name === category.name
@@ -212,11 +208,7 @@ const CategoryModal = ({
           : { ...item, selected: false }
       )
     );
-    console.log(selectedCategories);
-
-    // newSelected.push(temp)
-    // setSelectedCategories(newSelected)
-    // console.log(selectedCategories)
+    
   };
   // submit
   const onClickAdd = (e: React.MouseEvent) => {

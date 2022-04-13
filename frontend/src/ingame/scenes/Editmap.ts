@@ -6,7 +6,6 @@ import Computer from "../items/Computer";
 import Whiteboard from "../items/Whiteboard";
 import VendingMachine from "../items/VendingMachine";
 import { LocationInfoChange } from "../stores/EditStore";
-import Item from 'antd/lib/list/Item';
 
 enum ItemCategory {
   GROUND,
@@ -105,8 +104,6 @@ class Editmap extends Phaser.Scene {
     this.input.on('gameobjectdown', function(this:any, mousePointer, gameObjects) {
       if(this.isCreateMode == false) {
         gameObjects.destroy();
-        console.log(gameObjects.x, gameObjects.y)
-        console.log(mousePointer)
         if (gameObjects.name === "10") {  // 작품일 경우 삭제 
           store.dispatch(LocationInfoChange({x:Number(gameObjects.texture.key), y:0, gid:Number(gameObjects.name)}));
         } else if (gameObjects.name === "2") {
@@ -126,7 +123,6 @@ class Editmap extends Phaser.Scene {
     // let cursor = this.add.image(0, 0, 'chairs', this.itemGid-2561).setVisible(false)
     // cursor = this.add.image(0, 0, 'chairs', this.itemGid-2560).setVisible(false)
     // this.input.on('pointermove', function (mousePointer){
-    //   console.log(mousePointer.x, mousePointer.y)
     //   cursor.setVisible(true).setPosition(mousePointer.x, mousePointer.y).setDepth(100000)
     // }, this)
 
@@ -234,7 +230,6 @@ class Editmap extends Phaser.Scene {
         case ItemCategory.STRUCTURE:
           const structureInfo = this.map.getTileAt(pointTileX, pointTileY)
           this.map.putTileAtWorldXY(this.itemGid, this.marker.x, this.marker.y)
-          console.log(structureInfo)
           store.dispatch(LocationInfoChange({x:structureInfo.x, y:structureInfo.y, gid:structureInfo.index}));
           if (this.itemHeight === 64) {
             this.map.putTileAtWorldXY(this.itemGid+64, this.marker.x, this.marker.y+63)
@@ -304,7 +299,7 @@ class Editmap extends Phaser.Scene {
           var h = this.itemHeight / 32
             for (let i = 0; i< w; i ++){
               for (let j = 0; j< h; j ++){
-                console.log('Editmap', this.itemGid+(i+j*16))
+                
                 this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(0).setInteractive().setName("5")
                 store.dispatch(LocationInfoChange({x:this.marker.x-32+(i*32), y:this.marker.y+80+(j*32), gid:this.itemGid+(i+j*16)+3432}));
             }

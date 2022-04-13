@@ -78,11 +78,8 @@ export const EditSlice = createSlice({
     MakingModeChange : (state,action : PayloadAction<number>) => {
       const mkMode = action.payload === MakingMode.CREATE ? MakingMode.CREATE : MakingMode.DELETE
       state.makingMode = mkMode
-      console.log()
-      console.log(mkMode,' mkmode')
       const game = phaserGame.scene.keys.Editmap as Editmap
       // game.modeChange(mkMode)
-      console.log('게임모드는 들어왔습니다')
     },
 
     LocationInfoChange : (state, action : PayloadAction<ILocationInfo["locationInfo"]>) => {
@@ -94,11 +91,9 @@ export const EditSlice = createSlice({
     UserMapInfo: (state,action : PayloadAction<object>) => {
       // 유저 맵 정보에 대해서 한번 요청이 들어오면 이 정보를 저장한다.
       // 이렇게 하면 한번 불러 온 맴에 대해서는 사용이 가능하다.
-      console.log(action.payload,'맵정보가 스토어에 왔어요')
       const M = action.payload
       state.userMap = action.payload
       const Bootstrap = phaserGame.scene.keys.bootstrap as Bootstrap
-      console.log(Bootstrap)
     },
 
     GetUserArts: (state,action : PayloadAction<object>) => {

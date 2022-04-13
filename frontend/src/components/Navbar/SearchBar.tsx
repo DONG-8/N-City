@@ -161,8 +161,6 @@ const SearchBar = () => {
   const valueChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     
     await setSearchValue(e.target.value);
-  
-    console.log(searchValue)
     // setSearchResult(true);
     if (e.target.value === "") {
       setSearchResult(false);
@@ -173,9 +171,6 @@ const SearchBar = () => {
   };
 
   const handleEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(e, "이벤트");
-    console.log(e.currentTarget.value, "넘어온 벨류");
-    console.log(e.code, "코드");
     if (e.code === "Enter") {
       // await searchProductByName.mutate()
       // await searchUserByNickname.mutate()
@@ -198,12 +193,9 @@ const SearchBar = () => {
     },
     {
       onSuccess: async (res) => {
-        console.log(res, "상품검색성공");
-        console.log(res.content)
         setProducts(res.content)
       },
       onError: (err: any) => {
-        console.log(err, "상품검색에러발생");
       },
     }
   );
@@ -229,12 +221,9 @@ const SearchBar = () => {
     },
     {
       onSuccess: (res) => {
-        console.log(res, "유저검색성공");
         setUsers(res)
-        console.log(users)
       },
       onError: (err: any) => {
-        console.log(err, "유저검색에러발생");
       },
     }
   );

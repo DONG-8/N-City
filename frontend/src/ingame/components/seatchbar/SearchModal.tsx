@@ -159,12 +159,9 @@ const SearchModal:React.FC<Iprops> = ({setOpen}) => {
     },
     {
       onSuccess: (res) => {
-        console.log(res, "유저검색성공");
         setUsers(res)
-        console.log(users)
       },
       onError: (err: any) => {
-        console.log(err, "유저검색에러발생");
       },
     }
   );
@@ -189,13 +186,9 @@ const SearchModal:React.FC<Iprops> = ({setOpen}) => {
 
   const onChangeInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await setSearchValue(e.target.value);
-    console.log(searchValue)
   };
 
   const onKeyPressEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(e, "이벤트");
-    console.log(e.currentTarget.value, "넘어온 벨류");
-    console.log(e.code, "코드");
     if (e.code === "Enter") {
       searchUserByNickname.mutate();
     }

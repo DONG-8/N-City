@@ -37,7 +37,6 @@ export const postAuthetication = async ( {authFile,body}: API.TypeAutPost, name 
       name,authFile,body
     }
   )
-  console.log('post 요청중')
   return response.data
 }
 
@@ -48,7 +47,6 @@ export const postLogin = async (userAddress : string)=> {
       userAddress
     }
   )
-  console.log('로그인진행중')
   return response.data
 }
 
@@ -61,7 +59,6 @@ export const postProductLike = async (productId : number ) => {
       productId
     }
   )
-  console.log('상품 좋아요 추가 진행중')
   return response.data
 }
 
@@ -82,7 +79,6 @@ export const getProductLike = async (productId : number) => {
     `/favorites/${productId}`
   )
 
-  console.log('여기와쪄염')
   return response.data
 }
 

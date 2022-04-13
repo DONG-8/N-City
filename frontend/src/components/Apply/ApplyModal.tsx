@@ -251,20 +251,11 @@ const ModalBase = ({
       formdata.append("authType", convertType());
       formdata.append("authExtra", formType === "enterprise" ? "" : extra);
       formdata.append("authFile", files);
-      // formdata 확인
-      for (var key of formdata.keys()) {
-        console.log(key);
-      }
-
-      for (var value of formdata.values()) {
-        console.log(value);
-      }
 
       return await(postAuthentiaction(formdata));
     },
     {
       onSuccess: (res) => {
-        console.log("요청성공",res)
         alert('요청 성공!')
         navigate('/')
       },
@@ -272,7 +263,6 @@ const ModalBase = ({
         if (err.response.status === 401) { 
           navigate("/login")
         }
-        console.log(err, "❌APPLY 실패!");
         alert('요청 실패!')
         navigate(-1)
       },
@@ -280,7 +270,6 @@ const ModalBase = ({
   );
   const handleFileOnChange = (e: React.ChangeEvent) => {
     setFiles((e.target as HTMLInputElement).files?.item(0));
-    console.log((e.target as HTMLInputElement).files?.item(0));
   };
 
   // 이름 입력

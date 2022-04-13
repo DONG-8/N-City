@@ -191,7 +191,7 @@ const RankCitizen:React.FC<Iprops>= ({user}) => {
               <h1>{user.userNick}</h1>
             </div>
             <div className="status">
-              <div id="set">Follower</div>
+              <div id="set">팔로워</div>
               <div id="data">{user.userFollowerCnt}</div>
             </div>
           </div>

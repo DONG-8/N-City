@@ -332,11 +332,9 @@ const Mint = () => {
 
       // formdata 확인
       for (var key of formdata.keys()) {
-        console.log(key);
       }
 
       for (var value of formdata.values()) {
-        console.log(value);
       }
       return await postProduct(formdata);
     },
@@ -351,8 +349,6 @@ const Mint = () => {
           .send({
             from: accounts[0],
           });
-          console.log(accounts[0]); 
-          console.log(response.events.createNFT.returnValues._tokenId); // tokenId
           await setTokenId(response.events.createNFT.returnValues._tokenId);
           
           putToken.mutate();
@@ -365,7 +361,6 @@ const Mint = () => {
         if (err.response.status === 401) { 
           navigate("/login")
         }
-        console.log(err, "에러발생!");
       },
     }
   ); 
@@ -381,10 +376,8 @@ const Mint = () => {
     },
     {
       onSuccess: (res) => {
-        console.log(res, "정보 수정이 완료되었습니다");
       },
       onError: (err: any) => {
-        console.log(err, "put 에러발생에러발생");
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -433,27 +426,21 @@ const Mint = () => {
 
   const onChangeTokenName = (e: React.ChangeEvent) => {
     setTokenName((e.target as HTMLInputElement).value);
-    console.log((e.target as HTMLInputElement).value)
   };
 
   const onChangeDescription = (e: React.ChangeEvent) => {
     setDescription((e.target as HTMLInputElement).value);
-    console.log((e.target as HTMLInputElement).value);
   };
 
   const handleFileOnChange = (e: React.ChangeEvent) => {
-    console.log("메인파일변화");
     setFile((e.target as HTMLInputElement).files?.item(0));
-    console.log((e.target as HTMLInputElement).files?.item(0));
     if ((e.target as HTMLInputElement).files) {
       encodeMainFileToBasek64((e.target as HTMLInputElement).files?.item(0));
     }
   };
 
   const handleThumbnailUpload = (e: React.ChangeEvent) => {
-    console.log("썸네일파일변화");
     setThumbnail((e.target as HTMLInputElement).files?.item(0));
-    console.log((e.target as HTMLInputElement).files?.item(0));
     if ((e.target as HTMLInputElement).files) {
       encodeThumbnailToBasek64((e.target as HTMLInputElement).files?.item(0));
     }
@@ -535,12 +522,9 @@ const Mint = () => {
     },
     {
       onSuccess: async (res) => {
-        console.log("내정보를 받아왔습니다.");
-        console.log(res);
         setUserRole(res.userRole)
       },
       onError: (err: any) => {
-        console.log(err, "에러발생");
       },
     }
   );

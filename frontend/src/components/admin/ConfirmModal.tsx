@@ -166,13 +166,11 @@ const ConfirmModal = ({
     },
     {
       onSuccess: (res) => {
-        console.log("인증 수락/거절 성공!",res);
       },
       onError: (err: any) => {
         if (err.response.status === 401) { 
           navigate("/login")
         }
-        console.log("❌인증 수락/거절 실패!",err);
       },
     }
   );

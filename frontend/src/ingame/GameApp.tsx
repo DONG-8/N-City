@@ -72,14 +72,14 @@ const GameApp: Function = () => {
         setToday(res.myRoomTodayCnt)
         setTotal(res.myRoomTotalCnt)
         if (res.myRoomBackground === null) {
-          console.log('없음')
+          
           map = basicData;
         } else {
           
           map = res.myRoomBackground;
         }
         dispatch(UserMapInfo(res.myRoomBackground));
-        console.log("방 정보 불러오기", res);
+        
       },
       onError: (err: any) => {
       },
@@ -96,12 +96,11 @@ const GameApp: Function = () => {
     {
       onSuccess: (res) => {
         characterIdx = res.myRoomCharacter
-        console.log(res)
-        console.log(characterIdx)
+     
       },
       onError: (err: any) => {
         characterIdx = "1"
-        console.log('userId를 받아오지 못했습니다.',err)
+        
       },
     }
   );
@@ -129,7 +128,7 @@ const GameApp: Function = () => {
         dispatch(setUserProducts(res));
       },
       onError: (err: any) => {
-        console.log(err);
+        
       },
     }
   );
@@ -199,7 +198,6 @@ const GameApp: Function = () => {
   async function ConnectGame() {
     // 게임 접속
     game = phaserGame.scene.keys.game as Game;
-    console.log('character', characterIdx)
     game.registerKeys(); // 키 설정
     game.myPlayer.setPlayerName(userNick); // ❗ 내이름 설정해주기
     game.myPlayer.setPlayerTexture(characterIdx); // 캐릭터 종류 설정 (❗ 저장되어 있는 캐릭터 경로나 인덱스 넣어주기)

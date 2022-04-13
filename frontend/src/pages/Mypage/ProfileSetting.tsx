@@ -189,7 +189,6 @@ const ProfileSetting = () => {
       },
     {
       onSuccess: (res) => {
-        console.log(res)
         setUser(res)
         setEmailInput(res.userEmail === null ? "" : res.userEmail)
         setEmail((res.userEmail === null ? "" : res.userEmail))
@@ -201,7 +200,6 @@ const ProfileSetting = () => {
         setOriginalCheck(res.userEmailConfirm)
       },
       onError: (err: any) => {
-        console.log(err, "유저불러오기 실패");
       },
     }
   );
@@ -212,7 +210,6 @@ const ProfileSetting = () => {
       },
     {
       onSuccess: (res) => {
-        console.log(res)
         setAddressCheck(res)
         if(res) {
           alert("이메일 인증 성공")
@@ -225,7 +222,6 @@ const ProfileSetting = () => {
         if (err.response.status === 401) { 
           navigate("/login")
         }
-        console.log(err, "인증확인요청실패");
       },
     }
   );
@@ -253,7 +249,7 @@ const ProfileSetting = () => {
         setNameCheck(true)
         setuserName(nameInput)
       },
-      onError: (err: any) => {console.log('중복이름 에러')},
+      onError: (err: any) => {},
     }
   );
   const postEmail = useMutation<any, Error>(
@@ -263,7 +259,6 @@ const ProfileSetting = () => {
     },
     {
       onSuccess: (res) => { 
-        console.log(res)
         // setAddressCheck(true)
         setEmailProgressState(1)
       },
@@ -290,7 +285,6 @@ const ProfileSetting = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("요청성공", res);
         sessionStorage.setItem("userNickname", nameInput)
         navigate("/mypage/" + String(userId))
         window.location.reload()
@@ -299,7 +293,6 @@ const ProfileSetting = () => {
         if (err.response.status === 401) { 
           navigate("/login")
         }
-        console.log("프로필 저장 에러");
       },
     }
   );
