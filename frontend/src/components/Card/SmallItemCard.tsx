@@ -137,6 +137,7 @@ const SmallItemCard:React.FC<Iprops>= ({item,setMode}) => {
   }
   const [liked,setLiked] = useState(item.favorite)
   const [likes,setLikes] = useState(item.productFavoriteUser.length)
+  const navigate = useNavigate();
 
   const addLike = useMutation<any, Error>(
     "addLike",
@@ -149,6 +150,9 @@ const SmallItemCard:React.FC<Iprops>= ({item,setMode}) => {
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   ); 
@@ -164,6 +168,9 @@ const SmallItemCard:React.FC<Iprops>= ({item,setMode}) => {
       },
       onError: (err: any) => {
         console.log(err, "에러발생");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   ); 

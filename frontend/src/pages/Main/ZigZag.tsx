@@ -62,7 +62,7 @@ const ZigZag:React.FC<Iprops> = ({items}) => {
         </h1>
         <div className="sub">
           <p>방금 막 새로 민팅된 작품들입니다. 누구보다 빠르게 작품을 구경하세요</p>
-          <p>N-city 의 상점 기능을 이용해 구입하고, 자신의 방에 전시할 수 있습니다. </p>
+          <p>N-City 의 상점 기능을 이용해 구입하고, 자신의 방에 전시할 수 있습니다. </p>
         </div>
         </div>
         <div  className="itemCards">

@@ -132,8 +132,21 @@ interface IState {
     "userTokenRequest": boolean
   }
 }
-
-const SearchModal = () => {
+const CloseButton = styled.div`
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z'/%3E%3C/svg%3E");
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+`; 
+interface Iprops{
+  setOpen : React.Dispatch<React.SetStateAction<boolean>>
+}
+const SearchModal:React.FC<Iprops> = ({setOpen}) => {
   // 임시 userid params 의 데이터를 넘겨주는걸 생각해봐야할듯
   const [searchValue, setSearchValue] = useState<any>("");
   const [users, setUsers] = useState<IState["user"][]>([])
@@ -190,6 +203,7 @@ const SearchModal = () => {
 
   return (
     <Wrapper>
+      <CloseButton onClick={()=>{setOpen(true)}}/>
       <Head>
         <div className="name">Search User</div>
         <div className="subtitle"></div>

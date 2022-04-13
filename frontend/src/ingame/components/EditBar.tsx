@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { useMutation } from "react-query";
+import { useParams } from "react-router-dom";
+
 import styled from "styled-components";
 import phaserGame from "../PhaserGame";
 import Editmap from "../scenes/Editmap";
@@ -12,21 +14,21 @@ import { UserMapInfo } from "../stores/EditStore";
 import { postRoomJoin, putBackGroundChange } from "../../store/apis/myRoom";
 import { getUsercollectedInfo } from "../../store/apis/user";
 import { putProductXYView } from "../../store/apis/product";
-import { IUser } from "colyseus.js/lib/Auth";
-import { prototype } from "node-polyfill-webpack-plugin";
-import { TRUE } from "sass";
+import swal from 'sweetalert';
 
 const Sidebar = styled.div`
   position: absolute;
   display: flex;
   flex-direction: column;
+  min-width:250px;
+  
   width: 20%;
   height: 98.5%;
   background-color: white;
   padding: 4px 2px;
   right: 0;
   color: black;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   /* overflow-y: scroll; */
 `;
 
@@ -44,6 +46,10 @@ const XButton = styled.div`
     width: 50px;
     height: 50px;
     cursor: pointer;
+  }
+
+  img {
+    margin-right: 10px;
   }
 `;
 
@@ -108,8 +114,8 @@ const ItemList = styled.div`
 
   img {
     margin: 8px;
-    width: 100px;
-    height: 100px;
+    /* width: 100px;
+    height: 100px; */
   }
 `;
 enum ItemCategory {
@@ -117,7 +123,7 @@ enum ItemCategory {
   WALL,
   CHAIR,
   GENERIC,
-  INTERACTION,
+  OFFICE,
   RUGS,
   STAIRS,
   TABLES,
@@ -159,8 +165,11 @@ const EditBar = () => {
 
   const [mode, setMode] = useState(true);
   const location = useAppSelector((state) => state.edit.locationInfo);
-  const userId = useAppSelector((state) => state.edit.userId);
+  // const userId = useAppSelector((state) => state.edit.userId);
   // const myArts = useAppSelector((state) => state.edit.arts);
+
+  const { userId } = useParams();
+  const numUserId = Number(userId);
 
   useEffect(() => {
     roomInfo.mutate();
@@ -274,10 +283,10 @@ const EditBar = () => {
     }
     switch (status) {
       case ItemCategory.GROUND:
-        return makeImgTags("grounds", tileset);
+        return makeImgTagsForOb(10);
         break;
       case ItemCategory.WALL:
-        return makeImgTags("walls", wallset);
+        return makeImgTagsForOb(9);
         break;
       case ItemCategory.CHAIR:
         return makeImgTagsForOb(0);
@@ -285,7 +294,7 @@ const EditBar = () => {
       case ItemCategory.GENERIC:
         return makeImgTagsForOb(1);
         break;
-      case ItemCategory.INTERACTION:
+      case ItemCategory.OFFICE:
         return makeImgTagsForOb(2);
         break;
       case ItemCategory.RUGS:
@@ -330,7 +339,7 @@ const EditBar = () => {
       case ItemCategory.TABLES:
         return 6;
         break;
-      case ItemCategory.INTERACTION:
+      case ItemCategory.OFFICE:
         if (itemGid < 4685) {
           return 7;
         } else {
@@ -363,9 +372,15 @@ const EditBar = () => {
   function ChangeMap() {
     // console.log(newData)
     if (mode) {
-      if (status === ItemCategory.GROUND && newData.layers[0].data) {
+      if ((status === ItemCategory.GROUND || status === ItemCategory.WALL || status === ItemCategory.STRUCTURE)&& newData.layers[0].data) {
+        if (status === ItemCategory.WALL) {
+          console.log('hi')
+        }
         // 타일 데이터 넣기
-        newData.layers[0].data[location.x] = location.gid;
+        const tileIdx = location.y * 40 + location.x
+        console.log(location.y, location.x)
+        console.log(tileIdx)
+        newData.layers[0].data[tileIdx] = location.gid;
       } else if (status === ItemCategory.CHAIR) {
         // 의자 데이터 넣기
         let chairDirection = "down";
@@ -432,8 +447,6 @@ const EditBar = () => {
     } else {
       if (location.gid === 10) {
         // 작품일 경우 삭제
-        // putArts.push({id:location.x, x:0, y:0, view:false})
-        // makeImgTagsByMyArt(location.x, false)
         for (var key of newArtList.content) {
           if (key.productId === location.x) {
             key.productXCoordinate = 0
@@ -457,14 +470,60 @@ const EditBar = () => {
     }
   }
 
+  function outEditMode() {
+    swal({
+      title: "편집 모드를 종료하시겠습니까?",
+      text: "저장하지 않고 나가게 되면 편집했던 내용이 모두 사라지게 됩니다.",
+      icon: "warning",
+      buttons: {
+        cancel: true,
+        ok: true,
+      },
+    }).then((ok) => {
+      if (ok) {
+        window.location.reload();
+      } else {
+      }
+    })
+    
+  }
+
+  // 장영남이 작업함
+  function mapEditSave() {
+    swal({
+      title: "맵을 저장하시겠습니까?",
+      text: "확인버튼을 누르면 맵을 저장하고 2초 뒤 나가게 됩니다.",
+      icon: "success",
+      buttons: {
+        cancel: true,
+        ok: true,
+      },
+    }).then((ok) => {
+      if (ok) {
+        (() => {
+          changeRoom()
+          setTimeout(() => window.location.reload(), 2000)
+        })()
+      } else {
+      }
+    });
+  }
+
+  
+
   const roomInfo = useMutation<any, Error>(
     "postRoomInfo",
     async () => {
-      return await postRoomJoin(15);
+      return await postRoomJoin(numUserId);
     },
     {
       onSuccess: (res) => {
-        setData(res.myRoomBackground);
+        if (res.myRoomBackground === null) {
+          setData(firstmap);
+        } else {
+          setData(res.myRoomBackground);
+        }
+        
         // newData = res.myRoomBackground
         console.log(res.myRoomBackground, "백그라운드정보");
       },
@@ -484,7 +543,6 @@ const EditBar = () => {
           putProductXY({id: product.productId, view: product.productView, x: product.productXCoordinate, y: product.productYCoordinate})
         })
         console.log('저장 완료')
-        window.location.reload();
       },
       onError: (err: any) => {
         console.log(err);
@@ -495,7 +553,7 @@ const EditBar = () => {
   const { mutate: getMyArts } = useMutation<any, Error>(
     "getUsercollectedInfo",
     async () => {
-      return await getUsercollectedInfo(15);
+      return await getUsercollectedInfo(numUserId);
     },
     {
       onSuccess: (res) => {
@@ -532,28 +590,29 @@ const EditBar = () => {
   return (
     <Sidebar>
       <XButton>
-        {mode ? <div>생성중</div> : <div>삭제중</div>}
-
+        
+      {mode ? <div>생성중..🎨</div> : <div>삭제중..✂</div>}
         <div>
-          <img
-            className="button"
-            src="/essets/room/save.png"
-            alt=""
-            onClick={() => changeRoom()}
-          />
+          {mode? 
           <img
             className="button"
             src="/essets/room/delete.png"
             alt=""
             onClick={() => ModeChange(false)}
-          />
+          />:
           <img
             className="button"
             src="/essets/room/edit.png"
             alt=""
             onClick={() => ModeChange(true)}
+          />}
+          <img
+            className="button"
+            src="/essets/room/save.png"
+            alt=""
+            onClick={() => mapEditSave()}
           />
-          <img className="button" src="/essets/room/close.png" alt="" />
+          <img className="button" src="/essets/room/close.png" alt="" onClick={() => outEditMode()}/>
         </div>
       </XButton>
 
@@ -567,7 +626,7 @@ const EditBar = () => {
             className="Ground"
             id="{}"
           >
-            ground
+            Ground
           </button>
           <button
             onClick={() => {
@@ -576,16 +635,25 @@ const EditBar = () => {
             }}
             className="Wall"
           >
-            벽
+            Wall
           </button>
           <button
             onClick={() => {
-              setStatus(ItemCategory.INTERACTION);
+              setStatus(ItemCategory.OFFICE);
               ModeChange(true);
             }}
-            className="Interaction"
+            className="Office"
           >
-            상호작용
+            Office
+          </button>
+          <button
+            onClick={() => {
+              setStatus(ItemCategory.TABLES);
+              ModeChange(true);
+            }}
+            className="Table"
+          >
+            Table
           </button>
           <button
             onClick={() => {
@@ -594,7 +662,7 @@ const EditBar = () => {
             }}
             className="Chair"
           >
-            의자
+            Chair
           </button>
           <button
             onClick={() => {
@@ -603,7 +671,7 @@ const EditBar = () => {
             }}
             className="Generic"
           >
-            제내릭
+            Generic
           </button>
           <button
             onClick={() => {
@@ -612,7 +680,7 @@ const EditBar = () => {
             }}
             className="Rugs"
           >
-            러그
+            Rug
           </button>
           <button
             onClick={() => {
@@ -621,7 +689,7 @@ const EditBar = () => {
             }}
             className="Window_Door"
           >
-            창문,문
+            Window &#38; Door
           </button>
           <button
             onClick={() => {
@@ -630,7 +698,7 @@ const EditBar = () => {
             }}
             className="Stairs"
           >
-            ????
+            Stair
           </button>
           <button
             onClick={() => {

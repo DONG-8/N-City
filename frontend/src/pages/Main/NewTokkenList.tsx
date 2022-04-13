@@ -114,8 +114,9 @@ const NewTokkenList:React.FC = () => {
     <MainBannerWrapper>
       <div>
       {ILC ?<IsLoading2/>:
+        allitems &&
         <>
-        <h1>Hot Token</h1>
+        <h1>New Token</h1>
         <Slider {...settings}>
           {allitems && 
          allitems.map((item,idx) => {

@@ -22,6 +22,7 @@ import SearchPage from "./pages/NFTStore/SearchPage";
 import MapChoice from "./pages/Room/MapChoice";
 import Character from "./pages/Mypage/Character";
 import Guide from "./pages/Guide/Guide";
+import EmailCheck from "./pages/Login/EmailCheck";
 
 function App() {
   useEffect(() => {
@@ -59,6 +60,7 @@ function App() {
             <Route path="/guide" element={<Guide />} />
             <Route path="/ingame/:userId" element={<GameApp />} />
             <Route path="/character" element={<Character />} />
+            <Route path="/EmailConfirmGetRes.html" element={<EmailCheck/>}/>
           </Routes>
         </Provider>
         <Footer />

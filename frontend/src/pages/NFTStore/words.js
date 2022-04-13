@@ -5,4 +5,5 @@ export const words = [
   "간식 가져오는 중..",
   "월! 월!",
 ]
-export const randomwords = words[Math.floor(Math.random() * words.length)]
+export const randomwords =() =>{
+  return(words[Math.floor(Math.random() * words.length)])}

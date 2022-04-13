@@ -17,14 +17,7 @@ import { PlayerBehavior } from '../../types/PlayerBehavior'
 import store from '../stores'
 import { setFocused, setShowChat } from '../stores/ChatStore'
 import { closeVendingMachineDialogOpen } from '../stores/VendingMachineStore'
-import { getCharacter } from "../../store/apis/myRoom";
-import {useMutation} from "react-query";
 import stores from "../stores"
-
-enum GameMode {
-  GAME,
-  EDIT
-}
 
 export default class Game extends Phaser.Scene {
   myArtList = {content:[{productThumbnailUrl:'', productId:0, productView:true, productXCoordinate:0, productYCoordinate: 0}]}
@@ -92,7 +85,7 @@ export default class Game extends Phaser.Scene {
 
     // debugDraw(groundLayer, this) // 만들어둔 debug 사용해보기
 
-    this.myPlayer = this.add.myPlayer(705, 500, '1', this.network.mySessionId) // 시작 할때 캐릭터 위치 설정
+    this.myPlayer = this.add.myPlayer(640, 896, '1', this.network.mySessionId) // 시작 할때 캐릭터 위치 설정
     this.playerSelector = new PlayerSelector(this, 0, 0, 16, 16) // ⭐player selector가 뭘까
 
     // 의자 위치 잡기
@@ -170,7 +163,7 @@ export default class Game extends Phaser.Scene {
    
     this.physics.add.overlap( // ⭐ 이거 없으면 상호작용 불가
       this.playerSelector,
-      [chairs, computers, whiteboards, vendingMachines],
+      [chairs, whiteboards, vendingMachines],
       this.handleItemSelectorOverlap,
       undefined,
       this
@@ -233,7 +226,7 @@ export default class Game extends Phaser.Scene {
   ) {
     const group = this.physics.add.staticGroup()
     const objectLayer = this.map.getObjectLayer(objectLayerName)
-    objectLayer.objects.forEach((object) => {
+    objectLayer?.objects.forEach((object) => {
       const actualX = object.x! + object.width! * 0.5
       const actualY = object.y! - object.height! * 0.5
       // if (objectLayerName === 'GenericObjects') {
@@ -241,7 +234,7 @@ export default class Game extends Phaser.Scene {
       // }
       group
         .get(actualX, actualY, key, object.gid! - this.map.getTileset(tilesetName).firstgid)
-        .setDepth(actualY)
+        .setDepth(objectLayerName === 'GenericObjects' ? 10 : actualY)
     })
     if (this.myPlayer && collidable)
       this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], group)

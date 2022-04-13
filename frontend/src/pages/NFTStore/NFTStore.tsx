@@ -241,15 +241,15 @@ const NFTStore = () => {
         <Left>
           <div className='text'>
             <div className='h3'>NFT Marketplace</div>
-            <div className='h1'>N-city Store</div>
-            <div className='h4'>N-city는 다양한 <span className='blue'>NFT 작품</span>들을 판매하고 있습니다. </div>
+            <div className='h1'>N-City Store</div>
+            <div className='h4'>N-City는 다양한 <span className='blue'>NFT 작품</span>들을 판매하고 있습니다. </div>
             <div className='h4'><span className='purple'>NCT 토큰</span>을 이용해 갤러리를 구경하고 거래할 수 있습니다. </div>
             <div className='h4'>물건을 구입해 <span className='blue'>마이룸</span>을 꾸미세요. </div>
           </div>
         </Left>
         <Right>
           <div className='black'>
-          <img alt='black' src='https://i.gifer.com/7VA.gif' />            <div className='text'><p>N-city Store</p></div>
+          <img alt='black' src='https://i.gifer.com/7VA.gif' />            <div className='text'><p>N-City Store</p></div>
           </div>
         </Right>
       </IntroBox>
@@ -318,7 +318,7 @@ const NFTStore = () => {
           <div className='ISL'>
           <IsLoading2/>
           <div className='loading'>
-            {randomwords}
+            {randomwords()}
           </div>
           </div>}
         <ItemCards>
