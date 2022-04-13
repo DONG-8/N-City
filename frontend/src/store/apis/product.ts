@@ -39,7 +39,6 @@ export const postProduct = async (formdata : any) => {
     `/products`, 
     formdata
   )
-  console.log("상품등록")
   return response.data
 }
 
@@ -49,7 +48,6 @@ export const putTokenID = async (data : any) => {
     `/products/token`,
     data
   )
-  console.log("상품정보업데이트")
   return response.data
 }
 

@@ -46,4 +46,3 @@ app.use('/colyseus', monitor())
 
 gameServer.listen(port, "0.0.0.0")
 // gameServer.listen(port)
-console.log(`Listening on localhost:${port}`)

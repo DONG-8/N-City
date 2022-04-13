@@ -160,7 +160,6 @@ const ButtonBox = styled.div`
 `;
 
 const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
-  // console.log(item)
   const moment = require('moment')
   const [RESTTIME,setRESTTIME] = useState({days:0,hours:0,minutes:0,seconds:0}) 
   // const [history, setHistory] = useState<IState["history"][]>([])
@@ -179,11 +178,8 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
   },
   {
     onSuccess: (res) => {
-      console.log("히스토리받아오기 성공", res);
       if (res) {
         const bidArray = res.content.filter((item) => item.dealType === 3);
-        // console.log(bidArray)
-        // console.log(bidArray[bidArray.length - 1].dealFromNickName);
         if (bidArray.length > 0) {
           setLastBidder(bidArray[0].dealFromNickName);
           setLastBidderId(bidArray[0].dealFrom)
@@ -195,7 +191,6 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
       }
     },
     onError: (err: any) => {
-      console.log(err, "히스토리 오류");
     },
   }
 );
@@ -207,13 +202,11 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
     },
     {
       onSuccess: (res) => {
-        console.log("confirm 성공", res);
         setIsloading(false);
         navigate(`/mypage/${sessionStorage.getItem("userId")}`);
       },
       onError: (err:any) => {
         setIsloading(false);
-        console.log("confirm 실패", err)
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -228,13 +221,12 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
     },
     {
       onSuccess: (res) => {
-        console.log("경매취소 성공", res);
         setIsloading(false)
         window.location.reload()
       },
       onError: (err:any) => {
         setIsloading(false)
-        console.log("경매취소 실패", err)
+        
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -250,12 +242,12 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
     },
     {
       onSuccess: async (res) => {
-        console.log("구매등록 취소 성공", res);
+        
         setIsloading(false)
         window.location.reload()
       },
       onError: (err: any) => {
-        console.log("구매등록 취소 실패", err);
+        
         setIsloading(false)
         if (err.response.status === 401) { 
           navigate("/login")
@@ -283,7 +275,6 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
       await saleContract.methods.cancelSales().send({ from: accounts[0] });
       cancelSale.mutate()
     } catch (error) {
-      console.log("판매취소실패", error);
       setIsloading(false)
     }
   };
@@ -299,15 +290,14 @@ const BidBox:React.FC<Iprops> = ({item,setOpen}) => {
         const response = await saleContract.methods.confirmItem().send({ from: accounts[0] });
         const temp = (response.events.SaleEnded.returnValues.winner);
         const temp2 = (response.events.SaleEnded.returnValues.amount);
-        console.log("경매끝 최종 구매자", temp)
-        console.log("경매끝 최종 구매 가격", temp2)
+        
         confirmProduct.mutate()
       } else {
         const response = await saleContract.methods.cancelAuction().send({ from: accounts[0] });
         cancelAuction.mutate()  
       }
     } catch (error) {
-      console.log("confirm (경매닫기) 실패", error)
+    
       setIsloading(false)
     }
   }

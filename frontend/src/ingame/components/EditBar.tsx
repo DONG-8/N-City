@@ -177,9 +177,7 @@ const EditBar = () => {
   }, []);
 
   useEffect(() => {
-    // setStatus(ItemCategory.MYART)
     returnItemList(true);
-    console.log("klasfdjalsdjl");
   }, [myArts]);
 
   useEffect(() => {
@@ -357,11 +355,9 @@ const EditBar = () => {
   const ModeChange = (isCreateMode: boolean) => {
     const editmap = phaserGame.scene.keys.Editmap as Editmap;
     if (isCreateMode) {
-      console.log("생성모드");
       setMode(true);
       editmap.isCreateMode = true;
     } else {
-      console.log("삭제 변경");
       setMode(false);
       editmap.isCreateMode = false;
     }
@@ -370,16 +366,10 @@ const EditBar = () => {
   const newData = data;
   const newArtList = myArts;
   function ChangeMap() {
-    // console.log(newData)
     if (mode) {
       if ((status === ItemCategory.GROUND || status === ItemCategory.WALL || status === ItemCategory.STRUCTURE)&& newData.layers[0].data) {
-        if (status === ItemCategory.WALL) {
-          console.log('hi')
-        }
         // 타일 데이터 넣기
         const tileIdx = location.y * 40 + location.x
-        console.log(location.y, location.x)
-        console.log(tileIdx)
         newData.layers[0].data[tileIdx] = location.gid;
       } else if (status === ItemCategory.CHAIR) {
         // 의자 데이터 넣기
@@ -415,7 +405,6 @@ const EditBar = () => {
       } else if (status === ItemCategory.MYART) {
         // 작품 데이터 넣기
         for (var key of newArtList.content) {
-          console.log(key.productId, location.gid)
           if (key.productId === location.gid) {
             key.productXCoordinate = location.x;
             key.productYCoordinate = location.y;
@@ -457,14 +446,13 @@ const EditBar = () => {
         }
         setMyArts(newArtList)
       } else {
-        console.log('이전 데이터',newData.layers[location.gid].objects )
-        console.log(location.x, location.y)
+        
         const DelData = newData.layers[location.gid].objects?.filter((obj, i) => {
-          console.log(obj.x, obj.y)
+          
           return (obj.x !== location.x || obj.y !== location.y)
         });
         newData.layers[location.gid].objects = DelData
-        console.log('새 데이터', DelData)
+        
         setData(newData)
       }
     }
@@ -525,7 +513,6 @@ const EditBar = () => {
         }
         
         // newData = res.myRoomBackground
-        console.log(res.myRoomBackground, "백그라운드정보");
       },
     }
   );
@@ -538,14 +525,11 @@ const EditBar = () => {
     {
       onSuccess: (res) => {
         dispatch(UserMapInfo(data));
-        console.log(putArts);
         myArts.content.map((product, idx) => {
           putProductXY({id: product.productId, view: product.productView, x: product.productXCoordinate, y: product.productYCoordinate})
         })
-        console.log('저장 완료')
       },
       onError: (err: any) => {
-        console.log(err);
       },
     }
   );
@@ -557,11 +541,9 @@ const EditBar = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("완료");
         setMyArts(res);
       },
       onError: (err: any) => {
-        console.log(err);
       },
     }
   );
@@ -579,10 +561,8 @@ const EditBar = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("작품 수정 완료");
       },
       onError: (err: any) => {
-        console.log(err);
       },
     }
   );

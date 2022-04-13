@@ -104,7 +104,6 @@ const UsersModal = () => {
   // 임시 userid params 의 데이터를 넘겨주는걸 생각해봐야할듯
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.edit.userId);
-  console.log(userId, "유저아이디");
   const tracks = useAppSelector((state) => state.room.roomMusicList);
   const [userList, setUser] = useState();
   // 작품 조회
@@ -124,7 +123,6 @@ const UsersModal = () => {
       onSuccess: (res) => {
         // 성공하면 db에 뮤직 string List를 만들어서 넘겨준다.
         let arr;
-        console.log(res, "앱창에서 불러온 정보");
         const UserArray = res.content.map((obj, i) => {
           if (obj.productCode === 1) {
             return {
@@ -139,7 +137,6 @@ const UsersModal = () => {
           }
         });
         const result = UserArray.filter((obj, i) => obj !== null);
-        console.log(result, "새 결과");
         dispatch(setMusicList(result));
         setUser(result);
       },
@@ -155,7 +152,6 @@ const UsersModal = () => {
         {Alldata &&
           Alldata.content.map((obj, i) => {
             if (obj.productCode === 1) {
-              console.log('🎶',obj)
               return (
                 <UserItem>
                   <img src={obj.productThumbnailUrl} alt="사진없노~" />

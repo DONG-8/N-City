@@ -154,10 +154,8 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
     },
     {
       onSuccess: async (res) => {
-        console.log("좋아요 성공", res);
       },
       onError: (err: any) => {
-        console.log(err, "에러발생");
         if (err.response.status === 401) { 
           navigate("/login")
         }
@@ -172,10 +170,8 @@ const ItemCard:React.FC<Iprops>= ({item, handleOpen}) => {
     },
     {
       onSuccess: async (res) => {
-        console.log("좋아요 취소 성공", res);
       },
       onError: (err: any) => {
-        console.log(err, "에러발생");
         if (err.response.status === 401) { 
           navigate("/login")
         }

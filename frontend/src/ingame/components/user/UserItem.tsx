@@ -88,13 +88,11 @@ const UserItem: React.FC<Iprops> = ({ user }) => {
     },
     {
       onSuccess: (res) => {
-        console.log("유저정보 받아오기 성공", res);
         setUserInfo(res)
         setIsLoading(false)
       },
       onError: (err) => {
         setIsLoading(false)
-        console.log("유저정보받아오기 실패", err)
       },
     }
   );

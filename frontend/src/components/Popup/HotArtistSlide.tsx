@@ -145,10 +145,8 @@ const HotArtistSlide = () => {
     async () => {return (await (getUserfollowTop5( )))
       },
     { onSuccess:(res)=>{
-      console.log(res,'🎨')
     },
       onError: (err: any) => {
-        console.log(err, "판매중 정보 실패");
       },
     }
   );

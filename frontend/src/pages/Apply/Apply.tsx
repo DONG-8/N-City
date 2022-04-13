@@ -97,8 +97,6 @@ const Apply = () => {
   const handleModalOpen = (type: string) => {
     setIsOpen(true);
     setFormType(type);
-    console.log(type);
-    console.log(formType);
   };
 
   const handleModalClose = () => {

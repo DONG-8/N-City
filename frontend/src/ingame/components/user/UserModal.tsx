@@ -94,18 +94,14 @@ const UsersModal:React.FC<Iprops> = ({setOpen}) => {
   }, [escFunction]);
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.edit.userId);
-  console.log(userId, "유저아이디");
   const tracks = useAppSelector((state) => state.room.roomMusicList);
   // const user = useAppSelector((state) => state.user.playerNameMap)
   const [users, setUsers] = useState<any>([]);
   const [user, setUser] = useState(useAppSelector((state) => state.user.playerNameMap))
-  console.log(user.entries())
 
   const getUsers = () => {
     const temp:object[] = []
     user.forEach(function(value, key) {
-      console.log("key : ", key)
-      console.log("value : ", value)
       temp.push({"userId": key, "userNick" : value})
     })
     setUsers(temp)
@@ -115,73 +111,6 @@ const UsersModal:React.FC<Iprops> = ({setOpen}) => {
     getUsers()
   }, [user])
 
-  // 작품 조회
-  // productcode === 1 : 음악코드
-
-  // const {
-  //   data: Alldata,
-  //   isLoading: AllLoading,
-  //   refetch: ALL,
-  // } = useQuery<any>(
-  //   "ALLUSER",
-  //   async () => {
-  //     const size = 1000;
-  //     return await getUsercollectedInfo(userId, size);
-  //   },
-  //   {
-  //     onSuccess: (res) => {
-  //       // 성공하면 db에 뮤직 string List를 만들어서 넘겨준다.
-  //       let arr;
-  //       console.log(res, "앱창에서 불러온 정보");
-  //       const UserArray = res.content.map((obj, i) => {
-  //         if (obj.productCode === 1) {
-  //           return {
-  //             title: obj.productTitle,
-  //             artist: obj.productDesc,
-  //             audioSrc: obj.productFileUrl,
-  //             image: obj.productThumbnailUrl,
-  //             color: "#6225E6",
-  //           };
-  //         } else {
-  //           return null;
-  //         }
-  //       });
-  //       const result = UserArray.filter((obj, i) => obj !== null);
-  //       console.log(result, "새 결과");
-  //       dispatch(setMusicList(result));
-  //       setUser(result);
-  //     },
-  //   }
-  // );
-
-  // const follow = useMutation<any, Error>(
-  //   "follow",
-  //   async () => {
-  //     return await postFollow(Number(item.mintUserId));
-  //   },
-  //   {
-  //     onSuccess: (res) => {
-  //       console.log("팔로우 성공", res);
-  //       setFollowBtnState(false);
-  //     },
-  //     onError: (err) => console.log("팔로우 실패", err),
-  //   }
-  // );
-
-  // const unFollow = useMutation<any, Error>(
-  //   "follow",
-  //   async () => {
-  //     return await deleteFollow(Number(item.mintUserId));
-  //   },
-  //   {
-  //     onSuccess: (res) => {
-  //       console.log("언팔로우 성공", res);
-  //       setFollowBtnState(true);
-  //     },
-  //     onError: (err) => console.log("언팔로우 실패", err),
-  //   }
-  // );
-  console.log(tracks)
   const onClickJoinRoom = (userId) => {
     // 방입장 
   }

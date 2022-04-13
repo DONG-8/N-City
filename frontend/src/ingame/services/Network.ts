@@ -98,7 +98,6 @@ export default class Network {
     })
     this.roomId = roomId
     this.initialize()
-    console.log(this.room)
   }
 
   // 시작 전 네트워크 설정
@@ -112,8 +111,7 @@ export default class Network {
 
     // 유저가 들어오면 처리해줘야 할 값
     this.room.state.players.onAdd = (player: IPlayer, key: string) => {
-      console.log(player)
-      console.log(key)
+
       if (key === this.mySessionId) return
 
       // track changes on every child object inside the players MapSchema

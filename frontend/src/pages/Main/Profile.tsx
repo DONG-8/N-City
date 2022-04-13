@@ -308,7 +308,6 @@ const Profile = () => {
         // getChar.mutate()
       },
       onError: (err) => {
-        console.log(err);
       },
     }
   );

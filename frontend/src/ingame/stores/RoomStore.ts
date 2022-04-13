@@ -67,7 +67,6 @@ export const roomSlice = createSlice({
     },
     setMusicList : (state, action :PayloadAction<Array<RoomMusicInterface>>) => {
       state.roomMusicList = action.payload
-      console.log(state.roomMusicList,'스토어에 넘어온 뮤직리스트')
     }
   },
 })

@@ -146,7 +146,6 @@ const HotRoomSlide = () => {
     { onSuccess:(res)=>{
     },
       onError: (err: any) => {
-        console.log(err, "판매중 정보 실패");
       },
     }
   );

@@ -196,7 +196,6 @@ export class NCity extends Room<OfficeState> {
       if (whiteboardRoomIds.has(whiteboard.roomId)) whiteboardRoomIds.delete(whiteboard.roomId)
     })
 
-    console.log('room', this.roomId, 'disposing...')
     this.dispatcher.stop()
   }
 }
