@@ -107,9 +107,9 @@ class Editmap extends Phaser.Scene {
         if (gameObjects.name === "10") {  // 작품일 경우 삭제 
           store.dispatch(LocationInfoChange({x:Number(gameObjects.texture.key), y:0, gid:Number(gameObjects.name)}));
         } else if (gameObjects.name === "2") {
-          store.dispatch(LocationInfoChange({x:gameObjects.x+16, y:gameObjects.y+32, gid:Number(gameObjects.name)}));
+          store.dispatch(LocationInfoChange({x:gameObjects.x, y:gameObjects.y, gid:Number(gameObjects.name)}));
         } else {
-          store.dispatch(LocationInfoChange({x:gameObjects.x-16, y:gameObjects.y+16, gid:Number(gameObjects.name)}));
+          store.dispatch(LocationInfoChange({x:gameObjects.x, y:gameObjects.y, gid:Number(gameObjects.name)}));
         }
       }
     }, this)
