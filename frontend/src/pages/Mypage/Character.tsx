@@ -228,7 +228,7 @@ const Character = () => {
         <div className='cards'>
         <Card onClick={()=>{setMyChar('1')}}>
           <img className={myChar==='1'? 'choice':''} alt='캐릭터' src={img1} />
-          <div className='name'>못난이</div>
+          <div className='name'>NC보이</div>
         </Card>
         {everyitems&&
         items.map((item)=>{

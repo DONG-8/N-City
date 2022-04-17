@@ -151,10 +151,11 @@ const Description = styled.div`
     margin-bottom: 10px;
   }
   .box {
-    width: 26vw;
+    /* width: 250px; */
     height: 19vh;
     margin-left: 2vw;
     border-radius: 10px;
+    padding-right: 20px;
     p {
       margin: 5px 0;
       font-size: 15px;
