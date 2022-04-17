@@ -67,6 +67,7 @@ public class UserRepositorySupport {
                 .set(qUser.userNick, userInfo.getUserNick())
                 .set(qUser.userDescription, userInfo.getUserDescription())
                 .set(qUser.userImgUrl, userInfo.getUserImgUrl())
+                .set(qUser.userEmailConfirm, true)
                 .where(qUser.userId.eq(userInfo.getUserId()))
                 .execute();
         return execute;

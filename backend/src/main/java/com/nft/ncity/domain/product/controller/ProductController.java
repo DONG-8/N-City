@@ -55,7 +55,7 @@ public class ProductController {
         // 저장 결과 성공적이면 200, 중간에 다른 정보들이 없으면 404
 
         log.info("productRegister - 호출");
-        Long userId = Long.valueOf(1L);
+        Long userId = Long.valueOf(principal.getName());
         Product product = productService.productRegister(productRegisterPostReq,productFile,thumbnailFile,userId);
         if(!product.equals(null)) {
             return ResponseEntity.status(201).body(FileUrlResponseBody.of(201, "등록 성공" , product.getProductFileUrl(),product.getProductId()));

@@ -112,7 +112,7 @@ public class MyRoomController {
                                                                             Principal principal) {
         log.info("modifyMyRoomCharacter - Call");
 
-        Long userId = Long.valueOf(1L);
+        Long userId = Long.valueOf(principal.getName());
 
         if (myRoomService.modifyMyRoom(2, userId, myRoomCharacterInfo.getMyRoomCharacter()) == true) {
             return ResponseEntity.status(204).body(BaseResponseBody.of(204, "캐릭터 변경 성공"));

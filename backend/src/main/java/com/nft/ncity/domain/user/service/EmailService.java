@@ -25,7 +25,8 @@ class EmailService {
             messageHelper.setSubject("N-CITY 회원가입 이메일 인증 메일 입니다.");
             StringBuilder sb = new StringBuilder();
             sb.append("<img  src='https://ncity-bucket.s3.ap-northeast-2.amazonaws.com/forEmailSend/2.png'/> <br>");
-            sb.append("<a href=http://localhost:8080/api/users/confirm-email?email="+email+"&authToken="+authToken+">인증하기</a>");
+//            sb.append("<a href=https://localhost:8080/api/users/confirm-email?email="+email+"&authToken="+authToken+">인증하기</a>");
+            sb.append("<a href=https://j6e106.p.ssafy.io/api/users/confirm-email?email="+email+"&authToken="+authToken+">인증하기</a>");
             messageHelper.setText(sb.toString(),true);
         } catch (Exception e) {
             e.printStackTrace();;

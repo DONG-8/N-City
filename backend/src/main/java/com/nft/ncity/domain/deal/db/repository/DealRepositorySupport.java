@@ -71,6 +71,9 @@ public class DealRepositorySupport {
                 .set(qProduct.userId,userId)
                 .set(qProduct.productState,3)
                 .set(qProduct.productPrice,0.0)
+                .set(qProduct.productXCoordinate,0)
+                .set(qProduct.productYCoordinate,0)
+                .set(qProduct.productView,false)
                 .where(qProduct.productId.eq(productId))
                 .execute();
         return excute;
@@ -97,6 +100,9 @@ public class DealRepositorySupport {
                 .set(qProduct.userId,userId)
                 .set(qProduct.productState,3)
                 .set(qProduct.productPrice,0.0)
+                .set(qProduct.productXCoordinate,0)
+                .set(qProduct.productYCoordinate,0)
+                .set(qProduct.productView,false)
                 .where(qProduct.productId.eq(productId))
                 .execute();
         return excute;
