@@ -291,8 +291,8 @@ const StoreItemCard:React.FC<Iprops>= ({item}) => {
             {likes}
           </div>
           <div>
-            {item.productState === 1 && convertDate(item.productAuctionEndTime) && (moment(convertDate(item.productAuctionEndTime)).isBefore(moment()) && <SaleState>경매종료</SaleState>)}
-            {item.productState === 1 && convertDate(item.productAuctionEndTime) && !moment(convertDate(item.productAuctionEndTime)).isBefore(moment()) &&<SaleState>경매중 {item.productPrice}NCT</SaleState>}
+            {item.productState === 1 && item.productAuctionEndTime && convertDate(item.productAuctionEndTime) && (moment(convertDate(item.productAuctionEndTime)).isBefore(moment()) && <SaleState>경매종료</SaleState>)}
+            {item.productState === 1 && item.productAuctionEndTime && convertDate(item.productAuctionEndTime) && !moment(convertDate(item.productAuctionEndTime)).isBefore(moment()) &&<SaleState>경매중 {item.productPrice}NCT</SaleState>}
             {item.productState === 2 && (
               <SaleState>판매중 {item.productPrice}NCT</SaleState>
             )}

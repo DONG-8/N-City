@@ -489,6 +489,7 @@ public class ProductServiceImpl implements ProductService{
                     .productAuctionEndTime(p.getProductAuctionEndTime())
                     .productFavoriteCount(favoriteRepositorySupport.getFavoriteCount(p.getProductId()))
                     .isFavorite(favoriteRepositorySupport.getIsFavoriteByUserIdAndProductId(p.getUserId(),p.getProductId()))
+                    .productId(p.getProductId())
                     .build();
             list.add(userMintProductRes);
         }

@@ -57,7 +57,8 @@ const CardCenter = styled.div`
 const DesLeft = styled.div`
   margin-left: 0.5rem;
   /* flex: 6; */
-  max-width: 120px;
+  /* max-width: 120px; */
+  width: 400px;
 `;
 
 const DesRight = styled.div`
