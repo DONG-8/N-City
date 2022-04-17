@@ -350,7 +350,7 @@ export default function Navbar() {
                       }}
                       style={{color:"rebeccapurple"}}
                     >
-                      로그 아웃
+                      로그아웃
                     </p>
                   </div>
                 </div>

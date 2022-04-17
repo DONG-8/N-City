@@ -317,25 +317,25 @@ const Profile = () => {
       case "ROLE_INFLUENCER":
         return (
           <div>
-            <img src={influencer} alt="mark" /> 인플루언서
+            <img src={influencer} alt="mark" /> influencer
           </div>
         );
       case "ROLE_ARTIST":
         return (
           <div>
-            <img src={artist} alt="mark" /> 아티스트
+            <img src={artist} alt="mark" /> artist
           </div>
         );
       case "ROLE_ENTERPRISE":
         return (
           <div>
-            <img src={enterprise} alt="mark" /> 기업
+            <img src={enterprise} alt="mark" /> enterprise
           </div>
         );
       case "ROLE_ADMIN":
-        return <div>관리자</div>;
+        return <div>admin</div>;
       default:
-        return <div>일반유저</div>;
+        return <div>citizen</div>;
     }
   };
 
@@ -399,7 +399,7 @@ const Profile = () => {
               <>
                 <div className="status">{convertRoleText(user?.userRole)}</div>
                 <div className="status">
-                  <div id="set">followee</div>
+                  <div id="set">follow</div>
                   <div id="data">{user?.followeeCnt}</div>
                 </div>
                 <div className="status">
