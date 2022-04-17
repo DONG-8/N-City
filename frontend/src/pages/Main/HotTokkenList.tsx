@@ -76,7 +76,7 @@ const settings = {
 };
 
 const MainBannerWrapper = styled.div`
-  width: 85vw;
+  width: 1400px;
   height: 600px;
   color: black;
   margin: 0 auto;
@@ -108,18 +108,14 @@ interface Istate{
 }
 
 const NewTokkenList:React.FC = () => {
-  const [items,setItems] = useState<Istate['item'][]>([])
 
   const { isLoading:ILC, data:allitems } = useQuery<any>(
     "getliketop10",
     async () => {return (await (getliketop10()))
       },
     { onSuccess:(res)=>{
-      console.log('🎶',res)
-      setItems(res)
     },
       onError: (err: any) => {
-        console.log(err, "판매중 정보 실패");
       },
     }
   );
@@ -127,13 +123,15 @@ const NewTokkenList:React.FC = () => {
   return (
     <MainBannerWrapper>
       <div>
-        {ILC &&<IsLoading2/>}
+        {ILC ?<IsLoading2/>:
+        <>
+        <h1>Hot Token</h1>
         <Slider {...settings}>
-          {allitems && 
-         items.map((item,idx) => {
+         {allitems.map((item,idx) => {
             return <ItemCard2 key={idx} item={item} />;
           })}
         </Slider>
+        </>}
       </div>
     </MainBannerWrapper>
   );

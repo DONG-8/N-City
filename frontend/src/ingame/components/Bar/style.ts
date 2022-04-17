@@ -2,23 +2,25 @@ import styled from "styled-components";
 
 export const ToggleBtn = styled.div`
   position: absolute;
-  top: 25px;
-  left: -40px;
-  background-color: yellow;
-  width: 10px;
-  height: 10px;
+  top: 50px;
+  left: -45px;
+  /* background-color: yellow; */
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+
   .button {
     position: fixed;
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     transform: translateY(-50%) rotate(180deg);
     transition: all 0.3s ease;
   }
 
   .changeButton {
     position: fixed;
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     transform: translateY(-50%) rotate(0deg);
     transition: all 0.3s ease;
   }
@@ -26,7 +28,7 @@ export const ToggleBtn = styled.div`
 
 export const Wrapper = styled.div`
   padding: 10px 14px;
-  height: 100%;
+  height: 98%;
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -49,27 +51,29 @@ export const Wrapper = styled.div`
   .Icon {
     position: relative;
     width: 100%;
-    height: 80px;
+    height: 90px;
     display: flex;
     flex-direction: row;
     margin-bottom: 5px;
     /* background-color: blue; */
     border-radius: 10px;
+    align-items: center;
     cursor: pointer;
     :hover {
       background-color: rgba(98, 37, 230, 0.5);
       transition: all 0.3s ease;
     }
 
+    
+
     .content {
       width: 200px;
-      /* background-color: aliceblue; */
-      /* display: flex; */
-      /* height: 100px; */
+
       p {
         text-align: center;
-        font-size: 24px;
-        margin-top: 30px;
+        font-size: 18px;
+        font-weight: 500;
+        /* margin-top: 30px; */
       }
     }
     .playimg {
@@ -81,34 +85,96 @@ export const Wrapper = styled.div`
   .hidden {
     display: none;
   }
+  .head {
+      position: relative;
+      display: flex;
+      width: 100%;
+      flex-direction: row;
+      margin-bottom: 5px;
+      align-items: center;
+      .content {
+        width: 200px;
+      }
+
+      .onHiddenImg {
+        width: 70px;
+        height: 70px;
+        border-radius: 10px;
+      }
+    }
 `;
 
 export const Head = styled.div`
+  white-space: nowrap;
   width: 250px;
   margin: 0px;
-  height: 13%;
+  height: 16%;
   position: relative;
   /* background-color: red; */
   /* background-color: white; */
   transition: all 0.3s ease;
   display: flex;
   flex-direction: row;
+  /* justify-content: center; */
   z-index: 2;
+  align-items: center;
+
   img {
-    width: 88px;
-    height: 88px;
-    border-radius: 25px;
-    margin: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    /* margin-right: 20px; */
+    margin: auto; 
   }
-  div {
-    margin-left: 10px;
+  .profileBox {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    .bottom {
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      button {
+        width : 90px;
+        font-size: 12px;
+        margin-left: 5px;
+      }
+    }
+
+    .nick {
+      margin-bottom: 10px;
+      font-size: 26px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      img {
+        margin-left: 3px;
+      }
+    }
+    button {
+      font-family: "Noto Sans KR", sans-serif;
+      font-weight: 600;
+      background-color: #7272fe;
+      width: 100px;
+      height: 40px;
+      font-size: 16px;
+      &:hover {
+        transition: 0.2s;
+        background-color: #7e7ef8;
+      }
+    }
+    img {
+      width: 22px;
+      height: 22px;
+    }
   }
 `;
 
 export const BodyWrapper = styled.div`
   position: relative;
   width: 100%;
-  height: 87%;
+  height: 84%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -122,10 +188,9 @@ export const Body = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-
-  img {
-    width: 40px;
-    height: 40px;
+  .Mimg {
+    width: 30px;
+    height: 30px;
     margin: auto;
   }
 
@@ -152,6 +217,9 @@ export const BottomItem = styled.div`
       background-color: rgba(98, 37, 230, 0.5);
       transition: all 0.3s ease;
     }
+  
+    .content {
+      width: 200px;
     /* background-color: red; */
   }
 
@@ -166,20 +234,38 @@ export const BottomItem = styled.div`
     margin-bottom: 5px;
     /* background-color: blue; */
     border-radius: 10px;
+    button {
+      width: 50px;
+      height: 50px;
+    }
+    /* .bottomcontent {
+      display: flex;
+      justify-content: space-around;
+    } */
+    .content {
+      width: 200px;
+    } 
+  }
+
+   .Bcontainer{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+
     }
 
-    div {
-      width: 200px;
-      p {
-        text-align: center;
-        font-size: 24px;
-        margin-top: 30px;
-      }
+  div {
+    width: 200px;
+    p {
+      text-align: center;
+      font-size: 24px;
+      /* margin-top: 30px; */
+      margin: 0;
     }
-    .playimg {
-      width: 25px;
-      height: 25px;
-    }
+  }
+  .playimg {
+    width: 25px;
+    height: 25px;
   }
 
   .hidden {
@@ -197,12 +283,13 @@ export const BottomItem = styled.div`
       transition: all 0.3s ease;
     } */
     .user {
-      width: 80%;
+      width: 50px;
+      height: 50px;
       text-align: center;
-      height: 80%;
       margin: 5%;
     }
   }
+}
 `;
 
 export const Absol = styled.div`
@@ -212,3 +299,22 @@ export const Absol = styled.div`
 const ButtonTop = styled.div``;
 
 const ButtonBottom = styled.div``;
+
+export const NonMusicDiv = styled.div`
+  width : 100%;
+  height: 100%;
+  text-align: center;
+`
+
+export const BottomWrap = styled.div`
+  width : 100%;
+  height: 90px;
+  display: flex;
+  flex-direction: row;
+  
+  .content {
+    width : 200px;
+    display: flex;
+    justify-content: space-around;
+  }
+`

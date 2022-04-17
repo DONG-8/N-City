@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import img1 from './image/character/1.png'
-import img2 from './image/character/2.png'
-import img3 from './image/character/3.png'
-import img4 from './image/character/3.png'
-import img5 from './image/character/3.png'
-const charimg = {
-  '1':img1,'2':img2,'3':img3,'4':img4,'5':img5
+import img1 from './image/characters/character1.png'
+import img2 from './image/characters/character2.png'
+import img3 from './image/characters/character3.png'
+import img4 from './image/characters/character4.png'
+import img5 from './image/characters/character5.png'
+import img6 from './image/characters/character6.png'
+const charimg = {// 캐릭터 사진 바꾸는 곳 ⭐⭐
+  '1':img1,'2':img2,'3':img3,'4':img4,'5':img5,'6':img6
 }
 
 const RankCardWrapper = styled.div`
   position: relative;
   width: 410px;
   height: 300px;
-  background-color: #f6f6f7;
+  /* background-color: #f6f6f7; */
   border-radius: 10px;
 `;
 
@@ -30,7 +31,7 @@ const TitleCardDiv = styled.div`
   height: 200px;
   margin: 5px auto;
   font-size: 15px;
-  background-color: #eefeff;
+  background-color: #eaeafd;
   display: flex;
   border-radius: 10px;
   flex-direction: column;
@@ -80,8 +81,8 @@ const TitleCardDiv = styled.div`
     width: 135px;
     height: 135px;
     object-fit: fill;
-    border-radius: 10px;
-    border: #12abdc   solid 1px;
+    border-radius: 10px 0 10px 0;
+    border: #a9a9f2    solid 2px;
   }
 
   #explain {
@@ -108,14 +109,15 @@ const TitleCardDiv = styled.div`
 const TodayInformationDiv = styled.div`
   width: 400px;
   height: 65px;
-  background-color: #23afde;
+  /* background-color: #23afde; */
+  background-color: #9191e8;
   margin: 0 auto;
   margin-top: 10px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   &:hover{
-    background-color: #129fce;
+    background-color: #9d9dee;
       transition: 0.1s;
   }
   p {

@@ -1,6 +1,7 @@
 import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { getCharacter, putCharacterChange } from '../../store/apis/myRoom';
 import { getUsercollectedInfo } from '../../store/apis/user';
@@ -27,6 +28,7 @@ const IntroBox = styled.div`
   margin-top: 10vh;
   display: flex;
   margin-bottom:5vh;
+  overflow-y: hidden;
 
 `
 const Left = styled.div`
@@ -85,6 +87,7 @@ const Cards = styled.div`
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
   border-radius: 30px;
   margin: auto;
+  padding-bottom: 50px;
   .cards{
     margin: auto;
     display: flex;
@@ -95,6 +98,12 @@ const Card = styled.div`
   margin-top: 7vh;
   height: 20vw;
   width: 20vw;
+  .name{
+    margin-top: 10px;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 500;
+  }
   img{
     height: 18vw;
     width: 18vw;
@@ -114,6 +123,7 @@ const Card = styled.div`
   border-radius: 20px;
   cursor: pointer;
   margin-left: 5vw;
+  
 `
 interface Istate{
   item:
@@ -136,9 +146,9 @@ interface Istate{
 }
 const Character = () => {
   const [userId,setUserId] = useState(Number(sessionStorage.getItem('userId')||""))
-  const [characters,setCharacters ] = useState<Istate['item'][]>([])
   const [items,setItems] = useState<Istate['item'][]>([])
-  const [myChar,setMyChar] = useState(1)
+  const [myChar,setMyChar] = useState('')
+  const navigate = useNavigate()
   const getsave = ()=>{
     changeCharacter.mutate()
   }
@@ -151,25 +161,27 @@ const Character = () => {
       onSuccess:(res)=>{ 
       setItems(res.content.filter((item)=> item.productCode===7))
       },
-      onError: (err: any) => {console.log(err, "전체 nft 조회 실패")}
+      onError: (err: any) => {}
       }
   );
-  const { isLoading:ILC, data:characterId } = useQuery<any>(
+
+  const CharacterGet = useMutation<any, Error>(
     "getCharacter",
-    async () => {return (await (getCharacter(userId)))
-      },
+    async () => {
+      return await getCharacter(userId);
+    },
     {
-      onSuccess:(res)=>{ 
-        console.log('캐릭터 받음')
-        setMyChar(res.myRoomCharacter)
-        if (res.myRoomCharacter===null){
-          changeCharacter.mutate()
-          setMyChar(1) 
+      onSuccess: (res) => {
+        if(res.myRoomCharacter===null){
+          setMyChar('1')
         }
+        else{setMyChar(res.myRoomCharacter)}
       },
-      onError: (err: any) => {console.log(err, "캐릭터못받음")}
-      }
+      onError: (err: any) => {
+      },
+    }
   );
+  
   const changeCharacter = useMutation<any, Error>(
     "putCharacterChange",
     async () => {
@@ -177,16 +189,18 @@ const Character = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("캐릭터 바꾸기 성공",res);
-
+        alert('캐릭터를 변경했습니다. '+ myChar )
+        navigate('/')
       },
       onError: (err: any) => {
-        console.log("❌캐릭터 실패",err);
       },
     }
   );
   useEffect(()=>{
-    console.log('🎨',myChar)
+    CharacterGet.mutate()
+
+  },[])
+  useEffect(()=>{
   },[myChar])
   return (
     <Wrapper>
@@ -196,7 +210,7 @@ const Character = () => {
             <div className='h1'>Select Characters</div>
             <div className='h4'>Myroom에서<span className='blue'>NFT 캐릭터</span>를  사용해 보세요 </div>
             <div className='h4'> <span className='purple'>Store</span>에서 NFT 캐릭터를 구입하세요</div>
-            <div className='h4'>개성있는 자신만의 캐릭터로 <span className='blue'> N-city</span>를 즐기세요</div>
+            <div className='h4'>개성있는 자신만의 캐릭터로 <span className='blue'> N-City</span>를 즐기세요</div>
             <div className='h4'><Button>상점으로 이동 </Button></div>
           </div>
         </Left>
@@ -208,17 +222,20 @@ const Character = () => {
       </IntroBox>
       
       <h1 className='title'>내가 소유한 캐릭터 
-      {characterId!==undefined && characterId.userId !== myChar && <Button onClick={()=>{getsave()}} className='save'  variant='contained' >저장하기</Button>}</h1>
+        <Button onClick={()=>{getsave()}} className='save'  variant='contained' >저장하기</Button>
+      </h1>
       <Cards>
         <div className='cards'>
-        <Card onClick={()=>{setMyChar(1)}}>
-          <img className={myChar===1? 'choice':''} alt='캐릭터' src={img1} />
+        <Card onClick={()=>{setMyChar('1')}}>
+          <img className={myChar==='1'? 'choice':''} alt='캐릭터' src={img1} />
+          <div className='name'>못난이</div>
         </Card>
-        {everyitems !== undefined && characterId !==undefined &&
-        items.map((item,idx)=>{
+        {everyitems&&
+        items.map((item)=>{
           return( 
-            <Card key={idx} onClick={()=>{setMyChar(Number(item.productDesc.substring(9)))}}>
-            <img  className={myChar===idx+1? 'choice':''}  alt='캐릭터' src={item.productFileUrl} />
+            <Card key={item.productId} onClick={()=>{setMyChar(item.productDesc.substring(9))}}>
+            <img  className={myChar===item.productDesc.substring(9)? 'choice':''}  alt='캐릭터' src={item.productFileUrl} />
+            <div className='name'>{item.productTitle}</div>
             </Card>
         )})}
         </div>

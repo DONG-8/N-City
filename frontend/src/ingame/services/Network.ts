@@ -8,6 +8,7 @@ import { phaserEvents, Event } from '../components/events/EventCenter'
 import store from '../stores'
 import { setSessionId, setPlayerNameMap, removePlayerNameMap } from '../stores/UserStore'
 
+
 import {
   setLobbyJoined,
   setJoinedRoomData,
@@ -22,21 +23,22 @@ import {
 } from '../stores/ChatStore'
 import { setWhiteboardUrls } from '../stores/WhiteboardStore'
 
+
 export default class Network {
   private client: Client
   private room?: Room<IOfficeState>
   private lobby!: Room
+  private roomId = '0'
   webRTC?: WebRTC
 
   mySessionId!: string
 
   constructor() { // 네트워크 관련 ⭐⭐⭐⭐
-    // const protocol = window.location.protocol.replace('http', 'ws')
-    const endpoint =
+    const protocol = window.location.protocol.replace('http', 'ws')
+    const endpoint = 'wss://j6e106.p.ssafy.io/colyseus'
       // process.env.NODE_ENV === 'production'
       //   ? `wss://sky-office.herokuapp.com`
       //   : `${protocol}//${window.location.hostname}:2567`
-      "wss://j6e106.p.ssafy.io/colyseus"
     this.client = new Client(endpoint)
     this.joinLobbyRoom().then(() => {
       store.dispatch(setLobbyJoined(true))
@@ -63,6 +65,11 @@ export default class Network {
     })
   }
 
+    // public 방 만들기 
+  async getActiveRoom() {
+    return this.client.getAvailableRooms()
+  }
+
   // public 방 만들기 
   async joinOrCreatePublic() {
     this.room = await this.client.joinOrCreate(RoomType.PUBLIC)
@@ -72,6 +79,7 @@ export default class Network {
   // ❗ 방 들어가기 
   async joinRoom(roomId: string) {
     this.room = await this.client.joinById(roomId)
+    this.roomId = roomId
     this.initialize()
   }
 
@@ -85,8 +93,8 @@ export default class Network {
       password,
       autoDispose,
     })
+    this.roomId = roomId
     this.initialize()
-    console.log(this.room)
   }
 
   // 시작 전 네트워크 설정
@@ -100,6 +108,7 @@ export default class Network {
 
     // 유저가 들어오면 처리해줘야 할 값
     this.room.state.players.onAdd = (player: IPlayer, key: string) => {
+
       if (key === this.mySessionId) return
 
       // track changes on every child object inside the players MapSchema
@@ -111,7 +120,7 @@ export default class Network {
           // when a new player finished setting up player name
           if (field === 'name' && value !== '') {
             phaserEvents.emit(Event.PLAYER_JOINED, player, key)
-            store.dispatch(setPlayerNameMap({ id: key, name: value }))
+            store.dispatch(setPlayerNameMap({ id: 'changes', name: value }))
             store.dispatch(pushPlayerJoinedMessage(value))
           }
         })
@@ -143,7 +152,7 @@ export default class Network {
       store.dispatch(
         setWhiteboardUrls({
           whiteboardId: key,
-          roomId: whiteboard.roomId,
+          roomId: this.roomId,
         })
       )
       // track changes on every child object's connectedUser
@@ -237,8 +246,8 @@ export default class Network {
   }
 
   // method to send player name to Colyseus server
-  updatePlayerName(currentName: string) {
-    this.room?.send(Message.UPDATE_PLAYER_NAME, { name: currentName })
+  updatePlayerName(currentName: string, currentId: string) {
+    this.room?.send(Message.UPDATE_PLAYER_NAME, { name: currentName, userId: currentId })
   }
 
   // method to send ready-to-connect signal to Colyseus server

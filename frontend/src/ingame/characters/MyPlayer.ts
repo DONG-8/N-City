@@ -42,7 +42,7 @@ export default class MyPlayer extends Player {
 
   setPlayerTexture(texture: string) { // 시작할때 , 
     this.playerTexture = texture //  texture = 캐릭터 이름 
-    this.anims.play(`${this.playerTexture}_idle_down`, true) // 아래보고있는 캐릭터로 시작하기
+    this.anims.play(`${this.playerTexture}_idle_up`, true) // 아래보고있는 캐릭터로 시작하기
     phaserEvents.emit(Event.MY_PLAYER_TEXTURE_CHANGE, this.x, this.y, this.anims.currentAnim.key) //캐릭터 위치시키기
   }
   
@@ -69,7 +69,7 @@ export default class MyPlayer extends Player {
           break
         case ItemType.VENDINGMACHINE: // 화면을 띄운다.
           const vendingMachine = item as VendingMachine
-          vendingMachine.openDialog(1)
+          vendingMachine.openDialog(vendingMachine.texture.key)
           break
       }
     }

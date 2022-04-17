@@ -15,7 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 const SearchBarWrapper = styled.div`
   position: relative;
   width: 900px;
-  min-width: 500px;
+  min-width: 200px;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -32,7 +32,7 @@ const SearchBarWrapper = styled.div`
 
 const SearchBarDiv = styled.div`
   width: 90%;
-  min-width: 500px;
+  min-width: 200px;
   height: 50px;
   border-radius: 10px;
   border: solid 1px rgba(100, 100, 111, 0.2);
@@ -71,14 +71,14 @@ const SearchResultWrapper = styled.div`
   position: absolute;
   top: 70px;
   width: 100%;
-  min-width: 500px;
+  min-width: 200px;
   /* display: none; */
 `;
 
 const SearchResultDiv = styled.div`
   width: 90%;
   height: 100%;
-  min-width: 500px;
+  min-width: 200px;
   background-color: white;
   border-color: red;
   border: solid 1px rgba(100, 100, 111, 0.2);
@@ -101,6 +101,7 @@ const DivideContent = styled.div`
 `;
 
 const MenuBox = styled.div`
+  position: relative;
   button{
     margin-left: 1vw;
     margin-top: 1vh;
@@ -114,7 +115,7 @@ const MenuBox = styled.div`
   .x{
     position: absolute;
     top:10px;
-    right:4.5vw;
+    right:10px;
     cursor: pointer;
   }
 `
@@ -160,8 +161,6 @@ const SearchBar = () => {
   const valueChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     
     await setSearchValue(e.target.value);
-  
-    console.log(searchValue)
     // setSearchResult(true);
     if (e.target.value === "") {
       setSearchResult(false);
@@ -172,9 +171,6 @@ const SearchBar = () => {
   };
 
   const handleEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(e, "이벤트");
-    console.log(e.currentTarget.value, "넘어온 벨류");
-    console.log(e.code, "코드");
     if (e.code === "Enter") {
       // await searchProductByName.mutate()
       // await searchUserByNickname.mutate()
@@ -197,12 +193,9 @@ const SearchBar = () => {
     },
     {
       onSuccess: async (res) => {
-        console.log(res, "상품검색성공");
-        console.log(res.content)
         setProducts(res.content)
       },
       onError: (err: any) => {
-        console.log(err, "상품검색에러발생");
       },
     }
   );
@@ -228,12 +221,9 @@ const SearchBar = () => {
     },
     {
       onSuccess: (res) => {
-        console.log(res, "유저검색성공");
         setUsers(res)
-        console.log(users)
       },
       onError: (err: any) => {
-        console.log(err, "유저검색에러발생");
       },
     }
   );

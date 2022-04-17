@@ -24,8 +24,8 @@ const gameServer = new Server({
 
 // register room handlers
 gameServer.define(RoomType.LOBBY, LobbyRoom)
-// gameServer.define(RoomType.PUBLIC, SkyOffice, {
-//   roomId: 'asdf2as',
+// gameServer.define(RoomType.PUBLIC, NCity, {
+//   roomId: 'lobby',
 //   name: 'Public Lobby',
 //   description: 'For making friends and familiarizing yourself with the controls',
 //   password: null,
@@ -45,4 +45,4 @@ gameServer.define(RoomType.CUSTOM, NCity ).enableRealtimeListing()
 app.use('/colyseus', monitor())
 
 gameServer.listen(port)
-console.log(`Listening on ws://localhost:${port}`)
+

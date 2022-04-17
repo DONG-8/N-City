@@ -1,6 +1,7 @@
 import { Input, Button } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery } from 'react-query';
+import { Link } from 'react-router-dom';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components'
 import { getCheckConfirmEmail, getUserduplicateInfo, getUserInfo, patchUserInfoChange, postConfirmEmail } from '../../store/apis/user';
@@ -13,7 +14,7 @@ const AddressWrapper = styled.div`
   border-radius: 10px;
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
   margin: auto;
-  margin-top: 3vh;
+  margin-top: 10vh;
   margin-bottom:10vh;
 `
 
@@ -21,11 +22,26 @@ const SettingWrapper = styled.div`
   width: 83%;
   height: 78vh;
   background-color: #F7F8FA ;
-  border-radius: 10px;
+  border-radius: 30px;
   box-shadow: -10px -10px 12px #fff, 9px 9px 12px #e3e6ee, inset 1px 1px 0 rgb(233 235 242 / 10%);
   margin: auto;
   margin-top: 3vh;
   margin-bottom:10vh;
+  overflow-y: auto;
+
+.bigTitle {
+  margin-top: 2vh;
+  margin-left: 4vh;
+  margin-right: 4vh;
+  padding-top: 15px;
+  font-size: 4vh;
+  font-weight: 600;
+  display: flex;
+}
+.topBar{
+  display: flex;
+  justify-content: space-between;
+}
 `
 const EmailBox = styled.div`
   display: flex;
@@ -36,31 +52,30 @@ const EmailBox = styled.div`
 const Left = styled.div`
   flex: 6;
   margin-left: 3vw;
-  .bigTitle {
-    font-size: 4vh;
-    font-weight: 600;
-  }
   .profileImg {
+    margin-top: 3vh;
     border-radius: 100%;
-    width: 10vw;
-    height: 10vw;
+    width: 12vh;
+    height: 12vh;
     border: 0.5px solid #e3e6ee;
+  }
+  .img_edit_btn{
+    margin-left: 0.8vh;
+    height: 2.5vh;
   }
   .title {
     font-size: 3vh;
     font-weight: 600;
-    margin-top: 2vh;
+    margin-top: 3vh;
   }
-  .input {
-    width: 15vw;
-    height: 5vh;
-    font-size: 2.5vh;
-  }
+
   .img_name {
     display: flex;
+    margin-bottom: 8vh;
+    
   }
   .name_box {
-    margin-left: 3vw;
+    margin-left: 5vw;
     .input_check {
       display: flex;
       .nickcheck {
@@ -70,6 +85,9 @@ const Left = styled.div`
         }
       }
     }
+  }
+  .role_apply_btn{
+    margin-left : 15vw;
   }
   .btnbox {
     display: flex;
@@ -91,7 +109,6 @@ const Right = styled.div`
   .title {
     font-size: 3vh;
     font-weight: 600;
-    margin-top: 2vh;
   }
   textarea {
     width: 32vw;
@@ -99,12 +116,18 @@ const Right = styled.div`
     resize: none;
     font-size: 2vh;
     margin-right: 5vw;
+    border-radius: 0.7rem;
     &:focus {
       border-color: teal;
       outline: none;
       box-shadow: 0 0 4px #333;
       transition: 0.2s ease-in;
     }
+  }
+  .input {
+    width: 15vw;
+    height: 5vh;
+    font-size: 2.5vh;
   }
   .sumnailImg {
     width: 40vw;
@@ -116,15 +139,18 @@ const Right = styled.div`
   }
 `;
 const BTN = styled.div`
-  width:80%;
-  margin: auto;
-  display: flex;
-  margin-top: 5vh;
-  justify-content: space-around;
+  /* width:80%; */
+  /* margin: auto; */
+  /* display: flex; */
+  /* margin-top: 5vh; */
+  /* justify-content: space-around; */
   button{
-    width: 20vw;
-    height: 8vh;
-    font-size: 3vh;
+    background-color:#6225E6 ;
+    margin-top: 30px;
+    margin-right: 20px;
+    width: 9vw;
+    height: 4vh;
+    font-size: 1.8vh;
 
   }
 `
@@ -163,7 +189,6 @@ const ProfileSetting = () => {
       },
     {
       onSuccess: (res) => {
-        console.log(res)
         setUser(res)
         setEmailInput(res.userEmail === null ? "" : res.userEmail)
         setEmail((res.userEmail === null ? "" : res.userEmail))
@@ -175,7 +200,6 @@ const ProfileSetting = () => {
         setOriginalCheck(res.userEmailConfirm)
       },
       onError: (err: any) => {
-        console.log(err, "유저불러오기 실패");
       },
     }
   );
@@ -186,7 +210,6 @@ const ProfileSetting = () => {
       },
     {
       onSuccess: (res) => {
-        console.log(res)
         setAddressCheck(res)
         if(res) {
           alert("이메일 인증 성공")
@@ -196,7 +219,9 @@ const ProfileSetting = () => {
         setEmailProgressState(0)
       },
       onError: (err: any) => {
-        console.log(err, "인증확인요청실패");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -224,7 +249,7 @@ const ProfileSetting = () => {
         setNameCheck(true)
         setuserName(nameInput)
       },
-      onError: (err: any) => {console.log('중복이름 에러')},
+      onError: (err: any) => {},
     }
   );
   const postEmail = useMutation<any, Error>(
@@ -234,11 +259,13 @@ const ProfileSetting = () => {
     },
     {
       onSuccess: (res) => { 
-        console.log(res)
         // setAddressCheck(true)
         setEmailProgressState(1)
       },
       onError: (err: any) => {
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
         alert('이메일 중복 오류')
       },
     }
@@ -258,13 +285,14 @@ const ProfileSetting = () => {
     },
     {
       onSuccess: (res) => {
-        console.log("요청성공", res);
         sessionStorage.setItem("userNickname", nameInput)
         navigate("/mypage/" + String(userId))
-        // window.location.reload()
+        window.location.reload()
       },
       onError: (err: any) => {
-        console.log("프로필 저장 에러");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -291,28 +319,55 @@ const ProfileSetting = () => {
     <>
       {user !== undefined && (
         <SettingWrapper>
-          <Up>
-            <Left>
-              <p className="bigTitle">Profile Setting</p>
-              <div className="img_name">
-                {userURL ? (
-                  <img className="profileImg" alt="pic" src={userURL} />
-                ) : (
-                  <img
-                    className="profileImg"
-                    src="https://www.taggers.io/common/img/default_profile.png"
-                    alt="profile"
-                  />
-                )}
-                <div className="name_box">
+          <div className='topBar'>
+
+            <span className="bigTitle">Profile Setting</span>
+              <span>
+                <BTN>
                   <Button
+                    className="save"
                     variant="contained"
                     onClick={() => {
-                      setOpen(true);
+                      saveChange.mutate();
                     }}
-                  >
-                    이미지 수정
+                    >
+                    프로필 저장
                   </Button>
+                  </BTN>
+                </span>
+          </div>
+            <hr></hr>
+          <Up>
+            <Left>
+              
+              <div className="img_name">
+
+
+                        <div>
+                          <div>
+                          {userURL ? (
+                            <img className="profileImg" alt="pic" src={userURL} />
+                            ) : (
+                              <img
+                              className="profileImg"
+                              src="https://www.taggers.io/common/img/default_profile.png"
+                              alt="profile"
+                              />
+                              )
+                            }
+                          </div>
+                          <div>
+                            <Button className="img_edit_btn"
+                              variant="contained"
+                              onClick={() => {
+                                setOpen(true);
+                              }}
+                              >
+                              이미지 수정
+                            </Button>
+                          </div>
+                        </div>
+                <div className="name_box">
                   <p className="title">Username</p>
 
                   <div className="input_check">
@@ -328,10 +383,10 @@ const ProfileSetting = () => {
                         <p>✔</p>
                       ) : (
                         <Button
-                          onClick={() => {
+                        onClick={() => {
                             getNameCheck.mutate();
                           }}
-                        >
+                          >
                           닉네임 중복 확인
                         </Button>
                       )}
@@ -339,8 +394,37 @@ const ProfileSetting = () => {
                   </div>
                 </div>
               </div>
+              {
+                user && <div>
+                  <p className="title">Wallet</p>
+                  <p>{user.userAddress}</p>
+                  <p className="title">Athentication</p>
+                  <span >{user.userRole}</span>
+                  <span>
+                  <Link className='role_apply_btn' to="/apply">
+                    <Button variant="contained">인증마크 신청</Button>
+                  </Link>
+                  </span>
+                </div>
+              }
 
-              <p className="title">이메일</p>
+              
+            </Left>
+            <Right>
+              <p className="title">About Me</p>
+              <textarea
+                value={Description}
+                className="textarea"
+                onChange={(
+                  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+                ) => {
+                  setDescription((e.target as HTMLTextAreaElement).value);
+                }}
+              />
+        
+
+
+              <p className="title">E-mail</p>
               <EmailBox>
                 <Input
                   value={EmailInput}
@@ -387,51 +471,9 @@ const ProfileSetting = () => {
               {!AddressCheck && (
                 <h4>이메일 인증을 하지 않으면 프로필 수정이 불가합니다.</h4>
               )}
-            </Left>
-            <Right>
-              <p className="title">자기소개</p>
-              <textarea
-                value={Description}
-                className="textarea"
-                onChange={(
-                  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-                ) => {
-                  setDescription((e.target as HTMLTextAreaElement).value);
-                }}
-              />
-              {
-                user && <div>
-                  <p className="title">userAddress</p>
-                  <p>{user.userAddress}</p>
-                  <p className="title">userRole</p>
-                  <p>{user.userRole}</p>
-                </div>
-              }
-              <Button variant="contained">인증마크 신청 페이지</Button>
             </Right>
           </Up>
-          <BTN>
-            <Button
-              className="save"
-              variant="contained"
-              color="info"
-              onClick={() => {
-                navigate(-1);
-              }}
-            >
-              뒤로가기
-            </Button>
-            <Button
-              className="save"
-              variant="contained"
-              color="success"
-              onClick={() => {
-                saveChange.mutate();
-              }}
-            >
-              프로필 수정
-            </Button>
-          </BTN>
+          
           <SelectImage
             setuserURL={setuserURL}
             userId={Number(userId)}

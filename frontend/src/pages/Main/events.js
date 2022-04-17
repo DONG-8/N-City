@@ -1,6 +1,6 @@
 export const events = [
   {
-    pic: "https://nimage.g-enews.com/phpwas/restmb_allidxmake.php?idx=5&simg=2020121617202605478e0eaf3841f218144160198.jpg",
+    pic: "https://cdn.discordapp.com/attachments/945484206677557248/960902387139244043/Mainpage.png",
     ID: 1,
     name: "구찌",
   },

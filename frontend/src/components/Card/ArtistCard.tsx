@@ -75,7 +75,7 @@ const ArtistCard:React.FC<Iprops> = ({user}) => {
   const navigate = useNavigate()
   const goMyPage = ()=>{
     navigate(`/mypage/${user.userId}`)
-    localStorage.setItem("item",JSON.stringify(user))
+    sessionStorage.setItem("item",JSON.stringify(user))
   }
   return (<>
     <Cards onClick={()=>{goMyPage()}}>
@@ -95,9 +95,9 @@ const ArtistCard:React.FC<Iprops> = ({user}) => {
           <div className='name'>
             <Badge>
               <span>{user.userNick} </span>
-              {user.userRole==='ROLE_ENTERPRISE' && <img alt='badge' src="essets/marks/enterprise-mark.png"/>}
-              {user.userRole==='ROLE_ARTIST' && <img alt='badge' src="essets/marks/artist-mark.png"/>}
-              {user.userRole==='ROLE_INFLUENCER' && <img alt='badge' src="essets/marks/influencer-mark.png"/>}
+              {user.userRole==='ROLE_ENTERPRISE' && <img alt='badge' title='enterprise' src="essets/marks/enterprise-mark.png"/>}
+              {user.userRole==='ROLE_ARTIST' && <img alt='badge' title='artist' src="essets/marks/artist-mark.png"/>}
+              {user.userRole==='ROLE_INFLUENCER' && <img alt='badge' title='influencer' src="essets/marks/influencer-mark.png"/>}
             </Badge>
           </div>
           <div className='description'>

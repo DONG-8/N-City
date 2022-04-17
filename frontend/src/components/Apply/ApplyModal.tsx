@@ -2,6 +2,7 @@ import React, { ReactNode, useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { useMutation, useQuery } from 'react-query';
 import {postAuthentiaction} from '../../store/apis/authentication'
+import { useNavigate } from "react-router-dom";
 
 export type ModalBaseProps = {
   /** 모달에 들어갈 컴포넌트 */
@@ -77,7 +78,7 @@ const Title = styled.h1<{ visible: boolean }>`
 `;
 
 const Divider = styled.hr`
-  border: solid 1px #ff865b;
+  border: solid 1px #a9a9f2 ;
   width: 65%;
   margin-bottom: 30px;
 `;
@@ -94,11 +95,12 @@ const FormWrapper = styled.form<{ visible: boolean }>`
   // 업로드 버튼
   .file-label {
     display: flex;
-    /* background-color: #FF865B; */
-    color: #ff865b;
-    border: 1px solid #ff865b;
+    /* background-color: #a9a9f2; */
+    color: #5555f6;
+    border: 2px solid #8888ee;
     justify-content: center;
     align-items: center;
+    font-weight: 500;
     padding: 8px 10px;
     width: 90px;
     height: 26px;
@@ -166,7 +168,7 @@ const SubmitButton = styled.button`
   position: absolute;
   right: 35px;
   bottom: 35px;
-  background-color: #ff865b;
+  background-color: #6b6bf4;
   color: #fff;
   font-weight: bold;
   display: flex;
@@ -178,9 +180,11 @@ const SubmitButton = styled.button`
   border-radius: 10px;
   &:hover {
     font-weight: bold;
+    background-color: #8080fc;
+
   }
   &:active {
-    background-color: #de5d30;
+    background-color: #8888ee;
   }
 `;
 
@@ -190,7 +194,7 @@ const ExplaneText = styled.p<{ visible: boolean }>`
   font-weight: 500;
   margin: 0;
   span {
-    color: #aa2e2e;
+    color: #4141f2;
   }
 `;
 const FileUploadButtonBox = styled.div`
@@ -218,7 +222,7 @@ const CloseButton = styled.div`
   display: flex;
   justify-content: flex-end;
   cursor: pointer;
-`;
+`; 
 
 const InputBox = styled.div`
   margin: 15px 0;
@@ -237,7 +241,7 @@ const ModalBase = ({
   const [extra, setExtra] = useState<string>("");
   const [files, setFiles] = useState<any>([]);
   // const [fileNames, setFileNames] = useState<string[]>([]);
-
+  const navigate = useNavigate()
   const postAuth = useMutation<any, Error>(
     "postAuthentiaction",
     async () => {
@@ -247,29 +251,25 @@ const ModalBase = ({
       formdata.append("authType", convertType());
       formdata.append("authExtra", formType === "enterprise" ? "" : extra);
       formdata.append("authFile", files);
-      // formdata 확인
-      for (var key of formdata.keys()) {
-        console.log(key);
-      }
-
-      for (var value of formdata.values()) {
-        console.log(value);
-      }
 
       return await(postAuthentiaction(formdata));
     },
     {
       onSuccess: (res) => {
-        console.log("요청성공",res)
+        alert('요청 성공!')
+        navigate('/')
       },
       onError: (err: any) => {
-        console.log(err, "❌APPLY 실패!");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
+        alert('요청 실패!')
+        navigate(-1)
       },
     }
   );
   const handleFileOnChange = (e: React.ChangeEvent) => {
     setFiles((e.target as HTMLInputElement).files?.item(0));
-    console.log((e.target as HTMLInputElement).files?.item(0));
   };
 
   // 이름 입력

@@ -33,7 +33,6 @@ const ItemCards = styled.div`
   justify-content:center ;
 `
 const CharacterPage:React.FC<Iprops>= ({setMode,items}) => {
-  console.log('✔✔✔✔✔✔',items)
   return (
     <ItemCards>
         <h1>캐릭터 상점</h1>

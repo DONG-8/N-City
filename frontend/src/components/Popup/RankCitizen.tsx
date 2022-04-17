@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import img1 from './image/character/1.png'
-import img2 from './image/character/2.png'
-import img3 from './image/character/3.png'
-import img4 from './image/character/3.png'
-import img5 from './image/character/3.png'
+import img1 from './image/characters/character1.png'
+import img2 from './image/characters/character2.png'
+import img3 from './image/characters/character3.png'
+import img4 from './image/characters/character4.png'
+import img5 from './image/characters/character4.png'
 const charimg = {
   '1':img1,'2':img2,'3':img3,'4':img4,'5':img5
 }
@@ -14,7 +14,7 @@ const RankCardWrapper = styled.div`
   position: relative;
   width: 410px;
   height: 300px;
-  background-color: #f6f6f7;
+  /* background-color: #f6f6f7; */
   border-radius: 10px;
 
 `;
@@ -29,9 +29,9 @@ const RankCardDiv = styled.div`
 const TitleCardDiv = styled.div`
   width: 400px;
   height: 200px;
+  background-color: #e6e6ff;
   margin: 5px auto;
   font-size: 15px;
-  background-color: #ffffff;
   display: flex;
   border-radius: 10px;
   /* flex-direction: column; */
@@ -81,7 +81,7 @@ const TitleCardDiv = styled.div`
     height: 160px;
     object-fit: fill;
     border-radius: 100%;
-    border: gray   solid 1px;
+    /* border: #c4c1c1   solid 0.3px; */
   }
 
   #explain {
@@ -191,7 +191,7 @@ const RankCitizen:React.FC<Iprops>= ({user}) => {
               <h1>{user.userNick}</h1>
             </div>
             <div className="status">
-              <div id="set">Follower</div>
+              <div id="set">팔로워</div>
               <div id="data">{user.userFollowerCnt}</div>
             </div>
           </div>

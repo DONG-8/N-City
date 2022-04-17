@@ -47,16 +47,16 @@ const InnerContentContainer = styled.div`
     img{
       position: absolute;
       width: 15px;
-      height: auto;
+      height: 15px;
       margin-left: 5px;
     }
   }
 `;
 
 const InnerContent = styled.div`
-display: flex;
-align-items: center;
-  margin-right: 4vw;
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
   svg {
     width: 12px;
   }
@@ -87,7 +87,6 @@ interface Iitem {
   const ProductSearchResult:React.FC<Iitem> = ({item, searchValue,onclose}) => {
   const [items, setItems] = useState(item)
   const navigate = useNavigate();
-  console.log(item)
   const onClickItem = (productId) => {
     onclose()
     navigate(`/store/detail/${productId}`)
@@ -96,11 +95,11 @@ interface Iitem {
   const getVerifiedMark = (userType: string) => {
     switch (userType) {
       case "ROLE_INFLUENCER":
-        return <img src={influencer} alt="mark" />;
+        return <img src={influencer} title='influencer' alt="mark" />;
       case "ROLE_ARTIST":
-        return <img src={artist} alt="mark" />;
+        return <img src={artist}  title='artist' alt="mark" />;
       case "ROLE_ENTERPRISE":
-        return <img src={enterprise} alt="mark" />;
+        return <img src={enterprise} title='enterprise' alt="mark" />;
       default:
         return;
     }

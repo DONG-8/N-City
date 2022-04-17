@@ -4,10 +4,11 @@ import styled from "styled-components";
 import PersonIcon from "@material-ui/icons/Person";
 import SearchBar from "./SearchBar";
 import CoinChargeModal from "../Mint/CoinChargeModal";
-import logo from './logo.png'
 import { useMutation } from "react-query";
 import { getLogout } from "../../store/apis/log";
 import GameStartButton from "./GameStartButton";
+import Logo from "../../essets/images/logo2.png";
+import Logotext from "../../essets/images/logo2_text.png";
 
 const NavbarWrrap = styled.div`
   /* display: block; */
@@ -40,16 +41,22 @@ const NavbarBox = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
   }
 
   img {
-    margin-top: 5px;
-    height: 40px;
-    margin-left: 10px;
+    height: 50px;
+    margin-left: 5px;
   }
   .pageName {
+    display: flex;
+    align-items: center;
     font-size: 40px;
-    margin: 0 15px;
     min-width: 120px;
   }
 
@@ -61,7 +68,8 @@ const NavbarBox = styled.div`
     font-size: 20px;
     text-align: center;
     .inner {
-      width: 120px;
+      width: 5.5vw;
+      min-width: 80px;
     }
     .game {
       display: flex;
@@ -71,16 +79,17 @@ const NavbarBox = styled.div`
       min-width: 200px;
       height: 80px;
       background: linear-gradient(-45deg, #ffaa98, #fef0d3, #fddfd2, #ff9788);
-      background: linear-gradient(-45deg, #f3f3ff, #63638b , #7373f8 , #9d9dc5 );
+      background: linear-gradient(-45deg, #f3f3ff, #63638b, #7373f8, #9d9dc5);
       color: white;
       background-size: 400% 400%;
       font-size: 35px;
       cursor: pointer;
     }
 
-    .community{
+    .community {
       position: relative;
-      width: 120px;
+      width: 5.5vw;
+      min-width: 80px;
       height: 80px;
       display: flex;
       align-items: center;
@@ -113,9 +122,9 @@ const NavbarBox = styled.div`
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      .name{
+      .name {
         margin-left: 10px;
-        color:#6225E6; //🎨메인색🎨
+        color: #6225e6; //🎨메인색🎨
         font-weight: 600;
       }
       .hide {
@@ -133,9 +142,9 @@ const NavbarBox = styled.div`
           margin-top: 10px;
           margin-bottom: 10px;
         }
-      }  
+      }
     }
-    .community:hover{
+    .community:hover {
       .hide2 {
         display: block;
         @keyframes fadein {
@@ -179,86 +188,101 @@ const SearchBarContainer = styled.div`
   height: 80px;
   display: flex;
   justify-content: center;
-  `;
+`;
 
 export default function Navbar() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
   const [openCoin, setOpenCoin] = useState(false);
-  const [nickName,setNickName] = useState('')
-  const [userId,setUserId] = useState('')
-  
-  window.onstorage = event => {
+  const [nickName, setNickName] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  window.onstorage = (event) => {
     if (event.key !== "userNickname") return;
-    console.log("스토리지변경감지")
-    const newNick = sessionStorage.getItem("userNickname")
-    if (newNick) setNickName(newNick)
-  }
+    
+    const newNick = sessionStorage.getItem("userNickname");
+    
+    if (newNick) {
+      setNickName(newNick);
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  };
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-
-  useEffect(()=>{
-    setUserId(sessionStorage.getItem('userId')||'')
-    if (userId===''){setIsLogin(false)} // userId가 있다면 로그인 되어있음
-    else{
-      setIsLogin(true)
-      setNickName(sessionStorage.getItem('userNickname')||'')
+  useEffect(() => {
+    
+    if (sessionStorage.getItem("userId")) {
+      setIsLogin(true);
+      setNickName(sessionStorage.getItem("userNickname"));
+    } // userId가 있다면 로그인 되어있음
+    else {
+      setIsLogin(false);
     }
-  },[isLogin])
-  
-  const login = ()=>{ // 위에 세줄 지우기 ⭐ 
+  }, []);
+
+  const login = () => {
+    // 위에 세줄 지우기 ⭐
     navigate("/login");
-  }
+  };
 
-  const logout = ()=>{
-    get_logout.mutate()
+  const logout = () => {
+    setIsLogin(false);
+    get_logout.mutate();
     navigate("/");
-  }
+    
+  };
 
-  const get_logout = useMutation<any,Error>(
-    'getProductLike',
-    async()=>{return(
-      await (getLogout())
-    )},
-    {onSuccess:(res)=>{
-      setIsLogin(false)
-      sessionStorage.removeItem('userId')
-      sessionStorage.removeItem('userNickname')
-    },onError:(err)=>{console.log('로그아웃실패')}
+  const get_logout = useMutation<any, Error>(
+    "get_logout",
+    async () => {
+      return await getLogout();
+    },
+    {
+      onSuccess: (res) => {
+
+        sessionStorage.removeItem("userId");
+        sessionStorage.removeItem("userNickname");
+      },
+      onError: (err) => {
+        
+        sessionStorage.removeItem("userId");
+        sessionStorage.removeItem("userNickname");
+      },
     }
-  )
+  );
 
   const goToGame = () => {
     if (isLogin === true) {
-      navigate("/ingame");
+      navigate("/ingame/" + sessionStorage.getItem("userId"));
     } else {
       navigate("/ingame");
     }
   };
 
-  
-  if (window.location.pathname === '/ingame') return null;
+  if (window.location.pathname.slice(0, 7) === "/ingame") return null;
 
   return (
     <>
       <NavbarWrrap>
         <NavbarBox>
-          <div className="container">
-            <div>
-              <Link to="/">
-                <img src={logo} alt="로고" />
-              </Link>
+          <Link to="/">
+            <div className="container">
+              <div className="logo">
+                <img src={Logo} alt="로고" />
+              </div>
+              <div className="pageName">
+                <img src={Logotext} alt="로고" />
+              </div>
             </div>
-            <div className="pageName">
-              <Link to="/">Nct</Link>
-            </div>
-          </div>
+          </Link>
           <SearchBarContainer>
-            <SearchBar/>
+            <SearchBar />
           </SearchBarContainer>
           <div className="secondContainer">
             <div className="community">
@@ -270,9 +294,12 @@ export default function Navbar() {
                 <Link className="inner" to="event">
                   <p>Event</p>
                 </Link>
+                <Link className="inner" to="guide">
+                  <p>Guide</p>
+                </Link>
               </div>
             </div>
-            
+
             <Link className="inner" to="store">
               <p>NFTs</p>
             </Link>
@@ -280,24 +307,31 @@ export default function Navbar() {
               <p>Citizen</p>
             </Link>
 
-            {isLogin &&
-            <Link className="inner" to="mint">
-              <p>Create</p>
-            </Link>}
-            {isLogin ? ( // 로그인 되었으면 
+            {isLogin && (
+              <Link className="inner" to="mint">
+                <p>Create</p>
+              </Link>
+            )}
+            {isLogin ? ( // 로그인 되었으면
               <div className="profile">
-                <PersonIcon/>
+                <PersonIcon />
                 <p className="name">{nickName}님</p>
-                
+
                 <div className="hide">
                   <div>
-                      <p onClick = {()=>{setOpenCoin(true)}}>NCT 충전</p>
-                      <CoinChargeModal open={openCoin} setOpen={setOpenCoin} /> 
+                    <p
+                      onClick={() => {
+                        setOpenCoin(true);
+                      }}
+                    >
+                      NCT 충전
+                    </p>
+                    <CoinChargeModal open={openCoin} setOpen={setOpenCoin} />
                   </div>
                   <div>
-                      <Link to={"mypage/" + sessionStorage.getItem("userId")}>
-                        <p>마이페이지</p>
-                      </Link>
+                    <Link to={"mypage/" + sessionStorage.getItem("userId")}>
+                      <p>마이페이지</p>
+                    </Link>
                   </div>
                   <div>
                     <Link className="inner" to="character">
@@ -305,16 +339,34 @@ export default function Navbar() {
                     </Link>
                   </div>
                   <div>
-                    <p onClick={()=>{logout()}}>로그 아웃</p>
+                    <Link className="inner" to="apply">
+                      <p>인증신청</p>
+                    </Link>
+                  </div>
+                  <div>
+                    <p
+                      onClick={() => {
+                        logout();
+                      }}
+                      style={{color:"rebeccapurple"}}
+                    >
+                      로그아웃
+                    </p>
                   </div>
                 </div>
               </div>
             ) : (
               <>
                 <div className="profile">
-                  <p className="inner" onClick={()=>{login()}} >로그인</p>
-                  <div className="hide">
-                  </div>
+                  <p
+                    className="inner"
+                    onClick={() => {
+                      login();
+                    }}
+                  >
+                    로그인
+                  </p>
+                  <div className="hide"></div>
                 </div>
               </>
             )}

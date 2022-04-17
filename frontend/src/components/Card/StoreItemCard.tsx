@@ -13,6 +13,16 @@ import Tooltip from "@mui/material/Tooltip";
 import influencer from "../../essets/images/influencer-mark.png"
 import artist from "../../essets/images/artist-mark.png"
 import enterprise from "../../essets/images/enterprise-mark.png"
+import 'moment/locale/ko';
+
+const Wrapper = styled.div`
+  #character{
+    border:2px solid #636dffcd ;
+  }
+  #normal{
+  border:0.5px solid #E9E4E4;
+  }
+`
 
 const CardWrapper = styled.div`
   cursor: pointer;
@@ -53,7 +63,7 @@ const CardCenter = styled.div`
 const CardBottom = styled.div`
   margin-top: -14px;
   height: 35px;
-  border-radius: 0 0 5px 5px;
+  border-radius: 0 0 10px 10px;
   background-color: whitesmoke;
   display: flex;
   justify-content: space-between;
@@ -135,17 +145,19 @@ interface Iprops {
     favorite: boolean;
     tokenId?: number;
     userRole: string;
+    productAuctionEndTime: string;
   }; 
 }
 
 const StoreItemCard:React.FC<Iprops>= ({item}) => {
   const navigate = useNavigate()
   const goDetailPage = (productId)=>{
-    // localStorage.setItem("item",JSON.stringify(item))
+    // sessionStorage.setItem("item",JSON.stringify(item))
     navigate(`/store/detail/${productId}`)
   }
   const [liked,setLiked] = useState(item.favorite)
   const [likes,setLikes] = useState(item.productFavoriteUser.length)
+  const moment = require('moment')
 
   const addLike = useMutation<any, Error>(
     "addLike",
@@ -154,10 +166,12 @@ const StoreItemCard:React.FC<Iprops>= ({item}) => {
     },
     {
       onSuccess: async (res) => {
-        console.log("좋아요 성공", res);
+        
       },
       onError: (err: any) => {
-        console.log(err, "에러발생");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   ); 
@@ -169,10 +183,13 @@ const StoreItemCard:React.FC<Iprops>= ({item}) => {
     },
     {
       onSuccess: async (res) => {
-        console.log("좋아요 취소 성공", res);
+        
       },
       onError: (err: any) => {
-        console.log(err, "에러발생");
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
+      
       },
     }
   ); 
@@ -180,14 +197,35 @@ const StoreItemCard:React.FC<Iprops>= ({item}) => {
   const getVerifiedMark = (userType: string) => {
     switch (userType) {
       case "ROLE_INFLUENCER":
-        return <img src={influencer} alt="mark" />;
+        return <img src={influencer} title='influencer' alt="mark" />;
       case "ROLE_ARTIST":
-        return <img src={artist} alt="mark" />;
+        return <img src={artist}  title='artist' alt="mark" />;
       case "ROLE_ENTERPRISE":
-        return <img src={enterprise} alt="mark" />;
+        return <img src={enterprise} title='enterprise' alt="mark" />;
       default:
         return;
     }
+  }
+
+  function leadingZeros(n, digits) {
+    var zero = '';
+    n = n.toString();
+  
+    if (n.length < digits) {
+      for (var i = 0; i < digits - n.length; i++)
+        zero += '0';
+    }
+    return zero + n;
+  }
+  
+  const convertDate = (dateArray) => {
+    const year = String(dateArray[0]);
+    const month = String(dateArray[1]);
+    const day = String(dateArray[2]);
+    const hour = String(dateArray[3])
+    const minute = String(dateArray[4])
+    const second = String(dateArray[5] ? dateArray[5] : "00")
+    return year + "-" + leadingZeros(month, 2) + "-" + leadingZeros(day, 2) + " " + leadingZeros(hour, 2) + ":" + leadingZeros(minute, 2)+ ":" + leadingZeros(second, 2)
   }
 
   const onClickAddLike = async () => {
@@ -203,8 +241,8 @@ const StoreItemCard:React.FC<Iprops>= ({item}) => {
   }
 
   return (
-    <>
-      <CardWrapper>
+    <Wrapper>
+      <CardWrapper id={item.productCode===7?'character':'normal'}>
         <Image
           onClick={() => {
             goDetailPage(item.productId);
@@ -253,15 +291,15 @@ const StoreItemCard:React.FC<Iprops>= ({item}) => {
             {likes}
           </div>
           <div>
-            {item.productState === 1 ? (
-              <SaleState>경매중 {item.productPrice}NCT</SaleState>
-            ) : item.productState === 2 ? (
+            {item.productState === 1 && convertDate(item.productAuctionEndTime) && (moment(convertDate(item.productAuctionEndTime)).isBefore(moment()) && <SaleState>경매종료</SaleState>)}
+            {item.productState === 1 && convertDate(item.productAuctionEndTime) && !moment(convertDate(item.productAuctionEndTime)).isBefore(moment()) &&<SaleState>경매중 {item.productPrice}NCT</SaleState>}
+            {item.productState === 2 && (
               <SaleState>판매중 {item.productPrice}NCT</SaleState>
-            ) : null}
+            )}
           </div>
         </CardBottom>
       </CardWrapper>
-    </>
+    </Wrapper>
   );
 }
 

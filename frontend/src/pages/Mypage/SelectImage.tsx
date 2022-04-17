@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQuery } from 'react-query';
 import { getUsercollectedInfo } from '../../store/apis/user';
+import { useNavigate } from 'react-router-dom';
 
 
 const Wrapper = styled.div`
@@ -65,16 +66,19 @@ const ImgBox = styled.div`
 
 const SelectImage:React.FC<Iprops> = ({userId,open,setOpen,setuserURL}) => {
   const handleClose = () => setOpen(false);
+  const navigate = useNavigate();
   const { isLoading:ILA, data:items } = useQuery<any>(
     "getUsercollectedInfo",
     async () => {return (await (getUsercollectedInfo(Number(userId))))
     },
     {
       onSuccess: (res) => {},
-      onError: (err: any) => {console.log(err, "요청 실패")}
+      onError: (err: any) => {
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }}
     }
   );
-  console.log(items)
   return (
     <Modal 
       open={open}
@@ -95,8 +99,10 @@ const SelectImage:React.FC<Iprops> = ({userId,open,setOpen,setuserURL}) => {
             </div>
           }
           {items!==undefined &&
-            (items.content).map((item)=>{
-              return(<img alt='img' 
+            (items.content).map((item,idx)=>{
+              return(
+              <img alt='img' 
+              key={idx}
               onClick={()=>{
               setuserURL(item.productThumbnailUrl);
               handleClose()}

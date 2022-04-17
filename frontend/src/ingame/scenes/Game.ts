@@ -16,14 +16,12 @@ import Network from '../services/Network'
 import { PlayerBehavior } from '../../types/PlayerBehavior'
 import store from '../stores'
 import { setFocused, setShowChat } from '../stores/ChatStore'
+import { closeVendingMachineDialogOpen } from '../stores/VendingMachineStore'
 import stores from "../stores"
 
-enum GameMode {
-  GAME,
-  EDIT
-}
-
 export default class Game extends Phaser.Scene {
+  myArtList = {content:[{productThumbnailUrl:'', productId:0, productView:true, productXCoordinate:0, productYCoordinate: 0}]}
+
   network!: Network // null이 될수가 없는 변수에 대해서 지정
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private keyE!: Phaser.Input.Keyboard.Key
@@ -51,10 +49,9 @@ export default class Game extends Phaser.Scene {
     })
     this.input.keyboard.on('keydown-ESC', (event) => {
       store.dispatch(setShowChat(false))
+      store.dispatch(closeVendingMachineDialogOpen())
     })
     this.input.keyboard.on('keydown-CTRL', (event) => {
-      console.log('캐릭터 x 좌표 : ',this.myPlayer.x)
-      console.log('캐릭터 y 좌표 : ',this.myPlayer.y)
     })
   }
 
@@ -76,21 +73,17 @@ export default class Game extends Phaser.Scene {
     
     this.cameras.main.zoom = 1.6
     
-    
-
     createCharacterAnims(this.anims)
 
     this.map = this.make.tilemap({ key: 'tilemap' }) // 맵만들기 ⭐⭐⭐
-    console.log(this.map)
     const FloorAndGround = this.map.addTilesetImage('FloorAndGround', 'tiles_wall')
-
+    
     const groundLayer = this.map.createLayer('Ground', FloorAndGround)
-    console.log(groundLayer)
     groundLayer.setCollisionByProperty({ collides: true })
 
     // debugDraw(groundLayer, this) // 만들어둔 debug 사용해보기
 
-    this.myPlayer = this.add.myPlayer(705, 500, 'adam', this.network.mySessionId) // 시작 할때 캐릭터 위치 설정
+    this.myPlayer = this.add.myPlayer(640, 896, '1', this.network.mySessionId) // 시작 할때 캐릭터 위치 설정
     this.playerSelector = new PlayerSelector(this, 0, 0, 16, 16) // ⭐player selector가 뭘까
 
     // 의자 위치 잡기
@@ -111,6 +104,7 @@ export default class Game extends Phaser.Scene {
       const id = `${i}`
       item.id = id
       this.computerMap.set(id, item)
+      item.name = "computer"
     })
 
     // import whiteboards objects from Tiled map to Phaser
@@ -127,19 +121,25 @@ export default class Game extends Phaser.Scene {
         'whiteboards',
         'whiteboard'
       ) as Whiteboard
-      // console.log(item,'아이템 뽑아왔어요')
       const id = `${i}`
       item.id = id
-      // console.log(this.whiteboardMap, '화이트보트맵', id)
       this.whiteboardMap.set(id, item)
     })
 
     // import vending machine objects from Tiled map to Phaser
     const vendingMachines = this.physics.add.staticGroup({ classType: VendingMachine })
-    const vendingMachineLayer = this.map.getObjectLayer('VendingMachine')
-    console.log(vendingMachineLayer)
-    vendingMachineLayer.objects.forEach((obj, i) => {
-      this.addObjectFromTiled(vendingMachines, obj, 'vendingmachines', 'vendingmachine')
+    // const vendingMachineLayer = this.map.getObjectLayer('VendingMachine')
+    // vendingMachineLayer.objects.forEach((obj, i) => {
+    //   this.addObjectFromTiled(vendingMachines, obj, 'vendingmachines', 'vendingmachine')
+    // })
+
+    // 작품 세팅
+    this.myArtList.content.map((product, idx) => {
+      if (product.productView) {
+        // this.add.image(product.productXCoordinate, productYCoordinate, `${this.itemGid}`).setDepth(this.marker.y+16).setInteractive()
+        vendingMachines.get(product.productXCoordinate, product.productYCoordinate, String(product.productId), String(product.productId))
+        .setDepth(10)
+      }
     })
     
     this.addGroupFromTiled('Wall', 'tiles_wall', 'FloorAndGround', false)
@@ -154,11 +154,11 @@ export default class Game extends Phaser.Scene {
     this.cameras.main.startFollow(this.myPlayer, true) // 인칭
 
     this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], groundLayer) // 충돌나는 물건들 
-    this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines) //  충돌
+    // this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], vendingMachines) //  충돌
    
     this.physics.add.overlap( // ⭐ 이거 없으면 상호작용 불가
       this.playerSelector,
-      [chairs, computers, whiteboards, vendingMachines],
+      [chairs, whiteboards, vendingMachines],
       this.handleItemSelectorOverlap,
       undefined,
       this
@@ -221,7 +221,7 @@ export default class Game extends Phaser.Scene {
   ) {
     const group = this.physics.add.staticGroup()
     const objectLayer = this.map.getObjectLayer(objectLayerName)
-    objectLayer.objects.forEach((object) => {
+    objectLayer?.objects.forEach((object) => {
       const actualX = object.x! + object.width! * 0.5
       const actualY = object.y! - object.height! * 0.5
       // if (objectLayerName === 'GenericObjects') {
@@ -229,7 +229,7 @@ export default class Game extends Phaser.Scene {
       // }
       group
         .get(actualX, actualY, key, object.gid! - this.map.getTileset(tilesetName).firstgid)
-        .setDepth(actualY)
+        .setDepth(objectLayerName === 'GenericObjects' ? 10 : actualY)
     })
     if (this.myPlayer && collidable)
       this.physics.add.collider([this.myPlayer, this.myPlayer.playerContainer], group)
@@ -237,7 +237,9 @@ export default class Game extends Phaser.Scene {
 
   // 새로운 player가 들어왔을 때  추가해주기
   private handlePlayerJoined(newPlayer: IPlayer, id: string) {
-    const otherPlayer = this.add.otherPlayer(newPlayer.x, newPlayer.y, 'adam', id, newPlayer.name)
+
+  
+    const otherPlayer = this.add.otherPlayer(newPlayer.x, newPlayer.y, '1', id, newPlayer.name)
     this.otherPlayers.add(otherPlayer)
     this.otherPlayerMap.set(id, otherPlayer)
   }

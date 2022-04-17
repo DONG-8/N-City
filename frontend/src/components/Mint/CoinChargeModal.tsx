@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import CloseIcon from '@mui/icons-material/Close';
 import { useMutation } from 'react-query';
 import { putAuthApplyToken } from '../../store/apis/authentication';
+import { useNavigate } from 'react-router-dom';
 
 interface Iprops{
   open:boolean,
@@ -16,8 +17,8 @@ font-family: "Noto Sans KR", sans-serif;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #3f3f8d  ;
-  width: 40%;
-  height: 45vh;
+  width: 600px;
+  height: 400px;
   border-radius: 5px;
   border: none;
   display: flex;
@@ -64,6 +65,7 @@ const Contents= styled.div`
     font-size: 2vh;
     font-weight: 500;
     color: black;
+    overflow: hidden;
   }
   .gray{
     color: gray;
@@ -75,7 +77,8 @@ const Contents= styled.div`
 
 const CoinChargeModal:React.FC<Iprops> = ({open,setOpen}) => {
   const handleClose = () => setOpen(false);
-
+  const navigate = useNavigate();
+  
   const applyToken = useMutation<any, Error>(
     "applyToken",
     async () => {
@@ -83,13 +86,14 @@ const CoinChargeModal:React.FC<Iprops> = ({open,setOpen}) => {
     },
     {
       onSuccess: (res) => {
-        console.log("토큰신청  성공!",res);
+        
         alert("성공적으로 신청되었습니다.")
         handleClose();
       },
       onError: (err: any) => {
-        alert("신청오류")
-        console.log("❌토큰신청 실패!",err);
+        if (err.response.status === 401) { 
+          navigate("/login")
+        }
       },
     }
   );
@@ -117,7 +121,7 @@ const CoinChargeModal:React.FC<Iprops> = ({open,setOpen}) => {
         <Contents>
             <div className="content">
               <p> 토큰이 부족하세요?</p>
-              <p> 운영자에게 달라고 쫄라보세요.</p>
+              <p> 운영자에게 부탁해 보세요ㅎ</p>
             </div>
             <Button color='inherit' variant="contained" onClick={onClickApplyToken}>
               NCT 토큰충전 신청하기

@@ -17,14 +17,15 @@ import GameApp from "./ingame/GameApp";
 import { Provider } from "react-redux";
 import gamestore from "./ingame/stores";
 import phaserGame from "./ingame/PhaserGame";
-import YNTest from "./pages/Test/YNTest";
 import SearchPage from "./pages/NFTStore/SearchPage";
 import MapChoice from "./pages/Room/MapChoice";
 import Character from "./pages/Mypage/Character";
+import Guide from "./pages/Guide/Guide";
+import EmailCheck from "./pages/Login/EmailCheck";
 
 function App() {
   useEffect(() => {
-    if (window.location.pathname === "/ingame") {
+    if (window.location.pathname.slice(0, 7) === "/ingame") {
       (window as any).game = phaserGame;
     } else {
       (window as any).game.destroy(true);
@@ -50,13 +51,14 @@ function App() {
             <Route path="/mint" element={<Mint />} />
             <Route path="/profilesetting" element={<ProfileSetting />} />
             <Route path="/event" element={<EventPage />} />
-            <Route path="/event/detail" element={<EventDetail />} />
+            <Route path="/event/:eventId" element={<EventDetail />} />
             <Route path="/rank" element={<Rank />} />
             <Route path="/artists" element={<Artists />} />
-            <Route path="/YNTest" element={<YNTest />} />
             <Route path="/search/:data" element={<SearchPage />} />
-            <Route path="/ingame" element={<GameApp />} />
+            <Route path="/guide" element={<Guide />} />
+            <Route path="/ingame/:userId" element={<GameApp />} />
             <Route path="/character" element={<Character />} />
+            <Route path="/EmailConfirmGetRes.html" element={<EmailCheck/>}/>
           </Routes>
         </Provider>
         <Footer />

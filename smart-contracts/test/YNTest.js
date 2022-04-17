@@ -21,10 +21,6 @@ contract("Sale Contract Testing", (accounts) => {
     const seller = accounts[0];
     const bidder1 = accounts[1];
     const bidder2 = accounts[2];
-    console.log(`\n--------------------  ${title} --------------------`);
-    console.log(`Seller: ${seller} ${await getBalance(seller)}`);
-    console.log(`Bidder1: ${bidder1} ${await getBalance(bidder1)}`);
-    console.log(`Bidder2: ${bidder2} ${await getBalance(bidder2)}\n`);
   }
 
   it("SaleFactory create", async () => {
@@ -42,9 +38,7 @@ contract("Sale Contract Testing", (accounts) => {
     await nftContract.create(seller, uri, { from: seller });
     let tokenId2 = await nftContract.current();
     
-    console.log(nftContract.address);
     const temp = await nftContract.tokenURI(itemId);
-    console.log(temp);
     // uint256 itemId,
     // uint256 minPrice,
     // uint256 purchasePrice,
@@ -55,10 +49,8 @@ contract("Sale Contract Testing", (accounts) => {
     const tempSaleAddress1 = await salesFactoryContract.createSale(itemId, 10, 20, 10, 20, ssafyTokenContract.address, nftContract.address,  { from: seller });
     const SaleAddress1 = SaleAddress1.logs[0].args._saleContract
     await salesFactoryContract.createSale(tokenId2, 10, 20, 10, 20, ssafyTokenContract.address, nftContract.address,  { from: seller });
-    console.log(await salesFactoryContract.allSales());
     
     // const temp = await salesFactoryContract.allSales();
-    // console.log(temp)
     // TODO
     // 다음을 테스트를 통과해야합니다.
     // assert.equal(bidder2, await getNftOwner(), "Confirm Failed");

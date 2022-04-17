@@ -61,4 +61,13 @@ public class UserProductWithIsFavoriteRes {
 
     @ApiModelProperty(value = "유저 종류")
     private String userRole;
+
+    @ApiModelProperty(value = "상품 x 좌표")
+    private Integer productXCoordinate;
+
+    @ApiModelProperty(value = "상품 y 좌표")
+    private Integer productYCoordinate;
+
+    @ApiModelProperty(value = "상품 보이게 안보이게")
+    private Boolean productView;
 }

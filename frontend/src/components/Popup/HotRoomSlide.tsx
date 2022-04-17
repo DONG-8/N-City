@@ -14,7 +14,6 @@ const SubBannerWrraper = styled.div`
   color: white;
   /* margin: -400px auto 0 10px; */
 `;
-
 const SubBanner = styled.div`
   width: 420px;
   height: 300px;
@@ -147,7 +146,6 @@ const HotRoomSlide = () => {
     { onSuccess:(res)=>{
     },
       onError: (err: any) => {
-        console.log(err, "판매중 정보 실패");
       },
     }
   );

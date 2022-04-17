@@ -27,7 +27,12 @@ export const getProductAll =async ({page,size}:API.TypeProductGetAll) => {
   );
   return response.data
 }
-
+export const getProductNew =async () => {
+  const response = await apiClient.get<any>(
+    '/products/all/new', 
+  );
+  return response.data
+}
 
 
 // 상품등록
@@ -36,7 +41,6 @@ export const postProduct = async (formdata : any) => {
     `/products`, 
     formdata
   )
-  console.log("상품등록")
   return response.data
 }
 
@@ -46,7 +50,6 @@ export const putTokenID = async (data : any) => {
     `/products/token`,
     data
   )
-  console.log("상품정보업데이트")
   return response.data
 }
 
@@ -102,6 +105,16 @@ export const getProductSearch = async (productTitle : string) => {
   const response = await apiClient.get<any>(
     `/products/search/${productTitle}`
   )
+  return response.data
+}
+
+// 상품 배치(마이룸)
+export const putProductXYView = async (data : any) => {
+  const response = await apiClient.put<any>(
+    `/products/myroom`,
+    data
+  )
+
   return response.data
 }
 

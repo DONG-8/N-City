@@ -8,6 +8,10 @@ enum BackgroundMode {
   NIGHT,
 }
 
+interface userProductInfo {
+  content:[{productFileUrl:'', productId:0, productView: true, productXCoordinate:0, productYCoordinate: 0}]
+}
+
 export function getInitialBackgroundMode() {
   const currentHour = new Date().getHours() // 시간 파악후 
   return currentHour > 6 && currentHour <= 18 ? BackgroundMode.DAY : BackgroundMode.NIGHT // 낮밤 고르게 하기
@@ -30,6 +34,7 @@ export const userSlice = createSlice({
     videoConnected: false, // 비디오 연결 유무
     loggedIn: false, // 로그인 되어있나
     playerNameMap: new Map<string, string>(), // 뭘까요
+    userProducts: {content:[{productFileUrl:'', productId:0, productView: true, productXCoordinate:0, productYCoordinate: 0}]}
   },
   reducers: {
     toggleBackgroundMode: (state) => {  // 배경 바꿔주기
@@ -49,11 +54,14 @@ export const userSlice = createSlice({
       state.loggedIn = action.payload
     },
     setPlayerNameMap: (state, action: PayloadAction<{ id: string; name: string }>) => { //방이름 이름 저장
-      state.playerNameMap.set(sanitizeId(action.payload.id), action.payload.name)
+      state.playerNameMap.set(action.payload.id, action.payload.name)
     },
     removePlayerNameMap: (state, action: PayloadAction<string>) => { // 
       state.playerNameMap.delete(sanitizeId(action.payload))
     },
+    setUserProducts: (state, action : PayloadAction<userProductInfo> ) => {
+      state.userProducts = action.payload
+    }
   },
 })
 
@@ -64,6 +72,7 @@ export const {
   setLoggedIn,
   setPlayerNameMap,
   removePlayerNameMap,
+  setUserProducts
 } = userSlice.actions
 
 export default userSlice.reducer

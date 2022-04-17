@@ -2,20 +2,21 @@ import React, {  useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { getProductAll, getSellProduct } from '../../store/apis/product'
 import { useMutation, useQuery } from 'react-query'
-import ItemCard2 from '../../components/Card/ItemCard2'
-import ItemCard from '../../components/Card/ItemCard'
 import ToggleSwitch from './ToggleSwitch'
 import ToggleSwitch2 from './ToggleSwitch2'
 import IsLoading2 from './IsLoading2'
-import IsLoading from './IsLoading'
-import StoreItemCard from '../../components/Card/StoreItemCard'
-
+import StoreItemCard from '../../components/Card/StoreItemCard' 
+import { randomwords, words } from './words'
 const Wrapper = styled.div`
+  .ISL{
+    margin-top: -5vh;
+
+  }
   .loading{
     text-align: center;
     font-size: 2.5vh;
     font-weight: 600;
-    margin-top: -5vh;
+    margin-top: -7vh;
   }
 
 `
@@ -75,6 +76,7 @@ const IntroBox = styled.div`
   margin-top: 10vh;
   display: flex;
   margin-bottom:5vh;
+  overflow-y: hidden;
 
 `
 const Left = styled.div`
@@ -82,7 +84,7 @@ const Left = styled.div`
   .text{
     margin-left: 5vw;
     margin-top: 8vh;
-  
+    
   .h1{
     font-size: 8vh;
     margin-bottom: 5vh;
@@ -114,7 +116,7 @@ const Right = styled.div`
       font-size: 3rem;
       text-align: center;
       margin-left: 1vw;
-      margin-bottom: 10vh;
+      margin-top : -30px;
     }
   }
   img {
@@ -175,11 +177,10 @@ const NFTStore = () => {
     "prouductAll",
     async () => {return (await (getProductAll({ page: 1, size: 1000 }) ))},
     { onSuccess:(res)=>{
-      console.log(res)
       setAllitems(res.content)
       setShowItems(res.content)
     },
-      onError: (err: any) => {console.log(err, "상품정보 가져오기 오류")},
+      onError: (err: any) => {},
     });
   const getSale = useMutation<any,Error>(
     "getSellProduct",
@@ -191,7 +192,6 @@ const NFTStore = () => {
         setShowSales(res.content)
       },
       onError: (err: any) => {
-        console.log(err, "판매중 정보 실패");
       },
     }
   );
@@ -227,7 +227,6 @@ const NFTStore = () => {
   },[status])
 
   useEffect(()=>{
-    console.log('필터 함수!!!!!!!!')
     getFilter(filter)
   },[filter])
 
@@ -239,15 +238,15 @@ const NFTStore = () => {
         <Left>
           <div className='text'>
             <div className='h3'>NFT Marketplace</div>
-            <div className='h1'>N-city Store</div>
-            <div className='h4'>N-city는 다양한 <span className='blue'>NFT 작품</span>들을 판매하고 있습니다. </div>
+            <div className='h1'>N-City Store</div>
+            <div className='h4'>N-City는 다양한 <span className='blue'>NFT 작품</span>들을 판매하고 있습니다. </div>
             <div className='h4'><span className='purple'>NCT 토큰</span>을 이용해 갤러리를 구경하고 거래할 수 있습니다. </div>
             <div className='h4'>물건을 구입해 <span className='blue'>마이룸</span>을 꾸미세요. </div>
           </div>
         </Left>
         <Right>
           <div className='black'>
-          <img alt='black' src='https://i.gifer.com/7VA.gif' />            <div className='text'><p>N-city Store</p></div>
+          <img alt='black' src='https://i.gifer.com/7VA.gif' />            <div className='text'><p>N-City Store</p></div>
           </div>
         </Right>
       </IntroBox>
@@ -313,10 +312,12 @@ const NFTStore = () => {
       </>
       }
           {allitems.length===0 &&
-          <>
+          <div className='ISL'>
           <IsLoading2/>
-          <div className='loading'>Loading..</div>
-          </>}
+          <div className='loading'>
+            {randomwords()}
+          </div>
+          </div>}
         <ItemCards>
           {!status && showItems && !order&&
           ([...showItems].reverse()).map((item,idx) => {

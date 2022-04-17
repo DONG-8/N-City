@@ -28,7 +28,6 @@ export const postAuthentiaction = async (formdata: any) => {
     '/authentication', 
     formdata
   )
-  console.log("인증요청 등록")
   return response.data
 }
 
@@ -78,7 +77,7 @@ export const getAuthFileDownload = async (file : string) => {
 // 토큰 재신청
 export const putAuthApplyToken = async (userId: number) => {
   const response = await apiClient.put<any>(
-    `/authentication/token/request/${userId}`,
+    `/users/token/request/${userId}`,
   )
   return response.data
 }

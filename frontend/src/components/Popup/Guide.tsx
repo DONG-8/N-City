@@ -4,10 +4,9 @@ import styled from "styled-components";
 import GuideSlide from "./GuideSlide";
 import HotArtistSlide from "./HotArtistSlide";
 import HotRoomSlide from "./HotRoomSlide";
-import SmallSlide from "./SmallSlide";
 
 const InnreContent = styled.div`
-  width: 1500px;
+  width: 1450px;
   height: 500px;
   /* background-color: pink; */
   display: flex;
@@ -46,15 +45,18 @@ const ShopIcon = styled.div`
   align-items: center;
   flex-direction: row;
   cursor: pointer;
-  h4{
+  h4 {
     margin-left: 20px;
-    margin-top: 40px;
+    margin-top: 20px;
   }
-  .one{
+  .one {
     margin-top: -10px;
   }
-  &#end{
+  &#end {
     margin-right: 5vw;
+  }
+  .color {
+    color: #6225e6;
   }
 `;
 
@@ -72,7 +74,7 @@ const SubText = styled.div`
 `;
 
 const Guide = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <InnreContent>
       <FlexBox>
@@ -80,55 +82,72 @@ const Guide = () => {
           <SubText>
             <h3>Hot Room</h3>
           </SubText>
-          <HotRoomSlide/>
+          <HotRoomSlide />
         </InnerFlexBox>
 
         <InnerFlexBox>
           <SubText>
             <h3>Hot Citizen</h3>
           </SubText>
-          <HotArtistSlide/>
+          <HotArtistSlide />
         </InnerFlexBox>
 
         <InnerFlexBox>
           <SubText>
             <h3>Guide</h3>
-            <h1>+</h1>
+            <h1
+              onClick={() => {
+                navigate("/guide");
+              }}
+            >
+              +
+            </h1>
           </SubText>
-          <GuideSlide/>
+          <GuideSlide />
         </InnerFlexBox>
       </FlexBox>
       <FlexBox2>
-          <ShopIcon  onClick={()=>{navigate('/artists')}}>
-            <img className="one" src="essets/images/방문.png" alt="" />
-            <h4>
-              다른 사람의 방이 궁금하다면?
-              <br />
-              <br />
-              방 구경하러 가기
-            </h4>
-          </ShopIcon>
+        <ShopIcon
+          onClick={() => {
+            navigate("/artists");
+          }}
+        >
+          <img className="one" src="essets/images/방문.png" alt="" />
+          <h4>
+            다른 사람의 방이 궁금하다면?
+            <br />
+            <br />
+            <span className="color">방 구경하러 가기</span>
+          </h4>
+        </ShopIcon>
 
-          <ShopIcon  onClick={()=>{navigate('/nftstore')}}>
+        <ShopIcon
+          onClick={() => {
+            navigate("/store");
+          }}
+        >
           <img src="essets/images/거래소.png" alt="" />
           <h4>
             더 다양한 물품들을 만나보세요!
             <br />
             <br />
-            거래소
+            <span className="color">Store 가기</span>
           </h4>
         </ShopIcon>
-        <ShopIcon id="end"  onClick={()=>{navigate('/mint')}} >
+        <ShopIcon
+          id="end"
+          onClick={() => {
+            navigate("/mint");
+          }}
+        >
           <img src="essets/images/경매장.png" alt="" />
           <h4>
             작품을 등록하고 싶으신가요?
             <br />
             <br />
-            민팅
+            <span className="color">민팅하러 가기</span>
           </h4>
         </ShopIcon>
-        
-        
       </FlexBox2>
     </InnreContent>
   );

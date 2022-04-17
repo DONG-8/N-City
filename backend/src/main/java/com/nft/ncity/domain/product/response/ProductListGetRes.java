@@ -1,6 +1,7 @@
 package com.nft.ncity.domain.product.response;
 
 import com.nft.ncity.domain.user.db.entity.User;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -44,4 +45,7 @@ public class ProductListGetRes {
 
     @ApiModelProperty(value = "상품 거래상태")
     int productState;
+
+    @ApiModelProperty(value = "상품 경매 종료시간")
+    LocalDateTime productAuctionEndTime;
 }
