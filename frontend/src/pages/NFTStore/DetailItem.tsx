@@ -145,6 +145,7 @@ const UserBox = styled.div`
   height: 55%;
   background-color: #f7f8fa;
   border-radius: 30px;
+  overflow-y: scroll;
   .top {
     display: flex;
     align-items: center;
@@ -176,7 +177,7 @@ const UserBox = styled.div`
   .profile { 
     border-radius: 100%;
     height: 12vh;
-    width: 12vh;
+    width: 120px;
     margin: 5vh;
     margin-bottom: 2vh;
   }
@@ -219,16 +220,16 @@ const UserDescription = styled.div`
   .title {
     padding-top: 2vh;
     margin-left: 2vw;
-    font-size: 2rem;
+    font-size: 3.5vh;
     font-weight: 600;
   }
   .content {
     width: 90%;
     height: 15vh;
-    font-size: 1.2rem;
-    font-weight: 500;
+    font-size: 2vh;
     margin-left: 2vw;
     margin-top: 2vh;
+    overflow-y: scroll;
   }
 `;
 const TopR = styled.div`
@@ -246,7 +247,7 @@ const TopR = styled.div`
   .top-left {
     width: 25vw;
     .title {
-      font-size: 2.5rem;
+      font-size: 5vh;
       font-weight: 600;
       margin-top: 3vh;
       margin-left: 2vw;
@@ -266,9 +267,9 @@ const TopR = styled.div`
     align-items: center;
   }
   .img {
-    height: 300px;
-    width: 300px;
-    margin: 2vh 1vw;
+    height: 40vh;
+    width: 40vh;
+    margin: 1vh 1vw;
     border-radius: 30px;
     border: 1px solid #e0dede;
   }
@@ -294,20 +295,19 @@ const Mid = styled.div`
 const Description = styled.div`
   h3 {
     margin-left: 2vw;
-    font-size: 25px;
+    font-size: 3vh;
     margin-bottom: 10px;
   }
   .box {
     width: 26vw;
-    height: 19vh;
-    /* background-color: white; */
+    height: 16.5vh;
     margin-left: 2vw;
     border-radius: 10px;
-    /* border: 0.5px solid #e7e4e4; */
+    overflow-y: scroll;
     p {
       /* margin-left: 1vw; */
       margin: 5px 0;
-      font-size: 20px;
+      font-size: 2vh;
       font-weight: 500;
     }
   }
@@ -911,7 +911,7 @@ function leadingZeros(n, digits) {
                     </div>
                   </UserBox>
                   <UserDescription>
-                    <div className="title">User description</div>
+                    <div className="title">User Description</div>
                     {user.userDescription ? (
                       <div className="content">{user.userDescription}</div>
                     ) : (

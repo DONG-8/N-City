@@ -581,10 +581,10 @@ export default function Mypage() {
 
               <FollowTextBox>
                 <span onClick={() => handleModalOpen("follower")}>
-                  팔로워 <div className="blue">{userInfo?.followerCnt}</div>{" "}
+                  follower <div className="blue">{userInfo?.followerCnt}</div>{" "}
                 </span>
                 <span onClick={() => handleModalOpen("followee")}>
-                  팔로우 <div className="blue">{userInfo?.followeeCnt}</div>{" "}
+                  follow <div className="blue">{userInfo?.followeeCnt}</div>{" "}
                 </span>
               </FollowTextBox>
               {Number(sessionStorage.getItem("userId")) === userInfo?.userId ? (
