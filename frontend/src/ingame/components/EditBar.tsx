@@ -373,6 +373,7 @@ const EditBar = () => {
         newData.layers[0].data[tileIdx] = location.gid;
       } else if (status === ItemCategory.CHAIR) {
         // 의자 데이터 넣기
+        console.log('ok')
         let chairDirection = "down";
         if (itemGid == 2563 || itemGid == 2569) {
           chairDirection = "left";
@@ -418,14 +419,14 @@ const EditBar = () => {
       } else {
         const item = {
           gid: location.gid,
-          height: itemHeight,
+          height: 32,
           id: 100000,
           name: "",
           properties: [],
           rotation: 0,
           type: "",
           visible: true,
-          width: itemWidth,
+          width: 32,
           x: location.x,
           y: location.y,
         };
@@ -446,9 +447,11 @@ const EditBar = () => {
         }
         setMyArts(newArtList)
       } else {
-        
+        console.log('----editbar-----')
+        console.log(location.x, location.y)
+        console.log('----bar-----')
         const DelData = newData.layers[location.gid].objects?.filter((obj, i) => {
-          
+          console.log(obj.x, obj.y)
           return (obj.x !== location.x || obj.y !== location.y)
         });
         newData.layers[location.gid].objects = DelData
