@@ -109,13 +109,9 @@ class Editmap extends Phaser.Scene {
         } else if (gameObjects.name === "2") {  // 의자
           store.dispatch(LocationInfoChange({x:gameObjects.x-16, y:gameObjects.y+32, gid:Number(gameObjects.name)}));
         } else if (gameObjects.name === "7" || gameObjects.name === "8"){
-          console.log('-----gameObject------')
-          console.log(gameObjects.x, gameObjects.y)
           store.dispatch(LocationInfoChange({x:gameObjects.x+64, y:gameObjects.y+32, gid:Number(gameObjects.name)}));
         } else {
-          console.log('-----gameObject------')
-          console.log(gameObjects.x, gameObjects.y)
-          store.dispatch(LocationInfoChange({x:gameObjects.x, y:gameObjects.y, gid:Number(gameObjects.name)}));
+          store.dispatch(LocationInfoChange({x:gameObjects.x+16, y:gameObjects.y-16, gid:Number(gameObjects.name)}));
         }
       }
     }, this)
@@ -301,13 +297,14 @@ class Editmap extends Phaser.Scene {
             }
             break
         case ItemCategory.RUGS: case ItemCategory.STAIRS:
+          
           var w = this.itemWidth/ 32
           var h = this.itemHeight / 32
             for (let i = 0; i< w; i ++){
               for (let j = 0; j< h; j ++){
                 
                 this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(0).setInteractive().setName("5")
-                store.dispatch(LocationInfoChange({x:this.marker.x-32+(i*32), y:this.marker.y+80+(j*32), gid:this.itemGid+(i+j*16)+3432}));
+                store.dispatch(LocationInfoChange({x:this.marker.x+(i*32), y:this.marker.y+32+(j*32), gid:this.itemGid+(i+j*16)+3432}));
             }
           }
           break
