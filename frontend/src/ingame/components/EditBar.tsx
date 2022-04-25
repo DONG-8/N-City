@@ -418,14 +418,14 @@ const EditBar = () => {
       } else {
         const item = {
           gid: location.gid,
-          height: itemHeight,
+          height: 32,
           id: 100000,
           name: "",
           properties: [],
           rotation: 0,
           type: "",
           visible: true,
-          width: itemWidth,
+          width: 32,
           x: location.x,
           y: location.y,
         };
@@ -446,9 +446,7 @@ const EditBar = () => {
         }
         setMyArts(newArtList)
       } else {
-        
         const DelData = newData.layers[location.gid].objects?.filter((obj, i) => {
-          
           return (obj.x !== location.x || obj.y !== location.y)
         });
         newData.layers[location.gid].objects = DelData
