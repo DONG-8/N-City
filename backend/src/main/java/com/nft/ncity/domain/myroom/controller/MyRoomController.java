@@ -90,7 +90,7 @@ public class MyRoomController {
                                                                              Principal principal) throws IOException {
         log.info("modifyMyRoomBackground - Call");
 
-        Long userId = Long.valueOf(2L);
+        Long userId = Long.valueOf(principal.getName());
         // JSON -> String
         ObjectMapper mapper = new ObjectMapper();
         String jsonInString = mapper.writeValueAsString(myRoomBackgroundInfo.getMyRoomBackground());
