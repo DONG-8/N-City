@@ -106,10 +106,12 @@ class Editmap extends Phaser.Scene {
         gameObjects.destroy();
         if (gameObjects.name === "10") {  // 작품일 경우 삭제 
           store.dispatch(LocationInfoChange({x:Number(gameObjects.texture.key), y:0, gid:Number(gameObjects.name)}));
-        } else if (gameObjects.name === "2") {
-          store.dispatch(LocationInfoChange({x:gameObjects.x+16, y:gameObjects.y+32, gid:Number(gameObjects.name)}));
+        } else if (gameObjects.name === "2") {  // 의자
+          store.dispatch(LocationInfoChange({x:gameObjects.x-16, y:gameObjects.y+32, gid:Number(gameObjects.name)}));
+        } else if (gameObjects.name === "7" || gameObjects.name === "8"){
+          store.dispatch(LocationInfoChange({x:gameObjects.x+64, y:gameObjects.y+32, gid:Number(gameObjects.name)}));
         } else {
-          store.dispatch(LocationInfoChange({x:gameObjects.x-16, y:gameObjects.y+16, gid:Number(gameObjects.name)}));
+          store.dispatch(LocationInfoChange({x:gameObjects.x+16, y:gameObjects.y-16, gid:Number(gameObjects.name)}));
         }
       }
     }, this)
@@ -249,13 +251,13 @@ class Editmap extends Phaser.Scene {
           break
         case ItemCategory.OFFICE: 
           if(this.itemGid < 4685) {
-            this.physics.add.staticSprite(this.marker.x+48, this.marker.y, 'computers', this.itemGid-4680).setDepth(this.marker.y).setInteractive()
+            this.physics.add.staticSprite(this.marker.x+32, this.marker.y+32, 'computers', this.itemGid-4680).setDepth(this.marker.y).setInteractive()
             .setName("8")
           } else {
-            this.physics.add.staticSprite(this.marker.x+32, this.marker.y, 'whiteboards', this.itemGid-4685).setDepth(this.marker.y).setInteractive()
+            this.physics.add.staticSprite(this.marker.x+32, this.marker.y+32, 'whiteboards', this.itemGid-4685).setDepth(this.marker.y).setInteractive()
             .setName("7")
           }
-          store.dispatch(LocationInfoChange({x:this.marker.x, y:this.marker.y+32, gid:this.itemGid}));
+          store.dispatch(LocationInfoChange({x:this.marker.x+16, y:this.marker.y+48, gid:this.itemGid}));
           break
         case ItemCategory.CHAIR: 
           this.add.image(this.marker.x+16, this.marker.y, 'chairs', this.itemGid-2561).setDepth(this.marker.y).setInteractive().setName("2")
@@ -266,9 +268,9 @@ class Editmap extends Phaser.Scene {
           var h = this.itemHeight / 32
           for (let i = 0; i< w; i ++){
             for (let j = 0; j< h; j ++){
-              this.add.image(this.marker.x+16+(i*32), this.marker.y+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(this.marker.y+16+(j*32)).setInteractive()
+              this.add.image(this.marker.x+(i*32), this.marker.y+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(this.marker.y+16+(j*32)).setInteractive()
               .setName(this.selectedItemC === ItemCategory.GENERIC ? "6" : "5")
-              store.dispatch(LocationInfoChange({x:this.marker.x+(i*32), y:this.marker.y+32+(j*32), gid:this.itemGid+(i+j*16)+3432}));
+              store.dispatch(LocationInfoChange({x:this.marker.x+(i*32), y:this.marker.y+(j*32), gid:this.itemGid+(i+j*16)+3432}));
             }
           }
           break
@@ -295,19 +297,20 @@ class Editmap extends Phaser.Scene {
             }
             break
         case ItemCategory.RUGS: case ItemCategory.STAIRS:
+          
           var w = this.itemWidth/ 32
           var h = this.itemHeight / 32
             for (let i = 0; i< w; i ++){
               for (let j = 0; j< h; j ++){
                 
                 this.add.image(this.marker.x+16+(i*32), this.marker.y+16+(j*32), 'generic', this.itemGid+(i+j*16)).setDepth(0).setInteractive().setName("5")
-                store.dispatch(LocationInfoChange({x:this.marker.x-32+(i*32), y:this.marker.y+80+(j*32), gid:this.itemGid+(i+j*16)+3432}));
+                store.dispatch(LocationInfoChange({x:this.marker.x+(i*32), y:this.marker.y+32+(j*32), gid:this.itemGid+(i+j*16)+3432}));
             }
           }
           break
         case ItemCategory.MYART:
-          this.add.image(this.marker.x, this.marker.y-16, `${this.itemGid}`).setDepth(10).setInteractive().setName("10")
-          store.dispatch(LocationInfoChange({x:this.marker.x, y:this.marker.y+32, gid:this.itemGid}));
+          this.add.image(this.marker.x+64, this.marker.y+64, `${this.itemGid}`).setDepth(10).setInteractive().setName("10")
+          store.dispatch(LocationInfoChange({x:this.marker.x+64, y:this.marker.y+64, gid:this.itemGid}));
           this.selectedItemC = ItemCategory.NONE
 
           break

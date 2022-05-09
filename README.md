@@ -4,45 +4,49 @@
 
 ### 프로젝트 명 : N-CITY
 
-### 팀 이름 : 남현동싹쓸어
+#### 팀 이름 : 남현동싹쓸어
 
----
+<br>
 
-
+<br>
 
 ## 1. 서비스 소개
 
-### nft + 메타버스
+### "NFT + Metaverse"
 
-거래만을 위한 현 nft 시장의 상황을 고려하여
+거래만을 위한 현 NFT 시장에서 나아가, 개인이 보유 혹은 민팅한 NFT를 통해 자신만의 공간을 꾸미고 타 유저들과 소통할 수 있는 서비스
 
-개인이 보유 혹은 민팅 한 nft를 통해 자신만의 공간을 꾸미고 소통하며 판매할 수 있는 시스템을 만들고자 합니다.
+![image-20220426025557831](README.assets/image-20220426025557831.png)
 
-핵심으로 들어가는것은 인증 마크입니다. 인증 마크를 통해 어떤 누가 제일 처음 민팅한 저작권자인지 지속적으로 확인하는 인증마크 시스템을 통해 개인이 소유 한 물건의  가치를 가시적으로 보증합니다.
+<br>
 
-- 메이커(maker)들은 개인이 만든 작업물을 전시하며 구매욕을 끌어올릴 수 있습니다
-- 개인의 경우 개인이 소유한 nft를 통해 자신만의 공간을 꾸밀 수 있습니다.
-- 기업의 경우 기업만의 홍보 혹은 보증 판매를 통해 현물거래와도 연동을 시킬 수 있습니다.
+### 서비스 특장점
 
-### 거래만을 위한 nft 시장에서 개인의 소유욕과 과시욕을 만족시킬 수 있는 소통형 메타버스 n-city 입니다.
+1. MetaMask를 통한 손쉬운 회원가입 및 로그인
+2. 인증된 사용자가 민팅한 작품 인증마크 
+3. NFT 작품 및 N-City에서 제공하는 소품들로 나만의 공간 꾸미기 
+4. 자신만의 공간에서 타 유저와 소통
+5. 마음에 드는 유저 팔로우 
 
----
+<br>
 
+### 개발 기간
 
+2022.02.28 ~ 04.08 (6주)
 
-### 역할
+<br>
 
-![img](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/a0417fae-575c-44f5-aa40-ec0ca316306a/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220408%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220408T022157Z&X-Amz-Expires=86400&X-Amz-Signature=2fa302f768f13ce2f024a7d2b33a3cd9dca8ae11699c53a9dc5ed4d2e6960ac0&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject)
+### 팀원
 
+![image-20220426030314067](README.assets/image-20220426030314067.png)
 
-
----
+<br>
 
 ### ARCHITECTURE
 
 ![image-20220408112320249](README.assets/image-20220408112320249.png)
 
-
+<br>
 
 ### CONCEPT
 
@@ -50,11 +54,11 @@
 
 
 
-## 
+<br>
 
+<br>
 
-
-## 핵심 기능
+## 2. 핵심 기능
 
 #### 1. METAMASK LOGIN
 
@@ -65,6 +69,10 @@
 > 이더리움(Ethhereum) 개인지갑을 편리하고 안전하게 관리할 수 있는 구글 확장프로그램.
 
 ![메타마스크로그인](README.assets/메타마스크로그인.gif)
+
+<br>
+
+
 
 #### 2. 인증마크
 
@@ -86,7 +94,7 @@
 
 ![유저마크](README.assets/유저마크.png)
 
-
+<br>
 
 #### 3. NCT 토큰
 
@@ -96,7 +104,7 @@
 
 
 
-
+<br>
 
 #### 4. 상품 등록(MINTING)
 
@@ -142,7 +150,7 @@
 
 
 
-
+<br>
 
 #### 7. 실시간 채팅 및 유저간의 만남
 
@@ -154,9 +162,11 @@
 
 
 
+<br>
 
+<br>
 
-## 실행 방법
+## 3. 실행 방법
 
 소스코드 다운로드
 
@@ -164,7 +174,7 @@
 $ git clone https://lab.ssafy.com/s06-blockchain-nft-sub2/S06P22E106.git
 ```
 
-
+<br>
 
 ### BackEnd
 
@@ -194,7 +204,7 @@ $ git clone https://lab.ssafy.com/s06-blockchain-nft-sub2/S06P22E106.git
    $ java -jar build/libs/ncity-0.0.1-SNAPSHOT.jar app.jar
    ```
 
-
+<br>
 
 ### FrontEnd
 
@@ -216,7 +226,7 @@ $ npm i
 $ npm start
 ```
 
-
+<br>
 
 ### GAME
 
@@ -239,6 +249,3 @@ $ npm start
    ```
 
    
-
-## 소감
-

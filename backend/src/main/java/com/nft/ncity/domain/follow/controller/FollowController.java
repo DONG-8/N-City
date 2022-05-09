@@ -89,7 +89,7 @@ public class FollowController {
         // 1. Follow 테이블에 추가.
 
         log.info("FollowRegister - 호출");
-        Long userId = Long.valueOf(1L);
+        Long userId = Long.valueOf(principal.getName());
         Follow follow = followService.FollowRegister(followeeId,userId);
 
         if(null != follow) {
@@ -112,7 +112,7 @@ public class FollowController {
         // 0. 토큰으로부터 내 userId와 팔로우 신청할 유저의 Id(followeeId)를 받아온다.
         // 1. Follow 테이블에서 삭제.
         log.info("followRemove - 호출");
-        Long userId = Long.valueOf(1L);
+        Long userId = Long.valueOf(principal.getName());
         Follow follow = followService.FollowRemove(followeeId,userId);
 
         if(null != follow) {

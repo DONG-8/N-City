@@ -62,4 +62,7 @@ public class UserMintProductRes {
 
     @ApiModelProperty(value = "유저 종류")
     private String userRole;
+
+    // 상품 아이디
+    private Long productId;
 }

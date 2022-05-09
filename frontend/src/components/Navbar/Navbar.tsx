@@ -8,7 +8,7 @@ import { useMutation } from "react-query";
 import { getLogout } from "../../store/apis/log";
 import GameStartButton from "./GameStartButton";
 import Logo from "../../essets/images/logo2.png";
-import Logotext from "../../essets/images/logo2_text.png";
+import Logotext from "../../essets/images/logo2_text2.png";
 
 const NavbarWrrap = styled.div`
   /* display: block; */
@@ -58,6 +58,10 @@ const NavbarBox = styled.div`
     align-items: center;
     font-size: 40px;
     min-width: 120px;
+    img{
+      height: 40px;
+      margin-top: 5px;
+    }
   }
 
   .secondContainer {
@@ -350,7 +354,7 @@ export default function Navbar() {
                       }}
                       style={{color:"rebeccapurple"}}
                     >
-                      로그 아웃
+                      로그아웃
                     </p>
                   </div>
                 </div>
